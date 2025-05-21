@@ -20,6 +20,9 @@ namespace openturbine::interfaces {
  */
 class BladeInterface {
 public:
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+
     /**
      * @brief Constructs a BladeInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
@@ -30,15 +33,15 @@ public:
     )
         : model(Model(solution_input.gravity)),
           blade(blade_input, model),
-          state(model.CreateState()),
-          elements(model.CreateElements()),
-          constraints(model.CreateConstraints()),
+          state(model.CreateState<DeviceType>()),
+          elements(model.CreateElements<DeviceType>()),
+          constraints(model.CreateConstraints<DeviceType>()),
           parameters(
               solution_input.dynamic_solve, solution_input.max_iter, solution_input.time_step,
               solution_input.rho_inf, solution_input.absolute_error_tolerance,
               solution_input.relative_error_tolerance
           ),
-          solver(CreateSolver(state, elements, constraints)),
+          solver(CreateSolver<DeviceType>(state, elements, constraints)),
           state_save(CloneState(state)),
           host_state(state),
           vtk_output(solution_input.vtk_output_path) {
@@ -104,16 +107,18 @@ public:
     }
 
 private:
-    Model model;                ///< OpenTurbine class for model construction
-    components::Blade blade;    ///< Blade model input/output data
-    State state;                ///< OpenTurbine class for storing system state
-    Elements elements;          ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints constraints;    ///< OpenTurbine class for constraints tying elements together
-    StepParameters parameters;  ///< OpenTurbine class containing solution parameters
-    Solver solver;              ///< OpenTurbine class for solving the dynamic system
-    State state_save;           ///< OpenTurbine class state class for temporarily saving state
-    HostState host_state;       ///< Host local copy of node state data
-    VTKOutput vtk_output;       ///< VTK output manager
+    Model model;              ///< OpenTurbine class for model construction
+    components::Blade blade;  ///< Blade model input/output data
+    State<DeviceType> state;  ///< OpenTurbine class for storing system state
+    Elements<DeviceType>
+        elements;  ///< OpenTurbine class for model elements (beams, masses, springs)
+    Constraints<DeviceType>
+        constraints;               ///< OpenTurbine class for constraints tying elements together
+    StepParameters parameters;     ///< OpenTurbine class containing solution parameters
+    Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
+    State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
+    HostState<DeviceType> host_state;  ///< Host local copy of node state data
+    VTKOutput vtk_output;              ///< VTK output manager
 
     /// @brief  Updates motion data for all nodes (root and blade) in the interface
     void UpdateNodeMotion() {

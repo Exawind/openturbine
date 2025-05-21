@@ -19,53 +19,55 @@ namespace openturbine {
  * - The remaining dimensions are the number of components as defined by physics
  * - Additionally, shape_interp and shape_deriv have dimensions num_elems x num_nodes x num_qps
  */
+template <typename DeviceType>
 struct Beams {
     size_t num_elems;       // Total number of element
     size_t max_elem_nodes;  // Maximum number of nodes per element
     size_t max_elem_qps;    // Maximum number of quadrature points per element
 
-    Kokkos::View<size_t*> num_nodes_per_element;
-    Kokkos::View<size_t*> num_qps_per_element;
-    Kokkos::View<size_t**> node_state_indices;  // State row index for each node
-    Kokkos::View<FreedomSignature**> element_freedom_signature;
-    Kokkos::View<size_t** [6]> element_freedom_table;
+    Kokkos::View<size_t*, DeviceType> num_nodes_per_element;
+    Kokkos::View<size_t*, DeviceType> num_qps_per_element;
+    Kokkos::View<size_t**, DeviceType> node_state_indices;  // State row index for each node
+    Kokkos::View<FreedomSignature**, DeviceType> element_freedom_signature;
+    Kokkos::View<size_t** [6], DeviceType> element_freedom_table;
 
-    View_3 gravity;
+    Kokkos::View<double[3], DeviceType> gravity;
 
     // Node-based data
-    Kokkos::View<double** [7]> node_x0;      // Inital position/rotation
-    Kokkos::View<double** [7]> node_u;       // State: translation/rotation displacement
-    Kokkos::View<double** [6]> node_u_dot;   // State: translation/rotation velocity
-    Kokkos::View<double** [6]> node_u_ddot;  // State: translation/rotation acceleration
-    Kokkos::View<double** [6]> node_FX;      // External forces
+    Kokkos::View<double** [7], DeviceType> node_x0;      // Inital position/rotation
+    Kokkos::View<double** [7], DeviceType> node_u;       // State: translation/rotation displacement
+    Kokkos::View<double** [6], DeviceType> node_u_dot;   // State: translation/rotation velocity
+    Kokkos::View<double** [6], DeviceType> node_u_ddot;  // State: translation/rotation acceleration
+    Kokkos::View<double** [6], DeviceType> node_FX;      // External forces
 
     // Quadrature point data
-    Kokkos::View<double**> qp_weight;           // Integration weights
-    Kokkos::View<double**> qp_jacobian;         // Jacobian vector
-    Kokkos::View<double** [6][6]> qp_Mstar;     // Mass matrix in material frame
-    Kokkos::View<double** [6][6]> qp_Cstar;     // Stiffness matrix in material frame
-    Kokkos::View<double** [7]> qp_x;            // Current position/orientation
-    Kokkos::View<double** [3]> qp_x0;           // Initial position
-    Kokkos::View<double** [3]> qp_x0_prime;     // Initial position derivative
-    Kokkos::View<double** [4]> qp_r0;           // Initial rotation
-    Kokkos::View<double** [3]> qp_u;            // State: translation displacement
-    Kokkos::View<double** [3]> qp_u_prime;      // State: translation displacement derivative
-    Kokkos::View<double** [3]> qp_u_dot;        // State: translation velocity
-    Kokkos::View<double** [3]> qp_u_ddot;       // State: translation acceleration
-    Kokkos::View<double** [4]> qp_r;            // State: rotation
-    Kokkos::View<double** [4]> qp_r_prime;      // State: rotation derivative
-    Kokkos::View<double** [3]> qp_omega;        // State: angular velocity
-    Kokkos::View<double** [3]> qp_omega_dot;    // State: position/rotation
-    Kokkos::View<double** [3]> qp_deformation;  // Deformation relative to rigid body motion
-    Kokkos::View<double** [3][4]> qp_E;         // Quaternion derivative
-    Kokkos::View<double** [6]> qp_Fe;           // External force
+    Kokkos::View<double**, DeviceType> qp_weight;        // Integration weights
+    Kokkos::View<double**, DeviceType> qp_jacobian;      // Jacobian vector
+    Kokkos::View<double** [6][6], DeviceType> qp_Mstar;  // Mass matrix in material frame
+    Kokkos::View<double** [6][6], DeviceType> qp_Cstar;  // Stiffness matrix in material frame
+    Kokkos::View<double** [7], DeviceType> qp_x;         // Current position/orientation
+    Kokkos::View<double** [3], DeviceType> qp_x0;        // Initial position
+    Kokkos::View<double** [3], DeviceType> qp_x0_prime;  // Initial position derivative
+    Kokkos::View<double** [4], DeviceType> qp_r0;        // Initial rotation
+    Kokkos::View<double** [3], DeviceType> qp_u;         // State: translation displacement
+    Kokkos::View<double** [3], DeviceType> qp_u_prime;  // State: translation displacement derivative
+    Kokkos::View<double** [3], DeviceType> qp_u_dot;    // State: translation velocity
+    Kokkos::View<double** [3], DeviceType> qp_u_ddot;   // State: translation acceleration
+    Kokkos::View<double** [4], DeviceType> qp_r;        // State: rotation
+    Kokkos::View<double** [4], DeviceType> qp_r_prime;  // State: rotation derivative
+    Kokkos::View<double** [3], DeviceType> qp_omega;    // State: angular velocity
+    Kokkos::View<double** [3], DeviceType> qp_omega_dot;  // State: position/rotation
+    Kokkos::View<double** [3], DeviceType>
+        qp_deformation;                              // Deformation relative to rigid body motion
+    Kokkos::View<double** [3][4], DeviceType> qp_E;  // Quaternion derivative
+    Kokkos::View<double** [6], DeviceType> qp_Fe;    // External force
 
-    Kokkos::View<double** [6]> residual_vector_terms;
-    Kokkos::View<double*** [6][6]> system_matrix_terms;
+    Kokkos::View<double** [6], DeviceType> residual_vector_terms;
+    Kokkos::View<double*** [6][6], DeviceType> system_matrix_terms;
 
     // Shape Function data
-    Kokkos::View<double***> shape_interp;  // Shape function values
-    Kokkos::View<double***> shape_deriv;   // Shape function derivatives
+    Kokkos::View<double***, DeviceType> shape_interp;  // Shape function values
+    Kokkos::View<double***, DeviceType> shape_deriv;   // Shape function derivatives
 
     // Constructor which initializes views based on given sizes
     Beams(const size_t n_beams, const size_t max_e_nodes, const size_t max_e_qps)

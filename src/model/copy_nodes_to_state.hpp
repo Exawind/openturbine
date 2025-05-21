@@ -9,7 +9,8 @@
 
 namespace openturbine {
 
-inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
+template <typename DeviceType>
+inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& nodes) {
     auto host_id = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.ID);
     auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x0);
     auto host_q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
@@ -43,8 +44,9 @@ inline void CopyNodesToState(State& state, const std::vector<Node>& nodes) {
 
     // Calculate current global position from initial position and displacement
     Kokkos::parallel_for(
-        "UpdateGlobalPosition", state.num_system_nodes,
-        UpdateGlobalPosition{
+        "UpdateGlobalPosition",
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0UL, state.num_system_nodes),
+        UpdateGlobalPosition<DeviceType>{
             state.q,
             state.x0,
             state.x,

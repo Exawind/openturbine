@@ -14,21 +14,22 @@ namespace openturbine {
  * @note Mass elements consist of a single node and no quadrature points are required, hence no
  * node/qp prefix is used in the Views (as opposed to Beams)
  */
+template <typename DeviceType>
 struct Masses {
     size_t num_elems;  //< Total number of elements
 
-    Kokkos::View<size_t*> num_nodes_per_element;  //< This is always 1 for masses
-    Kokkos::View<size_t*> state_indices;
-    Kokkos::View<FreedomSignature*> element_freedom_signature;
-    Kokkos::View<size_t* [6]> element_freedom_table;
+    Kokkos::View<size_t*, DeviceType> num_nodes_per_element;  //< This is always 1 for masses
+    Kokkos::View<size_t*, DeviceType> state_indices;
+    Kokkos::View<FreedomSignature*, DeviceType> element_freedom_signature;
+    Kokkos::View<size_t* [6], DeviceType> element_freedom_table;
 
-    View_3 gravity;
+    Kokkos::View<double[3], DeviceType> gravity;
 
-    Kokkos::View<double* [7]> node_x0;      //< Initial position/rotation
-    Kokkos::View<double* [6][6]> qp_Mstar;  //< Mass matrix in material frame
+    Kokkos::View<double* [7], DeviceType> node_x0;      //< Initial position/rotation
+    Kokkos::View<double* [6][6], DeviceType> qp_Mstar;  //< Mass matrix in material frame
 
-    Kokkos::View<double* [6]> residual_vector_terms;
-    Kokkos::View<double* [6][6]> system_matrix_terms;
+    Kokkos::View<double* [6], DeviceType> residual_vector_terms;
+    Kokkos::View<double* [6][6], DeviceType> system_matrix_terms;
 
     explicit Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),

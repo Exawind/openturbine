@@ -12,19 +12,25 @@
 
 namespace openturbine {
 
-inline void AssembleSystemMatrix(StepParameters& parameters, Solver& solver, Elements& elements) {
+template <typename DeviceType>
+inline void AssembleSystemMatrix(
+    StepParameters& parameters, Solver<DeviceType>& solver, Elements<DeviceType>& elements
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
-    auto beams_sparse_matrix_policy =
-        Kokkos::TeamPolicy<>(static_cast<int>(elements.beams.num_elems), Kokkos::AUTO());
-    auto masses_sparse_matrix_policy =
-        Kokkos::RangePolicy<>(0, static_cast<int>(elements.masses.num_elems));
-    auto springs_sparse_matrix_policy =
-        Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
+    auto beams_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
+        static_cast<int>(elements.beams.num_elems), Kokkos::AUTO()
+    );
+    auto masses_sparse_matrix_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
+        0, static_cast<int>(elements.masses.num_elems)
+    );
+    auto springs_sparse_matrix_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
+        0, static_cast<int>(elements.springs.num_elems)
+    );
 
     Kokkos::parallel_for(
         "ContributeBeamsToSparseMatrix", beams_sparse_matrix_policy,
-        ContributeBeamsToSparseMatrix<Solver::CrsMatrixType>{
+        ContributeBeamsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.beams.num_nodes_per_element,
             elements.beams.element_freedom_signature, elements.beams.element_freedom_table,
             elements.beams.system_matrix_terms, solver.A
@@ -32,14 +38,14 @@ inline void AssembleSystemMatrix(StepParameters& parameters, Solver& solver, Ele
     );
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
-        ContributeMassesToSparseMatrix<Solver::CrsMatrixType>{
+        ContributeMassesToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.masses.element_freedom_signature,
             elements.masses.element_freedom_table, elements.masses.system_matrix_terms, solver.A
         }
     );
     Kokkos::parallel_for(
         "ContributeSpringsToSparseMatrix", springs_sparse_matrix_policy,
-        ContributeSpringsToSparseMatrix<Solver::CrsMatrixType>{
+        ContributeSpringsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.springs.element_freedom_signature,
             elements.springs.element_freedom_table, elements.springs.stiffness_matrix_terms, solver.A
         }

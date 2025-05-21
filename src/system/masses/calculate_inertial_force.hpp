@@ -8,16 +8,17 @@
 
 namespace openturbine::masses {
 
-KOKKOS_FUNCTION
-inline void CalculateInertialForce(
-    double mass, const Kokkos::View<double[3]>::const_type& u_ddot,
-    const Kokkos::View<double[3]>::const_type& omega,
-    const Kokkos::View<double[3]>::const_type& omega_dot,
-    const Kokkos::View<double[3]>::const_type& eta,
-    const Kokkos::View<double[3][3]>::const_type& eta_tilde,
-    const Kokkos::View<double[3][3]>::const_type& rho,
-    const Kokkos::View<double[3][3]>::const_type& omega_tilde,
-    const Kokkos::View<double[3][3]>::const_type& omega_dot_tilde, const Kokkos::View<double[6]>& FI
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateInertialForce(
+    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& u_ddot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& omega_dot,
+    const typename Kokkos::View<double[3], DeviceType>::const_type& eta,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& eta_tilde,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& rho,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_tilde,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_dot_tilde,
+    const Kokkos::View<double[6], DeviceType>& FI
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using GemmDefault = KokkosBatched::Algo::Gemm::Default;
@@ -25,9 +26,9 @@ inline void CalculateInertialForce(
     using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
     auto v1 = Kokkos::Array<double, 3>{};
-    auto V1 = View_3(v1.data());
+    auto V1 = Kokkos::View<double[3], DeviceType>(v1.data());
     auto m1 = Kokkos::Array<double, 9>{};
-    auto M1 = View_3x3(m1.data());
+    auto M1 = Kokkos::View<double[3][3], DeviceType>(m1.data());
 
     // Compute first 3 components of FI
     // FI_1 = m * u_ddot + (omega_dot_tilde + omega_tilde * omega_tilde) * m * eta

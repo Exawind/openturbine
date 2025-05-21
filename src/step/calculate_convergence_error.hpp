@@ -12,15 +12,16 @@
 namespace openturbine {
 
 /// @brief Calculation based on Table 1 of DOI: 10.1115/1.4033441
+template <typename DeviceType>
 inline double CalculateConvergenceError(
-    const StepParameters& parameters, const Solver& solver, const State& state,
-    const Constraints& constraints
+    const StepParameters& parameters, const Solver<DeviceType>& solver,
+    const State<DeviceType>& state, const Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
     double sum_error_squared = 0.;
     Kokkos::parallel_reduce(
-        solver.num_system_nodes,
-        CalculateSystemErrorSumSquares{
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+        CalculateSystemErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             parameters.h,
@@ -32,8 +33,8 @@ inline double CalculateConvergenceError(
         sum_error_squared
     );
     Kokkos::parallel_reduce(
-        constraints.num_constraints,
-        CalculateConstraintsErrorSumSquares{
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints),
+        CalculateConstraintsErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             solver.num_system_dofs,

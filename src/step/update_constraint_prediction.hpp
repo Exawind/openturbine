@@ -9,11 +9,16 @@
 
 namespace openturbine {
 
-inline void UpdateConstraintPrediction(Solver& solver, Constraints& constraints) {
+template <typename DeviceType>
+inline void UpdateConstraintPrediction(
+    Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Prediction");
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
-        "UpdateLambdaPrediction", constraints.num_constraints,
-        UpdateLambdaPrediction{
+        "UpdateLambdaPrediction", range_policy,
+        UpdateLambdaPrediction<DeviceType>{
             solver.num_system_dofs, constraints.row_range, solver.x, constraints.lambda
         }
     );
