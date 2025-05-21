@@ -19,7 +19,7 @@ struct ExecuteCalculateInertiaStiffnessMatrix {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateInertiaStiffnessMatrix(
+        masses::CalculateInertiaStiffnessMatrix<Kokkos::DefaultExecutionSpace>(
             mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu
         );
     }

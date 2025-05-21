@@ -6,16 +6,17 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct UpdateDynamicPrediction {
     double h;
     double beta_prime;
     double gamma_prime;
-    Kokkos::View<FreedomSignature*>::const_type node_freedom_allocation_table;
-    Kokkos::View<size_t*>::const_type node_freedom_map_table;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft>::const_type x_delta;
-    Kokkos::View<double* [6]> q_delta;
-    Kokkos::View<double* [6]> v;
-    Kokkos::View<double* [6]> vd;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type node_freedom_allocation_table;
+    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
+    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x_delta;
+    Kokkos::View<double* [6], DeviceType> q_delta;
+    Kokkos::View<double* [6], DeviceType> v;
+    Kokkos::View<double* [6], DeviceType> vd;
 
     KOKKOS_FUNCTION
     void operator()(const size_t i_node) const {

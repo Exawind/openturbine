@@ -16,9 +16,11 @@ inline void UpdateSystemVariablesSprings(
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables Springs");
 
     // Calculate system variables and perform assembly
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, springs.num_elems);
     Kokkos::parallel_for(
-        "Calculate System Variables Springs", springs.num_elems,
-        springs::CalculateQuadraturePointValues{
+        "Calculate System Variables Springs", range_policy,
+        springs::CalculateQuadraturePointValues<DeviceType>{
             state.q, springs.node_state_indices, springs.x0, springs.l_ref, springs.k,
             springs.residual_vector_terms, springs.stiffness_matrix_terms
         }

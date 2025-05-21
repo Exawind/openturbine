@@ -40,6 +40,7 @@ template <
     compute_node_freedom_map_table(state);
     create_element_freedom_table(elements, state);
     create_constraint_freedom_table(constraints, state);
+
     return {
         state.ID,
         state.active_dofs,

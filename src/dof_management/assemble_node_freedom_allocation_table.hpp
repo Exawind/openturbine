@@ -9,11 +9,12 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Beams {
-    Kokkos::View<size_t*>::const_type num_nodes_per_element;
-    Kokkos::View<size_t**>::const_type node_state_indices;
-    Kokkos::View<FreedomSignature**>::const_type element_freedom_signature;
-    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
+    typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
+    typename Kokkos::View<FreedomSignature**, DeviceType>::const_type element_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -27,10 +28,11 @@ struct AssembleNodeFreedomMapTable_Beams {
     }
 };
 
+template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Masses {
-    Kokkos::View<size_t*>::const_type node_state_indices;
-    Kokkos::View<FreedomSignature*>::const_type element_freedom_signature;
-    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    typename Kokkos::View<size_t*, DeviceType>::const_type node_state_indices;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type element_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -42,10 +44,11 @@ struct AssembleNodeFreedomMapTable_Masses {
     }
 };
 
+template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Springs {
-    Kokkos::View<size_t* [2]>::const_type node_state_indices;
-    Kokkos::View<FreedomSignature* [2]>::const_type element_freedom_signature;
-    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    typename Kokkos::View<size_t* [2], DeviceType>::const_type node_state_indices;
+    typename Kokkos::View<FreedomSignature* [2], DeviceType>::const_type element_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
@@ -59,13 +62,14 @@ struct AssembleNodeFreedomMapTable_Springs {
     }
 };
 
+template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Constraints {
-    Kokkos::View<ConstraintType*>::const_type type;
-    Kokkos::View<size_t*>::const_type target_node_index;
-    Kokkos::View<size_t*>::const_type base_node_index;
-    Kokkos::View<FreedomSignature*>::const_type target_node_freedom_signature;
-    Kokkos::View<FreedomSignature*>::const_type base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*> node_freedom_allocation_table;
+    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type;
+    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
+    typename Kokkos::View<size_t*, DeviceType>::const_type base_node_index;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type target_node_freedom_signature;
+    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type base_node_freedom_signature;
+    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t i) const {
@@ -92,30 +96,39 @@ inline void assemble_node_freedom_allocation_table(
 ) {
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::NoComponents);
 
+    auto beams_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
+
     Kokkos::parallel_for(
-        "AssembleNodeFreedomMapTable_Beams", elements.beams.num_elems,
-        AssembleNodeFreedomMapTable_Beams{
+        "AssembleNodeFreedomMapTable_Beams", beams_range,
+        AssembleNodeFreedomMapTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
             elements.beams.element_freedom_signature, state.node_freedom_allocation_table
         }
     );
+    auto masses_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.masses.num_elems);
     Kokkos::parallel_for(
-        "AssembleNodeFreedomMapTable_Masses", elements.masses.num_elems,
-        AssembleNodeFreedomMapTable_Masses{
+        "AssembleNodeFreedomMapTable_Masses", masses_range,
+        AssembleNodeFreedomMapTable_Masses<DeviceType>{
             elements.masses.state_indices, elements.masses.element_freedom_signature,
             state.node_freedom_allocation_table
         }
     );
+    auto springs_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.springs.num_elems);
     Kokkos::parallel_for(
-        "AssembleNodeFreedomMapTable_Springs", elements.springs.num_elems,
-        AssembleNodeFreedomMapTable_Springs{
+        "AssembleNodeFreedomMapTable_Springs", springs_range,
+        AssembleNodeFreedomMapTable_Springs<DeviceType>{
             elements.springs.node_state_indices, elements.springs.element_freedom_signature,
             state.node_freedom_allocation_table
         }
     );
+    auto constraints_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
-        "AssembleNodeFreedomMapTable_Constraints", constraints.num_constraints,
-        AssembleNodeFreedomMapTable_Constraints{
+        "AssembleNodeFreedomMapTable_Constraints", constraints_range,
+        AssembleNodeFreedomMapTable_Constraints<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_signature,
             state.node_freedom_allocation_table
@@ -124,8 +137,10 @@ inline void assemble_node_freedom_allocation_table(
 
     const auto active_dofs = state.active_dofs;
     const auto node_freedom_allocation_table = state.node_freedom_allocation_table;
+    auto system_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes);
     Kokkos::parallel_for(
-        "ComputeActiveDofs", state.num_system_nodes,
+        "ComputeActiveDofs", system_range,
         KOKKOS_LAMBDA(size_t i) {
             active_dofs(i) = count_active_dofs(node_freedom_allocation_table(i));
         }

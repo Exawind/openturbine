@@ -9,22 +9,25 @@ namespace openturbine {
 
 template <typename CrsMatrixType>
 struct ContributeBeamsToSparseMatrix {
+    using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     double conditioner{};
-    Kokkos::View<size_t*>::const_type num_nodes_per_element;
-    Kokkos::View<FreedomSignature**>::const_type element_freedom_signature;
-    Kokkos::View<size_t** [6]>::const_type element_freedom_table;
-    Kokkos::View<double*** [6][6]>::const_type dense;
+    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
+    typename Kokkos::View<FreedomSignature**, DeviceType>::const_type element_freedom_signature;
+    typename Kokkos::View<size_t** [6], DeviceType>::const_type element_freedom_table;
+    typename Kokkos::View<double*** [6][6], DeviceType>::const_type dense;
     CrsMatrixType sparse;
 
     KOKKOS_FUNCTION
-    void operator()(Kokkos::TeamPolicy<>::member_type member) const {
+    void operator()(member_type member) const {
         const auto i = member.league_rank();
         const auto num_nodes = num_nodes_per_element(i);
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
-            !std::is_same_v<Kokkos::TeamPolicy<>::member_type::execution_space, Kokkos::Serial>;
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_nodes * num_nodes),
             [&](size_t node_12) {

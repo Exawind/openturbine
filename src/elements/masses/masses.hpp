@@ -23,7 +23,7 @@ struct Masses {
     Kokkos::View<FreedomSignature*, DeviceType> element_freedom_signature;
     Kokkos::View<size_t* [6], DeviceType> element_freedom_table;
 
-    View_3 gravity;
+    Kokkos::View<double[3], DeviceType> gravity;
 
     Kokkos::View<double* [7], DeviceType> node_x0;      //< Initial position/rotation
     Kokkos::View<double* [6][6], DeviceType> qp_Mstar;  //< Mass matrix in material frame

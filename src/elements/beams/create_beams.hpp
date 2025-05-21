@@ -111,25 +111,28 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     Kokkos::deep_copy(beams.node_FX, 0.);
     Kokkos::deep_copy(beams.qp_Fe, 0.);
 
+    auto range_policy =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
+
     Kokkos::parallel_for(
-        "InterpolateQPPosition", beams.num_elems,
-        InterpolateQPPosition{
+        "InterpolateQPPosition", range_policy,
+        InterpolateQPPosition<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_x0
         }
     );
 
     Kokkos::parallel_for(
-        "InterpolateQPRotation", beams.num_elems,
-        InterpolateQPRotation{
+        "InterpolateQPRotation", range_policy,
+        InterpolateQPRotation<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_r0
         }
     );
 
     Kokkos::parallel_for(
-        "CalculateJacobian", beams.num_elems,
-        CalculateJacobian{
+        "CalculateJacobian", range_policy,
+        CalculateJacobian<DeviceType>{
             beams.num_nodes_per_element,
             beams.num_qps_per_element,
             beams.shape_deriv,
@@ -139,10 +142,12 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
+    auto team_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
+        static_cast<int>(beams.num_elems), Kokkos::AUTO()
+    );
     Kokkos::parallel_for(
-        "InterpolateToQuadraturePoints", range_policy,
-        InterpolateToQuadraturePoints{
+        "InterpolateToQuadraturePoints", team_policy,
+        InterpolateToQuadraturePoints<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
             beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,

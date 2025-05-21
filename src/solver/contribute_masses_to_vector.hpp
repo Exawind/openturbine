@@ -4,10 +4,11 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 struct ContributeMassesToVector {
-    Kokkos::View<size_t* [6]>::const_type element_freedom_table;
-    Kokkos::View<double* [6]>::const_type elements;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft> vector;
+    typename Kokkos::View<size_t* [6], DeviceType>::const_type element_freedom_table;
+    typename Kokkos::View<double* [6], DeviceType>::const_type elements;
+    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> vector;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {

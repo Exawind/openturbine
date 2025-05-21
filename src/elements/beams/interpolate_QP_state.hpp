@@ -9,12 +9,13 @@ namespace openturbine {
 /**
  * @brief Interpolates the displacement (u) part of the state at a quadrature point
  */
+template <typename DeviceType>
 struct InterpolateQPState_u {
     size_t i_elem;
     size_t num_nodes;
-    Kokkos::View<double***>::const_type shape_interp;
-    Kokkos::View<double** [7]>::const_type node_u;
-    Kokkos::View<double** [3]> qp_u;
+    typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
+    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
+    Kokkos::View<double** [3], DeviceType> qp_u;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
@@ -34,13 +35,14 @@ struct InterpolateQPState_u {
 /**
  * @brief Interpolates the displacement derivative (u') part of the state at a quadrature point
  */
+template <typename DeviceType>
 struct InterpolateQPState_uprime {
     size_t i_elem;
     size_t num_nodes;
-    Kokkos::View<double***>::const_type shape_deriv;
-    Kokkos::View<double**>::const_type qp_jacobian;
-    Kokkos::View<double** [7]>::const_type node_u;
-    Kokkos::View<double** [3]> qp_uprime;
+    typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
+    typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
+    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
+    Kokkos::View<double** [3], DeviceType> qp_uprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
@@ -61,12 +63,13 @@ struct InterpolateQPState_uprime {
 /**
  * @brief Interpolates the rotation (r) part of the state at a quadrature point
  */
+template <typename DeviceType>
 struct InterpolateQPState_r {
     size_t i_elem;
     size_t num_nodes;
-    Kokkos::View<double***>::const_type shape_interp;
-    Kokkos::View<double** [7]>::const_type node_u;
-    Kokkos::View<double** [4]> qp_r;
+    typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
+    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
+    Kokkos::View<double** [4], DeviceType> qp_r;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {
@@ -87,13 +90,14 @@ struct InterpolateQPState_r {
 /**
  * @brief Interpolates the rotation derivative (r') part of the state at a quadrature point
  */
+template <typename DeviceType>
 struct InterpolateQPState_rprime {
     size_t i_elem;
     size_t num_nodes;
-    Kokkos::View<double***>::const_type shape_deriv;
-    Kokkos::View<double**>::const_type qp_jacobian;
-    Kokkos::View<double** [7]>::const_type node_u;
-    Kokkos::View<double** [4]> qp_rprime;
+    typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
+    typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
+    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
+    Kokkos::View<double** [4], DeviceType> qp_rprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t j_index) const {

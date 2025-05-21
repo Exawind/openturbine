@@ -83,9 +83,11 @@ inline bool Step(
         UpdateConstraintPrediction(solver, constraints);
     }
 
+    auto system_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes);
     Kokkos::parallel_for(
-        "UpdateAlgorithmicAcceleration", solver.num_system_nodes,
-        UpdateAlgorithmicAcceleration{
+        "UpdateAlgorithmicAcceleration", system_range,
+        UpdateAlgorithmicAcceleration<DeviceType>{
             state.a,
             state.vd,
             parameters.alpha_f,
@@ -94,17 +96,19 @@ inline bool Step(
     );
 
     Kokkos::parallel_for(
-        "UpdateGlobalPosition", solver.num_system_nodes,
-        UpdateGlobalPosition{
+        "UpdateGlobalPosition", system_range,
+        UpdateGlobalPosition<DeviceType>{
             state.q,
             state.x0,
             state.x,
         }
     );
 
+    auto constraints_range =
+        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
     Kokkos::parallel_for(
-        "CalculateConstraintOutput", constraints.num_constraints,
-        CalculateConstraintOutput{
+        "CalculateConstraintOutput", constraints_range,
+        CalculateConstraintOutput<DeviceType>{
             constraints.type,
             constraints.target_node_index,
             constraints.axes,
