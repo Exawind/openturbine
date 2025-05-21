@@ -22,7 +22,6 @@
 #include "elements/springs/springs_input.hpp"
 #include "mesh_connectivity.hpp"
 #include "node.hpp"
-#include "outputs.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"
@@ -463,25 +462,6 @@ public:
         this->mesh_connectivity_.ExportToYAML(filename);
     }
 
-    //--------------------------------------------------------------------------
-    // Outputs
-    //--------------------------------------------------------------------------
-
-    /// @brief Set up outputs configuration
-    /// @param output_file Path to output file
-    /// @param num_nodes Number of nodes in the model
-    void SetupOutputs(const std::string& output_file, size_t num_nodes) {
-        this->outputs_ = std::make_unique<Outputs>(output_file, num_nodes);
-    }
-
-    /// @brief Write node state outputs at the specified timestep
-    /// @param timestep Current timestep index
-    void WriteOutputsAtTimestep(State& state, size_t timestep) const {
-        if (this->outputs_) {
-            outputs_->WriteNodeOutputsAtTimestep(state, timestep);
-        }
-    }
-
 private:
     Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
     std::vector<Node> nodes_;                     //< Nodes in the model
@@ -490,7 +470,6 @@ private:
     std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
     std::vector<Constraint> constraints_;         //< Constraints in the model
     MeshConnectivity mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
-    std::unique_ptr<Outputs> outputs_;    //< Outputs
 };
 
 }  // namespace openturbine
