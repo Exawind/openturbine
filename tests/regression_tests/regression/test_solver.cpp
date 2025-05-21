@@ -6,6 +6,7 @@
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 #include "step/predict_next_state.hpp"
+#include "step/reset_constraints.hpp"
 #include "step/step.hpp"
 #include "step/step_parameters.hpp"
 #include "step/update_constraint_variables.hpp"
@@ -92,7 +93,7 @@ inline void SetUpSolverAndAssemble() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
@@ -103,6 +104,8 @@ inline void SetUpSolverAndAssemble() {
 
     // Predict the next state for the solver
     PredictNextState(parameters, state);
+    ResetConstraints(constraints);
+    ResetSolver(solver);
 
     // Update beam elements state from solvers
     UpdateSystemVariables(parameters, elements, state);
@@ -320,7 +323,7 @@ inline void SetupAndTakeNoSteps() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
@@ -331,8 +334,7 @@ inline void SetupAndTakeNoSteps() {
 
     Step(parameters, solver, elements, state, constraints);
 
-    const auto x = Kokkos::create_mirror_view(solver.x);
-    Kokkos::deep_copy(x, solver.x);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), solver.x);
     expect_kokkos_view_1D_equal(
         Kokkos::subview(solver.x, Kokkos::ALL, 0),
         {
@@ -519,7 +521,7 @@ inline auto SetupAndTakeTwoSteps() {
 
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});

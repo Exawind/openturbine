@@ -20,6 +20,9 @@ namespace openturbine::interfaces::components {
  */
 class Beam {
 public:
+    /// @brief Maximum number of points allowed in blade geometry definition
+    static constexpr size_t kMaxGeometryPoints{10};
+
     /// @brief Beam element ID
     size_t beam_element_id{kInvalidID};
 
@@ -102,8 +105,8 @@ private:
      * @throws std::invalid_argument If configuration is invalid
      */
     static void ValidateInput(const BeamInput& input) {
-        if (input.ref_axis.coordinate_grid.empty() || input.ref_axis.coordinates.empty()) {
-            throw std::invalid_argument("At least one reference axis point is required");
+        if (input.ref_axis.coordinate_grid.size() < 2 || input.ref_axis.coordinates.size() < 2) {
+            throw std::invalid_argument("At least two reference axis points are required");
         }
         if (input.ref_axis.coordinate_grid.size() != input.ref_axis.coordinates.size()) {
             throw std::invalid_argument("Mismatch between coordinate_grid and coordinates sizes");
@@ -111,10 +114,9 @@ private:
         if (input.sections.empty()) {
             throw std::invalid_argument("At least one section is required");
         }
-        if (input.element_order < 2) {
+        if (input.element_order < 1) {
             throw std::invalid_argument(
-                "Element order must be at least 2 i.e. quadratic element for higher-order "
-                "discretization"
+                "Element order must be at least 1 i.e. linear element for discretization"
             );
         }
     }
@@ -134,7 +136,8 @@ private:
      */
     void CreateNodeGeometry(const BeamInput& input) {
         const auto n_nodes = input.element_order + 1;
-        const auto n_geometry_pts = std::min(input.ref_axis.coordinate_grid.size(), n_nodes);
+        const auto n_geometry_pts =
+            std::min({input.ref_axis.coordinate_grid.size(), n_nodes, kMaxGeometryPoints});
 
         if (n_geometry_pts < n_nodes) {
             // We need to project from n_geometry_pts -> element_order
@@ -144,7 +147,7 @@ private:
             const auto geometry_points = PerformLeastSquaresFitting(
                 n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
             );
-            const auto [gll_points, node_coords] =
+            const auto node_coords =
                 ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
 
             this->node_coordinates.clear();

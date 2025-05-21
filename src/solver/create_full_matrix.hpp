@@ -48,17 +48,15 @@ template <typename CrsMatrixType>
 
     KokkosSparse::sort_crs_graph(row_ptrs, col_inds);
 
-    // clang-format off
     return CrsMatrixType(
-               "full_matrix",
-               static_cast<IndicesValueType>(num_dofs),
-               static_cast<IndicesValueType>(num_dofs),
-               num_non_zero,
-               ValuesType("values", static_cast<size_t>(num_non_zero)),
-               row_ptrs,
-               col_inds
-           );
-    // clang-format on
+        "full_matrix", static_cast<IndicesValueType>(num_dofs),
+        static_cast<IndicesValueType>(num_dofs), num_non_zero,
+        ValuesType(
+            Kokkos::view_alloc("values", Kokkos::WithoutInitializing),
+            static_cast<size_t>(num_non_zero)
+        ),
+        row_ptrs, col_inds
+    );
 }
 
 }  // namespace openturbine

@@ -7,16 +7,7 @@
 namespace openturbine::tests {
 
 inline auto create_node_u_OneNode() {
-    constexpr auto num_nodes = 1;
-    constexpr auto num_entries = num_nodes * 7;
-    auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
-    auto node_u_mirror = Kokkos::create_mirror(node_u);
-
-    auto host_data = std::array<double, num_entries>{1., 2., 3., 4., 5., 6., 7.};
-    auto node_u_host = Kokkos::View<double[1][num_nodes][7], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(node_u_mirror, node_u_host);
-    Kokkos::deep_copy(node_u, node_u_mirror);
-    return node_u;
+    return CreateView<double[1][1][7]>("node_u", std::array{1., 2., 3., 4., 5., 6., 7.});
 }
 
 TEST(InterpolateQPStateTests, u_OneNodeOneQP) {
@@ -26,8 +17,7 @@ TEST(InterpolateQPStateTests, u_OneNodeOneQP) {
     auto node_u = create_node_u_OneNode();
     auto qp_u = Kokkos::View<double[1][num_qp][3]>("qp_u");
     Kokkos::parallel_for(num_qp, InterpolateQPState_u{0U, num_nodes, shape_interp, node_u, qp_u});
-    auto qp_u_mirror = Kokkos::create_mirror(qp_u);
-    Kokkos::deep_copy(qp_u_mirror, qp_u);
+    auto qp_u_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_u_mirror(0, 0, 1), 4., tolerance);
@@ -44,8 +34,7 @@ TEST(InterpolateQPStateTests, uprime_OneNodeOneQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_uprime{0, num_nodes, shape_deriv, jacobian, node_u, qp_uprime}
     );
-    auto qp_uprime_mirror = Kokkos::create_mirror(qp_uprime);
-    Kokkos::deep_copy(qp_uprime_mirror, qp_uprime);
+    auto qp_uprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_uprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 1), 4., tolerance);
@@ -59,8 +48,7 @@ TEST(InterpolateQPStateTests, r_OneNodeOneQP) {
     auto node_u = create_node_u_OneNode();
     auto qp_r = Kokkos::View<double[1][num_qp][4]>("qp_r");
     Kokkos::parallel_for(num_qp, InterpolateQPState_r{0, num_nodes, shape_interp, node_u, qp_r});
-    auto qp_r_mirror = Kokkos::create_mirror(qp_r);
-    Kokkos::deep_copy(qp_r_mirror, qp_r);
+    auto qp_r_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_r);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8. / (6. * std::sqrt(14.)), tolerance);
     EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10. / (6. * std::sqrt(14.)), tolerance);
@@ -78,8 +66,7 @@ TEST(InterpolateQPStateTests, rprime_OneNodeOneQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_rprime{0, num_nodes, shape_deriv, jacobian, node_u, qp_rprime}
     );
-    auto qp_rprime_mirror = Kokkos::create_mirror(qp_rprime);
-    Kokkos::deep_copy(qp_rprime_mirror, qp_rprime);
+    auto qp_rprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_rprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 0), 8., tolerance);
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 1), 10., tolerance);
@@ -94,8 +81,7 @@ TEST(InterpolateQPStateTests, u_OneNodeTwoQP) {
     auto node_u = create_node_u_OneNode();
     auto qp_u = Kokkos::View<double[1][num_qp][3]>("qp_u");
     Kokkos::parallel_for(num_qp, InterpolateQPState_u{0U, num_nodes, shape_interp, node_u, qp_u});
-    auto qp_u_mirror = Kokkos::create_mirror(qp_u);
-    Kokkos::deep_copy(qp_u_mirror, qp_u);
+    auto qp_u_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_u_mirror(0, 0, 1), 4., tolerance);
@@ -116,8 +102,7 @@ TEST(InterpolateQPStateTests, uprime_OneNodeTwoQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_uprime{0U, num_nodes, shape_deriv, jacobian, node_u, qp_uprime}
     );
-    auto qp_uprime_mirror = Kokkos::create_mirror(qp_uprime);
-    Kokkos::deep_copy(qp_uprime_mirror, qp_uprime);
+    auto qp_uprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_uprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 1), 4., tolerance);
@@ -135,8 +120,7 @@ TEST(InterpolateQPStateTests, r_OneNodeTwoQP) {
     auto node_u = create_node_u_OneNode();
     auto qp_r = Kokkos::View<double[1][num_qp][4]>("qp_r");
     Kokkos::parallel_for(num_qp, InterpolateQPState_r{0, num_nodes, shape_interp, node_u, qp_r});
-    auto qp_r_mirror = Kokkos::create_mirror(qp_r);
-    Kokkos::deep_copy(qp_r_mirror, qp_r);
+    auto qp_r_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_r);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_r_mirror(0, 0, 0), 8. / (6. * std::sqrt(14.)), tolerance);
     EXPECT_NEAR(qp_r_mirror(0, 0, 1), 10. / (6. * std::sqrt(14.)), tolerance);
@@ -159,8 +143,7 @@ TEST(InterpolateQPStateTests, rprime_OneNodeTwoQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_rprime{0U, num_nodes, shape_deriv, jacobian, node_u, qp_rprime}
     );
-    auto qp_rprime_mirror = Kokkos::create_mirror(qp_rprime);
-    Kokkos::deep_copy(qp_rprime_mirror, qp_rprime);
+    auto qp_rprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_rprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 0), 8., tolerance);
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 1), 10., tolerance);
@@ -174,17 +157,9 @@ TEST(InterpolateQPStateTests, rprime_OneNodeTwoQP) {
 }
 
 inline auto create_node_u_TwoNode() {
-    constexpr auto num_nodes = 2;
-    constexpr auto num_entries = num_nodes * 7;
-    auto node_u = Kokkos::View<double[1][num_nodes][7]>("node_u");
-    auto node_u_mirror = Kokkos::create_mirror(node_u);
-
-    auto host_data =
-        std::array<double, num_entries>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.};
-    auto node_u_host = Kokkos::View<double[1][num_nodes][7], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(node_u_mirror, node_u_host);
-    Kokkos::deep_copy(node_u, node_u_mirror);
-    return node_u;
+    return CreateView<double[1][2][7]>(
+        "node_u", std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12., 13., 14.}
+    );
 }
 
 TEST(InterpolateQPStateTests, u_TwoNodeTwoQP) {
@@ -194,8 +169,7 @@ TEST(InterpolateQPStateTests, u_TwoNodeTwoQP) {
     auto node_u = create_node_u_TwoNode();
     auto qp_u = Kokkos::View<double[1][num_qp][3]>("qp_u");
     Kokkos::parallel_for(num_qp, InterpolateQPState_u{0, num_nodes, shape_interp, node_u, qp_u});
-    auto qp_u_mirror = Kokkos::create_mirror(qp_u);
-    Kokkos::deep_copy(qp_u_mirror, qp_u);
+    auto qp_u_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_mirror(0, 0, 0), 34., tolerance);
     EXPECT_NEAR(qp_u_mirror(0, 0, 1), 40., tolerance);
@@ -216,8 +190,7 @@ TEST(InterpolateQPStateTests, uprime_TwoNodeTwoQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_uprime{0, num_nodes, shape_deriv, jacobian, node_u, qp_uprime}
     );
-    auto qp_uprime_mirror = Kokkos::create_mirror(qp_uprime);
-    Kokkos::deep_copy(qp_uprime_mirror, qp_uprime);
+    auto qp_uprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_uprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 0), 34., tolerance);
     EXPECT_NEAR(qp_uprime_mirror(0, 0, 1), 40., tolerance);
@@ -235,8 +208,7 @@ TEST(InterpolateQPStateTests, r_TwoNodeTwoQP) {
     auto node_u = create_node_u_TwoNode();
     auto qp_r = Kokkos::View<double[1][num_qp][4]>("qp_r");
     Kokkos::parallel_for(num_qp, InterpolateQPState_r{0, num_nodes, shape_interp, node_u, qp_r});
-    auto qp_r_mirror = Kokkos::create_mirror(qp_r);
-    Kokkos::deep_copy(qp_r_mirror, qp_r);
+    auto qp_r_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_r);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_r_mirror(0, 0, 0), 52. / (2. * std::sqrt(3766.)), tolerance);
     EXPECT_NEAR(qp_r_mirror(0, 0, 1), 58. / (2. * std::sqrt(3766.)), tolerance);
@@ -259,8 +231,7 @@ TEST(InterpolateQPStateTests, rprime_TwoNodeTwoQP) {
     Kokkos::parallel_for(
         num_qp, InterpolateQPState_rprime{0U, num_nodes, shape_deriv, jacobian, node_u, qp_rprime}
     );
-    auto qp_rprime_mirror = Kokkos::create_mirror(qp_rprime);
-    Kokkos::deep_copy(qp_rprime_mirror, qp_rprime);
+    auto qp_rprime_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_rprime);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 0), 52., tolerance);
     EXPECT_NEAR(qp_rprime_mirror(0, 0, 1), 58., tolerance);

@@ -28,10 +28,9 @@ namespace openturbine {
  *   - Constraint matrices (B and B_t)
  *   - Combined system matrices for the complete structural problem
  */
+template <typename DeviceType>
 struct Solver {
     // Define some types for the solver to make the code more readable
-    using DeviceType =
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     using ValueType = double;
 #if defined(OpenTurbine_ENABLE_MKL) && !defined(KOKKOS_ENABLE_CUDA)
     using IndexType = MKL_INT;
@@ -39,11 +38,34 @@ struct Solver {
     using IndexType = int;
 #endif
     using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
+    using MultiVectorType = Kokkos::View<ValueType* [1], Kokkos::LayoutLeft, DeviceType>;
 #ifdef KOKKOS_ENABLE_CUDA
 #if defined(OpenTurbine_ENABLE_CUDSS)
     using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
 #elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
     using HandleType = DSSHandle<DSSAlgorithm::CUSOLVER_SP>;
+#elif defined(OpenTurbine_ENABLE_MKL)
+    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
+#elif defined(OpenTurbine_ENABLE_KLU)
+    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
+#endif
+#elif defined(KOKKOS_ENABLE_HIP)
+#if defined(OpenTurbine_ENABLE_MKL)
+    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
+#elif defined(OpenTurbine_ENABLE_KLU)
+    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
 #endif
 #else
 #if defined(OpenTurbine_ENABLE_MKL)
@@ -63,9 +85,9 @@ struct Solver {
     size_t num_system_dofs;   //< Number of system degrees of freedom
     size_t num_dofs;          //< Number of degrees of freedom
 
-    CrsMatrixType A;                                     //< System matrix
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> b;  //< System RHS
-    Kokkos::View<ValueType* [1], Kokkos::LayoutLeft> x;  //< System solution
+    CrsMatrixType A;    //< System matrix
+    MultiVectorType b;  //< System RHS
+    MultiVectorType x;  //< System solution
 
     HandleType handle;
 
@@ -109,36 +131,10 @@ struct Solver {
               constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,
               node_state_indices
           )),
-          b("b", num_dofs),
-          x("x", num_dofs) {
+          b(Kokkos::view_alloc("b", Kokkos::WithoutInitializing), num_dofs),
+          x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_dofs) {
         dss_symbolic(handle, A);
     }
-
-    // cppcheck-suppress missingMemberCopy
-    /*
-    Solver(const Solver& other) = default;
-    Solver(Solver&& other) noexcept = delete;
-    ~Solver() = default;
-
-    Solver& operator=(const Solver& other) {
-        if (this == &other) {
-            return *this;
-        }
-
-        auto tmp = other;
-        std::swap(num_system_nodes, tmp.num_system_nodes);
-        std::swap(num_system_dofs, tmp.num_system_dofs);
-        std::swap(num_dofs, tmp.num_dofs);
-        std::swap(A, tmp.A);
-        std::swap(b, tmp.b);
-        std::swap(x, tmp.x);
-        std::swap(handle, tmp.handle);
-        std::swap(convergence_err, tmp.convergence_err);
-        return *this;
-    }
-
-    Solver& operator=(Solver&& other) noexcept = delete;
-    */
 };
 
 }  // namespace openturbine

@@ -27,12 +27,12 @@ constexpr double kDefaultTolerance{1e-12};
 const std::vector<double> kGLLNodes{-1., 0., 1.};
 
 /// Node positions for curved beam test (from Mathematica script)
-constexpr std::array<double, 9> kCurvedBeamNodes_data = {
-    0.,  0.,     0.,  // Node 1
-    2.5, -0.125, 0.,  // Node 2
-    5.,  1.,     -1.  // Node 3
+constexpr std::array<double, 21> kCurvedBeamNodes_data = {
+    0.,  0.,     0.,  0., 0., 0., 0.,  // Node 1
+    2.5, -0.125, 0.,  0., 0., 0., 0.,  // Node 2
+    5.,  1.,     -1., 0., 0., 0., 0.   // Node 3
 };
-const Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type kCurvedBeamNodes(
+const Kokkos::View<double[1][3][7], Kokkos::HostSpace>::const_type kCurvedBeamNodes(
     kCurvedBeamNodes_data.data()
 );
 
@@ -1782,7 +1782,7 @@ constexpr std::array<double, kNumQPs * 6 * 6> kCuu = {
     79690.04229982  // QP 7
 };
 
-constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMatrix = {
+constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMatrix_data = {
     // Node 1, Node 1
     569689.3362162, -38777.68238139, -34112.74014376, 4530.690247065, 69230.6811403, 36866.75913868,
 
@@ -1925,5 +1925,7 @@ constexpr std::array<double, kNumNodes * kNumNodes * 6 * 6> kExpectedStiffnessMa
 
     -93172.82283483, -214693.03116, 95131.76620372, 45440.96931327, 114661.6391408, 311150.0817408
 };
+const Kokkos::View<double[kNumNodes][kNumNodes][6][6], Kokkos::HostSpace>::const_type
+    kExpectedStiffnessMatrix(kExpectedStiffnessMatrix_data.data());
 
 }  // namespace openturbine::tests::curved_beam

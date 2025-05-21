@@ -116,9 +116,9 @@ void SetRotorMotion(
     }
 }
 
-template <typename T1, typename T2>
+template <typename DeviceType, typename T1, typename T2>
 void SetAeroLoads(
-    Beams& beams, const size_t n_blades, const size_t n_nodes, const size_t n_qps,
+    Beams<DeviceType>& beams, const size_t n_blades, const size_t n_nodes, const size_t n_qps,
     const util::TurbineData& turbine, const T1& host_node_FX, const T2& host_qp_Fe
 ) {
     if (use_node_loads) {
@@ -395,31 +395,30 @@ TEST(Milestone, IEA15RotorAeroController) {
     UpdateSystemVariables(parameters, elements, state);
 
     // Create mirrors for accessing node data
-    auto host_state_x = Kokkos::create_mirror(state.x);
-    auto host_state_q = Kokkos::create_mirror(state.q);
-    auto host_state_v = Kokkos::create_mirror(state.v);
-    auto host_state_vd = Kokkos::create_mirror(state.vd);
+    auto host_state_x = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x);
+    auto host_state_q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
+    auto host_state_v = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.v);
+    auto host_state_vd = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.vd);
 
     // Host mirror of beam external forces
-    auto host_node_FX = Kokkos::create_mirror(elements.beams.node_FX);
+    auto host_node_FX =
+        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, elements.beams.node_FX);
 
     //--------------------------------------------------------------------------
     // AeroDyn / InflowWind library
     //--------------------------------------------------------------------------
 
     // Create mirrors for accessing qp data
-    auto host_qp_x = Kokkos::create_mirror(elements.beams.qp_x);
-    auto host_qp_u_dot = Kokkos::create_mirror(elements.beams.qp_u_dot);
-    auto host_qp_omega = Kokkos::create_mirror(elements.beams.qp_omega);
-    auto host_qp_u_ddot = Kokkos::create_mirror(elements.beams.qp_u_ddot);
-    auto host_qp_omega_dot = Kokkos::create_mirror(elements.beams.qp_omega_dot);
-    auto host_qp_Fe = Kokkos::create_mirror(elements.beams.qp_Fe);
-
-    Kokkos::deep_copy(host_qp_x, elements.beams.qp_x);
-    Kokkos::deep_copy(host_qp_u_dot, elements.beams.qp_u_dot);
-    Kokkos::deep_copy(host_qp_omega, elements.beams.qp_omega);
-    Kokkos::deep_copy(host_qp_u_ddot, elements.beams.qp_u_ddot);
-    Kokkos::deep_copy(host_qp_omega_dot, elements.beams.qp_omega_dot);
+    auto host_qp_x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), elements.beams.qp_x);
+    auto host_qp_u_dot =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), elements.beams.qp_u_dot);
+    auto host_qp_omega =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), elements.beams.qp_omega);
+    auto host_qp_u_ddot =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), elements.beams.qp_u_ddot);
+    auto host_qp_omega_dot =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), elements.beams.qp_omega_dot);
+    auto host_qp_Fe = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, elements.beams.qp_Fe);
 
     // Create lambda for building blade configuration
     auto build_blade_config = [&](size_t i_blade) {

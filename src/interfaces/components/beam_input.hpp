@@ -50,10 +50,6 @@ struct Section {
         if (loc < 0. || loc > 1.) {
             throw std::invalid_argument("Section location must be in range [0, 1]");
         }
-        // Check that the mass and stiffness matrices are 6x6
-        if (m.size() != 6 || k.size() != 6) {
-            throw std::invalid_argument("Mass and stiffness matrices must be 6 x 6");
-        }
     }
 };
 

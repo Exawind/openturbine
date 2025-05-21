@@ -72,10 +72,10 @@ inline auto SetUpSpringMassSystem() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Create host mirror for checking solution
-    auto q = Kokkos::create_mirror(state.q);
+    auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Run simulation for T seconds
     for (auto time_step = 1U; time_step <= num_steps; ++time_step) {
@@ -157,7 +157,7 @@ inline auto SetUpSpringMassChainSystem() {
 
     // Create system and solver
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = CreateSolver(state, elements, constraints);
+    auto solver = CreateSolver<>(state, elements, constraints);
 
     const double T = 2. * M_PI * sqrt(m / k);
     constexpr auto num_steps = 1000;
@@ -169,7 +169,7 @@ inline auto SetUpSpringMassChainSystem() {
     const double step_size(T / static_cast<double>(num_steps));  // Calculate step size
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
-    auto q = Kokkos::create_mirror(state.q);
+    auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Run simulation for T seconds
     for (auto time_step = 1U; time_step <= num_steps; ++time_step) {

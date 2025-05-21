@@ -40,9 +40,10 @@ namespace openturbine {
  *
  * @return true if the step converged within the maximum allowed iterations, otherwise false
  */
+template <typename DeviceType>
 inline bool Step(
-    StepParameters& parameters, Solver& solver, Elements& elements, State& state,
-    Constraints& constraints
+    StepParameters& parameters, Solver<DeviceType>& solver, Elements<DeviceType>& elements,
+    State<DeviceType>& state, Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
 

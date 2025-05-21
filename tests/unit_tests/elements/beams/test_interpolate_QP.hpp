@@ -5,120 +5,48 @@
 
 namespace openturbine::tests {
 
-inline auto create_shape_interp_OneNodeOneQP() {
-    constexpr auto num_qp = 1;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_interp = Kokkos::View<double[1][num_nodes][num_qp]>("shape_interp");
-    auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
+template <typename ValueType, typename DataType>
+typename Kokkos::View<ValueType>::const_type CreateView(
+    const std::string& name, const DataType& data
+) {
+    const auto view = Kokkos::View<ValueType>(Kokkos::view_alloc(name, Kokkos::WithoutInitializing));
+    const auto host = typename Kokkos::View<ValueType, Kokkos::HostSpace>::const_type(data.data());
+    const auto mirror = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, view);
+    Kokkos::deep_copy(mirror, host);
+    Kokkos::deep_copy(view, mirror);
+    return view;
+}
 
-    auto host_data = std::array<double, num_entries>{2.};
-    auto shape_interp_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
-    Kokkos::deep_copy(shape_interp, shape_interp_mirror);
-    return shape_interp;
+inline auto create_shape_interp_OneNodeOneQP() {
+    return CreateView<double[1][1][1]>("shape_interp", std::array{2.});
 }
 
 inline auto create_shape_deriv_OneNodeOneQP() {
-    constexpr auto num_qp = 1;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qp]>("shape_deriv");
-    auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
-
-    auto host_data = std::array<double, num_entries>{4.};
-    auto shape_deriv_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
-    Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
-    return shape_deriv;
+    return CreateView<double[1][1][1]>("shape_deriv", std::array{4.});
 }
 
 inline auto create_jacobian_OneQP() {
-    constexpr auto num_qp = 1;
-    constexpr auto num_entries = num_qp;
-    auto jacobian = Kokkos::View<double[1][num_qp]>("jacobian");
-    auto jacobian_mirror = Kokkos::create_mirror(jacobian);
-
-    auto host_data = std::array<double, num_entries>{2.};
-    auto jacobian_host = Kokkos::View<double[1][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(jacobian_mirror, jacobian_host);
-    Kokkos::deep_copy(jacobian, jacobian_mirror);
-    return jacobian;
+    return CreateView<double[1][1]>("jacobian", std::array{2.});
 }
 
 inline auto create_shape_interp_OneNodeTwoQP() {
-    constexpr auto num_qp = 2;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_interp = Kokkos::View<double[1][num_nodes][num_qp]>("shape_interp");
-    auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
-
-    auto host_data = std::array<double, num_entries>{2., 4.};
-    auto shape_interp_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
-    Kokkos::deep_copy(shape_interp, shape_interp_mirror);
-    return shape_interp;
+    return CreateView<double[1][1][2]>("shape_interp", std::array{2., 4.});
 }
 
 inline auto create_shape_deriv_OneNodeTwoQP() {
-    constexpr auto num_qp = 2;
-    constexpr auto num_nodes = 1;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qp]>("shape_deriv");
-    auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
-
-    auto host_data = std::array<double, num_entries>{4., 9.};
-    auto shape_deriv_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
-    Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
-    return shape_deriv;
+    return CreateView<double[1][1][2]>("shape_deriv", std::array{4., 9.});
 }
 
 inline auto create_jacobian_TwoQP() {
-    constexpr auto num_qp = 2;
-    constexpr auto num_entries = num_qp;
-    auto jacobian = Kokkos::View<double[1][num_qp]>("jacobian");
-    auto jacobian_mirror = Kokkos::create_mirror(jacobian);
-
-    auto host_data = std::array<double, num_entries>{2., 3.};
-    auto jacobian_host = Kokkos::View<double[1][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(jacobian_mirror, jacobian_host);
-    Kokkos::deep_copy(jacobian, jacobian_mirror);
-    return jacobian;
+    return CreateView<double[1][2]>("jacobian", std::array{2., 3.});
 }
 
 inline auto create_shape_interp_TwoNodeTwoQP() {
-    constexpr auto num_qp = 2;
-    constexpr auto num_nodes = 2;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_interp = Kokkos::View<double[1][num_nodes][num_qp]>("shape_interp");
-    auto shape_interp_mirror = Kokkos::create_mirror(shape_interp);
-
-    auto host_data = std::array<double, num_entries>{2., 3., 4., 5.};
-    auto shape_interp_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_interp_mirror, shape_interp_host);
-    Kokkos::deep_copy(shape_interp, shape_interp_mirror);
-    return shape_interp;
+    return CreateView<double[1][2][2]>("shape_interp", std::array{2., 3., 4., 5.});
 }
 
 inline auto create_shape_deriv_TwoNodeTwoQP() {
-    constexpr auto num_qp = 2;
-    constexpr auto num_nodes = 2;
-    constexpr auto num_entries = num_qp * num_nodes;
-    auto shape_deriv = Kokkos::View<double[1][num_nodes][num_qp]>("shape_deriv");
-    auto shape_deriv_mirror = Kokkos::create_mirror(shape_deriv);
-
-    auto host_data = std::array<double, num_entries>{4., 9., 8., 15.};
-    auto shape_deriv_host =
-        Kokkos::View<double[1][num_nodes][num_qp], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(shape_deriv_mirror, shape_deriv_host);
-    Kokkos::deep_copy(shape_deriv, shape_deriv_mirror);
-    return shape_deriv;
+    return CreateView<double[1][2][2]>("shape_deriv", std::array{4., 9., 8., 15.});
 }
 
 }  // namespace openturbine::tests

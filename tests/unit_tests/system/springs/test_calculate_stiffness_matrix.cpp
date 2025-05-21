@@ -33,7 +33,7 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
 
     const auto a_exact = Kokkos::View<const double[3][3], Kokkos::HostSpace>(a_exact_data.data());
 
-    const auto a_result = Kokkos::create_mirror(a);
+    const auto a_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), a);
     Kokkos::deep_copy(a_result, a);
 
     openturbine::tests::CompareWithExpected(a_result, a_exact);

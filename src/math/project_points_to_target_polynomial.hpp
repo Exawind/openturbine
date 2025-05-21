@@ -24,13 +24,10 @@ namespace openturbine {
  * @param num_inputs Number of points in the source polynomial representation
  * @param num_outputs Number of points in the target polynomial representation
  * @param input_points 3D coordinates of points in the source representation
- * @return std::tuple<std::vector<double>, std::vector<std::array<double, 3>>>
- *         A tuple containing:
- *         - GLL points for the target polynomial
+ * @return std::vector<std::array<double, 3>>
  *         - Coordinates of the projected 3D points at the target polynomial nodes
  */
-inline std::tuple<std::vector<double>, std::vector<std::array<double, 3>>>
-ProjectPointsToTargetPolynomial(
+inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
     size_t num_inputs, size_t num_outputs, const std::vector<std::array<double, 3>>& input_points
 ) {
     // Step 1: Calculate locations of GLL points (the order will be num_outputs - 1)
@@ -51,7 +48,7 @@ ProjectPointsToTargetPolynomial(
             }
         }
     }
-    return {output_gll_pts, output_points};
+    return output_points;
 }
 
 }  // namespace openturbine

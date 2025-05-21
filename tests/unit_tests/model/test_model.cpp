@@ -155,20 +155,20 @@ TEST(ModelTest, ModelCreateState) {
                           .SetDisplacement(3., 2., 1., R2[0], R2[1], R2[2], R2[3])
                           .Build());
 
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     // Create state object from model
-    auto state = model.CreateState();
+    auto state = model.CreateState<DeviceType>();
 
     // Verify initial position
-    const auto x0 = Kokkos::create_mirror(state.x0);
-    Kokkos::deep_copy(x0, state.x0);
+    const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
     const auto exact_x0 = std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(x0(0, i), exact_x0[i], 1.e-15);
     }
 
     // Verify initial displacement
-    const auto q = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q, state.q);
+    const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     const auto exact_q = std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(q(0, i), exact_q[i], 1.e-15);
@@ -176,8 +176,7 @@ TEST(ModelTest, ModelCreateState) {
 
     // Verify current position (initial position plus displacement)
     auto Rt = QuaternionCompose(R2, R1);
-    const auto x = Kokkos::create_mirror(state.x);
-    Kokkos::deep_copy(x, state.x);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(x(0, i), exact_x[i], 1.e-15);
@@ -201,16 +200,14 @@ TEST(ModelTest, ModelCreateSystem) {
     auto [state, elements, constraints] = model.CreateSystem();
 
     // Verify initial position
-    const auto x0 = Kokkos::create_mirror(state.x0);
-    Kokkos::deep_copy(x0, state.x0);
+    const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
     const auto exact_x0 = std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(x0(0, i), exact_x0[i], 1.e-15);
     }
 
     // Verify initial displacement
-    const auto q = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q, state.q);
+    const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     const auto exact_q = std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(q(0, i), exact_q[i], 1.e-15);
@@ -218,8 +215,7 @@ TEST(ModelTest, ModelCreateSystem) {
 
     // Verify current position (initial position plus displacement)
     auto Rt = QuaternionCompose(R2, R1);
-    const auto x = Kokkos::create_mirror(state.x);
-    Kokkos::deep_copy(x, state.x);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
     for (auto i = 0U; i < 7U; ++i) {
         EXPECT_NEAR(x(0, i), exact_x[i], 1.e-15);

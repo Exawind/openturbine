@@ -30,8 +30,11 @@ static const size_t InvalidNodeID(0U);
 
 /// @brief Compute freedom tables for state, elements, and constraints, then construct and return
 /// solver.
-[[nodiscard]] inline Solver CreateSolver(
-    State& state, Elements& elements, Constraints& constraints
+template <
+    typename DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
+[[nodiscard]] inline Solver<DeviceType> CreateSolver(
+    State<DeviceType>& state, Elements<DeviceType>& elements, Constraints<DeviceType>& constraints
 ) {
     assemble_node_freedom_allocation_table(state, elements, constraints);
     compute_node_freedom_map_table(state);
@@ -151,8 +154,9 @@ public:
     }
 
     /// Returns Beams struct initialized with beams
-    [[nodiscard]] Beams CreateBeams() const {
-        return openturbine::CreateBeams(this->CreateBeamsInput(), this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] Beams<DeviceType> CreateBeams() const {
+        return openturbine::CreateBeams<DeviceType>(this->CreateBeamsInput(), this->nodes_);
     }
 
     /// Translate all beam nodes by given displacement
@@ -262,8 +266,9 @@ public:
     [[nodiscard]] size_t NumMassElements() const { return this->mass_elements_.size(); }
 
     /// Returns Masses struct initialized from mass elements
-    [[nodiscard]] Masses CreateMasses() const {
-        return openturbine::CreateMasses(
+    template <typename DeviceType>
+    [[nodiscard]] Masses<DeviceType> CreateMasses() const {
+        return openturbine::CreateMasses<DeviceType>(
             MassesInput(this->mass_elements_, this->gravity_), this->nodes_
         );
     }
@@ -296,8 +301,11 @@ public:
     [[nodiscard]] size_t NumSpringElements() const { return this->spring_elements_.size(); }
 
     /// Returns Springs struct initialized from spring elements
-    [[nodiscard]] Springs CreateSprings() const {
-        return openturbine::CreateSprings(SpringsInput(this->spring_elements_), this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] Springs<DeviceType> CreateSprings() const {
+        return openturbine::CreateSprings<DeviceType>(
+            SpringsInput(this->spring_elements_), this->nodes_
+        );
     }
 
     //--------------------------------------------------------------------------
@@ -305,11 +313,12 @@ public:
     //--------------------------------------------------------------------------
 
     /// Returns Elements struct initialized with elements
-    [[nodiscard]] Elements CreateElements() const {
-        return Elements{
-            this->CreateBeams(),
-            this->CreateMasses(),
-            this->CreateSprings(),
+    template <typename DeviceType>
+    [[nodiscard]] Elements<DeviceType> CreateElements() const {
+        return {
+            this->CreateBeams<DeviceType>(),
+            this->CreateMasses<DeviceType>(),
+            this->CreateSprings<DeviceType>(),
         };
     }
 
@@ -318,9 +327,10 @@ public:
     //--------------------------------------------------------------------------
 
     /// Returns a State object initialized from the model nodes
-    [[nodiscard]] State CreateState() const {
-        auto state = State(this->nodes_.size());
-        CopyNodesToState(state, this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] State<DeviceType> CreateState() const {
+        auto state = State<DeviceType>(this->nodes_.size());
+        CopyNodesToState<DeviceType>(state, this->nodes_);
         return state;
     }
 
@@ -403,19 +413,32 @@ public:
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
     /// Returns a Constraints object initialized from the model constraints
-    [[nodiscard]] Constraints CreateConstraints() const {
-        return Constraints(this->constraints_, this->nodes_);
+    template <typename DeviceType>
+    [[nodiscard]] Constraints<DeviceType> CreateConstraints() const {
+        return Constraints<DeviceType>(this->constraints_, this->nodes_);
     }
 
     // Returns a State, Elements, and Constraints object initialized from the model
-    [[nodiscard]] std::tuple<State, Elements, Constraints> CreateSystem() const {
-        return {this->CreateState(), this->CreateElements(), this->CreateConstraints()};
+    template <
+        typename DeviceType = Kokkos::Device<
+            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
+    [[nodiscard]] std::tuple<State<DeviceType>, Elements<DeviceType>, Constraints<DeviceType>>
+    CreateSystem() const {
+        return {
+            this->CreateState<DeviceType>(), this->CreateElements<DeviceType>(),
+            this->CreateConstraints<DeviceType>()
+        };
     }
 
     // Returns a State, Elements, Constraints, and Solver object initialized from the model
-    [[nodiscard]] std::tuple<State, Elements, Constraints, Solver> CreateSystemWithSolver() const {
-        auto [state, elements, constraints] = this->CreateSystem();
-        auto solver = CreateSolver(state, elements, constraints);
+    template <
+        typename DeviceType = Kokkos::Device<
+            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
+    [[nodiscard]] std::tuple<
+        State<DeviceType>, Elements<DeviceType>, Constraints<DeviceType>, Solver<DeviceType>>
+    CreateSystemWithSolver() const {
+        auto [state, elements, constraints] = this->CreateSystem<DeviceType>();
+        auto solver = CreateSolver<DeviceType>(state, elements, constraints);
         return {state, elements, constraints, solver};
     }
 

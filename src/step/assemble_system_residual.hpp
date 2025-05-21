@@ -13,7 +13,10 @@
 
 namespace openturbine {
 
-inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& state) {
+template <typename DeviceType>
+inline void AssembleSystemResidual(
+    Solver<DeviceType>& solver, Elements<DeviceType>& elements, State<DeviceType>& state
+) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Residual");
 
     auto forces_vector_policy = Kokkos::RangePolicy<>(0, static_cast<int>(state.num_system_nodes));
@@ -24,7 +27,6 @@ inline void AssembleSystemResidual(Solver& solver, Elements& elements, State& st
     auto springs_vector_policy =
         Kokkos::RangePolicy<>(0, static_cast<int>(elements.springs.num_elems));
 
-    Kokkos::deep_copy(state.f, state.host_f);
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
         ContributeForcesToVector{

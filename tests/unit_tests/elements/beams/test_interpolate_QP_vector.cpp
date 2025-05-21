@@ -7,16 +7,7 @@
 namespace openturbine::tests {
 
 inline auto create_node_u_dot_OneNode() {
-    constexpr auto num_nodes = size_t{1U};
-    constexpr auto num_entries = num_nodes * 6;
-    auto node_u = Kokkos::View<double[1][num_nodes][6]>("node_u_dot");
-    auto node_u_mirror = Kokkos::create_mirror(node_u);
-
-    auto host_data = std::array<double, num_entries>{1., 2., 3., 4., 5., 6.};
-    auto node_u_host = Kokkos::View<double[1][num_nodes][6], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(node_u_mirror, node_u_host);
-    Kokkos::deep_copy(node_u, node_u_mirror);
-    return node_u;
+    return CreateView<double[1][1][6]>("node_u_dot", std::array{1., 2., 3., 4., 5., 6.});
 }
 
 TEST(InterpolateQPVectorTests, OneNodeOneQP) {
@@ -32,8 +23,7 @@ TEST(InterpolateQPVectorTests, OneNodeOneQP) {
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }
     );
-    auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);
-    Kokkos::deep_copy(qp_u_dot_mirror, qp_u_dot);
+    auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 1), 4., tolerance);
@@ -53,8 +43,7 @@ TEST(InterpolateQPVectorTests, OneNodeTwoQP) {
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }
     );
-    auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);
-    Kokkos::deep_copy(qp_u_dot_mirror, qp_u_dot);
+    auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 0), 2., tolerance);
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 1), 4., tolerance);
@@ -66,18 +55,9 @@ TEST(InterpolateQPVectorTests, OneNodeTwoQP) {
 }
 
 inline auto create_node_u_dot_TwoNode() {
-    constexpr auto num_nodes = 2;
-    constexpr auto num_entries = num_nodes * 6;
-    auto node_u_dot = Kokkos::View<double[1][num_nodes][6]>("node_u_dot");
-    auto node_u_dot_mirror = Kokkos::create_mirror(node_u_dot);
-
-    auto host_data =
-        std::array<double, num_entries>{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.};
-    auto node_u_dot_host =
-        Kokkos::View<double[1][num_nodes][6], Kokkos::HostSpace>(host_data.data());
-    Kokkos::deep_copy(node_u_dot_mirror, node_u_dot_host);
-    Kokkos::deep_copy(node_u_dot, node_u_dot_mirror);
-    return node_u_dot;
+    return CreateView<double[1][2][6]>(
+        "node_u_dot", std::array{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.}
+    );
 }
 
 TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
@@ -93,8 +73,7 @@ TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
             Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
         }
     );
-    auto qp_u_dot_mirror = Kokkos::create_mirror(qp_u_dot);
-    Kokkos::deep_copy(qp_u_dot_mirror, qp_u_dot);
+    auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 0), 30., tolerance);
     EXPECT_NEAR(qp_u_dot_mirror(0, 0, 1), 36., tolerance);

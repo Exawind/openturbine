@@ -20,8 +20,11 @@ template <typename RowPtrType>
     const Kokkos::View<size_t* [6]>::const_type& target_node_freedom_table,
     const Kokkos::View<Kokkos::pair<size_t, size_t>*>::const_type& row_range
 ) {
-    const auto row_entries = RowPtrType("row_entries", num_dofs);
-    const auto row_ptrs = RowPtrType("row_ptrs", num_dofs + 1);
+    const auto row_entries =
+        RowPtrType(Kokkos::view_alloc("row_entries", Kokkos::WithoutInitializing), num_dofs);
+    const auto row_ptrs =
+        RowPtrType(Kokkos::view_alloc("row_ptrs", Kokkos::WithoutInitializing), num_dofs + 1);
+    Kokkos::deep_copy(Kokkos::subview(row_ptrs, 0), 0UL);
 
     const auto num_nodes = active_dofs.extent(0);
     const auto num_constraints = row_range.extent(0);

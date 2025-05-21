@@ -9,21 +9,23 @@
 namespace openturbine::tests {
 
 void TestIntegrateStiffnessMatrix_1Element1Node1QP(
-    const Kokkos::View<const double[1][6][6]>& qp_Kuu,
-    const Kokkos::View<const double[1][6][6]>& qp_Puu,
-    const Kokkos::View<const double[1][6][6]>& qp_Cuu,
-    const Kokkos::View<const double[1][6][6]>& qp_Ouu,
-    const Kokkos::View<const double[1][6][6]>& qp_Quu, const std::array<double, 36>& exact_M_data,
-    const double tolerance = 1e-12
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Kuu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Puu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Cuu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Ouu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Quu,
+    const std::array<double, 36>& exact_M_data, const double tolerance = 1e-12
 ) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_interp_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({5.});
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_interp_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp_deriv", std::array{5.});
 
     auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -46,24 +48,24 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M, tolerance);
+}
+
+constexpr std::array<double, 36> OneElement1Node1QP_Data() {
+    return {0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003., 1004., 1005., 1006.,
+            2001., 2002., 2003., 2004., 2005., 2006., 3001., 3002., 3003., 3004., 3005., 3006.,
+            4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.};
 }
 
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Kuu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu =
-        get_qp_Kuu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu = QpMatrixView("Quu");
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+    const auto qp_Kuu = CreateView<double[number_of_qps][6][6]>("qp_Kuu", OneElement1Node1QP_Data());
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data =
         std::array{000096., 000192., 000288., 000384., 000480., 000576., 096096., 096192., 096288.,
@@ -83,16 +85,11 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Kuu) {
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Puu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu =
-        get_qp_Puu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
-    const auto qp_Quu = QpMatrixView("Quu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = CreateView<double[number_of_qps][6][6]>("qp_Puu", OneElement1Node1QP_Data());
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
 
     constexpr auto exact_M_data =
         std::array{000040., 000080., 000120., 000160., 000200., 000240., 040040., 040080., 040120.,
@@ -112,16 +109,11 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Puu) {
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Quu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu =
-        get_qp_Quu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
-                                   1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
-                                   3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003.,
-                                   4004., 4005., 4006., 5001., 5002., 5003., 5004., 5005., 5006.});
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = CreateView<double[number_of_qps][6][6]>("qp_Quu", OneElement1Node1QP_Data());
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data =
         std::array{000096., 000192., 000288., 000384., 000480., 000576., 096096., 096192., 096288.,
@@ -138,20 +130,22 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Quu) {
     TestIntegrateStiffnessMatrix_1Element1Node1QP_Quu();
 }
 
+constexpr std::array<double, 36> OneElement1Node1QP_Cuu_Data() {
+    return {03003., 03006., 03009., 03012., 03015., 03018., 06003., 06006., 06009.,
+            06012., 06015., 06018., 09003., 09006., 09009., 09012., 09015., 09018.,
+            12003., 12006., 12009., 12012., 12015., 12018., 15003., 15006., 15009.,
+            15012., 15015., 15018., 18003., 18006., 18009., 18012., 18015., 18018.};
+}
+
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu = QpMatrixView("Quu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
     const auto qp_Cuu =
-        get_qp_Cuu<number_of_qps>({03003., 03006., 03009., 03012., 03015., 03018., 06003., 06006.,
-                                   06009., 06012., 06015., 06018., 09003., 09006., 09009., 09012.,
-                                   09015., 09018., 12003., 12006., 12009., 12012., 12015., 12018.,
-                                   15003., 15006., 15009., 15012., 15015., 15018., 18003., 18006.,
-                                   18009., 18012., 18015., 18018.});
-    const auto qp_Ouu = QpMatrixView("Ouu");
+        CreateView<double[number_of_qps][6][6]>("qp_Cuu", OneElement1Node1QP_Cuu_Data());
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data =
         std::array{050050., 050100., 050150., 050200., 050250., 050300., 100050., 100100., 100150.,
@@ -168,19 +162,21 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Cuu) {
     TestIntegrateStiffnessMatrix_1Element1Node1QP_Cuu();
 }
 
+constexpr std::array<double, 36> OneElement1Node1QP_Ouu_Data() {
+    return {1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003., 2004., 2005., 2006.,
+            3001., 3002., 3003., 3004., 3005., 3006., 4001., 4002., 4003., 4004., 4005., 4006.,
+            5001., 5002., 5003., 5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.};
+}
+
 void TestIntegrateStiffnessMatrix_1Element1Node1QP_Ouu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu = QpMatrixView("Quu");
-    const auto qp_Cuu = QpMatrixView("Cuu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
     const auto qp_Ouu =
-        get_qp_Ouu<number_of_qps>({1001., 1002., 1003., 1004., 1005., 1006., 2001., 2002., 2003.,
-                                   2004., 2005., 2006., 3001., 3002., 3003., 3004., 3005., 3006.,
-                                   4001., 4002., 4003., 4004., 4005., 4006., 5001., 5002., 5003.,
-                                   5004., 5005., 5006., 6001., 6002., 6003., 6004., 6005., 6006.});
+        CreateView<double[number_of_qps][6][6]>("qp_Ouu", OneElement1Node1QP_Ouu_Data());
 
     constexpr auto exact_M_data =
         std::array{040040., 040080., 040120., 040160., 040200., 040240., 080040., 080080., 080120.,
@@ -198,21 +194,24 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeOneQP_Ouu) {
 }
 
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
-    const Kokkos::View<const double[1][6][6]>& qp_Kuu,
-    const Kokkos::View<const double[1][6][6]>& qp_Puu,
-    const Kokkos::View<const double[1][6][6]>& qp_Cuu,
-    const Kokkos::View<const double[1][6][6]>& qp_Ouu,
-    const Kokkos::View<const double[1][6][6]>& qp_Quu, const std::array<double, 144>& exact_M_data
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Kuu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Puu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Cuu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Ouu,
+    const Kokkos::View<double[1][6][6]>::const_type& qp_Quu,
+    const std::array<double, 144>& exact_M_data
 ) {
     constexpr auto number_of_nodes = size_t{2U};
-    constexpr auto simd_width = Kokkos::Experimental::native_simd<double>::size();
+    constexpr auto simd_width = Kokkos::Experimental::simd<double>::size();
     constexpr auto number_of_simd_nodes = (simd_width == 1) ? size_t{2U} : size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({1.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1., 2.});
-    const auto shape_interp_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({1., 4.});
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{1.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{1.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1., 2.});
+    const auto shape_interp_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{1., 4.});
 
     auto gbl_M = Kokkos::View<double[2][2][6][6]>("global_M");
 
@@ -235,24 +234,25 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
     const auto exact_M =
         Kokkos::View<double[2][2][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
+}
+
+constexpr std::array<double, 36> OneElement2Nodes1QP_Data() {
+    return {0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103., 0104., 0105., 0106.,
+            0201., 0202., 0203., 0204., 0205., 0206., 0301., 0302., 0303., 0304., 0305., 0306.,
+            0401., 0402., 0403., 0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.};
 }
 
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Puu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
     const auto qp_Puu =
-        get_qp_Puu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103.,
-                                   0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
-                                   0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
-                                   0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Quu = QpMatrixView("Quu");
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+        CreateView<double[number_of_qps][6][6]>("qp_Puu", OneElement2Nodes1QP_Data());
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data = std::array<double, 144>{
         1.,    2.,    3.,    4.,    5.,    6.,    101.,  102.,  103.,  104.,  105.,  106.,
@@ -281,16 +281,12 @@ TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Puu) {
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Quu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
     const auto qp_Quu =
-        get_qp_Quu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103.,
-                                   0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
-                                   0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
-                                   0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+        CreateView<double[number_of_qps][6][6]>("qp_Quu", OneElement2Nodes1QP_Data());
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data = std::array<double, 144>{
         1.,    2.,    3.,    4.,    5.,    6.,    101.,  102.,  103.,  104.,  105.,  106.,
@@ -319,16 +315,12 @@ TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Quu) {
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Cuu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu = QpMatrixView("Quu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
     const auto qp_Cuu =
-        get_qp_Cuu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103.,
-                                   0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
-                                   0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
-                                   0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
-    const auto qp_Ouu = QpMatrixView("Ouu");
+        CreateView<double[number_of_qps][6][6]>("qp_Cuu", OneElement2Nodes1QP_Data());
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data = std::array<double, 144>{
         1.,    2.,    3.,    4.,    5.,    6.,    101.,  102.,  103.,  104.,  105.,  106.,
@@ -357,16 +349,12 @@ TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Cuu) {
 void TestIntegrateStiffnessMatrix_1Element2Nodes1QP_Ouu() {
     constexpr auto number_of_qps = 1;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Puu");
-    const auto qp_Quu = QpMatrixView("Quu");
-    const auto qp_Cuu = QpMatrixView("Cuu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Puu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
     const auto qp_Ouu =
-        get_qp_Ouu<number_of_qps>({0001., 0002., 0003., 0004., 0005., 0006., 0101., 0102., 0103.,
-                                   0104., 0105., 0106., 0201., 0202., 0203., 0204., 0205., 0206.,
-                                   0301., 0302., 0303., 0304., 0305., 0306., 0401., 0402., 0403.,
-                                   0404., 0405., 0406., 0501., 0502., 0503., 0504., 0505., 0506.});
+        CreateView<double[number_of_qps][6][6]>("qp_Ouu", OneElement2Nodes1QP_Data());
 
     constexpr auto exact_M_data = std::array<double, 144>{
         1.,    2.,    3.,    4.,    5.,    6.,    101.,  102.,  103.,  104.,  105.,  106.,
@@ -393,20 +381,24 @@ TEST(IntegrateStiffnessMatrixTests, OneElementTwoNodesOneQP_Ouu) {
 }
 
 void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
-    const Kokkos::View<const double[2][6][6]>& qp_Kuu,
-    const Kokkos::View<const double[2][6][6]>& qp_Puu,
-    const Kokkos::View<const double[2][6][6]>& qp_Cuu,
-    const Kokkos::View<const double[2][6][6]>& qp_Ouu,
-    const Kokkos::View<const double[2][6][6]>& qp_Quu, const std::array<double, 36>& exact_M_data
+    const Kokkos::View<double[2][6][6]>::const_type& qp_Kuu,
+    const Kokkos::View<double[2][6][6]>::const_type& qp_Puu,
+    const Kokkos::View<double[2][6][6]>::const_type& qp_Cuu,
+    const Kokkos::View<double[2][6][6]>::const_type& qp_Ouu,
+    const Kokkos::View<double[2][6][6]>::const_type& qp_Quu,
+    const std::array<double, 36>& exact_M_data
 ) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{2U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({1., 3.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({2., 4.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({1., 1.});
-    const auto shape_interp_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({1., 1.});
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{1., 3.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{2., 4.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1., 1.});
+    const auto shape_interp_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp_deriv", std::array{1., 1.}
+    );
 
     auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -429,30 +421,29 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
     const auto exact_M =
         Kokkos::View<double[1][1][6][6], Kokkos::HostSpace>::const_type(exact_M_data.data());
 
-    auto gbl_M_mirror = Kokkos::create_mirror(gbl_M);
-    Kokkos::deep_copy(gbl_M_mirror, gbl_M);
+    auto gbl_M_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), gbl_M);
     CompareWithExpected(gbl_M_mirror, exact_M);
+}
+
+constexpr std::array<double, 72> OneElement1Node2QPs_Data() {
+    return {10001., 10002., 10003., 10004., 10005., 10006., 10101., 10102., 10103., 10104., 10105.,
+            10106., 10201., 10202., 10203., 10204., 10205., 10206., 10301., 10302., 10303., 10304.,
+            10305., 10306., 10401., 10402., 10403., 10404., 10405., 10406., 10501., 10502., 10503.,
+            10504., 10505., 10506., 20001., 20002., 20003., 20004., 20005., 20006., 20101., 20102.,
+            20103., 20104., 20105., 20106., 20201., 20202., 20203., 20204., 20205., 20206., 20301.,
+            20302., 20303., 20304., 20305., 20306., 20401., 20402., 20403., 20404., 20405., 20406.,
+            20501., 20502., 20503., 20504., 20505., 20506.};
 }
 
 void TestIntegrateStiffnessMatrix_1Element1Node2QPs_Puu() {
     constexpr auto number_of_qps = 2;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Puu = get_qp_Puu<number_of_qps>(
-        {10001., 10002., 10003., 10004., 10005., 10006., 10101., 10102., 10103.,
-         10104., 10105., 10106., 10201., 10202., 10203., 10204., 10205., 10206.,
-         10301., 10302., 10303., 10304., 10305., 10306., 10401., 10402., 10403.,
-         10404., 10405., 10406., 10501., 10502., 10503., 10504., 10505., 10506.,
-
-         20001., 20002., 20003., 20004., 20005., 20006., 20101., 20102., 20103.,
-         20104., 20105., 20106., 20201., 20202., 20203., 20204., 20205., 20206.,
-         20301., 20302., 20303., 20304., 20305., 20306., 20401., 20402., 20403.,
-         20404., 20405., 20406., 20501., 20502., 20503., 20504., 20505., 20506.}
-    );
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Quu = QpMatrixView("Quu");
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+    const auto qp_Puu =
+        CreateView<double[number_of_qps][6][6]>("qp_Puu", OneElement1Node2QPs_Data());
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Quu = Kokkos::View<double[number_of_qps][6][6]>("Quu");
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data =
         std::array{70004., 70008., 70012., 70016., 70020., 70024., 70404., 70408., 70412.,
@@ -472,22 +463,12 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Puu) {
 void TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu() {
     constexpr auto number_of_qps = 2;
 
-    using QpMatrixView = Kokkos::View<double[number_of_qps][6][6]>;
-    const auto qp_Kuu = QpMatrixView("Kuu");
-    const auto qp_Puu = QpMatrixView("Cuu");
-    const auto qp_Quu = get_qp_Quu<number_of_qps>(
-        {10001., 10002., 10003., 10004., 10005., 10006., 10101., 10102., 10103.,
-         10104., 10105., 10106., 10201., 10202., 10203., 10204., 10205., 10206.,
-         10301., 10302., 10303., 10304., 10305., 10306., 10401., 10402., 10403.,
-         10404., 10405., 10406., 10501., 10502., 10503., 10504., 10505., 10506.,
-
-         20001., 20002., 20003., 20004., 20005., 20006., 20101., 20102., 20103.,
-         20104., 20105., 20106., 20201., 20202., 20203., 20204., 20205., 20206.,
-         20301., 20302., 20303., 20304., 20305., 20306., 20401., 20402., 20403.,
-         20404., 20405., 20406., 20501., 20502., 20503., 20504., 20505., 20506.}
-    );
-    const auto qp_Cuu = QpMatrixView("Cuu");
-    const auto qp_Ouu = QpMatrixView("Ouu");
+    const auto qp_Kuu = Kokkos::View<double[number_of_qps][6][6]>("Kuu");
+    const auto qp_Puu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Quu =
+        CreateView<double[number_of_qps][6][6]>("qp_Quu", OneElement1Node2QPs_Data());
+    const auto qp_Cuu = Kokkos::View<double[number_of_qps][6][6]>("Cuu");
+    const auto qp_Ouu = Kokkos::View<double[number_of_qps][6][6]>("Ouu");
 
     constexpr auto exact_M_data =
         std::array{260014., 260028., 260042., 260056., 260070., 260084., 261414., 261428., 261442.,

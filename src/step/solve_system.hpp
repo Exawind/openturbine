@@ -11,7 +11,8 @@
 
 namespace openturbine {
 
-inline void SolveSystem(StepParameters& parameters, Solver& solver) {
+template <typename DeviceType>
+inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
 
     Kokkos::parallel_for(

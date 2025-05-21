@@ -46,7 +46,7 @@ inline auto SetUpPrecessionTest() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Run simulation for 500 steps
     for (size_t i = 0; i < 500; ++i) {
@@ -54,8 +54,7 @@ inline auto SetUpPrecessionTest() {
         EXPECT_TRUE(converged);
     }
 
-    auto q_host = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q_host, state.q);
+    auto q_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     EXPECT_NEAR(q_host(0, 0), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 1), 0., 1.e-12);
     EXPECT_NEAR(q_host(0, 2), 0., 1.e-12);

@@ -21,16 +21,19 @@ inline auto SetUpSprings() {
     const auto l0 = 1.;  // Undeformed length
     model.AddSpringElement(node1_id, node2_id, k, l0);
 
-    auto springs = model.CreateSprings();
-    auto state = model.CreateState();
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+
+    auto springs = model.CreateSprings<DeviceType>();
+    auto state = model.CreateState<DeviceType>();
 
     return std::make_tuple(springs, state);
 }
 
 TEST(SpringsTest, NodeStateIndices) {
     auto [springs, _] = SetUpSprings();
-    auto node_state_indices_host = Kokkos::create_mirror(springs.node_state_indices);
-    Kokkos::deep_copy(node_state_indices_host, springs.node_state_indices);
+    auto node_state_indices_host =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), springs.node_state_indices);
     EXPECT_EQ(node_state_indices_host(0, 0), 0);
     EXPECT_EQ(node_state_indices_host(0, 1), 1);
 }

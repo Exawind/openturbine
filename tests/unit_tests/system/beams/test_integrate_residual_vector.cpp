@@ -12,19 +12,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc =
+        CreateView<double[number_of_qps][6]>("qp_Fc", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -40,11 +41,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
     constexpr auto resid_exact_data =
         std::array<double, number_of_nodes * 6>{6., 12., 18., 24., 30., 36.};
     const auto resid_exact =
-        Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
+        Kokkos::View<double[1][number_of_nodes][6], Kokkos::HostSpace>::const_type(
+            resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -52,19 +54,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = QpVectorView("qp_Fc");
-    const auto qp_Fd = get_qp_Fd<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
+    const auto qp_Fd =
+        CreateView<double[number_of_qps][6]>("qp_Fd", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -80,11 +83,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
     constexpr auto resid_exact_data =
         std::array<double, number_of_nodes * 6>{24., 48., 72., 96., 120., 144.};
     const auto resid_exact =
-        Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
+        Kokkos::View<double[1][number_of_nodes][6], Kokkos::HostSpace>::const_type(
+            resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -92,19 +96,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = QpVectorView("qp_Fc");
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = get_qp_Fi<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
+    const auto qp_Fd =
+        CreateView<double[number_of_qps][6]>("qp_Fd", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -120,11 +125,12 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
     constexpr auto resid_exact_data =
         std::array<double, number_of_nodes * 6>{24., 48., 72., 96., 120., 144.};
     const auto resid_exact =
-        Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
+        Kokkos::View<double[1][number_of_nodes][6], Kokkos::HostSpace>::const_type(
+            resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -132,19 +138,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fe) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = QpVectorView("qp_Fc");
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = get_qp_Fe<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe =
+        CreateView<double[number_of_qps][6]>("qp_Fe", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -163,8 +170,8 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fe) {
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -172,19 +179,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = QpVectorView("qp_Fc");
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = get_qp_Fg<number_of_qps>({1., 2., 3., 4., 5., 6.});
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg =
+        CreateView<double[number_of_qps][6]>("qp_Fg", std::array{1., 2., 3., 4., 5., 6.});
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -203,8 +211,8 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -212,18 +220,20 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({3.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({4.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({0.});
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
 
-    const auto node_FX = get_node_FX<number_of_nodes>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fc = QpVectorView("qp_Fc");
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX =
+        CreateView<double[number_of_nodes][6]>("node_FX", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -242,8 +252,8 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -251,20 +261,22 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc_1 = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fc_2 = get_qp_Fc<number_of_qps>({2., 4., 6., 8., 10., 12.});
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc_1 =
+        CreateView<double[number_of_qps][6]>("qp_Fc_1", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fc_2 =
+        CreateView<double[number_of_qps][6]>("qp_Fc_2", std::array{2., 4., 6., 8., 10., 12.});
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[2][number_of_nodes][6]>("residual_vector_terms");
@@ -292,8 +304,8 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
         Kokkos::View<const double[2][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -301,19 +313,22 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{2U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2., 1.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3., 2.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2., 1.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0., 0.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0., 0.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3., 2.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.});
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    // Note: using std::vector because of compiler bug in nvcc
+    const auto qp_Fc = CreateView<double[number_of_qps][6]>(
+        "qp_FC", std::vector{1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11., 12.}
+    );
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -332,8 +347,8 @@ TEST(IntegrateResidualVector, OneElementOneNodeTwoQPs) {
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
@@ -341,19 +356,20 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
     constexpr auto number_of_nodes = size_t{2U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = get_qp_weights<number_of_qps>({2.});
-    const auto qp_jacobian = get_qp_jacobian<number_of_qps>({0.});
-    const auto shape_interp = get_shape_interp<number_of_nodes, number_of_qps>({0.});
-    const auto shape_deriv = get_shape_interp_deriv<number_of_nodes, number_of_qps>({3.});
-    using NodeVectorView = Kokkos::View<double[number_of_nodes][6]>;
-    using QpVectorView = Kokkos::View<double[number_of_qps][6]>;
+    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
+    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
+    const auto shape_interp =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0., 0.});
+    const auto shape_deriv =
+        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3., 0.});
 
-    const auto node_FX = NodeVectorView("node_FX");
-    const auto qp_Fc = get_qp_Fc<number_of_qps>({1., 2., 3., 4., 5., 6.});
-    const auto qp_Fd = QpVectorView("qp_Fd");
-    const auto qp_Fi = QpVectorView("qp_Fi");
-    const auto qp_Fe = QpVectorView("qp_Fe");
-    const auto qp_Fg = QpVectorView("qp_Fg");
+    const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
+    const auto qp_Fc =
+        CreateView<double[number_of_qps][6]>("qp_FC", std::array{1., 2., 3., 4., 5., 6.});
+    const auto qp_Fd = Kokkos::View<double[number_of_qps][6]>("qp_Fd");
+    const auto qp_Fi = Kokkos::View<double[number_of_qps][6]>("qp_Fi");
+    const auto qp_Fe = Kokkos::View<double[number_of_qps][6]>("qp_Fe");
+    const auto qp_Fg = Kokkos::View<double[number_of_qps][6]>("qp_Fg");
 
     const auto residual_vector_terms =
         Kokkos::View<double[1][number_of_nodes][6]>("residual_vector_terms");
@@ -372,8 +388,8 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
         Kokkos::View<const double[1][number_of_nodes][6], Kokkos::HostSpace>(resid_exact_data.data()
         );
 
-    const auto residual_vector_terms_mirror = Kokkos::create_mirror(residual_vector_terms);
-    Kokkos::deep_copy(residual_vector_terms_mirror, residual_vector_terms);
+    const auto residual_vector_terms_mirror =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), residual_vector_terms);
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 

@@ -16,14 +16,15 @@ namespace openturbine {
  *          the entire mesh as a single object to be used by the gen-alpha solver
  *          logic.
  */
+template <typename DeviceType>
 struct Elements {
-    Beams beams;
-    Masses masses;
-    Springs springs;
+    Beams<DeviceType> beams;
+    Masses<DeviceType> masses;
+    Springs<DeviceType> springs;
 
     Elements() : beams(0U, 0U, 0U), masses(0U), springs(0U) {}
 
-    Elements(Beams b, Masses m, Springs s)
+    Elements(Beams<DeviceType> b, Masses<DeviceType> m, Springs<DeviceType> s)
         : beams(std::move(b)), masses(std::move(m)), springs(std::move(s)) {}
 
     /// Returns the total number of elements across all types in the system

@@ -5,7 +5,9 @@
 
 namespace openturbine::tests {
 TEST(CopyNodesToState, OneNode_ID) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array<double, 7>{};
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array<double, 6>{};
@@ -14,13 +16,14 @@ TEST(CopyNodesToState, OneNode_ID) {
 
     CopyNodesToState(state, nodes);
 
-    const auto id = Kokkos::create_mirror(state.ID);
-    Kokkos::deep_copy(id, state.ID);
+    const auto id = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.ID);
     EXPECT_EQ(id(0), 1234U);
 }
 
 TEST(CopyNodesToState, OneNode_Position) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array{1., 2., 3., 4., 5., 6., 7.};
     constexpr auto q_exact = std::array{8., 9., 10., 11., 12., 13., 14.};
     constexpr auto v_exact = std::array<double, 6>{};
@@ -29,17 +32,11 @@ TEST(CopyNodesToState, OneNode_Position) {
 
     CopyNodesToState(state, nodes);
 
-    const auto x0 = Kokkos::create_mirror(state.x0);
-    Kokkos::deep_copy(x0, state.x0);
+    const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
+    const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
+    const auto q_prev = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q_prev);
+    const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
 
-    const auto q = Kokkos::create_mirror(state.q);
-    Kokkos::deep_copy(q, state.q);
-
-    const auto q_prev = Kokkos::create_mirror(state.q_prev);
-    Kokkos::deep_copy(q_prev, state.q_prev);
-
-    const auto x = Kokkos::create_mirror(state.x);
-    Kokkos::deep_copy(x, state.x);
     const auto x_exact = std::array{9., 11., 13., -192., 110., 104., 140.};
 
     for (auto i = 0U; i < 7U; ++i) {
@@ -51,7 +48,9 @@ TEST(CopyNodesToState, OneNode_Position) {
 }
 
 TEST(CopyNodesToState, OneNode_Velocity) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array<double, 7>{};
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array{15., 16., 17., 18., 19., 20.};
@@ -60,11 +59,8 @@ TEST(CopyNodesToState, OneNode_Velocity) {
 
     CopyNodesToState(state, nodes);
 
-    const auto v = Kokkos::create_mirror(state.v);
-    Kokkos::deep_copy(v, state.v);
-
-    const auto vd = Kokkos::create_mirror(state.vd);
-    Kokkos::deep_copy(vd, state.vd);
+    const auto v = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.v);
+    const auto vd = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.vd);
 
     for (auto i = 0U; i < 6U; ++i) {
         EXPECT_EQ(v(0, i), v_exact[i]);

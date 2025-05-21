@@ -11,7 +11,10 @@
 
 namespace openturbine {
 
-inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints) {
+template <typename DeviceType>
+inline void AssembleConstraintsResidual(
+    Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
+) {
     auto resid_region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Residual");
 
     if (constraints.num_constraints == 0) {
@@ -21,7 +24,8 @@ inline void AssembleConstraintsResidual(Solver& solver, Constraints& constraints
     Kokkos::parallel_for(
         "ContributeConstraintsSystemResidualToVector", constraints.num_constraints,
         ContributeConstraintsSystemResidualToVector{
-            constraints.target_node_freedom_table, constraints.system_residual_terms, solver.b
+            constraints.target_node_freedom_table, constraints.target_active_dofs,
+            constraints.system_residual_terms, solver.b
         }
     );
 

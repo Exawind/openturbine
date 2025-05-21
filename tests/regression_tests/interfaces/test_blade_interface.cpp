@@ -43,7 +43,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
                 blade_axis["y"][i].as<double>(),
                 blade_axis["z"][i].as<double>(),
             },
-            'Z'
+            interfaces::components::ReferenceAxisOrientation::Z
         );
     }
 
@@ -119,7 +119,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
                 {k15[i], k25[i], k35[i], k45[i], k55[i], k56[i]},
                 {k16[i], k26[i], k36[i], k46[i], k56[i], k66[i]},
             }},
-            'Z'  // reference axis is along Z
+            interfaces::components::ReferenceAxisOrientation::Z
         );
     }
 
@@ -150,13 +150,13 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         interface.WriteOutputVTK();
     }
 
-    EXPECT_NEAR(tip_node.position[0], 117.00015677507447, 1e-10);
-    EXPECT_NEAR(tip_node.position[1], 0.17029757162527367, 1e-10);
-    EXPECT_NEAR(tip_node.position[2], 4.0018470825686112, 1e-10);
-    EXPECT_NEAR(tip_node.position[3], 0.99867645870262833, 1e-10);
-    EXPECT_NEAR(tip_node.position[4], -0.0017331183376092, 1e-10);
-    EXPECT_NEAR(tip_node.position[5], -0.051119189822748511, 1e-10);
-    EXPECT_NEAR(tip_node.position[6], 0.005399589417025623, 1e-10);
+    EXPECT_NEAR(tip_node.position[0], 117.00012960730839, 1e-10);
+    EXPECT_NEAR(tip_node.position[1], 0.1703315069675968, 1e-10);
+    EXPECT_NEAR(tip_node.position[2], 4.0021291879233418, 1e-10);
+    EXPECT_NEAR(tip_node.position[3], 0.9987613005270843, 1e-10);
+    EXPECT_NEAR(tip_node.position[4], -0.001514812181144, 1e-10);
+    EXPECT_NEAR(tip_node.position[5], -0.049439491482141, 1e-10);
+    EXPECT_NEAR(tip_node.position[6], 0.0054135566396299, 1e-10);
 }
 
 TEST(BladeInterfaceTest, RotatingBeam) {
@@ -196,7 +196,9 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
     // Add reference axis coordinates and twist
     for (const auto s : node_s) {
-        builder.Blade().AddRefAxisPoint(s, {10. * s, 0., 0.});
+        builder.Blade().AddRefAxisPoint(
+            s, {10. * s, 0., 0.}, interfaces::components::ReferenceAxisOrientation::X
+        );
     }
 
     // Beam section locations
@@ -224,7 +226,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
                 std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
                 std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
                 std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
-            }
+            },
+            interfaces::components::ReferenceAxisOrientation::X
         );
     }
 
@@ -352,7 +355,9 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .AddRefAxisTwist(1., 0.);
 
     for (const auto s : kp_s) {
-        builder.Blade().AddRefAxisPoint(s, {s * 10., 0., 0.});
+        builder.Blade().AddRefAxisPoint(
+            s, {s * 10., 0., 0.}, interfaces::components::ReferenceAxisOrientation::X
+        );
     }
 
     // Beam section locations
@@ -377,7 +382,8 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
                 std::array{0., 0., 0., 8.16e3, 0., 0.},
                 std::array{0., 0., 0., 0., 86.9e3, 0.},
                 std::array{0., 0., 0., 0., 0., 215.e3},
-            }
+            },
+            interfaces::components::ReferenceAxisOrientation::X
         );
     }
 

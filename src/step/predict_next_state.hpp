@@ -11,7 +11,8 @@
 
 namespace openturbine {
 
-inline void PredictNextState(StepParameters& parameters, State& state) {
+template <typename DeviceType>
+inline void PredictNextState(StepParameters& parameters, State<DeviceType>& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Predict Next State");
     Kokkos::deep_copy(state.q_prev, state.q);
 

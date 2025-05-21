@@ -23,7 +23,10 @@
 
 namespace openturbine::tests {
 
-inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filename) {
+template <typename DeviceType>
+inline void WriteVTKBeamsQP(
+    State<DeviceType>& state, Beams<DeviceType>& beams, const std::string& filename
+) {
     // Compute state values at quadrature points
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
@@ -48,8 +51,8 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     );
 
     // Get a copy of the beam element indices in the host space
-    auto num_qps_per_element = Kokkos::create_mirror(beams.num_qps_per_element);
-    Kokkos::deep_copy(num_qps_per_element, beams.num_qps_per_element);
+    auto num_qps_per_element =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.num_qps_per_element);
 
     // Create a grid object and add the points to it.
     const auto gd = vtkNew<vtkUnstructuredGrid>();
@@ -73,8 +76,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     //--------------------------------------------------------------------------
 
     // Create qp position points
-    auto qp_x = Kokkos::create_mirror(beams.qp_x);
-    Kokkos::deep_copy(qp_x, beams.qp_x);
+    auto qp_x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.qp_x);
     const auto qp_pos = vtkNew<vtkPoints>();
     for (size_t j = 0; j < beams.num_elems; ++j) {
         for (size_t k = 0; k < num_qps_per_element(j); ++k) {
@@ -122,8 +124,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     const auto translational_velocity = vtkNew<vtkFloatArray>();
     translational_velocity->SetNumberOfComponents(3);
     translational_velocity->SetName("TranslationalVelocity");
-    const auto qp_u_dot = Kokkos::create_mirror(beams.qp_u_dot);
-    Kokkos::deep_copy(qp_u_dot, beams.qp_u_dot);
+    const auto qp_u_dot = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.qp_u_dot);
     for (auto el = 0U; el < beams.num_elems; ++el) {
         for (auto p = 0U; p < num_qps_per_element(el); ++p) {
             const auto tv = std::array{qp_u_dot(el, p, 0), qp_u_dot(el, p, 1), qp_u_dot(el, p, 2)};
@@ -136,8 +137,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     const auto rotational_velocity = vtkNew<vtkFloatArray>();
     rotational_velocity->SetNumberOfComponents(3);
     rotational_velocity->SetName("RotationalVelocity");
-    const auto qp_omega = Kokkos::create_mirror(beams.qp_omega);
-    Kokkos::deep_copy(qp_omega, beams.qp_omega);
+    const auto qp_omega = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.qp_omega);
     for (auto el = 0U; el < beams.num_elems; ++el) {
         for (auto p = 0U; p < num_qps_per_element(el); ++p) {
             const auto rv = std::array{qp_omega(el, p, 0), qp_omega(el, p, 1), qp_omega(el, p, 2)};
@@ -185,8 +185,7 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     // Loads
     //--------------------------------------------------------------------------
 
-    const auto qp_Fe = Kokkos::create_mirror(beams.qp_Fe);
-    Kokkos::deep_copy(qp_Fe, beams.qp_Fe);
+    const auto qp_Fe = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.qp_Fe);
 
     // Add translational acceleration point data
     const auto force = vtkNew<vtkFloatArray>();
@@ -233,8 +232,8 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
             beams.qp_deformation,
         }
     );
-    auto qp_deformation = Kokkos::create_mirror(beams.qp_deformation);
-    Kokkos::deep_copy(qp_deformation, beams.qp_deformation);
+    auto qp_deformation =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.qp_deformation);
     for (auto i = 0U; i < beams.num_elems; ++i) {
         // Get the undeformed shape
         auto num_qps = num_qps_per_element(i);
@@ -257,7 +256,10 @@ inline void WriteVTKBeamsQP(State& state, Beams& beams, const std::string& filen
     writer->Write();
 }
 
-inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& filename) {
+template <typename DeviceType>
+inline void WriteVTKBeamsNodes(
+    State<DeviceType>& state, Beams<DeviceType>& beams, const std::string& filename
+) {
     // Compute value of state at beam nodes
     auto range_policy = Kokkos::TeamPolicy<>(static_cast<int>(beams.num_elems), Kokkos::AUTO());
     const auto smem = 3 * Kokkos::View<double* [7]>::shmem_size(beams.max_elem_nodes);
@@ -272,8 +274,8 @@ inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& fi
     );
 
     // Get a copy of the beam element indices in the host space
-    auto num_nodes_per_element = Kokkos::create_mirror(beams.num_nodes_per_element);
-    Kokkos::deep_copy(num_nodes_per_element, beams.num_nodes_per_element);
+    auto num_nodes_per_element =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.num_nodes_per_element);
 
     // Create a grid object and add the points to it.
     const auto gd = vtkNew<vtkUnstructuredGrid>();
@@ -296,11 +298,9 @@ inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& fi
     // Position
     //--------------------------------------------------------------------------
 
-    auto node_x0 = Kokkos::create_mirror(beams.node_x0);
-    Kokkos::deep_copy(node_x0, beams.node_x0);
+    auto node_x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.node_x0);
 
-    auto node_u = Kokkos::create_mirror(beams.node_u);
-    Kokkos::deep_copy(node_u, beams.node_u);
+    auto node_u = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.node_u);
 
     // Create qp position points
     const auto node_pos = vtkNew<vtkPoints>();
@@ -347,8 +347,8 @@ inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& fi
     // Velocity
     //--------------------------------------------------------------------------
 
-    const auto node_u_dot = Kokkos::create_mirror(beams.node_u_dot);
-    Kokkos::deep_copy(node_u_dot, beams.node_u_dot);
+    const auto node_u_dot =
+        Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.node_u_dot);
 
     // Add translational velocity point data
     const auto translational_velocity = vtkNew<vtkFloatArray>();
@@ -414,8 +414,7 @@ inline void WriteVTKBeamsNodes(State& state, Beams& beams, const std::string& fi
     // Loads
     //--------------------------------------------------------------------------
 
-    const auto node_FX = Kokkos::create_mirror(beams.node_FX);
-    Kokkos::deep_copy(node_FX, beams.node_FX);
+    const auto node_FX = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.node_FX);
 
     // Add translational acceleration point data
     const auto force = vtkNew<vtkFloatArray>();
