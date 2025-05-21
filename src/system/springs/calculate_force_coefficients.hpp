@@ -7,13 +7,13 @@
 
 namespace openturbine::springs {
 
-KOKKOS_FUNCTION
-inline double CalculateForceCoefficient1(double k, double l_ref, double l) {
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION double CalculateForceCoefficient1(double k, double l_ref, double l) {
     return k * (l_ref / l - 1.);
 }
 
-KOKKOS_FUNCTION
-inline double CalculateForceCoefficient2(double k, double l_ref, double l) {
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION double CalculateForceCoefficient2(double k, double l_ref, double l) {
     return k * l_ref / (l * l * l);
 }
 

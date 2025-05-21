@@ -7,11 +7,12 @@
 
 namespace openturbine::beams {
 
-KOKKOS_FUNCTION
-inline void CalculateQuu(
-    const Kokkos::View<double[6][6]>::const_type& Cuu,
-    const Kokkos::View<double[3][3]>::const_type& x0pupSS,
-    const Kokkos::View<double[3][3]>::const_type& N_tilde, const Kokkos::View<double[6][6]>& Quu
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateQuu(
+    const typename Kokkos::View<double[6][6], DeviceType>::const_type& Cuu,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& x0pupSS,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& N_tilde,
+    const Kokkos::View<double[6][6], DeviceType>& Quu
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
     using Transpose = KokkosBatched::Trans::Transpose;

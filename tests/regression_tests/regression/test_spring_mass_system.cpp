@@ -28,6 +28,7 @@ namespace openturbine::tests {
  * /|o---/\/\/--- ( M )o---->
  * /|
  */
+template <typename DeviceType>
 inline auto SetUpSpringMassSystem() {
     auto model = Model();
 
@@ -72,7 +73,7 @@ inline auto SetUpSpringMassSystem() {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Create solver, elements, constraints, and state
-    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
+    auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<DeviceType>();
 
     // Create host mirror for checking solution
     auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
@@ -101,7 +102,14 @@ inline auto SetUpSpringMassSystem() {
 }
 
 TEST(SpringMassSystemTest, FinalDisplacement) {
-    SetUpSpringMassSystem();
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    SetUpSpringMassSystem<DeviceType>();
+}
+
+TEST(SpringMassSystemTest, FinalDisplacement_Host) {
+    using DeviceType = Kokkos::Device<Kokkos::Serial, Kokkos::HostSpace>;
+    SetUpSpringMassSystem<DeviceType>();
 }
 
 /*

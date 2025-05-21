@@ -17,7 +17,9 @@ void TestCalculateTemporaryVariables() {
     Kokkos::parallel_for(
         "CalculateTemporaryVariables", 1,
         KOKKOS_LAMBDA(size_t) {
-            openturbine::beams::CalculateTemporaryVariables(x0_prime, u_prime, x0pupSS);
+            openturbine::beams::CalculateTemporaryVariables<Kokkos::DefaultExecutionSpace>(
+                x0_prime, u_prime, x0pupSS
+            );
         }
     );
 

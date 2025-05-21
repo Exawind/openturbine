@@ -9,16 +9,16 @@
 
 namespace openturbine {
 
-KOKKOS_FUNCTION
-inline void CalculateRotationControlConstraint(
-    const Kokkos::View<double[3]>::const_type& X0,
-    const Kokkos::View<double[3][3]>::const_type& axes,
-    const Kokkos::View<double[7]>::const_type& inputs,
-    const Kokkos::View<double[7]>::const_type& base_node_u,
-    const Kokkos::View<double[7]>::const_type& target_node_u,
-    const Kokkos::View<double[6]>& residual_terms,
-    const Kokkos::View<double[6][6]>& base_gradient_terms,
-    const Kokkos::View<double[6][6]>& target_gradient_terms
+template <typename DeviceType>
+KOKKOS_INLINE_FUNCTION void CalculateRotationControlConstraint(
+    const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
+    const typename Kokkos::View<double[3][3], DeviceType>::const_type& axes,
+    const typename Kokkos::View<double[7], DeviceType>::const_type& inputs,
+    const typename Kokkos::View<double[7], DeviceType>::const_type& base_node_u,
+    const typename Kokkos::View<double[7], DeviceType>::const_type& target_node_u,
+    const Kokkos::View<double[6], DeviceType>& residual_terms,
+    const Kokkos::View<double[6][6], DeviceType>& base_gradient_terms,
+    const Kokkos::View<double[6][6], DeviceType>& target_gradient_terms
 ) {
     const auto ub_data = Kokkos::Array<double, 3>{base_node_u(0), base_node_u(1), base_node_u(2)};
     const auto Rb_data =
@@ -40,21 +40,21 @@ inline void CalculateRotationControlConstraint(
     auto C_data = Kokkos::Array<double, 9>{};
     auto V3_data = Kokkos::Array<double, 3>{};
 
-    const auto ub = Kokkos::View<double[3]>::const_type{ub_data.data()};
-    const auto Rb = Kokkos::View<double[4]>::const_type{Rb_data.data()};
-    const auto ut = Kokkos::View<double[3]>::const_type{ut_data.data()};
-    const auto Rt = Kokkos::View<double[4]>::const_type{Rt_data.data()};
-    const auto AX = Kokkos::View<double[3]>{AX_data.data()};
-    const auto RV = Kokkos::View<double[3]>{RV_data.data()};
-    const auto Rc = Kokkos::View<double[4]>{Rc_data.data()};
-    const auto RcT = Kokkos::View<double[4]>{RcT_data.data()};
-    const auto RbT = Kokkos::View<double[4]>{RbT_data.data()};
-    const auto Rb_X0 = Kokkos::View<double[4]>{Rb_X0_data.data()};
-    const auto Rt_RcT = Kokkos::View<double[4]>{Rt_RcT_data.data()};
-    const auto Rt_RcT_RbT = Kokkos::View<double[4]>{Rt_RcT_RbT_data.data()};
-    const auto A = Kokkos::View<double[3][3]>{A_data.data()};
-    const auto C = Kokkos::View<double[3][3]>{C_data.data()};
-    const auto V3 = Kokkos::View<double[3]>{V3_data.data()};
+    const auto ub = typename Kokkos::View<double[3], DeviceType>::const_type{ub_data.data()};
+    const auto Rb = typename Kokkos::View<double[4], DeviceType>::const_type{Rb_data.data()};
+    const auto ut = typename Kokkos::View<double[3], DeviceType>::const_type{ut_data.data()};
+    const auto Rt = typename Kokkos::View<double[4], DeviceType>::const_type{Rt_data.data()};
+    const auto AX = Kokkos::View<double[3], DeviceType>{AX_data.data()};
+    const auto RV = Kokkos::View<double[3], DeviceType>{RV_data.data()};
+    const auto Rc = Kokkos::View<double[4], DeviceType>{Rc_data.data()};
+    const auto RcT = Kokkos::View<double[4], DeviceType>{RcT_data.data()};
+    const auto RbT = Kokkos::View<double[4], DeviceType>{RbT_data.data()};
+    const auto Rb_X0 = Kokkos::View<double[4], DeviceType>{Rb_X0_data.data()};
+    const auto Rt_RcT = Kokkos::View<double[4], DeviceType>{Rt_RcT_data.data()};
+    const auto Rt_RcT_RbT = Kokkos::View<double[4], DeviceType>{Rt_RcT_RbT_data.data()};
+    const auto A = Kokkos::View<double[3][3], DeviceType>{A_data.data()};
+    const auto C = Kokkos::View<double[3][3], DeviceType>{C_data.data()};
+    const auto V3 = Kokkos::View<double[3], DeviceType>{V3_data.data()};
 
     //----------------------------------------------------------------------
     // Position residual
