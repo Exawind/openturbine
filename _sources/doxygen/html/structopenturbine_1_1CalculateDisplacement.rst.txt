@@ -1,11 +1,11 @@
-.. meta::c4b009b1508272cf72d004e3d17a29d286132ff6a8d20d159ae41a310d251ae0ebcb374cbde034b233d82ab0dcf3f7ed3bb2e359d877314c6c78df98631940a0
+.. meta::98c592ae55a3107f0057c53798e83e90ca90e69d5385a92103b91fb5445ff65416a2a7d6710f9c2b315e361b937f405e576fbbc2198d4adf1e379b3cd2a2562f
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateDisplacement Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateDisplacement&lt; DeviceType &gt; Struct Template Reference
 
-CalculateDisplacement Struct Reference
-======================================
+CalculateDisplacement&lt; DeviceType &gt; Struct Template Reference
+===================================================================
 
 .. container:: doxygen-content
 

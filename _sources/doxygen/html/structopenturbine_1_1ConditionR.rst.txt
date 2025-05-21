@@ -1,11 +1,11 @@
-.. meta::316d20ec0aa80cf3619c4a63ba76765cef491251031477f2abcb4d2bb24f9fd0ad7b942a9adab0285ec356a3e4395a1fdc7f59bba228ef662b61873ac47dd433
+.. meta::8af4d05f60825cfb5f9aac114d5c267cdc81d8b5591cbccfa87abae5df90df0911d17d1aa00b9ac8db017ccb9d876ec1dc182f1a6e863d89834d63586dbb1c31
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ConditionR Struct Reference
+.. title:: OpenTurbine API: openturbine::ConditionR&lt; DeviceType &gt; Struct Template Reference
 
-ConditionR Struct Reference
-===========================
+ConditionR&lt; DeviceType &gt; Struct Template Reference
+========================================================
 
 .. container:: doxygen-content
 

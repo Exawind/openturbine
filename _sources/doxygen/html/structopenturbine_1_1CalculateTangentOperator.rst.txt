@@ -1,11 +1,11 @@
-.. meta::2a6226e3d8b5a311a71b6aedf00e9d0fb3418314a99580632b5e653cfffe4442676793f6c50f707e5ddc600135a2707c93384806ba99f4f72f1b5244bccfd9ea
+.. meta::927d164d95ad15b187f13e2919fb2a04398e8c29765c9b8cde0f1601f56c982d727e63df4a70fccabaf3d320640d16ac4729471cdaf6d0d4d471f30b9caec805
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateTangentOperator Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateTangentOperator&lt; DeviceType &gt; Struct Template Reference
 
-CalculateTangentOperator Struct Reference
-=========================================
+CalculateTangentOperator&lt; DeviceType &gt; Struct Template Reference
+======================================================================
 
 .. container:: doxygen-content
 

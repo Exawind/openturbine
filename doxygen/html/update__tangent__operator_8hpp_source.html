@@ -190,23 +190,24 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445">   13</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445">UpdateTangentOperator</a>(<a class="code hl_struct" href="structopenturbine_1_1StepParameters.html">StepParameters</a>&amp; parameters, <a class="code hl_struct" href="structopenturbine_1_1State.html">State&lt;DeviceType&gt;</a>&amp; state) {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">auto</span> region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Update Tangent Operator&quot;</span>);</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="stringliteral">&quot;CalculateTangentOperator&quot;</span>, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a>,</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator</a>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            parameters.h,</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            state.q_delta,</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            state.tangent,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        }</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    );</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="stringliteral">&quot;CalculateTangentOperator&quot;</span>,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a>),</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>            parameters.h,</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            state.q_delta,</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            state.tangent,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        }</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    );</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>}</div>
 </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="acalculate__tangent__operator_8hpp_html"><div class="ttname"><a href="calculate__tangent__operator_8hpp.html">calculate_tangent_operator.hpp</a></div></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a6bce4a0ea133697b8166de3f32939445"><div class="ttname"><a href="namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445">openturbine::UpdateTangentOperator</a></div><div class="ttdeci">void UpdateTangentOperator(StepParameters &amp;parameters, State&lt; DeviceType &gt; &amp;state)</div><div class="ttdef"><b>Definition</b> update_tangent_operator.hpp:13</div></div>
 <div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
 <div class="ttc" id="astep__parameters_8hpp_html"><div class="ttname"><a href="step__parameters_8hpp.html">step_parameters.hpp</a></div></div>
-<div class="ttc" id="astructopenturbine_1_1CalculateTangentOperator_html"><div class="ttname"><a href="structopenturbine_1_1CalculateTangentOperator.html">openturbine::CalculateTangentOperator</a></div><div class="ttdef"><b>Definition</b> calculate_tangent_operator.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateTangentOperator_html"><div class="ttname"><a href="structopenturbine_1_1CalculateTangentOperator.html">openturbine::CalculateTangentOperator</a></div><div class="ttdef"><b>Definition</b> calculate_tangent_operator.hpp:13</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html"><div class="ttname"><a href="structopenturbine_1_1State.html">openturbine::State</a></div><div class="ttdef"><b>Definition</b> state.hpp:18</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html_a6a604bf52063fa2e7380b3a38d190aa3"><div class="ttname"><a href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">openturbine::State::num_system_nodes</a></div><div class="ttdeci">size_t num_system_nodes</div><div class="ttdef"><b>Definition</b> state.hpp:19</div></div>
 <div class="ttc" id="astructopenturbine_1_1StepParameters_html"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html">openturbine::StepParameters</a></div><div class="ttdef"><b>Definition</b> step_parameters.hpp:7</div></div>

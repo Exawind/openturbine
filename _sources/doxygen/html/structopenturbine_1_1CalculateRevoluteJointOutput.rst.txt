@@ -1,11 +1,11 @@
-.. meta::9ce7d7bdb7e14b94eb096eb4d8d57595bf18f79c796b95f64211ff826a6ef36f78d3461c1c16a222e200c920f287bcebef93b3237fba76c4519b64ea6148d347
+.. meta::b1d4cb3ae0ada89e260790409b8afdd0f297fe2afae04cdacb50a279def8f5032d3b1136e27f1523e245113db2cb3019a818d146a815fbb4163eb98182ad03c1
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateRevoluteJointOutput Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateRevoluteJointOutput&lt; DeviceType &gt; Struct Template Reference
 
-CalculateRevoluteJointOutput Struct Reference
-=============================================
+CalculateRevoluteJointOutput&lt; DeviceType &gt; Struct Template Reference
+==========================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::c82a3b7a68984e031bb3fe6fd2a093bad9691be3e4acf88d2de4f84222ebb28853d717df54ed1fad1338cb7a86c7b81f5686e4a2f92f84a8edb9bb428082da13
+.. meta::3d11deb7f7591bce5cfcd2d08edee5015daddc97cbd5cc279fbd8e66a0db7a274471b81c6031613702fc92bdd2ebc92bb57ac0d8251feaf94404f6ea1f6b4795
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateNextState Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateNextState&lt; DeviceType &gt; Struct Template Reference
 
-CalculateNextState Struct Reference
-===================================
+CalculateNextState&lt; DeviceType &gt; Struct Template Reference
+================================================================
 
 .. container:: doxygen-content
 

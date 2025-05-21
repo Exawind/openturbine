@@ -1,11 +1,11 @@
-.. meta::8361d0859230bd690dde3a626ab38dba3f84a6f698af0b21f71e92c29be6206aa0fbad6522cfce991608bede02b294f8ac10c9d2231e2600abdaddbcc5eb98de
+.. meta::9cfa44bf96da59763402d69b876dcebcd7431f22130bea5ebff276ff9da3ab93c3b41b920a41cf28f792334be66acbde90807453ea1feb47c5b7f9dfa50a8c03
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::CalculateStiffnessQuadraturePointValues Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::CalculateStiffnessQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
 
-CalculateStiffnessQuadraturePointValues Struct Reference
-========================================================
+CalculateStiffnessQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
+=====================================================================================
 
 .. container:: doxygen-content
 

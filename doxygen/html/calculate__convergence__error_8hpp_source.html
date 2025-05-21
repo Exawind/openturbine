@@ -196,8 +196,8 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">auto</span> region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Calculate Convergence Error&quot;</span>);</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">double</span> sum_error_squared = 0.;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    Kokkos::parallel_reduce(</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a>,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateSystemErrorSumSquares.html">CalculateSystemErrorSumSquares</a>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a>),</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateSystemErrorSumSquares.html">CalculateSystemErrorSumSquares&lt;DeviceType&gt;</a>{</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            parameters.absolute_convergence_tol,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            parameters.relative_convergence_tol,</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            parameters.h,</div>
@@ -209,8 +209,8 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        sum_error_squared</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    );</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    Kokkos::parallel_reduce(</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">num_constraints</a>,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html">CalculateConstraintsErrorSumSquares</a>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">num_constraints</a>),</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html">CalculateConstraintsErrorSumSquares&lt;DeviceType&gt;</a>{</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            parameters.absolute_convergence_tol,</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            parameters.relative_convergence_tol,</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            solver.num_system_dofs,</div>
@@ -233,8 +233,8 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="asolver_8hpp_html"><div class="ttname"><a href="solver_8hpp.html">solver.hpp</a></div></div>
 <div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
 <div class="ttc" id="astep__parameters_8hpp_html"><div class="ttname"><a href="step__parameters_8hpp.html">step_parameters.hpp</a></div></div>
-<div class="ttc" id="astructopenturbine_1_1CalculateConstraintsErrorSumSquares_html"><div class="ttname"><a href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html">openturbine::CalculateConstraintsErrorSumSquares</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:29</div></div>
-<div class="ttc" id="astructopenturbine_1_1CalculateSystemErrorSumSquares_html"><div class="ttname"><a href="structopenturbine_1_1CalculateSystemErrorSumSquares.html">openturbine::CalculateSystemErrorSumSquares</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:7</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateConstraintsErrorSumSquares_html"><div class="ttname"><a href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html">openturbine::CalculateConstraintsErrorSumSquares</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateSystemErrorSumSquares_html"><div class="ttname"><a href="structopenturbine_1_1CalculateSystemErrorSumSquares.html">openturbine::CalculateSystemErrorSumSquares</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html"><div class="ttname"><a href="structopenturbine_1_1Constraints.html">openturbine::Constraints</a></div><div class="ttdoc">Container class for managing multiple constraints in a simulation.</div><div class="ttdef"><b>Definition</b> constraints.hpp:26</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html_a059227bdad44685e6b29146caa38e0e3"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">openturbine::Constraints::num_constraints</a></div><div class="ttdeci">size_t num_constraints</div><div class="ttdef"><b>Definition</b> constraints.hpp:27</div></div>
 <div class="ttc" id="astructopenturbine_1_1Solver_html"><div class="ttname"><a href="structopenturbine_1_1Solver.html">openturbine::Solver</a></div><div class="ttdoc">A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine....</div><div class="ttdef"><b>Definition</b> solver.hpp:32</div></div>

@@ -179,6 +179,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a22a83a2906bc4137627d481f8e935816" id="r_a22a83a2906bc4137627d481f8e935816"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a> = typename CrsMatrixType::device_type</td></tr>
+<tr class="separator:a22a83a2906bc4137627d481f8e935816"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a607e9ca91bc72f3393d9f8b5ea59f835" id="r_a607e9ca91bc72f3393d9f8b5ea59f835"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a607e9ca91bc72f3393d9f8b5ea59f835">RowDataType</a> = typename CrsMatrixType::values_type::non_const_type</td></tr>
 <tr class="separator:a607e9ca91bc72f3393d9f8b5ea59f835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8d456b12a9a7fbcdd11f77681ab788e" id="r_ab8d456b12a9a7fbcdd11f77681ab788e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#ab8d456b12a9a7fbcdd11f77681ab788e">ColIdxType</a> = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type</td></tr>
@@ -193,12 +195,12 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2b7adec751e15273ea7b094edb9ea2b8" id="r_a2b7adec751e15273ea7b094edb9ea2b8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a2b7adec751e15273ea7b094edb9ea2b8">conditioner</a> {}</td></tr>
 <tr class="separator:a2b7adec751e15273ea7b094edb9ea2b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a608c841634cebc80e25f53104af1547f" id="r_a608c841634cebc80e25f53104af1547f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *[2]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a608c841634cebc80e25f53104af1547f">element_freedom_signature</a></td></tr>
-<tr class="separator:a608c841634cebc80e25f53104af1547f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a660071ccc9fcc4720a7e95abb3132ebc" id="r_a660071ccc9fcc4720a7e95abb3132ebc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[2][3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a660071ccc9fcc4720a7e95abb3132ebc">element_freedom_table</a></td></tr>
-<tr class="separator:a660071ccc9fcc4720a7e95abb3132ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af51354f3798a6b16f34741ce727e704f" id="r_af51354f3798a6b16f34741ce727e704f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[2][2][3][3]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#af51354f3798a6b16f34741ce727e704f">dense</a></td></tr>
-<tr class="separator:af51354f3798a6b16f34741ce727e704f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1b344b25dc433192cecae20adc2c12" id="r_adb1b344b25dc433192cecae20adc2c12"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *[2], <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#adb1b344b25dc433192cecae20adc2c12">element_freedom_signature</a></td></tr>
+<tr class="separator:adb1b344b25dc433192cecae20adc2c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c94626da78495739f0b44e47928bced" id="r_a8c94626da78495739f0b44e47928bced"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[2][3], <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a8c94626da78495739f0b44e47928bced">element_freedom_table</a></td></tr>
+<tr class="separator:a8c94626da78495739f0b44e47928bced"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a258a04d409f622138659eabc965bf050" id="r_a258a04d409f622138659eabc965bf050"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[2][2][3][3], <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a258a04d409f622138659eabc965bf050">dense</a></td></tr>
+<tr class="separator:a258a04d409f622138659eabc965bf050"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1423f0fdc5fa82178039d806eebcd26e" id="r_a1423f0fdc5fa82178039d806eebcd26e"><td class="memItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a1423f0fdc5fa82178039d806eebcd26e">sparse</a></td></tr>
 <tr class="separator:a1423f0fdc5fa82178039d806eebcd26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -213,6 +215,22 @@ template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::ColIdxType =  typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a22a83a2906bc4137627d481f8e935816" name="a22a83a2906bc4137627d481f8e935816"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22a83a2906bc4137627d481f8e935816">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename CrsMatrixType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::DeviceType =  typename CrsMatrixType::device_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -281,8 +299,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
-<a id="af51354f3798a6b16f34741ce727e704f" name="af51354f3798a6b16f34741ce727e704f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af51354f3798a6b16f34741ce727e704f">&#9670;&#160;</a></span>dense</h2>
+<a id="a258a04d409f622138659eabc965bf050" name="a258a04d409f622138659eabc965bf050"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a258a04d409f622138659eabc965bf050">&#9670;&#160;</a></span>dense</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,15 +308,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[2][2][3][3]&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::dense</td>
+          <td class="memname">Kokkos::View&lt;double*[2][2][3][3],<a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::dense</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a608c841634cebc80e25f53104af1547f" name="a608c841634cebc80e25f53104af1547f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a608c841634cebc80e25f53104af1547f">&#9670;&#160;</a></span>element_freedom_signature</h2>
+<a id="adb1b344b25dc433192cecae20adc2c12" name="adb1b344b25dc433192cecae20adc2c12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1b344b25dc433192cecae20adc2c12">&#9670;&#160;</a></span>element_freedom_signature</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -306,15 +324,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*[2]&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::element_freedom_signature</td>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*[2],<a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::element_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a660071ccc9fcc4720a7e95abb3132ebc" name="a660071ccc9fcc4720a7e95abb3132ebc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a660071ccc9fcc4720a7e95abb3132ebc">&#9670;&#160;</a></span>element_freedom_table</h2>
+<a id="a8c94626da78495739f0b44e47928bced" name="a8c94626da78495739f0b44e47928bced"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c94626da78495739f0b44e47928bced">&#9670;&#160;</a></span>element_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +340,7 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*[2][3]&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::element_freedom_table</td>
+          <td class="memname">Kokkos::View&lt;size_t*[2][3],<a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a22a83a2906bc4137627d481f8e935816">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::element_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">

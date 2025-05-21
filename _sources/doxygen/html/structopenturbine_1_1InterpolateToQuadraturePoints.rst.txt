@@ -1,11 +1,11 @@
-.. meta::f9b32ce3ba258ea1a73b39f37723a3993909d6da2e54f70f29ce5376ddcae70c85a46b0cacc615f8faa8e694b93dd678b3d06a5081112fbad719635d54af54f6
+.. meta::c460e7c67f3d97680ac19c2bcc4742f78c6208b64b40b00f6b824fe91f7b5c71fc84e948fc44a2f52cf4eb6a94b101d69957213d24e41c19c52dc09afe9e1296
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::InterpolateToQuadraturePoints Struct Reference
+.. title:: OpenTurbine API: openturbine::InterpolateToQuadraturePoints&lt; DeviceType &gt; Struct Template Reference
 
-InterpolateToQuadraturePoints Struct Reference
-==============================================
+InterpolateToQuadraturePoints&lt; DeviceType &gt; Struct Template Reference
+===========================================================================
 
 .. container:: doxygen-content
 

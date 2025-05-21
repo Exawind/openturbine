@@ -1,11 +1,11 @@
-.. meta::e608e451707f944782dc0f7ecefd7a7add97dc2bc2ca79978028534dd1ba77c1d1b1618e563bc161726df662c64e75f36e4e98c4fd5a745404dcf7b94456107d
+.. meta::9dc71484091c1e836ee03639cf8d05c2e1a9e6322dbb63dbebbd6d3ed8c40d3904013ee8f9b7e7b9e0a35aeddfbd1899f15e5a2dd78b1fb93744bfcf4f4f810e
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::UpdateStaticPrediction Struct Reference
+.. title:: OpenTurbine API: openturbine::UpdateStaticPrediction&lt; DeviceType &gt; Struct Template Reference
 
-UpdateStaticPrediction Struct Reference
-=======================================
+UpdateStaticPrediction&lt; DeviceType &gt; Struct Template Reference
+====================================================================
 
 .. container:: doxygen-content
 

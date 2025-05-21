@@ -191,12 +191,12 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2370e24525afa10b086ae27ccc388b4f" id="r_a2370e24525afa10b086ae27ccc388b4f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a2370e24525afa10b086ae27ccc388b4f">num_system_dofs</a> {}</td></tr>
 <tr class="separator:a2370e24525afa10b086ae27ccc388b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a157ff927f5fae353b31a292f68ee7167" id="r_a157ff927f5fae353b31a292f68ee7167"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a157ff927f5fae353b31a292f68ee7167">base_active_dofs</a></td></tr>
-<tr class="separator:a157ff927f5fae353b31a292f68ee7167"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bbff0533ab0380ccfa5a7d0852084a1" id="r_a1bbff0533ab0380ccfa5a7d0852084a1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a1bbff0533ab0380ccfa5a7d0852084a1">target_active_dofs</a></td></tr>
-<tr class="separator:a1bbff0533ab0380ccfa5a7d0852084a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ae0ae6fe0f045fda0d702a6ab21ddfb" id="r_a8ae0ae6fe0f045fda0d702a6ab21ddfb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a8ae0ae6fe0f045fda0d702a6ab21ddfb">row_range</a></td></tr>
-<tr class="separator:a8ae0ae6fe0f045fda0d702a6ab21ddfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a679f9753f649b14c8150e173e20ce7" id="r_a8a679f9753f649b14c8150e173e20ce7"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, typenameRowPtrType::device_type &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a8a679f9753f649b14c8150e173e20ce7">base_active_dofs</a></td></tr>
+<tr class="separator:a8a679f9753f649b14c8150e173e20ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a70b3b497521c99ba7005372ae4cfd8" id="r_a1a70b3b497521c99ba7005372ae4cfd8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, typenameRowPtrType::device_type &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a1a70b3b497521c99ba7005372ae4cfd8">target_active_dofs</a></td></tr>
+<tr class="separator:a1a70b3b497521c99ba7005372ae4cfd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee7151458bc1cfc10e930652abb0cc0" id="r_a2ee7151458bc1cfc10e930652abb0cc0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typenameRowPtrType::device_type &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a2ee7151458bc1cfc10e930652abb0cc0">row_range</a></td></tr>
+<tr class="separator:a2ee7151458bc1cfc10e930652abb0cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6537a4d140b068f69f963185df4ac1b5" id="r_a6537a4d140b068f69f963185df4ac1b5"><td class="memItemLeft" align="right" valign="top">RowPtrType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html#a6537a4d140b068f69f963185df4ac1b5">row_entries</a></td></tr>
 <tr class="separator:a6537a4d140b068f69f963185df4ac1b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -247,8 +247,8 @@ template&lt;typename RowPtrType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a157ff927f5fae353b31a292f68ee7167" name="a157ff927f5fae353b31a292f68ee7167"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a157ff927f5fae353b31a292f68ee7167">&#9670;&#160;</a></span>base_active_dofs</h2>
+<a id="a8a679f9753f649b14c8150e173e20ce7" name="a8a679f9753f649b14c8150e173e20ce7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a679f9753f649b14c8150e173e20ce7">&#9670;&#160;</a></span>base_active_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -256,7 +256,7 @@ template&lt;typename RowPtrType &gt; </div>
 template&lt;typename RowPtrType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::base_active_dofs</td>
+          <td class="memname">Kokkos::View&lt;size_t*,typenameRowPtrType::device_type&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::base_active_dofs</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -295,8 +295,8 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="a8ae0ae6fe0f045fda0d702a6ab21ddfb" name="a8ae0ae6fe0f045fda0d702a6ab21ddfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ae0ae6fe0f045fda0d702a6ab21ddfb">&#9670;&#160;</a></span>row_range</h2>
+<a id="a2ee7151458bc1cfc10e930652abb0cc0" name="a2ee7151458bc1cfc10e930652abb0cc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ee7151458bc1cfc10e930652abb0cc0">&#9670;&#160;</a></span>row_range</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -304,15 +304,15 @@ template&lt;typename RowPtrType &gt; </div>
 template&lt;typename RowPtrType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::row_range</td>
+          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*,typenameRowPtrType::device_type&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::row_range</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a1bbff0533ab0380ccfa5a7d0852084a1" name="a1bbff0533ab0380ccfa5a7d0852084a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1bbff0533ab0380ccfa5a7d0852084a1">&#9670;&#160;</a></span>target_active_dofs</h2>
+<a id="a1a70b3b497521c99ba7005372ae4cfd8" name="a1a70b3b497521c99ba7005372ae4cfd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a70b3b497521c99ba7005372ae4cfd8">&#9670;&#160;</a></span>target_active_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -320,7 +320,7 @@ template&lt;typename RowPtrType &gt; </div>
 template&lt;typename RowPtrType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::target_active_dofs</td>
+          <td class="memname">Kokkos::View&lt;size_t*,typenameRowPtrType::device_type&gt;::const_type <a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">openturbine::ComputeConstraintsRowEntries</a>&lt; RowPtrType &gt;::target_active_dofs</td>
         </tr>
       </table>
 </div><div class="memdoc">

@@ -1,11 +1,11 @@
-.. meta::1843485cc0f14bf3735f3fccf6fd7e49d5b27d15652f988a160e4d13fc21e8a22c420ceef1927ae1d89abebb3b7101dd4ce3d3a39a68ee455ed26231f3137729
+.. meta::730cd02cbb372f9ed0edf13df284766d94e1d8dd7e6312429af9c51b6bb40b25dbb1aac2ef4336459245d7f35add64f3029ef175ba272cbcb4204606004096c7
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Constraints Struct Reference
+.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Constraints&lt; DeviceType &gt; Struct Template Reference
 
-AssembleNodeFreedomMapTable\_Constraints Struct Reference
-=========================================================
+AssembleNodeFreedomMapTable\_Constraints&lt; DeviceType &gt; Struct Template Reference
+======================================================================================
 
 .. container:: doxygen-content
 

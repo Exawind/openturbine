@@ -1,11 +1,11 @@
-.. meta::2aa5bb90f71bce2e6d9a71475bbc5f3ca1bd7d232df3cbeeb00857ad6fa66bd834d163763a82835104d65d2690186037b38426f4947817e974270a2b6b48126b
+.. meta::79777dfe4818d730705adba2dde64cc875651350f9bc08e86f1438958c186a46d2eb9010e2d8a40a01739d5eb9aea6b28af9783982bd75a2065df3205ddadff3
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::IntegrateInertiaMatrixElement Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::IntegrateInertiaMatrixElement&lt; DeviceType &gt; Struct Template Reference
 
-IntegrateInertiaMatrixElement Struct Reference
-==============================================
+IntegrateInertiaMatrixElement&lt; DeviceType &gt; Struct Template Reference
+===========================================================================
 
 .. container:: doxygen-content
 

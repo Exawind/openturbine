@@ -1,11 +1,11 @@
-.. meta::8301e101887bfcb6aeed15af61dd1265a6e516e3c61ef91443c2dc6534328c09c08b15cb99791c651db87b95d9fadd368cfaeb2996260383fbe37f057bca2abe
+.. meta::e0de16bed31c2a14dd5e436a1405fe0f94b42445733ffd74d0c342981bbe529ab1ae047d9e4aba18af4d1ed68c4b1c55bbe3d5ac1115c770de18d25b8fe54723
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::InterpolateQPState_u Struct Reference
+.. title:: OpenTurbine API: openturbine::InterpolateQPState_u&lt; DeviceType &gt; Struct Template Reference
 
-InterpolateQPState\_u Struct Reference
-======================================
+InterpolateQPState\_u&lt; DeviceType &gt; Struct Template Reference
+===================================================================
 
 .. container:: doxygen-content
 

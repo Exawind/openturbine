@@ -1,11 +1,11 @@
-.. meta::cf36c572a3210a6156fe62cac66942992ecdd59e3ac521938a28a284567813c4a4dbe1d744362642e6f6ebb2b9f05ac8ce700afff264031196b877862acb2b52
+.. meta::889ae01d292b37dfe686384f965211844306382e45c50e99a82e5183437dd6a1948991301af28bec31c1758faa451b0f83b73b7e0225b967c4941fb69821f1da
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ContributeSpringsToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::ContributeSpringsToVector&lt; DeviceType &gt; Struct Template Reference
 
-ContributeSpringsToVector Struct Reference
-==========================================
+ContributeSpringsToVector&lt; DeviceType &gt; Struct Template Reference
+=======================================================================
 
 .. container:: doxygen-content
 

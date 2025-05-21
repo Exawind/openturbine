@@ -1,11 +1,11 @@
-.. meta::72b2861d48d5c12c33c36f22451e6c9718f59fd76d9c2cdaaa76c644d35dfd97b4e250ac1e2d670a15930044bfc73aca4e90e3c00de25613954ce8d2338397b5
+.. meta::4d93ec6be89ba3c132303f7dd685d6ed620c4d6bae72d3cba1868331869c66fdb972e88d0577d16cd6c1ec7c45fc884f8fa73a1071b599ffc3d444a4c7fba996
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateConstraintsErrorSumSquares Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateConstraintsErrorSumSquares&lt; DeviceType &gt; Struct Template Reference
 
-CalculateConstraintsErrorSumSquares Struct Reference
-====================================================
+CalculateConstraintsErrorSumSquares&lt; DeviceType &gt; Struct Template Reference
+=================================================================================
 
 .. container:: doxygen-content
 

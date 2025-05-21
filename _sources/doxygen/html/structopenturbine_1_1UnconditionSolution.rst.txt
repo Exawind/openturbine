@@ -1,11 +1,11 @@
-.. meta::cfe55e6c85eb21f7f67947acfa992e1065efa805d226678cfd1efc3005b3b090a6298ac31a54fe7e2cb9c44d4a4b18001dba7ee5b3c6528b7e5a3f32a94fd821
+.. meta::2442263edeb550847d5e113be6a8977d324db82dd891644696d4d3ee84aff7086d371fc3ec0c53673340862e2e6c4609741348be883dc06ef8dbe0e59933bde0
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::UnconditionSolution Struct Reference
+.. title:: OpenTurbine API: openturbine::UnconditionSolution&lt; DeviceType &gt; Struct Template Reference
 
-UnconditionSolution Struct Reference
-====================================
+UnconditionSolution&lt; DeviceType &gt; Struct Template Reference
+=================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::e1dcb9eb0552c5d085a44eec327284959d1b840a75f08063c75ce3ea58ea6b18554c4cc4d34a5d2fd39f2186d048c36d8cadf8dd0f20bc5e4714aceee6cb518d
+.. meta::92794a672a1005ec3f8af6ea4508ff01858ee8ae583eda3d789797c61b932ea9d8cfd81d69c2f487e88629e435fe82095240b0b2dcd6d1c2037a22a706cd1fb9
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateConstraintOutput Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateConstraintOutput&lt; DeviceType &gt; Struct Template Reference
 
-CalculateConstraintOutput Struct Reference
-==========================================
+CalculateConstraintOutput&lt; DeviceType &gt; Struct Template Reference
+=======================================================================
 
 .. container:: doxygen-content
 

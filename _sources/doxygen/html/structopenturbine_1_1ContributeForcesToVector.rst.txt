@@ -1,11 +1,11 @@
-.. meta::c40d6e4918a16b2a03faa13f1aa72070f5d051327faebfd4d38f7457a7561ec7171a601a42f419969d2ca7c8e1fb4834708eafc1e8ee1e3f4b3785dff9a34226
+.. meta::f84b5a80d999158bef81ff218440a16102915894937f19cc079230bf5417c90eea1c24f67fad40de94f295f92e571658d33006ce75daccb6247c3422567dec30
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ContributeForcesToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::ContributeForcesToVector&lt; DeviceType &gt; Struct Template Reference
 
-ContributeForcesToVector Struct Reference
-=========================================
+ContributeForcesToVector&lt; DeviceType &gt; Struct Template Reference
+======================================================================
 
 .. container:: doxygen-content
 

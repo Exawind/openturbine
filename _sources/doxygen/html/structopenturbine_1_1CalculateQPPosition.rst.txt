@@ -1,11 +1,11 @@
-.. meta::c0d274ccd13f6f0e57fa7ede0d9bf4d0b113157371b64d224e886aebd515f257b86b9e67df7331b0536a49e8b5fb8c671c4e012a0e233e2ce801c56276c15517
+.. meta::889c33873c4382e92b37bb03ec3676426878af169d8a544f5de693b62aac03028cb472b94e1265ba05b15ac774aa724ee8839ac00c271f01bab2b51011d3d8a1
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateQPPosition Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateQPPosition&lt; DeviceType &gt; Struct Template Reference
 
-CalculateQPPosition Struct Reference
-====================================
+CalculateQPPosition&lt; DeviceType &gt; Struct Template Reference
+=================================================================
 
 .. container:: doxygen-content
 

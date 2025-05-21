@@ -249,45 +249,49 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <a class="code hl_function" href="namespaceopenturbine.html#a7db6a0642536770dfd1c9864d28b4b99">UpdateConstraintPrediction</a>(solver, constraints);</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="stringliteral">&quot;UpdateAlgorithmicAcceleration&quot;</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a>,</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html">UpdateAlgorithmicAcceleration</a>{</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            state.a,</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            state.vd,</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            parameters.alpha_f,</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            parameters.alpha_m,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    );</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="stringliteral">&quot;UpdateGlobalPosition&quot;</span>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a>,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition</a>{</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            state.q,</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            state.x0,</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            state.x,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    );</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="stringliteral">&quot;CalculateConstraintOutput&quot;</span>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">num_constraints</a>,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateConstraintOutput.html">CalculateConstraintOutput</a>{</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            constraints.type,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>            constraints.target_node_index,</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            constraints.axes,</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>            state.x0,</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            state.q,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            state.v,</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            state.vd,</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            constraints.output,</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        }</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    );</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    Kokkos::deep_copy(constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#ae37f8b6c91d511073e5875c779729a82">host_output</a>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a40049fa7b8eaccc95ca1c226ea932fad">output</a>);</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">auto</span> system_range =</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">num_system_nodes</a>);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="stringliteral">&quot;UpdateAlgorithmicAcceleration&quot;</span>, system_range,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html">UpdateAlgorithmicAcceleration&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a9a76e74f0dad0af2734e236219214ae1">a</a>,</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#ab55f9a6e0ad4f9838318922325d173fa">vd</a>,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            parameters.<a class="code hl_variable" href="structopenturbine_1_1StepParameters.html#a3cee439e456bf516ca18febd376be17a">alpha_f</a>,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            parameters.<a class="code hl_variable" href="structopenturbine_1_1StepParameters.html#ab4e08639d38f827148854255f1b80f7d">alpha_m</a>,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    );</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="stringliteral">&quot;UpdateGlobalPosition&quot;</span>, system_range,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a0d757ded49db00a7ad8483297139bf12">q</a>,</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6b36fc6286ccdf83194dd70291b9b39e">x0</a>,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a0f72df82a98523faca3946fb6824aeb4">x</a>,</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        }</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    );</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> constraints_range =</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">num_constraints</a>);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    Kokkos::parallel_for(</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="stringliteral">&quot;CalculateConstraintOutput&quot;</span>, constraints_range,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateConstraintOutput.html">CalculateConstraintOutput&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a644a6bff4e9bbb58c9f1eddd8040fc15">type</a>,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a3e4411e65ba0b027a15f9acbd3e13c7d">target_node_index</a>,</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a66db11741128e31d9c3093c499425201">axes</a>,</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6b36fc6286ccdf83194dd70291b9b39e">x0</a>,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a0d757ded49db00a7ad8483297139bf12">q</a>,</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#ac0956ac07695638983c8b5b9c88dabc0">v</a>,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>            state.<a class="code hl_variable" href="structopenturbine_1_1State.html#ab55f9a6e0ad4f9838318922325d173fa">vd</a>,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>            constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a40049fa7b8eaccc95ca1c226ea932fad">output</a>,</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        }</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    );</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    Kokkos::deep_copy(constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#ae37f8b6c91d511073e5875c779729a82">host_output</a>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a40049fa7b8eaccc95ca1c226ea932fad">output</a>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>}</div>
 </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="aassemble__constraints__matrix_8hpp_html"><div class="ttname"><a href="assemble__constraints__matrix_8hpp.html">assemble_constraints_matrix.hpp</a></div></div>
 <div class="ttc" id="aassemble__constraints__residual_8hpp_html"><div class="ttname"><a href="assemble__constraints__residual_8hpp.html">assemble_constraints_residual.hpp</a></div></div>
 <div class="ttc" id="aassemble__system__matrix_8hpp_html"><div class="ttname"><a href="assemble__system__matrix_8hpp.html">assemble_system_matrix.hpp</a></div></div>
@@ -319,20 +323,31 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="asolver_8hpp_html"><div class="ttname"><a href="solver_8hpp.html">solver.hpp</a></div></div>
 <div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
 <div class="ttc" id="astep__parameters_8hpp_html"><div class="ttname"><a href="step__parameters_8hpp.html">step_parameters.hpp</a></div></div>
-<div class="ttc" id="astructopenturbine_1_1CalculateConstraintOutput_html"><div class="ttname"><a href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:10</div></div>
+<div class="ttc" id="astructopenturbine_1_1CalculateConstraintOutput_html"><div class="ttname"><a href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:11</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html"><div class="ttname"><a href="structopenturbine_1_1Constraints.html">openturbine::Constraints</a></div><div class="ttdoc">Container class for managing multiple constraints in a simulation.</div><div class="ttdef"><b>Definition</b> constraints.hpp:26</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html_a059227bdad44685e6b29146caa38e0e3"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">openturbine::Constraints::num_constraints</a></div><div class="ttdeci">size_t num_constraints</div><div class="ttdef"><b>Definition</b> constraints.hpp:27</div></div>
+<div class="ttc" id="astructopenturbine_1_1Constraints_html_a3e4411e65ba0b027a15f9acbd3e13c7d"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a3e4411e65ba0b027a15f9acbd3e13c7d">openturbine::Constraints::target_node_index</a></div><div class="ttdeci">Kokkos::View&lt; size_t *, DeviceType &gt; target_node_index</div><div class="ttdef"><b>Definition</b> constraints.hpp:36</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html_a40049fa7b8eaccc95ca1c226ea932fad"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a40049fa7b8eaccc95ca1c226ea932fad">openturbine::Constraints::output</a></div><div class="ttdeci">Kokkos::View&lt; double *[3], DeviceType &gt; output</div><div class="ttdef"><b>Definition</b> constraints.hpp:53</div></div>
+<div class="ttc" id="astructopenturbine_1_1Constraints_html_a644a6bff4e9bbb58c9f1eddd8040fc15"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a644a6bff4e9bbb58c9f1eddd8040fc15">openturbine::Constraints::type</a></div><div class="ttdeci">Kokkos::View&lt; ConstraintType *, DeviceType &gt; type</div><div class="ttdef"><b>Definition</b> constraints.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1Constraints_html_a66db11741128e31d9c3093c499425201"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a66db11741128e31d9c3093c499425201">openturbine::Constraints::axes</a></div><div class="ttdeci">Kokkos::View&lt; double *[3][3], DeviceType &gt; axes</div><div class="ttdef"><b>Definition</b> constraints.hpp:49</div></div>
 <div class="ttc" id="astructopenturbine_1_1Constraints_html_ae37f8b6c91d511073e5875c779729a82"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#ae37f8b6c91d511073e5875c779729a82">openturbine::Constraints::host_output</a></div><div class="ttdeci">Kokkos::View&lt; double *[3], DeviceType &gt;::HostMirror host_output</div><div class="ttdef"><b>Definition</b> constraints.hpp:58</div></div>
 <div class="ttc" id="astructopenturbine_1_1Elements_html"><div class="ttname"><a href="structopenturbine_1_1Elements.html">openturbine::Elements</a></div><div class="ttdoc">A container providing handle to all structural elements present in the model.</div><div class="ttdef"><b>Definition</b> elements.hpp:20</div></div>
 <div class="ttc" id="astructopenturbine_1_1Solver_html"><div class="ttname"><a href="structopenturbine_1_1Solver.html">openturbine::Solver</a></div><div class="ttdoc">A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine....</div><div class="ttdef"><b>Definition</b> solver.hpp:32</div></div>
 <div class="ttc" id="astructopenturbine_1_1Solver_html_a54c589c877dc63dfab2029dc0f826889"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a54c589c877dc63dfab2029dc0f826889">openturbine::Solver::convergence_err</a></div><div class="ttdeci">std::vector&lt; double &gt; convergence_err</div><div class="ttdef"><b>Definition</b> solver.hpp:94</div></div>
 <div class="ttc" id="astructopenturbine_1_1Solver_html_a55cb5e131453f3bc96cc0e774490ea8a"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a55cb5e131453f3bc96cc0e774490ea8a">openturbine::Solver::num_system_nodes</a></div><div class="ttdeci">size_t num_system_nodes</div><div class="ttdef"><b>Definition</b> solver.hpp:84</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html"><div class="ttname"><a href="structopenturbine_1_1State.html">openturbine::State</a></div><div class="ttdef"><b>Definition</b> state.hpp:18</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a0d757ded49db00a7ad8483297139bf12"><div class="ttname"><a href="structopenturbine_1_1State.html#a0d757ded49db00a7ad8483297139bf12">openturbine::State::q</a></div><div class="ttdeci">Kokkos::View&lt; double *[7], DeviceType &gt; q</div><div class="ttdef"><b>Definition</b> state.hpp:29</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a0f72df82a98523faca3946fb6824aeb4"><div class="ttname"><a href="structopenturbine_1_1State.html#a0f72df82a98523faca3946fb6824aeb4">openturbine::State::x</a></div><div class="ttdeci">Kokkos::View&lt; double *[7], DeviceType &gt; x</div><div class="ttdef"><b>Definition</b> state.hpp:26</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a6b36fc6286ccdf83194dd70291b9b39e"><div class="ttname"><a href="structopenturbine_1_1State.html#a6b36fc6286ccdf83194dd70291b9b39e">openturbine::State::x0</a></div><div class="ttdeci">Kokkos::View&lt; double *[7], DeviceType &gt; x0</div><div class="ttdef"><b>Definition</b> state.hpp:25</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_a9a76e74f0dad0af2734e236219214ae1"><div class="ttname"><a href="structopenturbine_1_1State.html#a9a76e74f0dad0af2734e236219214ae1">openturbine::State::a</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; a</div><div class="ttdef"><b>Definition</b> state.hpp:32</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_ab55f9a6e0ad4f9838318922325d173fa"><div class="ttname"><a href="structopenturbine_1_1State.html#ab55f9a6e0ad4f9838318922325d173fa">openturbine::State::vd</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; vd</div><div class="ttdef"><b>Definition</b> state.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1State_html_ac0956ac07695638983c8b5b9c88dabc0"><div class="ttname"><a href="structopenturbine_1_1State.html#ac0956ac07695638983c8b5b9c88dabc0">openturbine::State::v</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; v</div><div class="ttdef"><b>Definition</b> state.hpp:30</div></div>
 <div class="ttc" id="astructopenturbine_1_1StepParameters_html"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html">openturbine::StepParameters</a></div><div class="ttdef"><b>Definition</b> step_parameters.hpp:7</div></div>
+<div class="ttc" id="astructopenturbine_1_1StepParameters_html_a3cee439e456bf516ca18febd376be17a"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html#a3cee439e456bf516ca18febd376be17a">openturbine::StepParameters::alpha_f</a></div><div class="ttdeci">double alpha_f</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1StepParameters_html_ab4e08639d38f827148854255f1b80f7d"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html#ab4e08639d38f827148854255f1b80f7d">openturbine::StepParameters::alpha_m</a></div><div class="ttdeci">double alpha_m</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:11</div></div>
 <div class="ttc" id="astructopenturbine_1_1StepParameters_html_ac9f4d98fbe2504f608d33320f37a26da"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html#ac9f4d98fbe2504f608d33320f37a26da">openturbine::StepParameters::max_iter</a></div><div class="ttdeci">size_t max_iter</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:9</div></div>
-<div class="ttc" id="astructopenturbine_1_1UpdateAlgorithmicAcceleration_html"><div class="ttname"><a href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html">openturbine::UpdateAlgorithmicAcceleration</a></div><div class="ttdef"><b>Definition</b> update_algorithmic_acceleration.hpp:7</div></div>
-<div class="ttc" id="astructopenturbine_1_1UpdateGlobalPosition_html"><div class="ttname"><a href="structopenturbine_1_1UpdateGlobalPosition.html">openturbine::UpdateGlobalPosition</a></div><div class="ttdef"><b>Definition</b> update_global_position.hpp:9</div></div>
+<div class="ttc" id="astructopenturbine_1_1UpdateAlgorithmicAcceleration_html"><div class="ttname"><a href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html">openturbine::UpdateAlgorithmicAcceleration</a></div><div class="ttdef"><b>Definition</b> update_algorithmic_acceleration.hpp:8</div></div>
+<div class="ttc" id="astructopenturbine_1_1UpdateGlobalPosition_html"><div class="ttname"><a href="structopenturbine_1_1UpdateGlobalPosition.html">openturbine::UpdateGlobalPosition</a></div><div class="ttdef"><b>Definition</b> update_global_position.hpp:10</div></div>
 <div class="ttc" id="aupdate__algorithmic__acceleration_8hpp_html"><div class="ttname"><a href="update__algorithmic__acceleration_8hpp.html">update_algorithmic_acceleration.hpp</a></div></div>
 <div class="ttc" id="aupdate__constraint__prediction_8hpp_html"><div class="ttname"><a href="update__constraint__prediction_8hpp.html">update_constraint_prediction.hpp</a></div></div>
 <div class="ttc" id="aupdate__constraint__variables_8hpp_html"><div class="ttname"><a href="update__constraint__variables_8hpp.html">update_constraint_variables.hpp</a></div></div>

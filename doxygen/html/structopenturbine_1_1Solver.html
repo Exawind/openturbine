@@ -193,9 +193,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae87c54a5079acccc809dffabe940a03d" id="r_ae87c54a5079acccc809dffabe940a03d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae87c54a5079acccc809dffabe940a03d">Solver</a> (const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_IDs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, size_t num_constraint_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;constraint_target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;constraint_row_range)</td></tr>
-<tr class="memdesc:ae87c54a5079acccc809dffabe940a03d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a sparse linear systems solver for OpenTurbine.  <br /></td></tr>
-<tr class="separator:ae87c54a5079acccc809dffabe940a03d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9cd09ee27ee99ceff58c5f1614da279" id="r_ae9cd09ee27ee99ceff58c5f1614da279"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html#ae9cd09ee27ee99ceff58c5f1614da279">Solver</a> (const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;node_IDs, const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;active_dofs, const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;node_freedom_map_table, const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;num_nodes_per_element, const typename Kokkos::View&lt; size_t **, DeviceType &gt;::const_type &amp;node_state_indices, size_t num_constraint_dofs, const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;base_active_dofs, const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;target_active_dofs, const typename Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type &amp;constraint_base_node_freedom_table, const typename Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type &amp;constraint_target_node_freedom_table, const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, DeviceType &gt;::const_type &amp;constraint_row_range)</td></tr>
+<tr class="memdesc:ae9cd09ee27ee99ceff58c5f1614da279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a sparse linear systems solver for OpenTurbine.  <br /></td></tr>
+<tr class="separator:ae9cd09ee27ee99ceff58c5f1614da279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -291,8 +291,8 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ae87c54a5079acccc809dffabe940a03d" name="ae87c54a5079acccc809dffabe940a03d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae87c54a5079acccc809dffabe940a03d">&#9670;&#160;</a></span>Solver()</h2>
+<a id="ae9cd09ee27ee99ceff58c5f1614da279" name="ae9cd09ee27ee99ceff58c5f1614da279"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9cd09ee27ee99ceff58c5f1614da279">&#9670;&#160;</a></span>Solver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -305,31 +305,31 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">openturbine::Solver</a>&lt; DeviceType &gt;::Solver </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_IDs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_freedom_map_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>num_nodes_per_element</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t ** &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t **, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_state_indices</em>, </td>
         </tr>
         <tr>
@@ -341,31 +341,31 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>constraint_base_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>constraint_target_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>constraint_row_range</em>&#160;</td>
         </tr>
         <tr>

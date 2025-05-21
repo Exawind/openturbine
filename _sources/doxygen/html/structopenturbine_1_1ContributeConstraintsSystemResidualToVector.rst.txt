@@ -1,11 +1,11 @@
-.. meta::c3801167bf451829663da16162ff88a9cf36552757548b78c8eee8a3d00787a711d4429803b6cde44c4d145d2ecf76077ec698e7fe0ce4426b01e5b6cbad0e4b
+.. meta::aef9c3adfc392d824f9270d48db38c4b116c8dc7603b3fd1debb815598134cc6f6ba08f7aee6ce33b57daa41c3153cb126acf08a15e598c27afe2216e3120118
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ContributeConstraintsSystemResidualToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::ContributeConstraintsSystemResidualToVector&lt; DeviceType &gt; Struct Template Reference
 
-ContributeConstraintsSystemResidualToVector Struct Reference
-============================================================
+ContributeConstraintsSystemResidualToVector&lt; DeviceType &gt; Struct Template Reference
+=========================================================================================
 
 .. container:: doxygen-content
 

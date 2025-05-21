@@ -1,11 +1,11 @@
-.. meta::07b6e83d67b9795d4c66e47990f32c615528eaee64594b4da2dedce835f640f9637b35528644609ac088253194e1bbd8adb3b00da663be52208cddecb523d60a
+.. meta::ffa2a74b030ef0f9d7e512a76faea8d9bc271e7511959218b3730a0da90b46c11c618786a17165ffae28e83eb78d74900007b5cfedba80e379d9ae726f722c02
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::CalculateSystemMatrix Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::CalculateSystemMatrix&lt; DeviceType &gt; Struct Template Reference
 
-CalculateSystemMatrix Struct Reference
-======================================
+CalculateSystemMatrix&lt; DeviceType &gt; Struct Template Reference
+===================================================================
 
 .. container:: doxygen-content
 

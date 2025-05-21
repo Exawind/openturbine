@@ -1,11 +1,11 @@
-.. meta::47f4999bcd955d30a85c382b566489450cc96c46f64a08087d68793f8bfb52483bc1491ddd65e5da62418d8638d12ff9fecf89ffb0af5d630b05ec00b889b91a
+.. meta::cb09f039d775acc1d4bcac47f3aab542f74d21c7be9ed7e654447db68cdf511dda2c70abbbc6593d9176fbf401b954551540c739420bc1202914c56983585cf8
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CopyConstraintsResidualToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::CopyConstraintsResidualToVector&lt; DeviceType &gt; Struct Template Reference
 
-CopyConstraintsResidualToVector Struct Reference
-================================================
+CopyConstraintsResidualToVector&lt; DeviceType &gt; Struct Template Reference
+=============================================================================
 
 .. container:: doxygen-content
 

@@ -188,12 +188,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a363979b50e419508632b26ef0dca1c9d" id="r_a363979b50e419508632b26ef0dca1c9d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html#a363979b50e419508632b26ef0dca1c9d">NumElementsInSystem</a> () const</td></tr>
 <tr class="memdesc:a363979b50e419508632b26ef0dca1c9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the total number of elements across all types in the system.  <br /></td></tr>
 <tr class="separator:a363979b50e419508632b26ef0dca1c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8139533b5718e2c7128e801c70cbf3e" id="r_ae8139533b5718e2c7128e801c70cbf3e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html#ae8139533b5718e2c7128e801c70cbf3e">NumberOfNodesPerElement</a> () const</td></tr>
-<tr class="memdesc:ae8139533b5718e2c7128e801c70cbf3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of nodes per element for each element in the system.  <br /></td></tr>
-<tr class="separator:ae8139533b5718e2c7128e801c70cbf3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24080489b664440a76098433b3c84078" id="r_a24080489b664440a76098433b3c84078"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html#a24080489b664440a76098433b3c84078">NodeStateIndices</a> () const</td></tr>
-<tr class="memdesc:a24080489b664440a76098433b3c84078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the state indices for each node of each element in the system.  <br /></td></tr>
-<tr class="separator:a24080489b664440a76098433b3c84078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b195a711c5c8adec60f9ba98a327730" id="r_a0b195a711c5c8adec60f9ba98a327730"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html#a0b195a711c5c8adec60f9ba98a327730">NumberOfNodesPerElement</a> () const</td></tr>
+<tr class="memdesc:a0b195a711c5c8adec60f9ba98a327730"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of nodes per element for each element in the system.  <br /></td></tr>
+<tr class="separator:a0b195a711c5c8adec60f9ba98a327730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b9909af9c333da664d106eefd0045bf" id="r_a6b9909af9c333da664d106eefd0045bf"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t **, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html#a6b9909af9c333da664d106eefd0045bf">NodeStateIndices</a> () const</td></tr>
+<tr class="memdesc:a6b9909af9c333da664d106eefd0045bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the state indices for each node of each element in the system.  <br /></td></tr>
+<tr class="separator:a6b9909af9c333da664d106eefd0045bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -281,8 +281,8 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a24080489b664440a76098433b3c84078" name="a24080489b664440a76098433b3c84078"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24080489b664440a76098433b3c84078">&#9670;&#160;</a></span>NodeStateIndices()</h2>
+<a id="a6b9909af9c333da664d106eefd0045bf" name="a6b9909af9c333da664d106eefd0045bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b9909af9c333da664d106eefd0045bf">&#9670;&#160;</a></span>NodeStateIndices()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,7 +293,7 @@ template&lt;typename DeviceType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt; size_t ** &gt; <a class="el" href="structopenturbine_1_1Elements.html">openturbine::Elements</a>&lt; DeviceType &gt;::NodeStateIndices </td>
+          <td class="memname">Kokkos::View&lt; size_t **, DeviceType &gt; <a class="el" href="structopenturbine_1_1Elements.html">openturbine::Elements</a>&lt; DeviceType &gt;::NodeStateIndices </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -311,8 +311,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="ae8139533b5718e2c7128e801c70cbf3e" name="ae8139533b5718e2c7128e801c70cbf3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8139533b5718e2c7128e801c70cbf3e">&#9670;&#160;</a></span>NumberOfNodesPerElement()</h2>
+<a id="a0b195a711c5c8adec60f9ba98a327730" name="a0b195a711c5c8adec60f9ba98a327730"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b195a711c5c8adec60f9ba98a327730">&#9670;&#160;</a></span>NumberOfNodesPerElement()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -323,7 +323,7 @@ template&lt;typename DeviceType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt; size_t * &gt; <a class="el" href="structopenturbine_1_1Elements.html">openturbine::Elements</a>&lt; DeviceType &gt;::NumberOfNodesPerElement </td>
+          <td class="memname">Kokkos::View&lt; size_t *, DeviceType &gt; <a class="el" href="structopenturbine_1_1Elements.html">openturbine::Elements</a>&lt; DeviceType &gt;::NumberOfNodesPerElement </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

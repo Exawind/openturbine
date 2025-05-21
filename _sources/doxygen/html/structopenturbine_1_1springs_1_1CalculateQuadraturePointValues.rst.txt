@@ -1,11 +1,11 @@
-.. meta::15286cb69a5f6b197939969c62bad80a5a1276e5950cf32a92e445dc569399cbb5a1697b439b407b797fcc9d2cba3182b468c99680fa96a2073bcc3dc087c458
+.. meta::6b59c92efb9f85fa435992aaf23d419fba707bf450d062b5952bf5422308ae8ef42cd90a1933aab19fc388650b6809a0384a4ff2e93a25d0abc64fa81638cb4d
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::springs::CalculateQuadraturePointValues Struct Reference
+.. title:: OpenTurbine API: openturbine::springs::CalculateQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
 
-CalculateQuadraturePointValues Struct Reference
-===============================================
+CalculateQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
+============================================================================
 
 .. container:: doxygen-content
 

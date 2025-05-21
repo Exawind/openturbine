@@ -1,11 +1,11 @@
-.. meta::047ff2978f967d4cc0b1de783b9d62c4545079aeaddf7fb2126721fc6e2d12ada05ecacd2a30932042bd0831d7a4816194d68d3210587892b012c43a35dd855a
+.. meta::56c998c504b7533001c0a7268cb5861efcd9cfb4336fa8c8a1478775c74c6650791073973a104f2bd29941f2381ff0aa91f7f7c7b0023ad7eb20d64f1c75d41d
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CalculateSystemErrorSumSquares Struct Reference
+.. title:: OpenTurbine API: openturbine::CalculateSystemErrorSumSquares&lt; DeviceType &gt; Struct Template Reference
 
-CalculateSystemErrorSumSquares Struct Reference
-===============================================
+CalculateSystemErrorSumSquares&lt; DeviceType &gt; Struct Template Reference
+============================================================================
 
 .. container:: doxygen-content
 

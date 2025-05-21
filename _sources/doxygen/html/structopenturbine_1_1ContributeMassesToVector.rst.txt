@@ -1,11 +1,11 @@
-.. meta::719f878378f10e37126e81ea3a38b0ea0657e74066ae24a8e2bda451276fa556a0ba6e15ce5f7242a7091719281abd5a71de43cd3efa4c7b564d419ae95b4cd0
+.. meta::35e87516dcf99242d56959794c4ae436674aa906f79e7b1ca4073018ea980b6a4a79bfb3d17d3e326f426f07b810e191cf7805e07d329be22e52d7806d40e0b0
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ContributeMassesToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::ContributeMassesToVector&lt; DeviceType &gt; Struct Template Reference
 
-ContributeMassesToVector Struct Reference
-=========================================
+ContributeMassesToVector&lt; DeviceType &gt; Struct Template Reference
+======================================================================
 
 .. container:: doxygen-content
 

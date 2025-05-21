@@ -221,17 +221,18 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">// Calculate current global position from initial position and displacement</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    Kokkos::parallel_for(</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="stringliteral">&quot;UpdateGlobalPosition&quot;</span>, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a>,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition</a>{</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            state.q,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            state.x0,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            state.x,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    );</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>}</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="stringliteral">&quot;UpdateGlobalPosition&quot;</span>,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;(0UL, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a>),</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_struct" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            state.q,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            state.x0,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            state.x,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    );</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
 </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a04ee64780a3fb5ae6e53fa9b901db66d"><div class="ttname"><a href="namespaceopenturbine.html#a04ee64780a3fb5ae6e53fa9b901db66d">openturbine::CopyNodesToState</a></div><div class="ttdeci">void CopyNodesToState(State&lt; DeviceType &gt; &amp;state, const std::vector&lt; Node &gt; &amp;nodes)</div><div class="ttdef"><b>Definition</b> copy_nodes_to_state.hpp:13</div></div>
 <div class="ttc" id="anamespaceopenturbine_html_a34d13d73291b906538e612db63f393e9"><div class="ttname"><a href="namespaceopenturbine.html#a34d13d73291b906538e612db63f393e9">openturbine::kLieGroupComponents</a></div><div class="ttdeci">static constexpr size_t kLieGroupComponents</div><div class="ttdef"><b>Definition</b> types.hpp:9</div></div>
@@ -248,7 +249,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="astructopenturbine_1_1State_html_a9a76e74f0dad0af2734e236219214ae1"><div class="ttname"><a href="structopenturbine_1_1State.html#a9a76e74f0dad0af2734e236219214ae1">openturbine::State::a</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; a</div><div class="ttdef"><b>Definition</b> state.hpp:32</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html_ab55f9a6e0ad4f9838318922325d173fa"><div class="ttname"><a href="structopenturbine_1_1State.html#ab55f9a6e0ad4f9838318922325d173fa">openturbine::State::vd</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; vd</div><div class="ttdef"><b>Definition</b> state.hpp:31</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html_ac0956ac07695638983c8b5b9c88dabc0"><div class="ttname"><a href="structopenturbine_1_1State.html#ac0956ac07695638983c8b5b9c88dabc0">openturbine::State::v</a></div><div class="ttdeci">Kokkos::View&lt; double *[6], DeviceType &gt; v</div><div class="ttdef"><b>Definition</b> state.hpp:30</div></div>
-<div class="ttc" id="astructopenturbine_1_1UpdateGlobalPosition_html"><div class="ttname"><a href="structopenturbine_1_1UpdateGlobalPosition.html">openturbine::UpdateGlobalPosition</a></div><div class="ttdef"><b>Definition</b> update_global_position.hpp:9</div></div>
+<div class="ttc" id="astructopenturbine_1_1UpdateGlobalPosition_html"><div class="ttname"><a href="structopenturbine_1_1UpdateGlobalPosition.html">openturbine::UpdateGlobalPosition</a></div><div class="ttdef"><b>Definition</b> update_global_position.hpp:10</div></div>
 <div class="ttc" id="aupdate__global__position_8hpp_html"><div class="ttname"><a href="update__global__position_8hpp.html">update_global_position.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

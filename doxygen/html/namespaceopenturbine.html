@@ -513,24 +513,33 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7dbbbc9ec8fb3dc16dcba1e5b9feae96" id="r_a7dbbbc9ec8fb3dc16dcba1e5b9feae96"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7dbbbc9ec8fb3dc16dcba1e5b9feae96">CalculateFixedBC3DOFConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a7dbbbc9ec8fb3dc16dcba1e5b9feae96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0a0e9f9c0573d8a97a6b5573ec91c43" id="r_ad0a0e9f9c0573d8a97a6b5573ec91c43"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad0a0e9f9c0573d8a97a6b5573ec91c43">CalculateFixedBCConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:ad0a0e9f9c0573d8a97a6b5573ec91c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f52c6ae4de379f2013184b18cb84458" id="r_a5f52c6ae4de379f2013184b18cb84458"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5f52c6ae4de379f2013184b18cb84458">CalculatePrescribedBC3DOFConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;inputs, const Kokkos::View&lt; double[7]&gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a5f52c6ae4de379f2013184b18cb84458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07e638e3be0ea2ab38cc192a70515094" id="r_a07e638e3be0ea2ab38cc192a70515094"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a07e638e3be0ea2ab38cc192a70515094">CalculatePrescribedBCConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;inputs, const Kokkos::View&lt; double[7]&gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a07e638e3be0ea2ab38cc192a70515094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6541551248c5ad689efc6d3c65141018" id="r_a6541551248c5ad689efc6d3c65141018"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6541551248c5ad689efc6d3c65141018">CalculateRevoluteJointConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;axes, const Kokkos::View&lt; double[7]&gt;::const_type &amp;base_node_u, const Kokkos::View&lt; double[7]&gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a6541551248c5ad689efc6d3c65141018"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc40a3b44923d7b010925d30a4b9f181" id="r_acc40a3b44923d7b010925d30a4b9f181"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#acc40a3b44923d7b010925d30a4b9f181">CalculateRevoluteJointForce</a> (const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;axes, const Kokkos::View&lt; double[7]&gt;::const_type &amp;inputs, const Kokkos::View&lt; double[7]&gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6]&gt; &amp;system_residual_terms)</td></tr>
-<tr class="separator:acc40a3b44923d7b010925d30a4b9f181"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a002954584388a9d3177d58f6abefc" id="r_a78a002954584388a9d3177d58f6abefc"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a78a002954584388a9d3177d58f6abefc">CalculateRigidJoint3DOFConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;base_node_u, const Kokkos::View&lt; double[7]&gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a78a002954584388a9d3177d58f6abefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a422d922201ceb958effa82df3c42d0b0" id="r_a422d922201ceb958effa82df3c42d0b0"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a422d922201ceb958effa82df3c42d0b0">CalculateRigidJointConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[7]&gt;::const_type &amp;base_node_u, const Kokkos::View&lt; double[7]&gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a422d922201ceb958effa82df3c42d0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6125942d035bbc7337c89c30f88338ef" id="r_a6125942d035bbc7337c89c30f88338ef"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6125942d035bbc7337c89c30f88338ef">CalculateRotationControlConstraint</a> (const Kokkos::View&lt; double[3]&gt;::const_type &amp;X0, const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;axes, const Kokkos::View&lt; double[7]&gt;::const_type &amp;inputs, const Kokkos::View&lt; double[7]&gt;::const_type &amp;base_node_u, const Kokkos::View&lt; double[7]&gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6]&gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6]&gt; &amp;target_gradient_terms)</td></tr>
-<tr class="separator:a6125942d035bbc7337c89c30f88338ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20d8256fd96c2c109c206addd7285901" id="r_a20d8256fd96c2c109c206addd7285901"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a20d8256fd96c2c109c206addd7285901"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a20d8256fd96c2c109c206addd7285901">CalculateFixedBC3DOFConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;node_u, const typename Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a20d8256fd96c2c109c206addd7285901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493120565e69bf9d5d93375ff96a9b47" id="r_a493120565e69bf9d5d93375ff96a9b47"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a493120565e69bf9d5d93375ff96a9b47"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a493120565e69bf9d5d93375ff96a9b47">CalculateFixedBCConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;node_u, const typename Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a493120565e69bf9d5d93375ff96a9b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bea7606473a700395b6037d58821b55" id="r_a6bea7606473a700395b6037d58821b55"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a6bea7606473a700395b6037d58821b55"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6bea7606473a700395b6037d58821b55">CalculatePrescribedBC3DOFConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;inputs, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a6bea7606473a700395b6037d58821b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bc5a2d0fd38086a8750b5feb661864f" id="r_a2bc5a2d0fd38086a8750b5feb661864f"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a2bc5a2d0fd38086a8750b5feb661864f"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2bc5a2d0fd38086a8750b5feb661864f">CalculatePrescribedBCConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;inputs, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a2bc5a2d0fd38086a8750b5feb661864f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5532f3504d0d6e5af0d2c98fbc2a3b89" id="r_a5532f3504d0d6e5af0d2c98fbc2a3b89"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a5532f3504d0d6e5af0d2c98fbc2a3b89"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5532f3504d0d6e5af0d2c98fbc2a3b89">CalculateRevoluteJointConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;axes, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;base_node_u, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a5532f3504d0d6e5af0d2c98fbc2a3b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee1d615ccb19b9bfd001244542669aae" id="r_aee1d615ccb19b9bfd001244542669aae"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aee1d615ccb19b9bfd001244542669aae"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aee1d615ccb19b9bfd001244542669aae">CalculateRevoluteJointForce</a> (const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;axes, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;inputs, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;system_residual_terms)</td></tr>
+<tr class="separator:aee1d615ccb19b9bfd001244542669aae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52bb860554a54ce5bd9f1489a0f45cf5" id="r_a52bb860554a54ce5bd9f1489a0f45cf5"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a52bb860554a54ce5bd9f1489a0f45cf5"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a52bb860554a54ce5bd9f1489a0f45cf5">CalculateRigidJoint3DOFConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;base_node_u, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a52bb860554a54ce5bd9f1489a0f45cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e7032577b1a594c5decbe355433d100" id="r_a0e7032577b1a594c5decbe355433d100"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a0e7032577b1a594c5decbe355433d100"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0e7032577b1a594c5decbe355433d100">CalculateRigidJointConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;base_node_u, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:a0e7032577b1a594c5decbe355433d100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa693a678d08576d57c4c47af8ca206ad" id="r_aa693a678d08576d57c4c47af8ca206ad"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aa693a678d08576d57c4c47af8ca206ad"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aa693a678d08576d57c4c47af8ca206ad">CalculateRotationControlConstraint</a> (const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;X0, const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;axes, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;inputs, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;base_node_u, const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;target_node_u, const Kokkos::View&lt; double[6], DeviceType &gt; &amp;residual_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;base_gradient_terms, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;target_gradient_terms)</td></tr>
+<tr class="separator:aa693a678d08576d57c4c47af8ca206ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a382b442cac8b0bcc950d5b66d3268f53" id="r_a382b442cac8b0bcc950d5b66d3268f53"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a382b442cac8b0bcc950d5b66d3268f53">GetNumberOfNodes</a> (<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> t)</td></tr>
 <tr class="memdesc:a382b442cac8b0bcc950d5b66d3268f53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of nodes used/required by the constraint type.  <br /></td></tr>
 <tr class="separator:a382b442cac8b0bcc950d5b66d3268f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -740,18 +749,19 @@ Functions</h2></td></tr>
 <tr class="memitem:a7a407ea76de5afb5078a4c76b4c59495"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7a407ea76de5afb5078a4c76b4c59495">CreateSolver</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
 <tr class="memdesc:a7a407ea76de5afb5078a4c76b4c59495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute freedom tables for state, elements, and constraints, then construct and return solver.  <br /></td></tr>
 <tr class="separator:a7a407ea76de5afb5078a4c76b4c59495"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6533b36c326415e89a9b7da14cf21097" id="r_a6533b36c326415e89a9b7da14cf21097"><td class="memTemplParams" colspan="2">template&lt;typename RowPtrType , typename IndicesType &gt; </td></tr>
-<tr class="memitem:a6533b36c326415e89a9b7da14cf21097"><td class="memTemplItemLeft" align="right" valign="top">IndicesType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6533b36c326415e89a9b7da14cf21097">ComputeColInds</a> (typename RowPtrType::value_type num_non_zero, size_t num_system_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;row_range, const typename RowPtrType::const_type &amp;row_ptrs)</td></tr>
-<tr class="separator:a6533b36c326415e89a9b7da14cf21097"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3d48eb6a5872669373b4f8ea9012839" id="r_ae3d48eb6a5872669373b4f8ea9012839"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae3d48eb6a5872669373b4f8ea9012839">ComputeNumSystemDofs</a> (const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs)</td></tr>
-<tr class="memdesc:ae3d48eb6a5872669373b4f8ea9012839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the total number of active degrees of freedom in the system.  <br /></td></tr>
-<tr class="separator:ae3d48eb6a5872669373b4f8ea9012839"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f96fb8f0eb6fc4c041c3fa44157cd6d" id="r_a6f96fb8f0eb6fc4c041c3fa44157cd6d"><td class="memTemplParams" colspan="2">template&lt;typename RowPtrType &gt; </td></tr>
-<tr class="memitem:a6f96fb8f0eb6fc4c041c3fa44157cd6d"><td class="memTemplItemLeft" align="right" valign="top">RowPtrType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6f96fb8f0eb6fc4c041c3fa44157cd6d">ComputeRowPtrs</a> (size_t num_system_dofs, size_t num_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;row_range)</td></tr>
-<tr class="separator:a6f96fb8f0eb6fc4c041c3fa44157cd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e904e4f4364f057d3dc3bd118408ab5" id="r_a8e904e4f4364f057d3dc3bd118408ab5"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
-<tr class="memitem:a8e904e4f4364f057d3dc3bd118408ab5"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a8e904e4f4364f057d3dc3bd118408ab5">CreateFullMatrix</a> (size_t num_system_dofs, size_t num_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;row_range, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices)</td></tr>
-<tr class="separator:a8e904e4f4364f057d3dc3bd118408ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11abf1ee69254cb9eb886ffd94bb46fa" id="r_a11abf1ee69254cb9eb886ffd94bb46fa"><td class="memTemplParams" colspan="2">template&lt;typename RowPtrType , typename IndicesType &gt; </td></tr>
+<tr class="memitem:a11abf1ee69254cb9eb886ffd94bb46fa"><td class="memTemplItemLeft" align="right" valign="top">IndicesType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a11abf1ee69254cb9eb886ffd94bb46fa">ComputeColInds</a> (typename RowPtrType::value_type num_non_zero, size_t num_system_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;active_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;node_freedom_map_table, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;num_nodes_per_element, const typename Kokkos::View&lt; size_t **, typename RowPtrType::device_type &gt;::const_type &amp;node_state_indices, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;base_active_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;target_active_dofs, const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;base_node_freedom_table, const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;target_node_freedom_table, const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename RowPtrType::device_type &gt;::const_type &amp;row_range, const typename RowPtrType::const_type &amp;row_ptrs)</td></tr>
+<tr class="separator:a11abf1ee69254cb9eb886ffd94bb46fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba456c8b86c4960edec901de54f9c62e" id="r_aba456c8b86c4960edec901de54f9c62e"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aba456c8b86c4960edec901de54f9c62e"><td class="memTemplItemLeft" align="right" valign="top">size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aba456c8b86c4960edec901de54f9c62e">ComputeNumSystemDofs</a> (const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;active_dofs)</td></tr>
+<tr class="memdesc:aba456c8b86c4960edec901de54f9c62e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the total number of active degrees of freedom in the system.  <br /></td></tr>
+<tr class="separator:aba456c8b86c4960edec901de54f9c62e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c1a525f0efe8c4f643b0d710ae51a2b" id="r_a0c1a525f0efe8c4f643b0d710ae51a2b"><td class="memTemplParams" colspan="2">template&lt;typename RowPtrType &gt; </td></tr>
+<tr class="memitem:a0c1a525f0efe8c4f643b0d710ae51a2b"><td class="memTemplItemLeft" align="right" valign="top">RowPtrType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0c1a525f0efe8c4f643b0d710ae51a2b">ComputeRowPtrs</a> (size_t num_system_dofs, size_t num_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;active_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;node_freedom_map_table, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;num_nodes_per_element, const typename Kokkos::View&lt; size_t **, typename RowPtrType::device_type &gt;::const_type &amp;node_state_indices, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;base_active_dofs, const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;target_active_dofs, const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;base_node_freedom_table, const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;target_node_freedom_table, const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename RowPtrType::device_type &gt;::const_type &amp;row_range)</td></tr>
+<tr class="separator:a0c1a525f0efe8c4f643b0d710ae51a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a48dc3547da4a3e5ca5ed21128b66a8" id="r_a1a48dc3547da4a3e5ca5ed21128b66a8"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
+<tr class="memitem:a1a48dc3547da4a3e5ca5ed21128b66a8"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a1a48dc3547da4a3e5ca5ed21128b66a8">CreateFullMatrix</a> (size_t num_system_dofs, size_t num_dofs, const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;base_active_dofs, const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;target_active_dofs, const typename Kokkos::View&lt; size_t *[6], typename CrsMatrixType::device_type &gt;::const_type &amp;base_node_freedom_table, const typename Kokkos::View&lt; size_t *[6], typename CrsMatrixType::device_type &gt;::const_type &amp;target_node_freedom_table, const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename CrsMatrixType::device_type &gt;::const_type &amp;row_range, const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;active_dofs, const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;node_freedom_map_table, const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;num_nodes_per_element, const typename Kokkos::View&lt; size_t **, typename CrsMatrixType::device_type &gt;::const_type &amp;node_state_indices)</td></tr>
+<tr class="separator:a1a48dc3547da4a3e5ca5ed21128b66a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad828f748bcad650272c61f59cd247669" id="r_ad828f748bcad650272c61f59cd247669"><td class="memTemplParams" colspan="2">template&lt;typename CrsMatrixType &gt; </td></tr>
 <tr class="memitem:ad828f748bcad650272c61f59cd247669"><td class="memTemplItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad828f748bcad650272c61f59cd247669">CreateSystemMatrixFull</a> (size_t num_system_dofs, size_t num_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices)</td></tr>
 <tr class="separator:ad828f748bcad650272c61f59cd247669"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1647,37 +1657,36 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a7dbbbc9ec8fb3dc16dcba1e5b9feae96" name="a7dbbbc9ec8fb3dc16dcba1e5b9feae96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7dbbbc9ec8fb3dc16dcba1e5b9feae96">&#9670;&#160;</a></span>CalculateFixedBC3DOFConstraint()</h2>
+<a id="a20d8256fd96c2c109c206addd7285901" name="a20d8256fd96c2c109c206addd7285901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20d8256fd96c2c109c206addd7285901">&#9670;&#160;</a></span>CalculateFixedBC3DOFConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateFixedBC3DOFConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateFixedBC3DOFConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1686,46 +1695,40 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ad0a0e9f9c0573d8a97a6b5573ec91c43" name="ad0a0e9f9c0573d8a97a6b5573ec91c43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0a0e9f9c0573d8a97a6b5573ec91c43">&#9670;&#160;</a></span>CalculateFixedBCConstraint()</h2>
+<a id="a493120565e69bf9d5d93375ff96a9b47" name="a493120565e69bf9d5d93375ff96a9b47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a493120565e69bf9d5d93375ff96a9b47">&#9670;&#160;</a></span>CalculateFixedBCConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateFixedBCConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateFixedBCConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1734,52 +1737,46 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a5f52c6ae4de379f2013184b18cb84458" name="a5f52c6ae4de379f2013184b18cb84458"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f52c6ae4de379f2013184b18cb84458">&#9670;&#160;</a></span>CalculatePrescribedBC3DOFConstraint()</h2>
+<a id="a6bea7606473a700395b6037d58821b55" name="a6bea7606473a700395b6037d58821b55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bea7606473a700395b6037d58821b55">&#9670;&#160;</a></span>CalculatePrescribedBC3DOFConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculatePrescribedBC3DOFConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculatePrescribedBC3DOFConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>inputs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1788,52 +1785,46 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a07e638e3be0ea2ab38cc192a70515094" name="a07e638e3be0ea2ab38cc192a70515094"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07e638e3be0ea2ab38cc192a70515094">&#9670;&#160;</a></span>CalculatePrescribedBCConstraint()</h2>
+<a id="a2bc5a2d0fd38086a8750b5feb661864f" name="a2bc5a2d0fd38086a8750b5feb661864f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bc5a2d0fd38086a8750b5feb661864f">&#9670;&#160;</a></span>CalculatePrescribedBCConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculatePrescribedBCConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculatePrescribedBCConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>inputs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1842,64 +1833,58 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6541551248c5ad689efc6d3c65141018" name="a6541551248c5ad689efc6d3c65141018"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6541551248c5ad689efc6d3c65141018">&#9670;&#160;</a></span>CalculateRevoluteJointConstraint()</h2>
+<a id="a5532f3504d0d6e5af0d2c98fbc2a3b89" name="a5532f3504d0d6e5af0d2c98fbc2a3b89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5532f3504d0d6e5af0d2c98fbc2a3b89">&#9670;&#160;</a></span>CalculateRevoluteJointConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRevoluteJointConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateRevoluteJointConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>axes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>base_gradient_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1908,46 +1893,40 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="acc40a3b44923d7b010925d30a4b9f181" name="acc40a3b44923d7b010925d30a4b9f181"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc40a3b44923d7b010925d30a4b9f181">&#9670;&#160;</a></span>CalculateRevoluteJointForce()</h2>
+<a id="aee1d615ccb19b9bfd001244542669aae" name="aee1d615ccb19b9bfd001244542669aae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee1d615ccb19b9bfd001244542669aae">&#9670;&#160;</a></span>CalculateRevoluteJointForce()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRevoluteJointForce </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateRevoluteJointForce </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>axes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>inputs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>system_residual_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -1956,58 +1935,52 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a78a002954584388a9d3177d58f6abefc" name="a78a002954584388a9d3177d58f6abefc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78a002954584388a9d3177d58f6abefc">&#9670;&#160;</a></span>CalculateRigidJoint3DOFConstraint()</h2>
+<a id="a52bb860554a54ce5bd9f1489a0f45cf5" name="a52bb860554a54ce5bd9f1489a0f45cf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52bb860554a54ce5bd9f1489a0f45cf5">&#9670;&#160;</a></span>CalculateRigidJoint3DOFConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRigidJoint3DOFConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateRigidJoint3DOFConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>base_gradient_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -2016,58 +1989,52 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a422d922201ceb958effa82df3c42d0b0" name="a422d922201ceb958effa82df3c42d0b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a422d922201ceb958effa82df3c42d0b0">&#9670;&#160;</a></span>CalculateRigidJointConstraint()</h2>
+<a id="a0e7032577b1a594c5decbe355433d100" name="a0e7032577b1a594c5decbe355433d100"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e7032577b1a594c5decbe355433d100">&#9670;&#160;</a></span>CalculateRigidJointConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRigidJointConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateRigidJointConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>base_gradient_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -2076,70 +2043,64 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6125942d035bbc7337c89c30f88338ef" name="a6125942d035bbc7337c89c30f88338ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6125942d035bbc7337c89c30f88338ef">&#9670;&#160;</a></span>CalculateRotationControlConstraint()</h2>
+<a id="aa693a678d08576d57c4c47af8ca206ad" name="aa693a678d08576d57c4c47af8ca206ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa693a678d08576d57c4c47af8ca206ad">&#9670;&#160;</a></span>CalculateRotationControlConstraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void openturbine::CalculateRotationControlConstraint </td>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::CalculateRotationControlConstraint </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; double[3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>X0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>axes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>inputs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[7]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; double[7], DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_u</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>residual_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>base_gradient_terms</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; double[6][6]&gt; &amp;&#160;</td>
+          <td class="paramtype">const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>target_gradient_terms</em>&#160;</td>
         </tr>
         <tr>
@@ -2148,11 +2109,6 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -2213,8 +2169,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a6533b36c326415e89a9b7da14cf21097" name="a6533b36c326415e89a9b7da14cf21097"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6533b36c326415e89a9b7da14cf21097">&#9670;&#160;</a></span>ComputeColInds()</h2>
+<a id="a11abf1ee69254cb9eb886ffd94bb46fa" name="a11abf1ee69254cb9eb886ffd94bb46fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11abf1ee69254cb9eb886ffd94bb46fa">&#9670;&#160;</a></span>ComputeColInds()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2239,55 +2195,55 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_freedom_map_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>num_nodes_per_element</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t ** &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t **, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_state_indices</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>row_range</em>, </td>
         </tr>
         <tr>
@@ -2311,11 +2267,13 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
 
 </div>
 </div>
-<a id="ae3d48eb6a5872669373b4f8ea9012839" name="ae3d48eb6a5872669373b4f8ea9012839"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3d48eb6a5872669373b4f8ea9012839">&#9670;&#160;</a></span>ComputeNumSystemDofs()</h2>
+<a id="aba456c8b86c4960edec901de54f9c62e" name="aba456c8b86c4960edec901de54f9c62e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba456c8b86c4960edec901de54f9c62e">&#9670;&#160;</a></span>ComputeNumSystemDofs()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2323,7 +2281,7 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
         <tr>
           <td class="memname">size_t openturbine::ComputeNumSystemDofs </td>
           <td>(</td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, DeviceType &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>active_dofs</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2339,8 +2297,8 @@ template&lt;typename RowPtrType , typename IndicesType &gt; </div>
 
 </div>
 </div>
-<a id="a6f96fb8f0eb6fc4c041c3fa44157cd6d" name="a6f96fb8f0eb6fc4c041c3fa44157cd6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f96fb8f0eb6fc4c041c3fa44157cd6d">&#9670;&#160;</a></span>ComputeRowPtrs()</h2>
+<a id="a0c1a525f0efe8c4f643b0d710ae51a2b" name="a0c1a525f0efe8c4f643b0d710ae51a2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c1a525f0efe8c4f643b0d710ae51a2b">&#9670;&#160;</a></span>ComputeRowPtrs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2365,55 +2323,55 @@ template&lt;typename RowPtrType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_freedom_map_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>num_nodes_per_element</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t ** &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t **, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_state_indices</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename RowPtrType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>row_range</em>&#160;</td>
         </tr>
         <tr>
@@ -2648,8 +2606,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a8e904e4f4364f057d3dc3bd118408ab5" name="a8e904e4f4364f057d3dc3bd118408ab5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e904e4f4364f057d3dc3bd118408ab5">&#9670;&#160;</a></span>CreateFullMatrix()</h2>
+<a id="a1a48dc3547da4a3e5ca5ed21128b66a8" name="a1a48dc3547da4a3e5ca5ed21128b66a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a48dc3547da4a3e5ca5ed21128b66a8">&#9670;&#160;</a></span>CreateFullMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2674,55 +2632,55 @@ template&lt;typename CrsMatrixType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>base_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *[6], typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>target_node_freedom_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>row_range</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>active_dofs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_freedom_map_table</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t * &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t *, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>num_nodes_per_element</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Kokkos::View&lt; size_t ** &gt;::const_type &amp;&#160;</td>
+          <td class="paramtype">const typename Kokkos::View&lt; size_t **, typename CrsMatrixType::device_type &gt;::const_type &amp;&#160;</td>
           <td class="paramname"><em>node_state_indices</em>&#160;</td>
         </tr>
         <tr>

@@ -1,11 +1,11 @@
-.. meta::072b18cc95b0868ca9e0e5d3074c3945a1c2362775aae43605c119088235dcfa186a0924a89dd718fcb1a0cfc42e4f689b298ac29b0245bd0ccd51cb564adbb3
+.. meta::0652e6e802c8d4d652eb80e212eb330e6318d15e0eeebb3a2a453d6ab9c4dfc8e31453270958653c147595b78a643465f800fc549fdcc2f93d41b10e6ab455ca
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ComputeNodeFreedomMapTable Struct Reference
+.. title:: OpenTurbine API: openturbine::ComputeNodeFreedomMapTable&lt; DeviceType &gt; Struct Template Reference
 
-ComputeNodeFreedomMapTable Struct Reference
-===========================================
+ComputeNodeFreedomMapTable&lt; DeviceType &gt; Struct Template Reference
+========================================================================
 
 .. container:: doxygen-content
 

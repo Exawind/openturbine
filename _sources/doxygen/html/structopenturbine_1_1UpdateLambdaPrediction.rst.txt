@@ -1,11 +1,11 @@
-.. meta::af55a4ee5b0764f3b842f919d670404c6506e5fac993b9422e0fca3d8e3b3df4dce7af5a858fe48a5bce34de4e6c0f41019fa7ca727c1203e823098c9e8857d3
+.. meta::c10ed7a2052abf21b53fbf21397810c6cf99eb1bd5cef1b9b5ebec1ec958a5e7a0b2215e713cbee84f2a09b8b9feb74c5eaccaf7f1a8d1d7a7a7639922110148
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::UpdateLambdaPrediction Struct Reference
+.. title:: OpenTurbine API: openturbine::UpdateLambdaPrediction&lt; DeviceType &gt; Struct Template Reference
 
-UpdateLambdaPrediction Struct Reference
-=======================================
+UpdateLambdaPrediction&lt; DeviceType &gt; Struct Template Reference
+====================================================================
 
 .. container:: doxygen-content
 

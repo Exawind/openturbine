@@ -1,11 +1,11 @@
-.. meta::c818e1a9ea0e4aed8fccb43d4fe58f2cedb1c74658eccd0d37faa5c07c451dd723ee3d892c34a170b064bc4f8b431fbd0ca56783c6ad5d9a03490210ea711b0c
+.. meta::81970aeb4931ead76f8fbba0b21b9ae29f713e7c3bc0f02b4903ce699a868aa832ccb43bbb42a5b2b1820844dce00b9919170e6bd373ffab5d5a000a0fc46977
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Masses Struct Reference
+.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Masses&lt; DeviceType &gt; Struct Template Reference
 
-AssembleNodeFreedomMapTable\_Masses Struct Reference
-====================================================
+AssembleNodeFreedomMapTable\_Masses&lt; DeviceType &gt; Struct Template Reference
+=================================================================================
 
 .. container:: doxygen-content
 

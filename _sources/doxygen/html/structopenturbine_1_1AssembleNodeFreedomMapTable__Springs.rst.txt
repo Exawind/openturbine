@@ -1,11 +1,11 @@
-.. meta::064a86b76f829bf0d9cd04de37b7759089c4d697e65b191a3ae251fa2b4ed9b2cf816524b613cd86901121fcd9083b71ccd96ac8d89e9130d488d939c2acf624
+.. meta::a5a398ba8347e296ee570deeac9b2bb02a04208af8ac5f86f9cf8524249dc049b538ad2ffd0dc9f19069548bfa1377e571c8f8f48d6a116f887d29d39c1b2dc9
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Springs Struct Reference
+.. title:: OpenTurbine API: openturbine::AssembleNodeFreedomMapTable_Springs&lt; DeviceType &gt; Struct Template Reference
 
-AssembleNodeFreedomMapTable\_Springs Struct Reference
-=====================================================
+AssembleNodeFreedomMapTable\_Springs&lt; DeviceType &gt; Struct Template Reference
+==================================================================================
 
 .. container:: doxygen-content
 

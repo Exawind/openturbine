@@ -1,11 +1,11 @@
-.. meta::d094e2e9f1b90a1c7e1ce356c0da8108513bd7502bbd4b08396602381924e94a096810efc8799213ae339be0d32e905f97877968049b2b4d6fe9dca403740512
+.. meta::9813457d3101c4d9b7ff33cbbcf5f82692bbcdabd2f53c63d63b106697391ab5d7f0bc4ea62b7f8f655cc47b05f5c077d419a203150f12944319e42be5d39ecf
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::UpdateGlobalPosition Struct Reference
+.. title:: OpenTurbine API: openturbine::UpdateGlobalPosition&lt; DeviceType &gt; Struct Template Reference
 
-UpdateGlobalPosition Struct Reference
-=====================================
+UpdateGlobalPosition&lt; DeviceType &gt; Struct Template Reference
+==================================================================
 
 .. container:: doxygen-content
 

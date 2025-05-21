@@ -183,31 +183,32 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1beams.html">openturbine::beams</a> {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>KOKKOS_FUNCTION</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00011" data-start="{" data-end="}">
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1beams.html#a37e6a146c484ecf35cc65687ba071821">   11</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1beams.html#a37e6a146c484ecf35cc65687ba071821">CalculatePuu</a>(</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[6][6]&gt;::const_type&amp; Cuu,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3][3]&gt;::const_type&amp; x0pupSS,</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3][3]&gt;::const_type&amp; N_tilde, <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[6][6]&gt;&amp; Puu</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>) {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">using </span>NoTranspose = KokkosBatched::Trans::NoTranspose;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">using </span>Transpose = KokkosBatched::Trans::Transpose;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">using </span>Default = KokkosBatched::Algo::Gemm::Default;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">using </span>GemmTN = KokkosBatched::SerialGemm&lt;Transpose, NoTranspose, Default&gt;;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">auto</span> C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">auto</span> C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    KokkosBlas::SerialSet::invoke(0., Puu);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">auto</span> Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    KokkosBlas::serial_axpy(1., N_tilde, Puu_21);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    GemmTN::invoke(1., x0pupSS, C11, 1., Puu_21);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">auto</span> Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    GemmTN::invoke(1., x0pupSS, C12, 0., Puu_22);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1beams.html#ae99c39780e0122d2cf7e7a1cc644eb5f">   11</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1beams.html#ae99c39780e0122d2cf7e7a1cc644eb5f">CalculatePuu</a>(</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[6][6], DeviceType&gt;::const_type&amp; Cuu,</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3][3], DeviceType&gt;::const_type&amp; x0pupSS,</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3][3], DeviceType&gt;::const_type&amp; N_tilde,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[6][6], DeviceType&gt;&amp; Puu</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>) {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">using </span>NoTranspose = KokkosBatched::Trans::NoTranspose;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">using </span>Transpose = KokkosBatched::Trans::Transpose;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">using </span>Default = KokkosBatched::Algo::Gemm::Default;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">using </span>GemmTN = KokkosBatched::SerialGemm&lt;Transpose, NoTranspose, Default&gt;;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">auto</span> C11 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(0, 3));</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">auto</span> C12 = Kokkos::subview(Cuu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    KokkosBlas::SerialSet::invoke(0., Puu);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">auto</span> Puu_21 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(0, 3));</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    KokkosBlas::serial_axpy(1., N_tilde, Puu_21);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    GemmTN::invoke(1., x0pupSS, C11, 1., Puu_21);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">auto</span> Puu_22 = Kokkos::subview(Puu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    GemmTN::invoke(1., x0pupSS, C12, 0., Puu_22);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
 </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}  <span class="comment">// namespace openturbine::beams</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}  <span class="comment">// namespace openturbine::beams</span></div>
 <div class="ttc" id="anamespaceopenturbine_1_1beams_html"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html">openturbine::beams</a></div><div class="ttdef"><b>Definition</b> calculate_force_FC.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1beams_html_a37e6a146c484ecf35cc65687ba071821"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html#a37e6a146c484ecf35cc65687ba071821">openturbine::beams::CalculatePuu</a></div><div class="ttdeci">KOKKOS_FUNCTION void CalculatePuu(const Kokkos::View&lt; double[6][6]&gt;::const_type &amp;Cuu, const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;x0pupSS, const Kokkos::View&lt; double[3][3]&gt;::const_type &amp;N_tilde, const Kokkos::View&lt; double[6][6]&gt; &amp;Puu)</div><div class="ttdef"><b>Definition</b> calculate_Puu.hpp:11</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1beams_html_ae99c39780e0122d2cf7e7a1cc644eb5f"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html#ae99c39780e0122d2cf7e7a1cc644eb5f">openturbine::beams::CalculatePuu</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void CalculatePuu(const typename Kokkos::View&lt; double[6][6], DeviceType &gt;::const_type &amp;Cuu, const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;x0pupSS, const typename Kokkos::View&lt; double[3][3], DeviceType &gt;::const_type &amp;N_tilde, const Kokkos::View&lt; double[6][6], DeviceType &gt; &amp;Puu)</div><div class="ttdef"><b>Definition</b> calculate_Puu.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

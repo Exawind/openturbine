@@ -184,22 +184,24 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00008" data-start="{" data-end="}">
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1springs.html">    8</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1springs.html">openturbine::springs</a> {</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>KOKKOS_FUNCTION</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00011" data-start="{" data-end="}">
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1springs.html#a5834961918b01e68694918672a051e75">   11</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1springs.html#a5834961918b01e68694918672a051e75">CalculateDistanceComponents</a>(</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3]&gt;::const_type&amp; x0, <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3]&gt;::const_type&amp; u1,</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3]&gt;::const_type&amp; u2, <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3]&gt;&amp; r</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>) {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 3U; ++i) {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        r(i) = x0(i) + u2(i) - u1(i);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    }</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1springs.html#a86302a699bc1c141e29066dffdbbe970">   11</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1springs.html#a86302a699bc1c141e29066dffdbbe970">CalculateDistanceComponents</a>(</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3], DeviceType&gt;::const_type&amp; x0,</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3], DeviceType&gt;::const_type&amp; u1,</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">const</span> <span class="keyword">typename</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3], DeviceType&gt;::const_type&amp; u2,</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">const</span> Kokkos::View&lt;<span class="keywordtype">double</span>[3], DeviceType&gt;&amp; r</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>) {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 3U; ++i) {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        r(i) = x0(i) + u2(i) - u1(i);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    }</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
 </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}  <span class="comment">// namespace openturbine::springs</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}  <span class="comment">// namespace openturbine::springs</span></div>
 </div>
 <div class="ttc" id="anamespaceopenturbine_1_1springs_html"><div class="ttname"><a href="namespaceopenturbine_1_1springs.html">openturbine::springs</a></div><div class="ttdef"><b>Definition</b> calculate_distance_components.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1springs_html_a5834961918b01e68694918672a051e75"><div class="ttname"><a href="namespaceopenturbine_1_1springs.html#a5834961918b01e68694918672a051e75">openturbine::springs::CalculateDistanceComponents</a></div><div class="ttdeci">KOKKOS_FUNCTION void CalculateDistanceComponents(const Kokkos::View&lt; double[3]&gt;::const_type &amp;x0, const Kokkos::View&lt; double[3]&gt;::const_type &amp;u1, const Kokkos::View&lt; double[3]&gt;::const_type &amp;u2, const Kokkos::View&lt; double[3]&gt; &amp;r)</div><div class="ttdef"><b>Definition</b> calculate_distance_components.hpp:11</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1springs_html_a86302a699bc1c141e29066dffdbbe970"><div class="ttname"><a href="namespaceopenturbine_1_1springs.html#a86302a699bc1c141e29066dffdbbe970">openturbine::springs::CalculateDistanceComponents</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void CalculateDistanceComponents(const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;x0, const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;u1, const typename Kokkos::View&lt; double[3], DeviceType &gt;::const_type &amp;u2, const Kokkos::View&lt; double[3], DeviceType &gt; &amp;r)</div><div class="ttdef"><b>Definition</b> calculate_distance_components.hpp:11</div></div>
 <div class="ttc" id="avector__operations_8hpp_html"><div class="ttname"><a href="vector__operations_8hpp.html">vector_operations.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

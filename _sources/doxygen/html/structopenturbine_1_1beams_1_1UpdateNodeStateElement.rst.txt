@@ -1,11 +1,11 @@
-.. meta::3842640231916bfcc3bd95e0e20bd4f63643328a36f867a4039d5f16cafec2c0282d892bd14e24106fde0b62cc12f739811fcd6a64b68fc47530b6fcec3b4f5a
+.. meta::8d61c935f9ea42a5daa0c8e33144f7cdfa275e817387f2de78ffcb3d3627a8519121f74acbfe32e8c6aa37e7d80200e0e06d6b4da73d1f2d23b3e97b3a7bf3fc
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::UpdateNodeStateElement Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::UpdateNodeStateElement&lt; DeviceType &gt; Struct Template Reference
 
-UpdateNodeStateElement Struct Reference
-=======================================
+UpdateNodeStateElement&lt; DeviceType &gt; Struct Template Reference
+====================================================================
 
 .. container:: doxygen-content
 

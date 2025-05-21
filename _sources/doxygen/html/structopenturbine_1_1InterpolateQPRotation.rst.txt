@@ -1,11 +1,11 @@
-.. meta::d5ad57150f77df37846ea03a50e0fe6b9e3f10d8bbb20e728f24f102cc996303b5ed68eccc8a52eb3b1110af1901291c09eadb571226d14f64e7196a089e69a0
+.. meta::2e852e7a8be95d1d2324156fd04d8ba7c7daa78a4b59b12776baac437382439032705c5746570d242582a528c15d78aa828908446e7b2076899a7186f23e1cfc
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::InterpolateQPRotation Struct Reference
+.. title:: OpenTurbine API: openturbine::InterpolateQPRotation&lt; DeviceType &gt; Struct Template Reference
 
-InterpolateQPRotation Struct Reference
-======================================
+InterpolateQPRotation&lt; DeviceType &gt; Struct Template Reference
+===================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::292cbe56f1840d09a7a79c5050b863d61c69d324865fbe0557a33318937f118e22a0872ad1f40b51bb27d5eca2859d4b4a7758c28425b31336e04f4b6612fc74
+.. meta::f54433b75b152690075273b5a13e7a4fb14974d52c9b5f876f3e243d83d9d051936d35f00e3660189292b7fd22e4bbb01ff840b06f104218b2e558700a591445
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CreateElementFreedomTable_Beams Struct Reference
+.. title:: OpenTurbine API: openturbine::CreateElementFreedomTable_Beams&lt; DeviceType &gt; Struct Template Reference
 
-CreateElementFreedomTable\_Beams Struct Reference
-=================================================
+CreateElementFreedomTable\_Beams&lt; DeviceType &gt; Struct Template Reference
+==============================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::0b7d6953971e98aca4292c68d8402a80f2aa5cb1329e538953038114db1809002a447f21dfddf0ddb9b129ab06ffe9c46f9d7d4aea540b3b3257c4916742b123
+.. meta::d2ccf31161f183dcca9f82a9a06068df9841a8b72cbbc43aa3aa59618f1b9c11bc2de6456cc0276c645a4d95b47cf7b8564c5aeb11bfaa67c1a89cd77843c64a
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::CalculateInertialQuadraturePointValues Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::CalculateInertialQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
 
-CalculateInertialQuadraturePointValues Struct Reference
-=======================================================
+CalculateInertialQuadraturePointValues&lt; DeviceType &gt; Struct Template Reference
+====================================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::a37057dca343d0e564ebb6f6ee7f9e95267cc812827b352dc5133566af55e13cba7fc1a538789590c527ee0703c58e6a209251f0441880f63646e4d6f7b29f28
+.. meta::9a4e5b35ea2ec8941dbe83b00c9d446af94a20c2bbdd5838f600d2b8ee5ed982b903b39a29659351fcaed5fe06eea2734b2ebfbeffccbf378eca9497d32e6f45
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::CreateConstraintFreedomTable Struct Reference
+.. title:: OpenTurbine API: openturbine::CreateConstraintFreedomTable&lt; DeviceType &gt; Struct Template Reference
 
-CreateConstraintFreedomTable Struct Reference
-=============================================
+CreateConstraintFreedomTable&lt; DeviceType &gt; Struct Template Reference
+==========================================================================
 
 .. container:: doxygen-content
 

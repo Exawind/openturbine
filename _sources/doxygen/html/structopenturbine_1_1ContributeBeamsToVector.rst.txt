@@ -1,11 +1,11 @@
-.. meta::52f8e8b0d7cd68575b1577a51720f2857646f164d61c62b050d67385a43535310e54d78afb34a1ee3b344f9aaa5d8a6ca53b77ef146b4570a81a096eb87de6bc
+.. meta::ddd9888f40f4c61cace1681ecfbda2ed59c2814e1feb949985463516cfd2325c7e1834f0a57f24597dc1b25a20bd27c0237ede6c7d96144e2ca2d0bd379aeb0f
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::ContributeBeamsToVector Struct Reference
+.. title:: OpenTurbine API: openturbine::ContributeBeamsToVector&lt; DeviceType &gt; Struct Template Reference
 
-ContributeBeamsToVector Struct Reference
-========================================
+ContributeBeamsToVector&lt; DeviceType &gt; Struct Template Reference
+=====================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::faec7d856dd99fe297293112ae8a31b7cb44c239959221aac068cebf8d51be67dc596a0daea2b6f3aff72fbd3a697f2eb8839e554c9e09d57d3a17e0b5e76463
+.. meta::4650909db6d156f3b97708f13c871fbc6b8686dd2eb49ea9dbc26592b2f247dda51b91ea67c4c0e69624bc8cab2eec61c11357bd7954fbe80664cbdc0a319b98
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::IntegrateStiffnessMatrixElement Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::IntegrateStiffnessMatrixElement&lt; DeviceType &gt; Struct Template Reference
 
-IntegrateStiffnessMatrixElement Struct Reference
-================================================
+IntegrateStiffnessMatrixElement&lt; DeviceType &gt; Struct Template Reference
+=============================================================================
 
 .. container:: doxygen-content
 

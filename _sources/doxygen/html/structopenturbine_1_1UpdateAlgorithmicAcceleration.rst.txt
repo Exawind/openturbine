@@ -1,11 +1,11 @@
-.. meta::2267c570bc12f2fbdfe7b646f2fefb9c5baec78b63d7da3129510b720c60299f3778cdae6aa687ddfdc80f0921a99102478cc2dcbab88391c120abdf7e29383d
+.. meta::a16111f218ee8ebee1396379ff071d7229832470d4200d0b8b3e3bcb5d737ea1ed6b63717c941c2e1ebfc8ff5b68969a9f795426b166f9ef88d70a7dbcdd4160
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::UpdateAlgorithmicAcceleration Struct Reference
+.. title:: OpenTurbine API: openturbine::UpdateAlgorithmicAcceleration&lt; DeviceType &gt; Struct Template Reference
 
-UpdateAlgorithmicAcceleration Struct Reference
-==============================================
+UpdateAlgorithmicAcceleration&lt; DeviceType &gt; Struct Template Reference
+===========================================================================
 
 .. container:: doxygen-content
 

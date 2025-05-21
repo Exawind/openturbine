@@ -1,11 +1,11 @@
-.. meta::e7faed9927c10a7c50f52b56aed58effd3df116f6eeda545ea4532c67855a6d70da1048b358f99b02ef0f48ab570218bede25dc6c7e6065e7bbe562b0755d568
+.. meta::8dd556f9fb004f229e6fe290cc2f2c685d0d6f4c2b45fd12ec158af9584b393f81ca31da71603400aed6b265cbb12c05e6906e960044e0c18900b7fb1fae0050
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::beams::IntegrateResidualVectorElement Struct Reference
+.. title:: OpenTurbine API: openturbine::beams::IntegrateResidualVectorElement&lt; DeviceType &gt; Struct Template Reference
 
-IntegrateResidualVectorElement Struct Reference
-===============================================
+IntegrateResidualVectorElement&lt; DeviceType &gt; Struct Template Reference
+============================================================================
 
 .. container:: doxygen-content
 

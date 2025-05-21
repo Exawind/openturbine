@@ -179,34 +179,38 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a28d8f3e24582f380c5485e056ee9010a" id="r_a28d8f3e24582f380c5485e056ee9010a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> = typename CrsMatrixType::device_type</td></tr>
+<tr class="separator:a28d8f3e24582f380c5485e056ee9010a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af254d644e3cbd84435cc327525c3e16b" id="r_af254d644e3cbd84435cc327525c3e16b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#af254d644e3cbd84435cc327525c3e16b">RowDataType</a> = typename CrsMatrixType::values_type::non_const_type</td></tr>
 <tr class="separator:af254d644e3cbd84435cc327525c3e16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b77a4da214e55df1e128ec4a13743cb" id="r_a4b77a4da214e55df1e128ec4a13743cb"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a4b77a4da214e55df1e128ec4a13743cb">ColIdxType</a> = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type</td></tr>
 <tr class="separator:a4b77a4da214e55df1e128ec4a13743cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe00d09b619d40b436ddd59fc212628f" id="r_abe00d09b619d40b436ddd59fc212628f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#abe00d09b619d40b436ddd59fc212628f">member_type</a> = typename Kokkos::TeamPolicy&lt; typename DeviceType::execution_space &gt;::member_type</td></tr>
+<tr class="separator:abe00d09b619d40b436ddd59fc212628f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aae458ded0f3fdffb5182b7e19e6dda61" id="r_aae458ded0f3fdffb5182b7e19e6dda61"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#aae458ded0f3fdffb5182b7e19e6dda61">operator()</a> (Kokkos::TeamPolicy&lt;&gt;::member_type member) const</td></tr>
-<tr class="separator:aae458ded0f3fdffb5182b7e19e6dda61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a890718bdfc0dbb3e3f407334bfe24cf8" id="r_a890718bdfc0dbb3e3f407334bfe24cf8"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a890718bdfc0dbb3e3f407334bfe24cf8">operator()</a> (<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#abe00d09b619d40b436ddd59fc212628f">member_type</a> member) const</td></tr>
+<tr class="separator:a890718bdfc0dbb3e3f407334bfe24cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:afce12a380ba7bfb908518f05cf5759b7" id="r_afce12a380ba7bfb908518f05cf5759b7"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#afce12a380ba7bfb908518f05cf5759b7">num_system_rows</a> {}</td></tr>
 <tr class="separator:afce12a380ba7bfb908518f05cf5759b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6407d95e972910efc30c7ad1e6755c15" id="r_a6407d95e972910efc30c7ad1e6755c15"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a6407d95e972910efc30c7ad1e6755c15">row_range</a></td></tr>
-<tr class="separator:a6407d95e972910efc30c7ad1e6755c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2c21f67ef603bbff2be0746a3d045fc" id="r_ac2c21f67ef603bbff2be0746a3d045fc"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#ac2c21f67ef603bbff2be0746a3d045fc">base_node_freedom_signature</a></td></tr>
-<tr class="separator:ac2c21f67ef603bbff2be0746a3d045fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e1a882270182d592d8c61898f65e758" id="r_a2e1a882270182d592d8c61898f65e758"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a2e1a882270182d592d8c61898f65e758">target_node_freedom_signature</a></td></tr>
-<tr class="separator:a2e1a882270182d592d8c61898f65e758"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7594011d3d159d65cf85a86c83503937" id="r_a7594011d3d159d65cf85a86c83503937"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a7594011d3d159d65cf85a86c83503937">base_node_freedom_table</a></td></tr>
-<tr class="separator:a7594011d3d159d65cf85a86c83503937"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bbdb1737e0198016a07113433f405c2" id="r_a2bbdb1737e0198016a07113433f405c2"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a2bbdb1737e0198016a07113433f405c2">target_node_freedom_table</a></td></tr>
-<tr class="separator:a2bbdb1737e0198016a07113433f405c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad02cb71e0e38a9d2ec73a71eff0d3dbb" id="r_ad02cb71e0e38a9d2ec73a71eff0d3dbb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#ad02cb71e0e38a9d2ec73a71eff0d3dbb">base_dense</a></td></tr>
-<tr class="separator:ad02cb71e0e38a9d2ec73a71eff0d3dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c36f9d4dec041f79edbd8df93ba1aeb" id="r_a3c36f9d4dec041f79edbd8df93ba1aeb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6]&gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a3c36f9d4dec041f79edbd8df93ba1aeb">target_dense</a></td></tr>
-<tr class="separator:a3c36f9d4dec041f79edbd8df93ba1aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae07239e4bfd4407d464aadc8a5870fce" id="r_ae07239e4bfd4407d464aadc8a5870fce"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#ae07239e4bfd4407d464aadc8a5870fce">row_range</a></td></tr>
+<tr class="separator:ae07239e4bfd4407d464aadc8a5870fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a9952f8a370c8f709e8b3439fa797f" id="r_a38a9952f8a370c8f709e8b3439fa797f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a38a9952f8a370c8f709e8b3439fa797f">base_node_freedom_signature</a></td></tr>
+<tr class="separator:a38a9952f8a370c8f709e8b3439fa797f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3011508d29ffc7cc453df0d79310cf91" id="r_a3011508d29ffc7cc453df0d79310cf91"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a3011508d29ffc7cc453df0d79310cf91">target_node_freedom_signature</a></td></tr>
+<tr class="separator:a3011508d29ffc7cc453df0d79310cf91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af22102163364b20a9f49545d3a492996" id="r_af22102163364b20a9f49545d3a492996"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6], <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#af22102163364b20a9f49545d3a492996">base_node_freedom_table</a></td></tr>
+<tr class="separator:af22102163364b20a9f49545d3a492996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af875ea5dbb3f967fabc9788e0c6d5bfb" id="r_af875ea5dbb3f967fabc9788e0c6d5bfb"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6], <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#af875ea5dbb3f967fabc9788e0c6d5bfb">target_node_freedom_table</a></td></tr>
+<tr class="separator:af875ea5dbb3f967fabc9788e0c6d5bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07d1a514fbd2f1fc3f7fea4811be45f5" id="r_a07d1a514fbd2f1fc3f7fea4811be45f5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6], <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a07d1a514fbd2f1fc3f7fea4811be45f5">base_dense</a></td></tr>
+<tr class="separator:a07d1a514fbd2f1fc3f7fea4811be45f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a815c4b934d886ee4d7a7d10b015d9546" id="r_a815c4b934d886ee4d7a7d10b015d9546"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6], <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a> &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a815c4b934d886ee4d7a7d10b015d9546">target_dense</a></td></tr>
+<tr class="separator:a815c4b934d886ee4d7a7d10b015d9546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4720141fb0b0f5c94f7fd1b0213fedcc" id="r_a4720141fb0b0f5c94f7fd1b0213fedcc"><td class="memItemLeft" align="right" valign="top">CrsMatrixType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a4720141fb0b0f5c94f7fd1b0213fedcc">sparse</a></td></tr>
 <tr class="separator:a4720141fb0b0f5c94f7fd1b0213fedcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -221,6 +225,38 @@ template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::ColIdxType =  typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a28d8f3e24582f380c5485e056ee9010a" name="a28d8f3e24582f380c5485e056ee9010a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28d8f3e24582f380c5485e056ee9010a">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename CrsMatrixType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::DeviceType =  typename CrsMatrixType::device_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abe00d09b619d40b436ddd59fc212628f" name="abe00d09b619d40b436ddd59fc212628f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe00d09b619d40b436ddd59fc212628f">&#9670;&#160;</a></span>member_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename CrsMatrixType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::member_type =  typename Kokkos::TeamPolicy&lt;typename DeviceType::execution_space&gt;::member_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -244,8 +280,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aae458ded0f3fdffb5182b7e19e6dda61" name="aae458ded0f3fdffb5182b7e19e6dda61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae458ded0f3fdffb5182b7e19e6dda61">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a890718bdfc0dbb3e3f407334bfe24cf8" name="a890718bdfc0dbb3e3f407334bfe24cf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a890718bdfc0dbb3e3f407334bfe24cf8">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,7 +294,7 @@ template&lt;typename CrsMatrixType &gt; </div>
         <tr>
           <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">Kokkos::TeamPolicy&lt;&gt;::member_type&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#abe00d09b619d40b436ddd59fc212628f">member_type</a>&#160;</td>
           <td class="paramname"><em>member</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -273,8 +309,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad02cb71e0e38a9d2ec73a71eff0d3dbb" name="ad02cb71e0e38a9d2ec73a71eff0d3dbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad02cb71e0e38a9d2ec73a71eff0d3dbb">&#9670;&#160;</a></span>base_dense</h2>
+<a id="a07d1a514fbd2f1fc3f7fea4811be45f5" name="a07d1a514fbd2f1fc3f7fea4811be45f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07d1a514fbd2f1fc3f7fea4811be45f5">&#9670;&#160;</a></span>base_dense</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -282,15 +318,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_dense</td>
+          <td class="memname">Kokkos::View&lt;double*[6][6],<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_dense</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac2c21f67ef603bbff2be0746a3d045fc" name="ac2c21f67ef603bbff2be0746a3d045fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2c21f67ef603bbff2be0746a3d045fc">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
+<a id="a38a9952f8a370c8f709e8b3439fa797f" name="a38a9952f8a370c8f709e8b3439fa797f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38a9952f8a370c8f709e8b3439fa797f">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -298,15 +334,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_node_freedom_signature</td>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*,<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_node_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a7594011d3d159d65cf85a86c83503937" name="a7594011d3d159d65cf85a86c83503937"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7594011d3d159d65cf85a86c83503937">&#9670;&#160;</a></span>base_node_freedom_table</h2>
+<a id="af22102163364b20a9f49545d3a492996" name="af22102163364b20a9f49545d3a492996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af22102163364b20a9f49545d3a492996">&#9670;&#160;</a></span>base_node_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,7 +350,7 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*[6]&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_node_freedom_table</td>
+          <td class="memname">Kokkos::View&lt;size_t*[6],<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::base_node_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -337,8 +373,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
-<a id="a6407d95e972910efc30c7ad1e6755c15" name="a6407d95e972910efc30c7ad1e6755c15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6407d95e972910efc30c7ad1e6755c15">&#9670;&#160;</a></span>row_range</h2>
+<a id="ae07239e4bfd4407d464aadc8a5870fce" name="ae07239e4bfd4407d464aadc8a5870fce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae07239e4bfd4407d464aadc8a5870fce">&#9670;&#160;</a></span>row_range</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +382,7 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::row_range</td>
+          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*,<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::row_range</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -369,8 +405,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
-<a id="a3c36f9d4dec041f79edbd8df93ba1aeb" name="a3c36f9d4dec041f79edbd8df93ba1aeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c36f9d4dec041f79edbd8df93ba1aeb">&#9670;&#160;</a></span>target_dense</h2>
+<a id="a815c4b934d886ee4d7a7d10b015d9546" name="a815c4b934d886ee4d7a7d10b015d9546"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a815c4b934d886ee4d7a7d10b015d9546">&#9670;&#160;</a></span>target_dense</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,15 +414,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6][6]&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_dense</td>
+          <td class="memname">Kokkos::View&lt;double*[6][6],<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_dense</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2e1a882270182d592d8c61898f65e758" name="a2e1a882270182d592d8c61898f65e758"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e1a882270182d592d8c61898f65e758">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
+<a id="a3011508d29ffc7cc453df0d79310cf91" name="a3011508d29ffc7cc453df0d79310cf91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3011508d29ffc7cc453df0d79310cf91">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -394,15 +430,15 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_node_freedom_signature</td>
+          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*,<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_node_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2bbdb1737e0198016a07113433f405c2" name="a2bbdb1737e0198016a07113433f405c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bbdb1737e0198016a07113433f405c2">&#9670;&#160;</a></span>target_node_freedom_table</h2>
+<a id="af875ea5dbb3f967fabc9788e0c6d5bfb" name="af875ea5dbb3f967fabc9788e0c6d5bfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af875ea5dbb3f967fabc9788e0c6d5bfb">&#9670;&#160;</a></span>target_node_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -410,7 +446,7 @@ template&lt;typename CrsMatrixType &gt; </div>
 template&lt;typename CrsMatrixType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*[6]&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_node_freedom_table</td>
+          <td class="memname">Kokkos::View&lt;size_t*[6],<a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#a28d8f3e24582f380c5485e056ee9010a">DeviceType</a>&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">openturbine::CopyConstraintsToSparseMatrix</a>&lt; CrsMatrixType &gt;::target_node_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
