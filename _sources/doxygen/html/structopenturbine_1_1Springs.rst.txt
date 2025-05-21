@@ -1,11 +1,11 @@
-.. meta::11c76b7e9bad00fb3f3ed9c33945368d23778254b8740977fe8bc75131be9f1775d1b863bf417c3f5df156588d2a97bf3a6f71ff7e95aad8d646089289401fba
+.. meta::0e9c9306b31fe53228bb97314778d7eb0ace302c8bd3b51696ceeb17a270ef328f89427ca895789357720280caf0d596748dd3b0481bb66ce82d195a1df779e6
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Springs Struct Reference
+.. title:: OpenTurbine API: openturbine::Springs&lt; DeviceType &gt; Struct Template Reference
 
-Springs Struct Reference
-========================
+Springs&lt; DeviceType &gt; Struct Template Reference
+=====================================================
 
 .. container:: doxygen-content
 

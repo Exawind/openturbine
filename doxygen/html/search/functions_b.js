@@ -5,7 +5,7 @@ var searchData=
   ['mapnodepositions_2',['MapNodePositions',['../namespaceopenturbine.html#a45278089c85b116e991de15af3ac44ce',1,'openturbine']]],
   ['mapsectionpositions_3',['MapSectionPositions',['../namespaceopenturbine.html#aeaadd42bbad5c5402c33c5dbdb445179',1,'openturbine']]],
   ['masselement_4',['MassElement',['../structopenturbine_1_1MassElement.html#ad00c86d3b7ca9cf36b9a62353021f982',1,'openturbine::MassElement']]],
-  ['masses_5',['Masses',['../structopenturbine_1_1Masses.html#af67b1c81a51cfe4a2809a4b481c7faf0',1,'openturbine::Masses']]],
+  ['masses_5',['Masses',['../structopenturbine_1_1Masses.html#a885b376e180e5a54abb14eae567b4b93',1,'openturbine::Masses']]],
   ['massesinput_6',['MassesInput',['../structopenturbine_1_1MassesInput.html#a326399872ec836517c5a111690ab42f7',1,'openturbine::MassesInput']]],
   ['maxelemnodes_7',['MaxElemNodes',['../structopenturbine_1_1BeamsInput.html#ad39ed7fe7f6cc39df0bcbf1639717ae3',1,'openturbine::BeamsInput']]],
   ['maxelemquadraturepoints_8',['MaxElemQuadraturePoints',['../structopenturbine_1_1BeamsInput.html#adbba5754fb41bcad894c952e66151285',1,'openturbine::BeamsInput']]],

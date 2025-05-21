@@ -1,11 +1,11 @@
-.. meta::4dff11396a8185b42db949c26e7b3ab7790659600dcbd5b3575e3fbbc154791f2576e9262f9d5fc1900c332a7ba7149a1babc96592b401e8c8cc07b0fd941006
+.. meta::fb37581c83b5dd80df8134e960c13aa8ac1ad95b6e324746019c7a9351c315a11261e6c00cc78948b30adaf840c7db54442ffb870d80debfd88d121750680346
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::State Struct Reference
+.. title:: OpenTurbine API: openturbine::State&lt; DeviceType &gt; Struct Template Reference
 
-State Struct Reference
-======================
+State&lt; DeviceType &gt; Struct Template Reference
+===================================================
 
 .. container:: doxygen-content
 

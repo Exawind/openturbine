@@ -540,14 +540,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a14ddfd0e99cc8dfae2c642df6d8b1063" id="r_a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a14ddfd0e99cc8dfae2c642df6d8b1063">NumRowsForConstraint</a> (<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> type)</td></tr>
 <tr class="memdesc:a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of degrees of freedom prescribed/fixed by the constraint type.  <br /></td></tr>
 <tr class="separator:a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73df7db3151390957bb059cad4aaacc6" id="r_a73df7db3151390957bb059cad4aaacc6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a73df7db3151390957bb059cad4aaacc6">assemble_node_freedom_allocation_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:a73df7db3151390957bb059cad4aaacc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa82b6fa11c59125852df5520fd4c4af3" id="r_aa82b6fa11c59125852df5520fd4c4af3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aa82b6fa11c59125852df5520fd4c4af3">compute_node_freedom_map_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:aa82b6fa11c59125852df5520fd4c4af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11b7ef0873eaa4135fcc955cc3fd5ba4" id="r_a11b7ef0873eaa4135fcc955cc3fd5ba4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a11b7ef0873eaa4135fcc955cc3fd5ba4">create_constraint_freedom_table</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints, const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a11b7ef0873eaa4135fcc955cc3fd5ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91c6946effee6a339849b0ee801424bf" id="r_a91c6946effee6a339849b0ee801424bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a91c6946effee6a339849b0ee801424bf">create_element_freedom_table</a> (<a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a91c6946effee6a339849b0ee801424bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a932a665948376539c8aa98265a8e8257" id="r_a932a665948376539c8aa98265a8e8257"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a932a665948376539c8aa98265a8e8257"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a932a665948376539c8aa98265a8e8257">assemble_node_freedom_allocation_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a932a665948376539c8aa98265a8e8257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab306821727cde73c9c0a552c66b62238" id="r_ab306821727cde73c9c0a552c66b62238"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ab306821727cde73c9c0a552c66b62238"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab306821727cde73c9c0a552c66b62238">compute_node_freedom_map_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:ab306821727cde73c9c0a552c66b62238"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54288e8047ccc914721bc897928e61cc" id="r_a54288e8047ccc914721bc897928e61cc"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a54288e8047ccc914721bc897928e61cc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a54288e8047ccc914721bc897928e61cc">create_constraint_freedom_table</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a54288e8047ccc914721bc897928e61cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68e93c3fd69a7f4617f67df3a8ece264" id="r_a68e93c3fd69a7f4617f67df3a8ece264"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a68e93c3fd69a7f4617f67df3a8ece264"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a68e93c3fd69a7f4617f67df3a8ece264">create_element_freedom_table</a> (<a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a68e93c3fd69a7f4617f67df3a8ece264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46c42f508c32ce963cde7215e5acd063" id="r_a46c42f508c32ce963cde7215e5acd063"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a46c42f508c32ce963cde7215e5acd063">operator|</a> (<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> x, <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> y)</td></tr>
 <tr class="memdesc:a46c42f508c32ce963cde7215e5acd063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines two freedom signatures using bitwise OR.  <br /></td></tr>
 <tr class="separator:a46c42f508c32ce963cde7215e5acd063"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -556,8 +560,9 @@ Functions</h2></td></tr>
 <tr class="separator:ac49461f4e15c88f90f8383dffa5ac51b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf227a76a63e51fdd3f8c22aae66bce3" id="r_abf227a76a63e51fdd3f8c22aae66bce3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a1c94c5b16b1d9c6c62dc82988f8d3e81">BeamQuadrature</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3">CreateTrapezoidalQuadrature</a> (const std::vector&lt; double &gt; &amp;grid)</td></tr>
 <tr class="separator:abf227a76a63e51fdd3f8c22aae66bce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03813256f55e200252c09662bc3afb08" id="r_a03813256f55e200252c09662bc3afb08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a03813256f55e200252c09662bc3afb08">CreateBeams</a> (const <a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a> &amp;beams_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
-<tr class="separator:a03813256f55e200252c09662bc3afb08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af984b601608050be09485b044eb900a7" id="r_af984b601608050be09485b044eb900a7"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:af984b601608050be09485b044eb900a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af984b601608050be09485b044eb900a7">CreateBeams</a> (const <a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a> &amp;beams_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
+<tr class="separator:af984b601608050be09485b044eb900a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8211d7f6377e8997cc7bc582b0026cf1" id="r_a8211d7f6377e8997cc7bc582b0026cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a8211d7f6377e8997cc7bc582b0026cf1">LinearInterpWeights</a> (double x, const std::vector&lt; double &gt; &amp;xs, std::vector&lt; double &gt; &amp;weights)</td></tr>
 <tr class="memdesc:a8211d7f6377e8997cc7bc582b0026cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes weights for linear interpolation.  <br /></td></tr>
 <tr class="separator:a8211d7f6377e8997cc7bc582b0026cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -615,10 +620,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ad04aed28bc5a0aa6e48f1f1d3fdd7590" id="r_ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad04aed28bc5a0aa6e48f1f1d3fdd7590">PopulateQPCstar</a> (const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;elem, const Kokkos::View&lt; double *[6][6], Kokkos::LayoutStride, Kokkos::HostSpace &gt; &amp;qp_Cstar)</td></tr>
 <tr class="memdesc:ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate stiffness matrix values at each quadrature point.  <br /></td></tr>
 <tr class="separator:ad04aed28bc5a0aa6e48f1f1d3fdd7590"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ca207a510f1203f25828fcac23e58dd" id="r_a6ca207a510f1203f25828fcac23e58dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6ca207a510f1203f25828fcac23e58dd">CreateMasses</a> (const <a class="el" href="structopenturbine_1_1MassesInput.html">MassesInput</a> &amp;masses_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
-<tr class="separator:a6ca207a510f1203f25828fcac23e58dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fa5ad5bb401e044e23069c2eebd4100" id="r_a5fa5ad5bb401e044e23069c2eebd4100"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5fa5ad5bb401e044e23069c2eebd4100">CreateSprings</a> (const <a class="el" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a> &amp;springs_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
-<tr class="separator:a5fa5ad5bb401e044e23069c2eebd4100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7998ef9f2338d934f86b295c4c659da8" id="r_a7998ef9f2338d934f86b295c4c659da8"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a7998ef9f2338d934f86b295c4c659da8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7998ef9f2338d934f86b295c4c659da8">CreateMasses</a> (const <a class="el" href="structopenturbine_1_1MassesInput.html">MassesInput</a> &amp;masses_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
+<tr class="separator:a7998ef9f2338d934f86b295c4c659da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a740a2e9d6bd4f113add8c965e67d09d9" id="r_a740a2e9d6bd4f113add8c965e67d09d9"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a740a2e9d6bd4f113add8c965e67d09d9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">CreateSprings</a> (const <a class="el" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a> &amp;springs_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
+<tr class="separator:a740a2e9d6bd4f113add8c965e67d09d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0205ddd45198a3c2892ebfb251c18be6" id="r_a0205ddd45198a3c2892ebfb251c18be6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6">MapGeometricLocations</a> (const std::vector&lt; double &gt; &amp;geom_locations)</td></tr>
 <tr class="memdesc:a0205ddd45198a3c2892ebfb251c18be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
 <tr class="separator:a0205ddd45198a3c2892ebfb251c18be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -723,15 +730,16 @@ Functions</h2></td></tr>
 <tr class="memitem:a03248d8626d6620e7d60419ca409e6c6" id="r_a03248d8626d6620e7d60419ca409e6c6"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a03248d8626d6620e7d60419ca409e6c6">Dot3</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v1, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v2)</td></tr>
 <tr class="memdesc:a03248d8626d6620e7d60419ca409e6c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot3 returns the dot product of two 3-component vectors.  <br /></td></tr>
 <tr class="separator:a03248d8626d6620e7d60419ca409e6c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc26a6747d2e84010f39e61388dadb21" id="r_abc26a6747d2e84010f39e61388dadb21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#abc26a6747d2e84010f39e61388dadb21">CopyNodesToState</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
-<tr class="separator:abc26a6747d2e84010f39e61388dadb21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04ee64780a3fb5ae6e53fa9b901db66d" id="r_a04ee64780a3fb5ae6e53fa9b901db66d"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a04ee64780a3fb5ae6e53fa9b901db66d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a04ee64780a3fb5ae6e53fa9b901db66d">CopyNodesToState</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
+<tr class="separator:a04ee64780a3fb5ae6e53fa9b901db66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affc1e69d7d6d313fdab42f6ef6073cfc" id="r_affc1e69d7d6d313fdab42f6ef6073cfc"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#affc1e69d7d6d313fdab42f6ef6073cfc">InvalidNodeID</a> (0U)</td></tr>
 <tr class="memdesc:affc1e69d7d6d313fdab42f6ef6073cfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an invalid node in constraints that only uses the target node.  <br /></td></tr>
 <tr class="separator:affc1e69d7d6d313fdab42f6ef6073cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c8d4345db2af01b8ac8bd66be15679b" id="r_a5c8d4345db2af01b8ac8bd66be15679b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
-<tr class="memitem:a5c8d4345db2af01b8ac8bd66be15679b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5c8d4345db2af01b8ac8bd66be15679b">CreateSolver</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="memdesc:a5c8d4345db2af01b8ac8bd66be15679b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute freedom tables for state, elements, and constraints, then construct and return solver.  <br /></td></tr>
-<tr class="separator:a5c8d4345db2af01b8ac8bd66be15679b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a407ea76de5afb5078a4c76b4c59495" id="r_a7a407ea76de5afb5078a4c76b4c59495"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
+<tr class="memitem:a7a407ea76de5afb5078a4c76b4c59495"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7a407ea76de5afb5078a4c76b4c59495">CreateSolver</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="memdesc:a7a407ea76de5afb5078a4c76b4c59495"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute freedom tables for state, elements, and constraints, then construct and return solver.  <br /></td></tr>
+<tr class="separator:a7a407ea76de5afb5078a4c76b4c59495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6533b36c326415e89a9b7da14cf21097" id="r_a6533b36c326415e89a9b7da14cf21097"><td class="memTemplParams" colspan="2">template&lt;typename RowPtrType , typename IndicesType &gt; </td></tr>
 <tr class="memitem:a6533b36c326415e89a9b7da14cf21097"><td class="memTemplItemLeft" align="right" valign="top">IndicesType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6533b36c326415e89a9b7da14cf21097">ComputeColInds</a> (typename RowPtrType::value_type num_non_zero, size_t num_system_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;node_freedom_map_table, const Kokkos::View&lt; size_t * &gt;::const_type &amp;num_nodes_per_element, const Kokkos::View&lt; size_t ** &gt;::const_type &amp;node_state_indices, const Kokkos::View&lt; size_t * &gt;::const_type &amp;base_active_dofs, const Kokkos::View&lt; size_t * &gt;::const_type &amp;target_active_dofs, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;base_node_freedom_table, const Kokkos::View&lt; size_t *[6]&gt;::const_type &amp;target_node_freedom_table, const Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt;::const_type &amp;row_range, const typename RowPtrType::const_type &amp;row_ptrs)</td></tr>
 <tr class="separator:a6533b36c326415e89a9b7da14cf21097"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -756,62 +764,74 @@ Functions</h2></td></tr>
 <tr class="memitem:a5faae3763d2c59be117c6fb7a48e8289" id="r_a5faae3763d2c59be117c6fb7a48e8289"><td class="memTemplParams" colspan="2">template&lt;typename DSSHandleType , typename CrsMatrixType &gt; </td></tr>
 <tr class="memitem:a5faae3763d2c59be117c6fb7a48e8289"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289">dss_symbolic</a> (DSSHandleType &amp;dss_handle, CrsMatrixType &amp;A)</td></tr>
 <tr class="separator:a5faae3763d2c59be117c6fb7a48e8289"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f0ca8d4638c307c70759256d5b825cf" id="r_a2f0ca8d4638c307c70759256d5b825cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2f0ca8d4638c307c70759256d5b825cf">CloneState</a> (const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;old)</td></tr>
-<tr class="separator:a2f0ca8d4638c307c70759256d5b825cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e990e82d994bebd34b1a4900633ac51" id="r_a7e990e82d994bebd34b1a4900633ac51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7e990e82d994bebd34b1a4900633ac51">CopyStateData</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;copy, const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;old)</td></tr>
-<tr class="separator:a7e990e82d994bebd34b1a4900633ac51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7028f5c2bd543cd6f2295e5f7b21a11" id="r_ac7028f5c2bd543cd6f2295e5f7b21a11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac7028f5c2bd543cd6f2295e5f7b21a11">ReadStateFromFile</a> (std::istream &amp;input, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:ac7028f5c2bd543cd6f2295e5f7b21a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4599cf459cb008364dd097a897c19b" id="r_a3f4599cf459cb008364dd097a897c19b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3f4599cf459cb008364dd097a897c19b">WriteStateToFile</a> (std::ostream &amp;output, const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a3f4599cf459cb008364dd097a897c19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e2d675e671acd8cd2a3b4d7b34e2274" id="r_a7e2d675e671acd8cd2a3b4d7b34e2274"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a7e2d675e671acd8cd2a3b4d7b34e2274"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7e2d675e671acd8cd2a3b4d7b34e2274">AssembleConstraintsMatrix</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:a7e2d675e671acd8cd2a3b4d7b34e2274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2419cfecf5c0cc89ab729b0d320960e0" id="r_a2419cfecf5c0cc89ab729b0d320960e0"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a2419cfecf5c0cc89ab729b0d320960e0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2419cfecf5c0cc89ab729b0d320960e0">AssembleConstraintsResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:a2419cfecf5c0cc89ab729b0d320960e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bf4593d3aa6bd6f2ed4008b6b6ad077" id="r_a9bf4593d3aa6bd6f2ed4008b6b6ad077"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a9bf4593d3aa6bd6f2ed4008b6b6ad077"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a9bf4593d3aa6bd6f2ed4008b6b6ad077">AssembleSystemMatrix</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements)</td></tr>
-<tr class="separator:a9bf4593d3aa6bd6f2ed4008b6b6ad077"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58a192deb8a2011f59d25ed39756f3e9" id="r_a58a192deb8a2011f59d25ed39756f3e9"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a58a192deb8a2011f59d25ed39756f3e9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a58a192deb8a2011f59d25ed39756f3e9">AssembleSystemResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a58a192deb8a2011f59d25ed39756f3e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcd44d000e14079511d0f93d31ac82c9" id="r_abcd44d000e14079511d0f93d31ac82c9"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:abcd44d000e14079511d0f93d31ac82c9"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#abcd44d000e14079511d0f93d31ac82c9">CalculateConvergenceError</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="memdesc:abcd44d000e14079511d0f93d31ac82c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculation based on Table 1 of DOI: 10.1115/1.4033441.  <br /></td></tr>
-<tr class="separator:abcd44d000e14079511d0f93d31ac82c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48bf6306dade38ba0ab3011e1c5ade21" id="r_a48bf6306dade38ba0ab3011e1c5ade21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a48bf6306dade38ba0ab3011e1c5ade21">PredictNextState</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a48bf6306dade38ba0ab3011e1c5ade21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb43595e02a0d3b6becc30a12cfda5ce" id="r_adb43595e02a0d3b6becc30a12cfda5ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#adb43595e02a0d3b6becc30a12cfda5ce">ResetConstraints</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:adb43595e02a0d3b6becc30a12cfda5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a794447995e27871f70d7acf0f3f13747" id="r_a794447995e27871f70d7acf0f3f13747"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a794447995e27871f70d7acf0f3f13747"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a794447995e27871f70d7acf0f3f13747">CloneState</a> (const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;old)</td></tr>
+<tr class="separator:a794447995e27871f70d7acf0f3f13747"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3af04c0e5a2a9870a95b10edd29cc3f4" id="r_a3af04c0e5a2a9870a95b10edd29cc3f4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a3af04c0e5a2a9870a95b10edd29cc3f4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3af04c0e5a2a9870a95b10edd29cc3f4">CopyStateData</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;copy, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;old)</td></tr>
+<tr class="separator:a3af04c0e5a2a9870a95b10edd29cc3f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a824a1ec66835921088c4dfc658322095" id="r_a824a1ec66835921088c4dfc658322095"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a824a1ec66835921088c4dfc658322095"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a824a1ec66835921088c4dfc658322095">ReadStateFromFile</a> (std::istream &amp;input, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a824a1ec66835921088c4dfc658322095"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62af0f1efb9ba7a0937e98e71f34e0ef" id="r_a62af0f1efb9ba7a0937e98e71f34e0ef"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a62af0f1efb9ba7a0937e98e71f34e0ef"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a62af0f1efb9ba7a0937e98e71f34e0ef">WriteStateToFile</a> (std::ostream &amp;output, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a62af0f1efb9ba7a0937e98e71f34e0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91a1c1ca0eaaf2697da6b979d2cf9de6" id="r_a91a1c1ca0eaaf2697da6b979d2cf9de6"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a91a1c1ca0eaaf2697da6b979d2cf9de6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a91a1c1ca0eaaf2697da6b979d2cf9de6">AssembleConstraintsMatrix</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a91a1c1ca0eaaf2697da6b979d2cf9de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a5e2795cf65aea8db173b3fd1396e65" id="r_a8a5e2795cf65aea8db173b3fd1396e65"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a8a5e2795cf65aea8db173b3fd1396e65"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a8a5e2795cf65aea8db173b3fd1396e65">AssembleConstraintsResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a8a5e2795cf65aea8db173b3fd1396e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e59612cdaf821fd088101c76db997c4" id="r_a0e59612cdaf821fd088101c76db997c4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a0e59612cdaf821fd088101c76db997c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4">AssembleSystemMatrix</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements)</td></tr>
+<tr class="separator:a0e59612cdaf821fd088101c76db997c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36566437e3b617bfdc718e6d33f273c6" id="r_a36566437e3b617bfdc718e6d33f273c6"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a36566437e3b617bfdc718e6d33f273c6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a36566437e3b617bfdc718e6d33f273c6">AssembleSystemResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a36566437e3b617bfdc718e6d33f273c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81f75a93db6a6068eb5759ec7125ac8d" id="r_a81f75a93db6a6068eb5759ec7125ac8d"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a81f75a93db6a6068eb5759ec7125ac8d"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a81f75a93db6a6068eb5759ec7125ac8d">CalculateConvergenceError</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="memdesc:a81f75a93db6a6068eb5759ec7125ac8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculation based on Table 1 of DOI: 10.1115/1.4033441.  <br /></td></tr>
+<tr class="separator:a81f75a93db6a6068eb5759ec7125ac8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa87b3510b483752bb7b465629e7180c4" id="r_aa87b3510b483752bb7b465629e7180c4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aa87b3510b483752bb7b465629e7180c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aa87b3510b483752bb7b465629e7180c4">PredictNextState</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:aa87b3510b483752bb7b465629e7180c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8777e77beabff02f607c8252c2cefd4" id="r_ad8777e77beabff02f607c8252c2cefd4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ad8777e77beabff02f607c8252c2cefd4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad8777e77beabff02f607c8252c2cefd4">ResetConstraints</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:ad8777e77beabff02f607c8252c2cefd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c05476e233e348498c9719f6571f8fc" id="r_a9c05476e233e348498c9719f6571f8fc"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:a9c05476e233e348498c9719f6571f8fc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a9c05476e233e348498c9719f6571f8fc">ResetSolver</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver)</td></tr>
 <tr class="separator:a9c05476e233e348498c9719f6571f8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab7f7a5476c025fc05f72cd313619ec9" id="r_aab7f7a5476c025fc05f72cd313619ec9"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:aab7f7a5476c025fc05f72cd313619ec9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aab7f7a5476c025fc05f72cd313619ec9">SolveSystem</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver)</td></tr>
 <tr class="separator:aab7f7a5476c025fc05f72cd313619ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad17a4d454cf45f236959aa224e84b24b" id="r_ad17a4d454cf45f236959aa224e84b24b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:ad17a4d454cf45f236959aa224e84b24b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ad17a4d454cf45f236959aa224e84b24b">Step</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="memdesc:ad17a4d454cf45f236959aa224e84b24b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to complete a single time step in the dynamic FEA simulation.  <br /></td></tr>
-<tr class="separator:ad17a4d454cf45f236959aa224e84b24b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a4bc62a368c67b45c746c40a3220a50" id="r_a6a4bc62a368c67b45c746c40a3220a50"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a6a4bc62a368c67b45c746c40a3220a50"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6a4bc62a368c67b45c746c40a3220a50">UpdateConstraintPrediction</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:a6a4bc62a368c67b45c746c40a3220a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ba002da89da95e26bb8cce74c4309e3" id="r_a9ba002da89da95e26bb8cce74c4309e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a9ba002da89da95e26bb8cce74c4309e3">UpdateConstraintVariables</a> (<a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;constraints)</td></tr>
-<tr class="separator:a9ba002da89da95e26bb8cce74c4309e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b9d05a5cbadd3dbc0e23d1671bb6589" id="r_a2b9d05a5cbadd3dbc0e23d1671bb6589"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a2b9d05a5cbadd3dbc0e23d1671bb6589"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2b9d05a5cbadd3dbc0e23d1671bb6589">UpdateStatePrediction</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a2b9d05a5cbadd3dbc0e23d1671bb6589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52d2e9670a2b56af60e43ede9cb60b4f" id="r_a52d2e9670a2b56af60e43ede9cb60b4f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a52d2e9670a2b56af60e43ede9cb60b4f">UpdateSystemVariables</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a52d2e9670a2b56af60e43ede9cb60b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e496c5eafd4d42659ef9552629a6894" id="r_a3e496c5eafd4d42659ef9552629a6894"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3e496c5eafd4d42659ef9552629a6894">UpdateSystemVariablesBeams</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a> &amp;beams, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a3e496c5eafd4d42659ef9552629a6894"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec36335d47a54979e39b1c4dbd9fe326" id="r_aec36335d47a54979e39b1c4dbd9fe326"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aec36335d47a54979e39b1c4dbd9fe326">UpdateSystemVariablesMasses</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a> &amp;masses, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:aec36335d47a54979e39b1c4dbd9fe326"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f4c2ead74d55de6fe2227ae6b042687" id="r_a1f4c2ead74d55de6fe2227ae6b042687"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a1f4c2ead74d55de6fe2227ae6b042687">UpdateSystemVariablesSprings</a> (const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a> &amp;springs, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:a1f4c2ead74d55de6fe2227ae6b042687"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3d718d1c75c5bbca3378da46029a87f" id="r_ac3d718d1c75c5bbca3378da46029a87f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac3d718d1c75c5bbca3378da46029a87f">UpdateTangentOperator</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;state)</td></tr>
-<tr class="separator:ac3d718d1c75c5bbca3378da46029a87f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a401e812f3359217f90799a34c5fb37f4" id="r_a401e812f3359217f90799a34c5fb37f4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a401e812f3359217f90799a34c5fb37f4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a401e812f3359217f90799a34c5fb37f4">Step</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="memdesc:a401e812f3359217f90799a34c5fb37f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attempts to complete a single time step in the dynamic FEA simulation.  <br /></td></tr>
+<tr class="separator:a401e812f3359217f90799a34c5fb37f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7db6a0642536770dfd1c9864d28b4b99" id="r_a7db6a0642536770dfd1c9864d28b4b99"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a7db6a0642536770dfd1c9864d28b4b99"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a7db6a0642536770dfd1c9864d28b4b99">UpdateConstraintPrediction</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a7db6a0642536770dfd1c9864d28b4b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab85467e8fa5b8b0757ac1749a12f6640" id="r_ab85467e8fa5b8b0757ac1749a12f6640"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ab85467e8fa5b8b0757ac1749a12f6640"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab85467e8fa5b8b0757ac1749a12f6640">UpdateConstraintVariables</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:ab85467e8fa5b8b0757ac1749a12f6640"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab135fd3e4a55b8eafb693d63778d6d0b" id="r_ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab135fd3e4a55b8eafb693d63778d6d0b">UpdateStatePrediction</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceb0d78408970e2f5707eb6da6c65656" id="r_aceb0d78408970e2f5707eb6da6c65656"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aceb0d78408970e2f5707eb6da6c65656"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aceb0d78408970e2f5707eb6da6c65656">UpdateSystemVariables</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:aceb0d78408970e2f5707eb6da6c65656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97ea1c4346ac0e80a41e7986ff1c4ee9" id="r_a97ea1c4346ac0e80a41e7986ff1c4ee9"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a97ea1c4346ac0e80a41e7986ff1c4ee9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a97ea1c4346ac0e80a41e7986ff1c4ee9">UpdateSystemVariablesBeams</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt; &amp;beams, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a97ea1c4346ac0e80a41e7986ff1c4ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae90ea3c8e7997ac4f2ac3057fd591a8c" id="r_ae90ea3c8e7997ac4f2ac3057fd591a8c"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ae90ea3c8e7997ac4f2ac3057fd591a8c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae90ea3c8e7997ac4f2ac3057fd591a8c">UpdateSystemVariablesMasses</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt; &amp;masses, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:ae90ea3c8e7997ac4f2ac3057fd591a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd3707277127727af6fe2bf96e37b744" id="r_abd3707277127727af6fe2bf96e37b744"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:abd3707277127727af6fe2bf96e37b744"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#abd3707277127727af6fe2bf96e37b744">UpdateSystemVariablesSprings</a> (const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt; &amp;springs, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:abd3707277127727af6fe2bf96e37b744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bce4a0ea133697b8166de3f32939445" id="r_a6bce4a0ea133697b8166de3f32939445"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a6bce4a0ea133697b8166de3f32939445"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445">UpdateTangentOperator</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a6bce4a0ea133697b8166de3f32939445"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f98d0c4da39a68c6faa89fcb1f3cbe5" id="r_a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3f98d0c4da39a68c6faa89fcb1f3cbe5">WriteLinesVTK</a> (const std::vector&lt; std::array&lt; size_t, 2 &gt; &gt; &amp;lines_data, const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;points, const std::string &amp;filename)</td></tr>
 <tr class="separator:a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -1288,11 +1308,13 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a73df7db3151390957bb059cad4aaacc6" name="a73df7db3151390957bb059cad4aaacc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73df7db3151390957bb059cad4aaacc6">&#9670;&#160;</a></span>assemble_node_freedom_allocation_table()</h2>
+<a id="a932a665948376539c8aa98265a8e8257" name="a932a665948376539c8aa98265a8e8257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a932a665948376539c8aa98265a8e8257">&#9670;&#160;</a></span>assemble_node_freedom_allocation_table()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1300,19 +1322,19 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void openturbine::assemble_node_freedom_allocation_table </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -1330,8 +1352,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7e2d675e671acd8cd2a3b4d7b34e2274" name="a7e2d675e671acd8cd2a3b4d7b34e2274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e2d675e671acd8cd2a3b4d7b34e2274">&#9670;&#160;</a></span>AssembleConstraintsMatrix()</h2>
+<a id="a91a1c1ca0eaaf2697da6b979d2cf9de6" name="a91a1c1ca0eaaf2697da6b979d2cf9de6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91a1c1ca0eaaf2697da6b979d2cf9de6">&#9670;&#160;</a></span>AssembleConstraintsMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1350,7 +1372,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -1368,8 +1390,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a2419cfecf5c0cc89ab729b0d320960e0" name="a2419cfecf5c0cc89ab729b0d320960e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2419cfecf5c0cc89ab729b0d320960e0">&#9670;&#160;</a></span>AssembleConstraintsResidual()</h2>
+<a id="a8a5e2795cf65aea8db173b3fd1396e65" name="a8a5e2795cf65aea8db173b3fd1396e65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a5e2795cf65aea8db173b3fd1396e65">&#9670;&#160;</a></span>AssembleConstraintsResidual()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1388,7 +1410,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -1406,8 +1428,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a9bf4593d3aa6bd6f2ed4008b6b6ad077" name="a9bf4593d3aa6bd6f2ed4008b6b6ad077"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9bf4593d3aa6bd6f2ed4008b6b6ad077">&#9670;&#160;</a></span>AssembleSystemMatrix()</h2>
+<a id="a0e59612cdaf821fd088101c76db997c4" name="a0e59612cdaf821fd088101c76db997c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e59612cdaf821fd088101c76db997c4">&#9670;&#160;</a></span>AssembleSystemMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1432,7 +1454,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>&#160;</td>
         </tr>
         <tr>
@@ -1450,8 +1472,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a58a192deb8a2011f59d25ed39756f3e9" name="a58a192deb8a2011f59d25ed39756f3e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58a192deb8a2011f59d25ed39756f3e9">&#9670;&#160;</a></span>AssembleSystemResidual()</h2>
+<a id="a36566437e3b617bfdc718e6d33f273c6" name="a36566437e3b617bfdc718e6d33f273c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36566437e3b617bfdc718e6d33f273c6">&#9670;&#160;</a></span>AssembleSystemResidual()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1470,13 +1492,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -1573,8 +1595,8 @@ template&lt;typename <a class="el" href="namespaceopenturbine.html#afc4eb55fdc2a
 
 </div>
 </div>
-<a id="abcd44d000e14079511d0f93d31ac82c9" name="abcd44d000e14079511d0f93d31ac82c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abcd44d000e14079511d0f93d31ac82c9">&#9670;&#160;</a></span>CalculateConvergenceError()</h2>
+<a id="a81f75a93db6a6068eb5759ec7125ac8d" name="a81f75a93db6a6068eb5759ec7125ac8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81f75a93db6a6068eb5759ec7125ac8d">&#9670;&#160;</a></span>CalculateConvergenceError()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1599,13 +1621,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -2135,19 +2157,21 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a2f0ca8d4638c307c70759256d5b825cf" name="a2f0ca8d4638c307c70759256d5b825cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f0ca8d4638c307c70759256d5b825cf">&#9670;&#160;</a></span>CloneState()</h2>
+<a id="a794447995e27871f70d7acf0f3f13747" name="a794447995e27871f70d7acf0f3f13747"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a794447995e27871f70d7acf0f3f13747">&#9670;&#160;</a></span>CloneState()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1State.html">State</a> openturbine::CloneState </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; openturbine::CloneState </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>old</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2161,11 +2185,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="aa82b6fa11c59125852df5520fd4c4af3" name="aa82b6fa11c59125852df5520fd4c4af3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa82b6fa11c59125852df5520fd4c4af3">&#9670;&#160;</a></span>compute_node_freedom_map_table()</h2>
+<a id="ab306821727cde73c9c0a552c66b62238" name="ab306821727cde73c9c0a552c66b62238"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab306821727cde73c9c0a552c66b62238">&#9670;&#160;</a></span>compute_node_freedom_map_table()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2173,7 +2199,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname">void openturbine::compute_node_freedom_map_table </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2405,11 +2431,13 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="abc26a6747d2e84010f39e61388dadb21" name="abc26a6747d2e84010f39e61388dadb21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc26a6747d2e84010f39e61388dadb21">&#9670;&#160;</a></span>CopyNodesToState()</h2>
+<a id="a04ee64780a3fb5ae6e53fa9b901db66d" name="a04ee64780a3fb5ae6e53fa9b901db66d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04ee64780a3fb5ae6e53fa9b901db66d">&#9670;&#160;</a></span>CopyNodesToState()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2417,7 +2445,7 @@ template&lt;typename RowPtrType &gt; </div>
         <tr>
           <td class="memname">void openturbine::CopyNodesToState </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
@@ -2441,11 +2469,13 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="a7e990e82d994bebd34b1a4900633ac51" name="a7e990e82d994bebd34b1a4900633ac51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e990e82d994bebd34b1a4900633ac51">&#9670;&#160;</a></span>CopyStateData()</h2>
+<a id="a3af04c0e5a2a9870a95b10edd29cc3f4" name="a3af04c0e5a2a9870a95b10edd29cc3f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3af04c0e5a2a9870a95b10edd29cc3f4">&#9670;&#160;</a></span>CopyStateData()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2453,13 +2483,13 @@ template&lt;typename RowPtrType &gt; </div>
         <tr>
           <td class="memname">void openturbine::CopyStateData </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>copy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>old</em>&#160;</td>
         </tr>
         <tr>
@@ -2504,11 +2534,13 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="a11b7ef0873eaa4135fcc955cc3fd5ba4" name="a11b7ef0873eaa4135fcc955cc3fd5ba4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11b7ef0873eaa4135fcc955cc3fd5ba4">&#9670;&#160;</a></span>create_constraint_freedom_table()</h2>
+<a id="a54288e8047ccc914721bc897928e61cc" name="a54288e8047ccc914721bc897928e61cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54288e8047ccc914721bc897928e61cc">&#9670;&#160;</a></span>create_constraint_freedom_table()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2516,13 +2548,13 @@ template&lt;typename RowPtrType &gt; </div>
         <tr>
           <td class="memname">void openturbine::create_constraint_freedom_table </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -2540,11 +2572,13 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="a91c6946effee6a339849b0ee801424bf" name="a91c6946effee6a339849b0ee801424bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91c6946effee6a339849b0ee801424bf">&#9670;&#160;</a></span>create_element_freedom_table()</h2>
+<a id="a68e93c3fd69a7f4617f67df3a8ece264" name="a68e93c3fd69a7f4617f67df3a8ece264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68e93c3fd69a7f4617f67df3a8ece264">&#9670;&#160;</a></span>create_element_freedom_table()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -2552,13 +2586,13 @@ template&lt;typename RowPtrType &gt; </div>
         <tr>
           <td class="memname">void openturbine::create_element_freedom_table </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -2576,17 +2610,19 @@ template&lt;typename RowPtrType &gt; </div>
 
 </div>
 </div>
-<a id="a03813256f55e200252c09662bc3afb08" name="a03813256f55e200252c09662bc3afb08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03813256f55e200252c09662bc3afb08">&#9670;&#160;</a></span>CreateBeams()</h2>
+<a id="af984b601608050be09485b044eb900a7" name="af984b601608050be09485b044eb900a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af984b601608050be09485b044eb900a7">&#9670;&#160;</a></span>CreateBeams()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a> openturbine::CreateBeams </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt; openturbine::CreateBeams </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a> &amp;&#160;</td>
           <td class="paramname"><em>beams_input</em>, </td>
@@ -2704,17 +2740,19 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
-<a id="a6ca207a510f1203f25828fcac23e58dd" name="a6ca207a510f1203f25828fcac23e58dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ca207a510f1203f25828fcac23e58dd">&#9670;&#160;</a></span>CreateMasses()</h2>
+<a id="a7998ef9f2338d934f86b295c4c659da8" name="a7998ef9f2338d934f86b295c4c659da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7998ef9f2338d934f86b295c4c659da8">&#9670;&#160;</a></span>CreateMasses()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Masses.html">Masses</a> openturbine::CreateMasses </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt; openturbine::CreateMasses </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1MassesInput.html">MassesInput</a> &amp;&#160;</td>
           <td class="paramname"><em>masses_input</em>, </td>
@@ -2740,8 +2778,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
-<a id="a5c8d4345db2af01b8ac8bd66be15679b" name="a5c8d4345db2af01b8ac8bd66be15679b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c8d4345db2af01b8ac8bd66be15679b">&#9670;&#160;</a></span>CreateSolver()</h2>
+<a id="a7a407ea76de5afb5078a4c76b4c59495" name="a7a407ea76de5afb5078a4c76b4c59495"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a407ea76de5afb5078a4c76b4c59495">&#9670;&#160;</a></span>CreateSolver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2754,19 +2792,19 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpa
         <tr>
           <td class="memname"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; openturbine::CreateSolver </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -2786,17 +2824,19 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpa
 
 </div>
 </div>
-<a id="a5fa5ad5bb401e044e23069c2eebd4100" name="a5fa5ad5bb401e044e23069c2eebd4100"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fa5ad5bb401e044e23069c2eebd4100">&#9670;&#160;</a></span>CreateSprings()</h2>
+<a id="a740a2e9d6bd4f113add8c965e67d09d9" name="a740a2e9d6bd4f113add8c965e67d09d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a740a2e9d6bd4f113add8c965e67d09d9">&#9670;&#160;</a></span>CreateSprings()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1Springs.html">Springs</a> openturbine::CreateSprings </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt; openturbine::CreateSprings </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a> &amp;&#160;</td>
           <td class="paramname"><em>springs_input</em>, </td>
@@ -4294,11 +4334,13 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
 
 </div>
 </div>
-<a id="a48bf6306dade38ba0ab3011e1c5ade21" name="a48bf6306dade38ba0ab3011e1c5ade21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48bf6306dade38ba0ab3011e1c5ade21">&#9670;&#160;</a></span>PredictNextState()</h2>
+<a id="aa87b3510b483752bb7b465629e7180c4" name="aa87b3510b483752bb7b465629e7180c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa87b3510b483752bb7b465629e7180c4">&#9670;&#160;</a></span>PredictNextState()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -4312,7 +4354,7 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -4648,11 +4690,13 @@ template&lt;typename Quaternion , typename Vector &gt; </div>
 
 </div>
 </div>
-<a id="ac7028f5c2bd543cd6f2295e5f7b21a11" name="ac7028f5c2bd543cd6f2295e5f7b21a11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7028f5c2bd543cd6f2295e5f7b21a11">&#9670;&#160;</a></span>ReadStateFromFile()</h2>
+<a id="a824a1ec66835921088c4dfc658322095" name="a824a1ec66835921088c4dfc658322095"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a824a1ec66835921088c4dfc658322095">&#9670;&#160;</a></span>ReadStateFromFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -4666,7 +4710,7 @@ template&lt;typename Quaternion , typename Vector &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -4684,11 +4728,13 @@ template&lt;typename Quaternion , typename Vector &gt; </div>
 
 </div>
 </div>
-<a id="adb43595e02a0d3b6becc30a12cfda5ce" name="adb43595e02a0d3b6becc30a12cfda5ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb43595e02a0d3b6becc30a12cfda5ce">&#9670;&#160;</a></span>ResetConstraints()</h2>
+<a id="ad8777e77beabff02f607c8252c2cefd4" name="ad8777e77beabff02f607c8252c2cefd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8777e77beabff02f607c8252c2cefd4">&#9670;&#160;</a></span>ResetConstraints()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -4696,7 +4742,7 @@ template&lt;typename Quaternion , typename Vector &gt; </div>
         <tr>
           <td class="memname">void openturbine::ResetConstraints </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em></td><td>)</td>
           <td></td>
         </tr>
@@ -5075,8 +5121,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="ad17a4d454cf45f236959aa224e84b24b" name="ad17a4d454cf45f236959aa224e84b24b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad17a4d454cf45f236959aa224e84b24b">&#9670;&#160;</a></span>Step()</h2>
+<a id="a401e812f3359217f90799a34c5fb37f4" name="a401e812f3359217f90799a34c5fb37f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a401e812f3359217f90799a34c5fb37f4">&#9670;&#160;</a></span>Step()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5101,19 +5147,19 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -5210,8 +5256,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a6a4bc62a368c67b45c746c40a3220a50" name="a6a4bc62a368c67b45c746c40a3220a50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a4bc62a368c67b45c746c40a3220a50">&#9670;&#160;</a></span>UpdateConstraintPrediction()</h2>
+<a id="a7db6a0642536770dfd1c9864d28b4b99" name="a7db6a0642536770dfd1c9864d28b4b99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7db6a0642536770dfd1c9864d28b4b99">&#9670;&#160;</a></span>UpdateConstraintPrediction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5230,7 +5276,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -5248,11 +5294,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a9ba002da89da95e26bb8cce74c4309e3" name="a9ba002da89da95e26bb8cce74c4309e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ba002da89da95e26bb8cce74c4309e3">&#9670;&#160;</a></span>UpdateConstraintVariables()</h2>
+<a id="ab85467e8fa5b8b0757ac1749a12f6640" name="ab85467e8fa5b8b0757ac1749a12f6640"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab85467e8fa5b8b0757ac1749a12f6640">&#9670;&#160;</a></span>UpdateConstraintVariables()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5260,13 +5308,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname">void openturbine::UpdateConstraintVariables </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>constraints</em>&#160;</td>
         </tr>
         <tr>
@@ -5284,8 +5332,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a2b9d05a5cbadd3dbc0e23d1671bb6589" name="a2b9d05a5cbadd3dbc0e23d1671bb6589"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b9d05a5cbadd3dbc0e23d1671bb6589">&#9670;&#160;</a></span>UpdateStatePrediction()</h2>
+<a id="ab135fd3e4a55b8eafb693d63778d6d0b" name="ab135fd3e4a55b8eafb693d63778d6d0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab135fd3e4a55b8eafb693d63778d6d0b">&#9670;&#160;</a></span>UpdateStatePrediction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5310,7 +5358,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5328,11 +5376,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a52d2e9670a2b56af60e43ede9cb60b4f" name="a52d2e9670a2b56af60e43ede9cb60b4f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52d2e9670a2b56af60e43ede9cb60b4f">&#9670;&#160;</a></span>UpdateSystemVariables()</h2>
+<a id="aceb0d78408970e2f5707eb6da6c65656" name="aceb0d78408970e2f5707eb6da6c65656"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceb0d78408970e2f5707eb6da6c65656">&#9670;&#160;</a></span>UpdateSystemVariables()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5346,13 +5396,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>elements</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5370,11 +5420,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a3e496c5eafd4d42659ef9552629a6894" name="a3e496c5eafd4d42659ef9552629a6894"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e496c5eafd4d42659ef9552629a6894">&#9670;&#160;</a></span>UpdateSystemVariablesBeams()</h2>
+<a id="a97ea1c4346ac0e80a41e7986ff1c4ee9" name="a97ea1c4346ac0e80a41e7986ff1c4ee9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97ea1c4346ac0e80a41e7986ff1c4ee9">&#9670;&#160;</a></span>UpdateSystemVariablesBeams()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5388,13 +5440,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>beams</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5412,11 +5464,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="aec36335d47a54979e39b1c4dbd9fe326" name="aec36335d47a54979e39b1c4dbd9fe326"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec36335d47a54979e39b1c4dbd9fe326">&#9670;&#160;</a></span>UpdateSystemVariablesMasses()</h2>
+<a id="ae90ea3c8e7997ac4f2ac3057fd591a8c" name="ae90ea3c8e7997ac4f2ac3057fd591a8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae90ea3c8e7997ac4f2ac3057fd591a8c">&#9670;&#160;</a></span>UpdateSystemVariablesMasses()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5430,13 +5484,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>masses</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5454,11 +5508,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a1f4c2ead74d55de6fe2227ae6b042687" name="a1f4c2ead74d55de6fe2227ae6b042687"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f4c2ead74d55de6fe2227ae6b042687">&#9670;&#160;</a></span>UpdateSystemVariablesSprings()</h2>
+<a id="abd3707277127727af6fe2bf96e37b744" name="abd3707277127727af6fe2bf96e37b744"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd3707277127727af6fe2bf96e37b744">&#9670;&#160;</a></span>UpdateSystemVariablesSprings()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5466,13 +5522,13 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname">void openturbine::UpdateSystemVariablesSprings </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>springs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5490,11 +5546,13 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="ac3d718d1c75c5bbca3378da46029a87f" name="ac3d718d1c75c5bbca3378da46029a87f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3d718d1c75c5bbca3378da46029a87f">&#9670;&#160;</a></span>UpdateTangentOperator()</h2>
+<a id="a6bce4a0ea133697b8166de3f32939445" name="a6bce4a0ea133697b8166de3f32939445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bce4a0ea133697b8166de3f32939445">&#9670;&#160;</a></span>UpdateTangentOperator()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5508,7 +5566,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>
@@ -5600,11 +5658,13 @@ template&lt;typename VectorType , typename MatrixType &gt; </div>
 
 </div>
 </div>
-<a id="a3f4599cf459cb008364dd097a897c19b" name="a3f4599cf459cb008364dd097a897c19b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f4599cf459cb008364dd097a897c19b">&#9670;&#160;</a></span>WriteStateToFile()</h2>
+<a id="a62af0f1efb9ba7a0937e98e71f34e0ef" name="a62af0f1efb9ba7a0937e98e71f34e0ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62af0f1efb9ba7a0937e98e71f34e0ef">&#9670;&#160;</a></span>WriteStateToFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -5618,7 +5678,7 @@ template&lt;typename VectorType , typename MatrixType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>state</em>&#160;</td>
         </tr>
         <tr>

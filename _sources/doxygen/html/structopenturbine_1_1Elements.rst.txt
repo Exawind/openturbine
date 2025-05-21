@@ -1,11 +1,11 @@
-.. meta::83a9e06a8cd988c3e82d3231c17f4a47c499ab4df50c0e72c78f5bb284d14b1d0db73ff6517d87dc6cdcc0b7b43c288b75369c8e98ad45e915a2c3e609ac9f53
+.. meta::3ff998722831ad5d7f1f39f708136515e81e8d44446d7929650475dc3ef18092182e661dd53842d59e58ec880612392301802d99485f988d7ace37287fb96262
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Elements Struct Reference
+.. title:: OpenTurbine API: openturbine::Elements&lt; DeviceType &gt; Struct Template Reference
 
-Elements Struct Reference
-=========================
+Elements&lt; DeviceType &gt; Struct Template Reference
+======================================================
 
 .. container:: doxygen-content
 

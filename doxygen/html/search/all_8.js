@@ -5,11 +5,11 @@ var searchData=
   ['has_5fsymbol_2',['has_symbol',['../classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b',1,'openturbine::util::dylib::has_symbol(const char *symbol_name) const noexcept'],['../classopenturbine_1_1util_1_1dylib.html#abe184bea79af69518e02ed934b08bc86',1,'openturbine::util::dylib::has_symbol(const std::string &amp;symbol) const noexcept']]],
   ['hh_5fvel_3',['hh_vel',['../structopenturbine_1_1util_1_1TurbineData.html#a445f611ba7b171ba7eb57afb2ac39033',1,'openturbine::util::TurbineData']]],
   ['horizontal_5fwind_5fspeed_4',['horizontal_wind_speed',['../structopenturbine_1_1util_1_1ControllerIO.html#a06e9882b23fcf85073284b2616b8f395',1,'openturbine::util::ControllerIO']]],
-  ['host_5finput_5',['host_input',['../structopenturbine_1_1Constraints.html#a10a8ce1ea59ca89d15ad28b74af89450',1,'openturbine::Constraints']]],
-  ['host_5foutput_6',['host_output',['../structopenturbine_1_1Constraints.html#a9a6ec52bf722b30770f62d2cf6e85071',1,'openturbine::Constraints']]],
-  ['host_5fstate_7',['host_state',['../classopenturbine_1_1cfd_1_1Interface.html#a6c12ace3e706791a2181a5cb733a18ce',1,'openturbine::cfd::Interface']]],
+  ['host_5finput_5',['host_input',['../structopenturbine_1_1Constraints.html#aef98359551ba23c430dd76f461aaf252',1,'openturbine::Constraints']]],
+  ['host_5foutput_6',['host_output',['../structopenturbine_1_1Constraints.html#ae37f8b6c91d511073e5875c779729a82',1,'openturbine::Constraints']]],
+  ['host_5fstate_7',['host_state',['../classopenturbine_1_1cfd_1_1Interface.html#a81ac1480205f20ca946de30ad6b3a98f',1,'openturbine::cfd::Interface']]],
   ['host_5fstate_2ehpp_8',['host_state.hpp',['../host__state_8hpp.html',1,'']]],
-  ['hoststate_9',['hoststate',['../structopenturbine_1_1interfaces_1_1HostState.html',1,'openturbine::interfaces::HostState'],['../structopenturbine_1_1interfaces_1_1HostState.html#afb3eff409026205365633a34e0f3e73e',1,'openturbine::interfaces::HostState::HostState()']]],
+  ['hoststate_9',['hoststate',['../structopenturbine_1_1interfaces_1_1HostState.html',1,'openturbine::interfaces::HostState&lt; DeviceType &gt;'],['../structopenturbine_1_1interfaces_1_1HostState.html#a64b6ec8ab9e7755641e486f10321bbae',1,'openturbine::interfaces::HostState::HostState()']]],
   ['hub_10',['hub',['../structopenturbine_1_1util_1_1TurbineData.html#a7b561da2d208abbfb520fb55b0334ec6',1,'openturbine::util::TurbineData']]],
   ['hub_5finitial_5fposition_11',['hub_initial_position',['../structopenturbine_1_1util_1_1TurbineConfig.html#a7b553dc41a7e5af7ed4f466755cb0c18',1,'openturbine::util::TurbineConfig']]]
 ];

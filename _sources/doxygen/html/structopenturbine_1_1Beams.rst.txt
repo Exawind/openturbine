@@ -1,11 +1,11 @@
-.. meta::5cea5cdb30ab43986566348f9712cec0af78f083139a274b13d963ddac2e74f1493d87f36866d278a538d45bf255d160b28781904c75fd6016ae2119a4255fd0
+.. meta::e7a892f8f712e19b58d1944bac4b1767c4a5ad99a2ec980e8ff5d3752f71651f99ccf0ca9823c2543a5cb5c6baec42cb16ece19a63621ed098e80f179d0b11b6
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Beams Struct Reference
+.. title:: OpenTurbine API: openturbine::Beams&lt; Device &gt; Struct Template Reference
 
-Beams Struct Reference
-======================
+Beams&lt; Device &gt; Struct Template Reference
+===============================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::7fe05410bd37d943aa11743a07d3d682ef98c91592a300d02f37602020130d0198239a1ca9df6af40fd3bdb13bbc17beb394af30c997cdca5d7cde871006a582
+.. meta::b1bccbf2b8fb78b9ebd05e4609783e32f21c38e0aed083c0e63ee995933cd1a020e240a9d68b37e6aa3190a25f75e8957736c66f1826ba94e6d7cfdf35009aa7
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Masses Struct Reference
+.. title:: OpenTurbine API: openturbine::Masses&lt; DeviceType &gt; Struct Template Reference
 
-Masses Struct Reference
-=======================
+Masses&lt; DeviceType &gt; Struct Template Reference
+====================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::fab78408273074a5adfaf20085581edecb0c75ecdca84bb5b169225de095029bda9f46db1774d0f6126c4760b2d64466b0a383b22b8319bbdefc887f7c1f7bb0
+.. meta::cb5a9ec164707aa82f370b340f76aeb9ff7c5f15e83873937f131befec453c3f37921a318c6253a8736011975802a5a62f07b446775248adbb95a9f94b7d6ca8
 
 :orphan:
 
-.. title:: OpenTurbine API: openturbine::Constraints Struct Reference
+.. title:: OpenTurbine API: openturbine::Constraints&lt; DeviceType &gt; Struct Template Reference
 
-Constraints Struct Reference
-============================
+Constraints&lt; DeviceType &gt; Struct Template Reference
+=========================================================
 
 .. container:: doxygen-content
 
