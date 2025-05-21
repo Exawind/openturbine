@@ -1,7 +1,7 @@
 #pragma once
 
-#include "interfaces/components/blade.hpp"
-#include "interfaces/components/blade_input.hpp"
+#include "interfaces/components/beam.hpp"
+#include "interfaces/components/beam_input.hpp"
 #include "interfaces/components/solution_input.hpp"
 #include "interfaces/host_state.hpp"
 #include "interfaces/vtk_output.hpp"
@@ -26,7 +26,7 @@ public:
      * @param blade_input Configuration parameters for blade geometry
      */
     explicit BladeInterface(
-        const components::SolutionInput& solution_input, const components::BladeInput& blade_input
+        const components::SolutionInput& solution_input, const components::BeamInput& blade_input
     )
         : model(Model(solution_input.gravity)),
           blade(blade_input, model),
@@ -47,7 +47,7 @@ public:
     }
 
     /// @brief Returns a reference to the blade model
-    [[nodiscard]] components::Blade& Blade() { return this->blade; }
+    [[nodiscard]] components::Beam& Blade() { return this->blade; }
 
     /**
      * @brief Steps forward in time
@@ -99,7 +99,7 @@ public:
 
 private:
     Model model;                ///< OpenTurbine class for model construction
-    components::Blade blade;    ///< Blade model input/output data
+    components::Beam blade;     ///< Blade model input/output data
     State state;                ///< OpenTurbine class for storing system state
     Elements elements;          ///< OpenTurbine class for model elements (beams, masses, springs)
     Constraints constraints;    ///< OpenTurbine class for constraints tying elements together
