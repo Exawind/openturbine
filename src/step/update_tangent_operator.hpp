@@ -9,7 +9,8 @@
 
 namespace openturbine {
 
-inline void UpdateTangentOperator(StepParameters& parameters, State& state) {
+template <typename DeviceType>
+inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Tangent Operator");
     Kokkos::parallel_for(
         "CalculateTangentOperator", state.num_system_nodes,

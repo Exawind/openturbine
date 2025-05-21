@@ -6,8 +6,11 @@
 
 namespace openturbine {
 
-inline Masses CreateMasses(const MassesInput& masses_input, const std::vector<Node>& nodes) {
-    Masses masses(masses_input.NumElements());
+template <typename DeviceType>
+inline Masses<DeviceType> CreateMasses(
+    const MassesInput& masses_input, const std::vector<Node>& nodes
+) {
+    Masses<DeviceType> masses(masses_input.NumElements());
 
     auto host_gravity = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.gravity);
     auto host_state_indices =

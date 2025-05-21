@@ -21,7 +21,8 @@ struct ComputeNodeFreedomMapTable {
     }
 };
 
-inline void compute_node_freedom_map_table(State& state) {
+template <typename DeviceType>
+inline void compute_node_freedom_map_table(State<DeviceType>& state) {
     Kokkos::deep_copy(state.node_freedom_map_table, 0UL);
     auto result = 0UL;
     Kokkos::parallel_scan(

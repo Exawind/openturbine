@@ -61,7 +61,10 @@ struct CreateElementFreedomTable_Springs {
     }
 };
 
-inline void create_element_freedom_table(Elements& elements, const State& state) {
+template <typename DeviceType>
+inline void create_element_freedom_table(
+    Elements<DeviceType>& elements, const State<DeviceType>& state
+) {
     Kokkos::parallel_for(
         "CreateElementFreedomTable_Beams", elements.beams.num_elems,
         CreateElementFreedomTable_Beams{

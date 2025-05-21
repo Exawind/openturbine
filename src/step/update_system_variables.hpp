@@ -11,8 +11,9 @@
 
 namespace openturbine {
 
+template <typename DeviceType>
 inline void UpdateSystemVariables(
-    StepParameters& parameters, const Elements& elements, State& state
+    StepParameters& parameters, const Elements<DeviceType>& elements, State<DeviceType>& state
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update System Variables");
 

@@ -5,7 +5,9 @@
 
 namespace openturbine::tests {
 TEST(CopyNodesToState, OneNode_ID) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array<double, 7>{};
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array<double, 6>{};
@@ -19,7 +21,9 @@ TEST(CopyNodesToState, OneNode_ID) {
 }
 
 TEST(CopyNodesToState, OneNode_Position) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array{1., 2., 3., 4., 5., 6., 7.};
     constexpr auto q_exact = std::array{8., 9., 10., 11., 12., 13., 14.};
     constexpr auto v_exact = std::array<double, 6>{};
@@ -44,7 +48,9 @@ TEST(CopyNodesToState, OneNode_Position) {
 }
 
 TEST(CopyNodesToState, OneNode_Velocity) {
-    auto state = State(1U);
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+    auto state = State<DeviceType>(1U);
     constexpr auto x0_exact = std::array<double, 7>{};
     constexpr auto q_exact = std::array<double, 7>{};
     constexpr auto v_exact = std::array{15., 16., 17., 18., 19., 20.};
