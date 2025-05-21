@@ -34,7 +34,11 @@ RUN git clone https://github.com/spack/spack.git && \
     spack install googletest && \
     spack --insecure install cppcheck && \
     spack install yaml-cpp && \
-    spack --insecure install trilinos@16.0.0~mpi~epetra && \
+    spack install kokkos && \
+    spack install kokkos-kernels && \
+    spack install netcdf-c && \
+    spack install suite-sparse && \
+    spack install lapack && \
     spack --insecure install vtk~mpi~opengl2
 
 # Step 3: Set up the working directory and copy the OpenTurbine repository
@@ -50,7 +54,7 @@ ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_VTK=ON \
 ARG N_PARALLEL_JOBS=4
 
 RUN . /spack/share/spack/setup-env.sh && \
-    spack load cppcheck googletest trilinos vtk yaml-cpp && \
+    spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp && \
     mkdir docker-build && \
     cd docker-build && \
     cmake .. ${CMAKE_OPTIONS} && \

@@ -70,6 +70,7 @@ inline void create_element_freedom_table(
 ) {
     auto beams_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
+
     Kokkos::parallel_for(
         "CreateElementFreedomTable_Beams", beams_range,
         CreateElementFreedomTable_Beams<DeviceType>{

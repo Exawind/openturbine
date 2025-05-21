@@ -98,6 +98,7 @@ inline void assemble_node_freedom_allocation_table(
 
     auto beams_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, elements.beams.num_elems);
+
     Kokkos::parallel_for(
         "AssembleNodeFreedomMapTable_Beams", beams_range,
         AssembleNodeFreedomMapTable_Beams<DeviceType>{

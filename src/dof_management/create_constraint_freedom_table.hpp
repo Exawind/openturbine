@@ -47,6 +47,7 @@ inline void create_constraint_freedom_table(
 ) {
     auto constraints_range =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+
     Kokkos::parallel_for(
         "Create Constraint Node Freedom Table", constraints_range,
         CreateConstraintFreedomTable<DeviceType>{

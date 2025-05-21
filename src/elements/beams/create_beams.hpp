@@ -113,6 +113,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
 
     auto range_policy =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
+
     Kokkos::parallel_for(
         "InterpolateQPPosition", range_policy,
         InterpolateQPPosition<DeviceType>{
