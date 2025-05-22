@@ -100,9 +100,6 @@ void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::strin
 }
 
 TEST(RotorTest, IEA15Rotor) {
-    // Flag to write output
-    constexpr bool write_output{false};
-
     // Rotor angular velocity in rad/s
     constexpr auto omega = std::array{0., 0., -0.79063415025};
 
@@ -132,19 +129,6 @@ TEST(RotorTest, IEA15Rotor) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = std::string("RotorTest.IEA15RotorOnly");
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    model.SetupOutputs(output_dir + "/rotor_test.nc", num_blades * num_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
-
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
@@ -165,17 +149,10 @@ TEST(RotorTest, IEA15Rotor) {
         // Take step
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
     }
 }
 
 TEST(RotorTest, IEA15RotorHub) {
-    // Flag to write output
-    constexpr bool write_output(false);
-
     // Rotor angular velocity in rad/s
     constexpr auto omega = std::array{0., 0., -0.79063415025};
 
@@ -206,20 +183,6 @@ TEST(RotorTest, IEA15RotorHub) {
     // Create solver, elements, constraints, and state
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = std::string("RotorTest.IEA15RotorHub");
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
-    model.SetupOutputs(output_dir + "/rotor_test.nc", total_num_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
-
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
@@ -240,17 +203,10 @@ TEST(RotorTest, IEA15RotorHub) {
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
     }
 }
 
 TEST(RotorTest, IEA15RotorController) {
-    // Flag to write output
-    constexpr bool write_output(true);
-
     // Rotor angular velocity in rad/s
     constexpr auto angular_speed = 0.79063415025;
     constexpr auto omega = std::array{0., 0., -angular_speed};
@@ -283,14 +239,14 @@ TEST(RotorTest, IEA15RotorController) {
     };
 
     // Define hub node and associated constraints
-    auto hub_node_d = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
+    auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
     for (const auto& beam_elem : model.GetBeamElements()) {
         const auto rotation_fraction =
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
         const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
         const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
-            {hub_node_d, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
+            {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
         );
     }
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
@@ -298,20 +254,6 @@ TEST(RotorTest, IEA15RotorController) {
     // Create solver, elements, constraints, and state
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = std::string("RotorTest.IEA15RotorController");
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    auto total_num_nodes = num_blades * num_nodes + 1;  // +1 for hub node
-    model.SetupOutputs(output_dir + "/rotor_test.nc", total_num_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
 
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
@@ -336,17 +278,10 @@ TEST(RotorTest, IEA15RotorController) {
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
     }
 }
 
 TEST(RotorTest, IEA15RotorHost) {
-    // Flag to write output
-    constexpr bool write_output{false};
-
     // Rotor angular velocity in rad/s
     constexpr auto omega = std::array{0., 0., -0.79063415025};
 
@@ -379,18 +314,6 @@ TEST(RotorTest, IEA15RotorHost) {
         Kokkos::DefaultHostExecutionSpace, Kokkos::DefaultHostExecutionSpace::memory_space>;
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<Device>();
 
-    // Remove output directory for writing step data
-    if (write_output) {
-#ifdef OpenTurbine_ENABLE_VTK
-        RemoveDirectoryWithRetries("steps");
-        std::filesystem::create_directory("steps");
-
-        // Write quadrature point global positions to file and VTK
-        // Write vtk visualization file
-        WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
-#endif
-    }
-
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
@@ -413,16 +336,6 @@ TEST(RotorTest, IEA15RotorHost) {
 
         // Verify that step converged
         EXPECT_EQ(converged, true);
-
-        // If flag set, write quadrature point glob position to file
-        if (write_output) {
-#ifdef OpenTurbine_ENABLE_VTK
-            // Write VTK output to file
-            auto tmp = std::to_string(i + 1);
-            auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-            WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
-#endif
-        }
     }
 }
 }  // namespace openturbine::tests

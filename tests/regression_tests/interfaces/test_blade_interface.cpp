@@ -21,11 +21,8 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO");
-#endif
+        .SetRelativeErrorTolerance(1e-4)
+        .SetOutputFile("BladeInterfaceTest.BladeWindIO");
 
     // Set blade parameters
     // Use prescribed root motion to fix root rotation
@@ -169,12 +166,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam");
-#endif
-
+        .SetRelativeErrorTolerance(1e-4)
+        .SetOutputFile("BladeInterfaceTest.RotatingBeam");
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{
         0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
@@ -329,11 +322,8 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetDampingFactor(1.)
         .SetMaximumNonlinearIterations(10)
         .SetAbsoluteErrorTolerance(1e-5)
-        .SetRelativeErrorTolerance(1e-3);
-
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
-#endif
+        .SetRelativeErrorTolerance(1e-3)
+        .SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
 
     // Node locations
     const std::vector<double> kp_s{0., 1.};

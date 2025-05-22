@@ -536,25 +536,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto rotor_speed = rotor_speed_init;
     auto azimuth = azimuth_init;
 
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = std::string("IEA15RotorAeroController");
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    model.SetupOutputs(output_dir + "/iea15_rotor_aero_controller.nc", state.num_system_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
-
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
 
         // Get current time and next time
         const auto current_time{step_size * static_cast<double>(i)};

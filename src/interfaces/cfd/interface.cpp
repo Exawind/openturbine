@@ -261,9 +261,9 @@ bool Interface::Step() {
     );
 
     // Write outputs and increment timestep counter
-    /* if (this->outputs_) {
+    if (this->outputs_) {
         outputs_->WriteNodeOutputsAtTimestep(this->host_state, this->current_timestep_);
-    } */
+    }
     this->current_timestep_++;
 
     return true;

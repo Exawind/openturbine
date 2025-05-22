@@ -607,26 +607,10 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = std::string("RotatingBeamTest.RevoluteJointConstraint");
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    model.SetupOutputs(output_dir + "/revolute_joint_constraint.nc", state.num_system_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
-
     // Run 10 steps
     for (size_t i = 0; i < 5; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
     }
 
     expect_kokkos_view_2D_equal(
@@ -716,26 +700,10 @@ void GeneratorTorqueWithAxisTilt(
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-#ifdef OpenTurbine_WRITE_OUTPUTS
-    // Create output directory if it doesn't exist
-    auto output_dir = "RotatingBeamTest.GeneratorTorqueWithAxisTilt_" + std::to_string(tilt);
-    std::filesystem::create_directories(output_dir);
-
-    // Export mesh connectivity to yaml
-    model.ExportMeshConnectivityToYAML(output_dir + "/mesh_connectivity.yaml");
-
-    // Set NetCDF output writer
-    model.SetupOutputs(output_dir + "/generator_torque_with_axis_tilt.nc", state.num_system_nodes);
-    model.WriteOutputsAtTimestep(state, 0);
-#endif
-
     // Run 10 steps
     for (size_t i = 0; i < 10; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_WRITE_OUTPUTS
-        model.WriteOutputsAtTimestep(state, i + 1);
-#endif
     }
 
     // Check that the azimuth node has rotated by the expected amount
