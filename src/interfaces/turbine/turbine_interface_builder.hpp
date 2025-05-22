@@ -19,15 +19,22 @@ namespace openturbine::interfaces {
  */
 class TurbineInterfaceBuilder {
 public:
+    /// @brief Gets the builder for the solution component
+    /// @return A reference to the SolutionBuilder for the solution component
     [[nodiscard]] components::SolutionBuilder& Solution() { return this->solution_builder; }
 
+    /// @brief Gets the builder for a specific blade
+    /// @param n The index of the blade (first blade is 0)
+    /// @return A reference to the BeamBuilder for the specified blade
     [[nodiscard]] components::BeamBuilder& Blade(size_t n) {
-        if (n >= this->blade_builders.size()) {
-            this->blade_builders.resize(n + 1);
+        if (n > this->blade_builders.size()) {
+            this->blade_builders.resize(n);
         }
         return this->blade_builders.at(n);
     }
 
+    /// @brief Gets the builder for the tower
+    /// @return A reference to the BeamBuilder for the tower
     [[nodiscard]] components::BeamBuilder& Tower() { return this->tower_builder; }
 
     /**
