@@ -24,7 +24,15 @@ public:
     )
         : output_writer_(std::make_unique<util::NodeStateWriter>(output_file, true, num_nodes)),
           num_nodes_(num_nodes),
-          location_(location) {}
+          location_(location) {
+        this->x_data_.resize(num_nodes_);
+        this->y_data_.resize(num_nodes_);
+        this->z_data_.resize(num_nodes_);
+        this->i_data_.resize(num_nodes_);
+        this->j_data_.resize(num_nodes_);
+        this->k_data_.resize(num_nodes_);
+        this->w_data_.resize(num_nodes_);
+    }
 
     [[nodiscard]] std::unique_ptr<util::NodeStateWriter>& GetOutputWriter() {
         return this->output_writer_;
@@ -34,70 +42,83 @@ public:
 
     /// @brief Write node state outputs to NetCDF file at specified timestep
     template <typename DeviceType>
-    void WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state, size_t timestep) const {
+    void WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state, size_t timestep) {
         if (!this->output_writer_) {
             return;
         }
 
-        std::vector<double> x(num_nodes_);
-        std::vector<double> y(num_nodes_);
-        std::vector<double> z(num_nodes_);
-        std::vector<double> i(num_nodes_);
-        std::vector<double> j(num_nodes_);
-        std::vector<double> k(num_nodes_);
-        std::vector<double> w(num_nodes_);
-
         // Position data
         for (size_t node = 0; node < num_nodes_; ++node) {
-            x[node] = host_state.x(node, 0);
-            y[node] = host_state.x(node, 1);
-            z[node] = host_state.x(node, 2);
-            w[node] = host_state.x(node, 3);
-            i[node] = host_state.x(node, 4);
-            j[node] = host_state.x(node, 5);
-            k[node] = host_state.x(node, 6);
+            this->x_data_[node] = host_state.x(node, 0);
+            this->y_data_[node] = host_state.x(node, 1);
+            this->z_data_[node] = host_state.x(node, 2);
+            this->w_data_[node] = host_state.x(node, 3);
+            this->i_data_[node] = host_state.x(node, 4);
+            this->j_data_[node] = host_state.x(node, 5);
+            this->k_data_[node] = host_state.x(node, 6);
         }
-        this->output_writer_->WriteStateDataAtTimestep(timestep, "x", x, y, z, i, j, k, w);
+        this->output_writer_->WriteStateDataAtTimestep(
+            timestep, "x", this->x_data_, this->y_data_, this->z_data_, this->i_data_, this->j_data_,
+            this->k_data_, this->w_data_
+        );
 
         // Displacement data
         for (size_t node = 0; node < num_nodes_; ++node) {
-            x[node] = host_state.q(node, 0);
-            y[node] = host_state.q(node, 1);
-            z[node] = host_state.q(node, 2);
-            w[node] = host_state.q(node, 3);
-            i[node] = host_state.q(node, 4);
-            j[node] = host_state.q(node, 5);
-            k[node] = host_state.q(node, 6);
+            this->x_data_[node] = host_state.q(node, 0);
+            this->y_data_[node] = host_state.q(node, 1);
+            this->z_data_[node] = host_state.q(node, 2);
+            this->w_data_[node] = host_state.q(node, 3);
+            this->i_data_[node] = host_state.q(node, 4);
+            this->j_data_[node] = host_state.q(node, 5);
+            this->k_data_[node] = host_state.q(node, 6);
         }
-        this->output_writer_->WriteStateDataAtTimestep(timestep, "u", x, y, z, i, j, k, w);
+        this->output_writer_->WriteStateDataAtTimestep(
+            timestep, "u", this->x_data_, this->y_data_, this->z_data_, this->i_data_, this->j_data_,
+            this->k_data_, this->w_data_
+        );
 
         // Velocity data
         for (size_t node = 0; node < num_nodes_; ++node) {
-            x[node] = host_state.v(node, 0);
-            y[node] = host_state.v(node, 1);
-            z[node] = host_state.v(node, 2);
-            i[node] = host_state.v(node, 3);
-            j[node] = host_state.v(node, 4);
-            k[node] = host_state.v(node, 5);
+            this->x_data_[node] = host_state.v(node, 0);
+            this->y_data_[node] = host_state.v(node, 1);
+            this->z_data_[node] = host_state.v(node, 2);
+            this->i_data_[node] = host_state.v(node, 3);
+            this->j_data_[node] = host_state.v(node, 4);
+            this->k_data_[node] = host_state.v(node, 5);
         }
-        this->output_writer_->WriteStateDataAtTimestep(timestep, "v", x, y, z, i, j, k);
+        this->output_writer_->WriteStateDataAtTimestep(
+            timestep, "v", this->x_data_, this->y_data_, this->z_data_, this->i_data_, this->j_data_,
+            this->k_data_
+        );
 
         // Acceleration data
         for (size_t node = 0; node < num_nodes_; ++node) {
-            x[node] = host_state.vd(node, 0);
-            y[node] = host_state.vd(node, 1);
-            z[node] = host_state.vd(node, 2);
-            i[node] = host_state.vd(node, 3);
-            j[node] = host_state.vd(node, 4);
-            k[node] = host_state.vd(node, 5);
+            this->x_data_[node] = host_state.vd(node, 0);
+            this->y_data_[node] = host_state.vd(node, 1);
+            this->z_data_[node] = host_state.vd(node, 2);
+            this->i_data_[node] = host_state.vd(node, 3);
+            this->j_data_[node] = host_state.vd(node, 4);
+            this->k_data_[node] = host_state.vd(node, 5);
         }
-        this->output_writer_->WriteStateDataAtTimestep(timestep, "a", x, y, z, i, j, k);
+        this->output_writer_->WriteStateDataAtTimestep(
+            timestep, "a", this->x_data_, this->y_data_, this->z_data_, this->i_data_, this->j_data_,
+            this->k_data_
+        );
     }
 
 private:
     std::unique_ptr<util::NodeStateWriter> output_writer_;  ///< Output writer
     size_t num_nodes_;         ///< Number of nodes to be written in the output file
     OutputLocation location_;  ///< Output writing location in element
+
+    // Pre-allocated vectors for storing output data
+    std::vector<double> x_data_;
+    std::vector<double> y_data_;
+    std::vector<double> z_data_;
+    std::vector<double> i_data_;
+    std::vector<double> j_data_;
+    std::vector<double> k_data_;
+    std::vector<double> w_data_;
 };
 
 }  // namespace openturbine::interfaces
