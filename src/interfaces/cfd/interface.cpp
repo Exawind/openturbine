@@ -2,6 +2,7 @@
 
 #include "floating_platform.hpp"
 #include "floating_platform_input.hpp"
+#include "interfaces/outputs.hpp"
 #include "model/model.hpp"
 #include "mooring_line_input.hpp"
 #include "node_data.hpp"
@@ -195,7 +196,7 @@ Interface::Interface(const InterfaceInput& input)
       solver(CreateSolver<DeviceType>(state, elements, constraints)),
       state_save(CloneState(state)),
       host_state(state),
-      output_writer_(nullptr) {
+      outputs_(nullptr) {
     // Copy state motion members from device to host
     this->host_state.CopyFromState(this->state);
     Kokkos::deep_copy(this->host_state.f, 0.);
@@ -206,10 +207,18 @@ Interface::Interface(const InterfaceInput& input)
         this->host_state.vd
     );
 
-    // Initialize NetCDF writer if output file is specified
+    // Initialize NetCDF writer and write mesh connectivity if output path is specified
     if (!input.output_file.empty()) {
-        this->output_writer_ =
-            std::make_unique<util::NodeStateWriter>(input.output_file, true, state.num_system_nodes);
+        // Create output directory if it doesn't exist
+        std::filesystem::create_directories(input.output_file);
+
+        // Initialize outputs
+        this->outputs_ = std::make_unique<openturbine::interfaces::Outputs>(
+            input.output_file + "/cfd_interface.nc", state.num_system_nodes
+        );
+
+        // Write mesh connectivity to YAML file
+        model.ExportMeshConnectivityToYAML(input.output_file + "/mesh_connectivity.yaml");
     }
 }
 
@@ -252,8 +261,8 @@ bool Interface::Step() {
     );
 
     // Write outputs and increment timestep counter
-    if (this->output_writer_) {
-        WriteOutputs();
+    if (this->outputs_) {
+        outputs_->WriteNodeOutputsAtTimestep(this->host_state, this->current_timestep_);
     }
     this->current_timestep_++;
 
@@ -275,66 +284,6 @@ void Interface::RestoreState() {
         this->turbine, this->host_state.x, this->host_state.q, this->host_state.v,
         this->host_state.vd
     );
-}
-
-//------------------------------------------------------------------------------
-// Write outputs
-//------------------------------------------------------------------------------
-void Interface::WriteOutputs() const {
-    const size_t num_nodes = state.num_system_nodes;
-    std::vector<double> x(num_nodes);
-    std::vector<double> y(num_nodes);
-    std::vector<double> z(num_nodes);
-    std::vector<double> i(num_nodes);
-    std::vector<double> j(num_nodes);
-    std::vector<double> k(num_nodes);
-    std::vector<double> w(num_nodes);
-
-    // position
-    for (size_t node = 0; node < num_nodes; ++node) {
-        x[node] = this->host_state.x(node, 0);
-        y[node] = this->host_state.x(node, 1);
-        z[node] = this->host_state.x(node, 2);
-        w[node] = this->host_state.x(node, 3);
-        i[node] = this->host_state.x(node, 4);
-        j[node] = this->host_state.x(node, 5);
-        k[node] = this->host_state.x(node, 6);
-    }
-    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "x", x, y, z, i, j, k, w);
-
-    // displacement
-    for (size_t node = 0; node < num_nodes; ++node) {
-        x[node] = this->host_state.q(node, 0);
-        y[node] = this->host_state.q(node, 1);
-        z[node] = this->host_state.q(node, 2);
-        w[node] = this->host_state.q(node, 3);
-        i[node] = this->host_state.q(node, 4);
-        j[node] = this->host_state.q(node, 5);
-        k[node] = this->host_state.q(node, 6);
-    }
-    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "u", x, y, z, i, j, k, w);
-
-    // velocity
-    for (size_t node = 0; node < num_nodes; ++node) {
-        x[node] = this->host_state.v(node, 0);
-        y[node] = this->host_state.v(node, 1);
-        z[node] = this->host_state.v(node, 2);
-        i[node] = this->host_state.v(node, 3);
-        j[node] = this->host_state.v(node, 4);
-        k[node] = this->host_state.v(node, 5);
-    }
-    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "v", x, y, z, i, j, k);
-
-    // acceleration
-    for (size_t node = 0; node < num_nodes; ++node) {
-        x[node] = this->host_state.vd(node, 0);
-        y[node] = this->host_state.vd(node, 1);
-        z[node] = this->host_state.vd(node, 2);
-        i[node] = this->host_state.vd(node, 3);
-        j[node] = this->host_state.vd(node, 4);
-        k[node] = this->host_state.vd(node, 5);
-    }
-    output_writer_->WriteStateDataAtTimestep(this->current_timestep_, "a", x, y, z, i, j, k);
 }
 
 }  // namespace openturbine::cfd

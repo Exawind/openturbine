@@ -46,7 +46,7 @@ WORKDIR /projects/openturbine
 COPY . .
 
 # Step 4: Load necessary libraries and build the project
-ARG CMAKE_OPTIONS="-DOpenTurbine_ENABLE_VTK=ON \
+ARG CMAKE_OPTIONS="-DOpenTurbine_WRITE_OUTPUTS=ON \
     -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
     -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
     -DCMAKE_BUILD_TYPE=Release"

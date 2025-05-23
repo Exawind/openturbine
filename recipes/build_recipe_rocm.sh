@@ -7,7 +7,7 @@
 # Note that many systems have ROCm already built and properly configured.  If this
 # is the case for you, make sure that all modules are loaded and paths set correctly.
 # You may have to manually set some of this for Spack configuration.
-# You may also need to add the amdgpu_target option for your platform to the Spack 
+# You may also need to add the amdgpu_target option for your platform to the Spack
 # spec for Trilinos.
 # -----------------------------------------------------------------------------
 
@@ -57,7 +57,6 @@ install_if_missing suite-sparse
 install_if_missing lapack
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
-#install_if_missing "vtk~mpi~opengl2" # add if VTK is needed
 
 spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp #llvm vtk cppcheck
 
@@ -66,7 +65,7 @@ mkdir -p build-from-script
 cd build-from-script
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
-  -DOpenTurbine_ENABLE_VTK=ON \
+  -DOpenTurbine_WRITE_OUTPUTS=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
   -DOpenTUrbine_ENABLE_KLU=ON \

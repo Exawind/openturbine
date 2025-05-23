@@ -5,14 +5,9 @@
 
 #include <gtest/gtest.h>
 
-#include "test_utilities.hpp"
-
-#ifdef OpenTurbine_ENABLE_VTK
-#include "vtkout.hpp"
-#endif
-
 #include "model/model.hpp"
 #include "step/step.hpp"
+#include "test_utilities.hpp"
 #include "types.hpp"
 
 using Array_7 = std::array<double, 7>;
@@ -75,7 +70,7 @@ constexpr auto stiffness_matrix_unity = std::array{
     std::array{0., 0., 0., 0., 0., 1.},
 };
 
-// Node locations (GLL quadrature)
+// Node locations (GLL quadrature) - 6 nodes
 const auto node_s = std::vector{
     0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
 };
@@ -612,22 +607,10 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-#ifdef OpenTurbine_ENABLE_VTK
-    UpdateSystemVariables(parameters, elements, state);
-    RemoveDirectoryWithRetries("steps");
-    std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
-#endif
-
     // Run 10 steps
-    for (int i = 0; i < 5; ++i) {
+    for (size_t i = 0; i < 5; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_ENABLE_VTK
-        auto tmp = std::to_string(i + 1);
-        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
-#endif
     }
 
     expect_kokkos_view_2D_equal(
@@ -717,22 +700,10 @@ void GeneratorTorqueWithAxisTilt(
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-#ifdef OpenTurbine_ENABLE_VTK
-    UpdateSystemVariables(parameters, elements, state);
-    RemoveDirectoryWithRetries("steps");
-    std::filesystem::create_directory("steps");
-    WriteVTKBeamsQP(state, elements.beams, "steps/step_0000.vtu");
-#endif
-
     // Run 10 steps
-    for (int i = 0; i < 10; ++i) {
+    for (size_t i = 0; i < 10; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
-#ifdef OpenTurbine_ENABLE_VTK
-        auto tmp = std::to_string(i + 1);
-        auto file_name = std::string("steps/step_") + std::string(4 - tmp.size(), '0') + tmp;
-        WriteVTKBeamsQP(state, elements.beams, file_name + ".vtu");
-#endif
     }
 
     // Check that the azimuth node has rotated by the expected amount

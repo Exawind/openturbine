@@ -21,11 +21,8 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4);
-
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.BladeWindIO/blade_####");
-#endif
+        .SetRelativeErrorTolerance(1e-4)
+        .SetOutputFile("BladeInterfaceTest.BladeWindIO");
 
     // Set blade parameters
     // Use prescribed root motion to fix root rotation
@@ -126,9 +123,6 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     // Build blade interface
     auto interface = builder.Build();
 
-    // Write initial vtk output
-    interface.WriteOutputVTK();
-
     // Get reference to tip node
     auto& tip_node = interface.Blade().nodes.back();
 
@@ -145,9 +139,6 @@ TEST(BladeInterfaceTest, BladeWindIO) {
 
         // Check convergence
         ASSERT_EQ(converged, true);
-
-        // Write vtk output
-        interface.WriteOutputVTK();
     }
 
     EXPECT_NEAR(tip_node.position[0], 117.00012960730839, 1e-10);
@@ -175,12 +166,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4);
-
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.RotatingBeam/step_####");
-#endif
-
+        .SetRelativeErrorTolerance(1e-4)
+        .SetOutputFile("BladeInterfaceTest.RotatingBeam");
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{
         0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
@@ -254,9 +241,6 @@ TEST(BladeInterfaceTest, RotatingBeam) {
 
         // Check for convergence
         ASSERT_EQ(converged, true);
-
-        // Write VTK file for end of step
-        interface.WriteOutputVTK();
     }
 
     //--------------------------------------------------------------------------
@@ -338,11 +322,8 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetDampingFactor(1.)
         .SetMaximumNonlinearIterations(10)
         .SetAbsoluteErrorTolerance(1e-5)
-        .SetRelativeErrorTolerance(1e-3);
-
-#ifdef OpenTurbine_ENABLE_VTK
-    builder.Solution().SetVTKOutputPath("BladeInterfaceTest.StaticCurledBeam/step_####");
-#endif
+        .SetRelativeErrorTolerance(1e-3)
+        .SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
 
     // Node locations
     const std::vector<double> kp_s{0., 1.};
@@ -403,9 +384,6 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
         // Static step
         const auto converged = interface.Step();
-
-        // Write beam visualization output
-        interface.WriteOutputVTK();
 
         // Check convergence
         ASSERT_EQ(converged, true);

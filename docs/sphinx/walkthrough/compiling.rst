@@ -295,7 +295,7 @@ CMake from the command line or through a GUI such as ccmake.
 - ``OpenTurbine_ENABLE_TESTS`` builds OpenTurbine's test suite
 - ``OpenTurbine_ENABLE_UNITY_BUILD`` uses unity builds to potentially decrease
   compilation time
-- ``OpenTurbine_ENABLE_VTK`` builds OpenTurbine with VTK support for
+- ``OpenTurbine_WRITE_OUTPUTS`` builds OpenTurbine with VTK support for
   visualization in tests. Will need the VTK TPL to be properly configured
 - ``OpenTurbine_WARNINGS_AS_ERRORS`` treats warnings as errors, including
   warnings from static analysis tools

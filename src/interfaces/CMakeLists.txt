@@ -5,6 +5,6 @@ add_subdirectory(components)
 install(FILES
         host_state.hpp
         node_data.hpp
-        vtk_output.hpp
+        outputs.hpp
         DESTINATION include/OpenTurbine/interfaces/
 )
