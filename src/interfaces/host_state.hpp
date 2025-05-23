@@ -5,14 +5,19 @@
 
 namespace openturbine::interfaces {
 
-/* @brief Container for storing the complete system state of the simulation at a given
- * time increment
- * @details This struct maintains all state variables required for the dynamic simulation,
- * including:
- * - Node configuration and freedom allocation
- * - Position and rotation states (current, previous, and initial)
- * - Velocity and acceleration states
- * - Tangent matrix
+/**
+ * @brief Host-side mirror of the simulation state for a given time increment
+ *
+ * @details This struct maintains host-local copies of the key state variables required
+ * for the dynamic simulation, including:
+ * - Position: Current position and orientation [x, y, z, qw, qx, qy, qz] -> 7 x 1
+ * - Displacement: Current displacement and rotation [δx, δy, δz, δqw, δqx, δqy, δqz] -> 7 x 1
+ * - Velocity: Current linear and angular velocities [vx, vy, vz, wx, wy, wz] -> 6 x 1
+ * - Acceleration: Current linear and angular accelerations [ax, ay, az, αx, αy, αz] -> 6 x 1
+ *
+ * @note This struct serves as a host-side mirror of the device state, allowing for
+ * efficient data transfer between device and host memory. It's primarily used for
+ * the interfaces, I/O operations etc.
  */
 template <typename DeviceType>
 struct HostState {
@@ -32,7 +37,6 @@ struct HostState {
     typename Kokkos::View<double* [6], DeviceType>::HostMirror f;
 
     /// @brief  Construct host state from state
-    /// @param state
     explicit HostState(const State<DeviceType>& state)
         : x(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x)),
           q(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q)),
@@ -41,7 +45,6 @@ struct HostState {
           f(Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.f)) {}
 
     /// @brief Copy state data to host state
-    /// @param state
     void CopyFromState(const State<DeviceType>& state) const {
         Kokkos::deep_copy(this->x, state.x);
         Kokkos::deep_copy(this->q, state.q);

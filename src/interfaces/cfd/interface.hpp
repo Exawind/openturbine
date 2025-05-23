@@ -5,8 +5,8 @@
 #include "interfaces/cfd/interface_input.hpp"
 #include "interfaces/cfd/turbine.hpp"
 #include "interfaces/host_state.hpp"
+#include "interfaces/outputs.hpp"
 #include "model/model.hpp"
-#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::cfd {
 
@@ -66,7 +66,7 @@ public:
     size_t current_timestep_{0};
 
     /// @brief Optional NetCDF output writer
-    std::unique_ptr<util::NodeStateWriter> output_writer_;
+    std::unique_ptr<interfaces::Outputs> outputs_;
 };
 
 }  // namespace openturbine::cfd

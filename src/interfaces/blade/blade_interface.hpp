@@ -4,11 +4,12 @@
 #include "interfaces/components/beam_input.hpp"
 #include "interfaces/components/solution_input.hpp"
 #include "interfaces/host_state.hpp"
-#include "interfaces/vtk_output.hpp"
+#include "interfaces/outputs.hpp"
 #include "model/model.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
+#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::interfaces {
 
@@ -43,10 +44,25 @@ public:
           ),
           solver(CreateSolver<DeviceType>(state, elements, constraints)),
           state_save(CloneState(state)),
-          host_state(state),
-          vtk_output(solution_input.vtk_output_path) {
+          host_state(state) {
         // Update the blade motion to match state
         UpdateNodeMotion();
+
+        // Initialize NetCDF writer and write mesh connectivity if output path is specified
+        if (!solution_input.output_file_path.empty()) {
+            // Create output directory if it doesn't exist
+            std::filesystem::create_directories(solution_input.output_file_path);
+
+            // Initialize outputs
+            this->outputs_ = std::make_unique<Outputs>(
+                solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
+            );
+
+            // Write mesh connectivity to YAML file
+            model.ExportMeshConnectivityToYAML(
+                solution_input.output_file_path + "/mesh_connectivity.yaml"
+            );
+        }
         Kokkos::deep_copy(this->host_state.f, 0.);
     }
 
@@ -70,13 +86,20 @@ public:
         auto converged = openturbine::Step(
             this->parameters, this->solver, this->elements, this->state, this->constraints
         );
+        if (!converged) {
+            return false;
+        }
 
         // Update the blade motion if there was convergence
-        if (converged) {
-            UpdateNodeMotion();
-            return true;
+        UpdateNodeMotion();
+
+        // Write outputs and increment timestep counter
+        if (this->outputs_) {
+            outputs_->WriteNodeOutputsAtTimestep(this->host_state, this->current_timestep_);
         }
-        return false;
+        this->current_timestep_++;
+
+        return true;
     }
 
     /// @brief Saves the current state for potential restoration (in correction step)
@@ -100,12 +123,6 @@ public:
         this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);
     }
 
-    ///@brief Writes the current blade state to VTK output files
-    void WriteOutputVTK() {
-        this->vtk_output.WriteBeam(this->blade.nodes);
-        this->vtk_output.IncrementFileIndex();
-    }
-
 private:
     Model model;              ///< OpenTurbine class for model construction
     components::Beam blade;   ///< Blade model input/output data
@@ -117,8 +134,9 @@ private:
     StepParameters parameters;     ///< OpenTurbine class containing solution parameters
     Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
     State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;  ///< Host local copy of node state data
-    VTKOutput vtk_output;              ///< VTK output manager
+    HostState<DeviceType> host_state;   ///< Host local copy of node state data
+    size_t current_timestep_{0};        ///< Current timestep index
+    std::unique_ptr<Outputs> outputs_;  ///< handle to Output for writing to NetCDF
 
     /// @brief  Updates motion data for all nodes (root and blade) in the interface
     void UpdateNodeMotion() {
