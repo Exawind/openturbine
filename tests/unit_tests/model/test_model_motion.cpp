@@ -25,7 +25,7 @@ protected:
 };
 
 TEST_F(ModelMotionTest, TranslateBeam) {
-    Array_3 displacement = {0., 1., 2.};
+    const Array_3 displacement = {0., 1., 2.};
     model.TranslateBeam(beam_element, displacement);
 
     // Check that nodes were translated
@@ -43,7 +43,7 @@ TEST_F(ModelMotionTest, TranslateBeam) {
     ASSERT_EQ(n2.x[2], 2.);
 
     // Test additional translation (should accumulate)
-    Array_3 displacement2 = {1., 1., -1.};
+    const Array_3 displacement2 = {1., 1., -1.};
     model.TranslateBeam(beam_element, displacement2);
 
     // Check updated positions
@@ -63,8 +63,8 @@ TEST_F(ModelMotionTest, TranslateBeam) {
 
 TEST_F(ModelMotionTest, RotateBeamAboutOrigin) {
     // Rotate 90 degrees around Z axis using quaternion [cos(π/4), 0, 0, sin(π/4)]
-    Array_4 rotation = {0.7071068, 0.0, 0.0, 0.7071068};  // cos(45°), 0, 0, sin(45°)
-    Array_3 center = {0.0, 0.0, 0.0};
+    const Array_4 rotation = {0.7071068, 0.0, 0.0, 0.7071068};  // cos(45°), 0, 0, sin(45°)
+    const Array_3 center = {0.0, 0.0, 0.0};
     model.RotateBeamAboutPoint(beam_element, rotation, center);
 
     // Check that nodes were rotated properly
@@ -88,8 +88,8 @@ TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
     model.TranslateBeam(beam_element, {1., 1., 0.});
 
     // Now rotate around point (1,1,0) by 90 degrees around y-axis
-    Array_4 rotation = {0.7071068, 0.0, 0.7071068, 0.0};  // 90 degrees around y-axis
-    Array_3 center = {1., 1., 0.};
+    const Array_4 rotation = {0.7071068, 0.0, 0.7071068, 0.0};  // 90 degrees around y-axis
+    const Array_3 center = {1., 1., 0.};
     model.RotateBeamAboutPoint(beam_element, rotation, center);
 
     // Check that nodes were rotated properly around the new center
@@ -109,8 +109,9 @@ TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
 
 TEST_F(ModelMotionTest, SetBeamVelocityAboutOrigin) {
     // Set a velocity about the origin
-    Array_6 velocity = {1., 0., 0., 0., 0., 1.};  // Linear velocity in x, angular velocity around z
-    Array_3 point = {0., 0., 0.};
+    const Array_6 velocity = {1., 0., 0.,
+                              0., 0., 1.};  // Linear velocity in x, angular velocity around z
+    const Array_3 point = {0., 0., 0.};
     model.SetBeamVelocityAboutPoint(beam_element, velocity, point);
 
     // Check velocity at first node (at origin)
@@ -135,8 +136,9 @@ TEST_F(ModelMotionTest, SetBeamVelocityAboutOrigin) {
 
 TEST_F(ModelMotionTest, SetBeamVelocityAboutArbitraryPoint) {
     // Test with reference point at (1,0,0)
-    Array_6 velocity = {0., 1., 0., 0., 0., 1.};  // Linear velocity in y, angular velocity around z
-    Array_3 point = {1., 0., 0.};                 // Reference point at node 2
+    const Array_6 velocity = {0., 1., 0.,
+                              0., 0., 1.};  // Linear velocity in y, angular velocity around z
+    const Array_3 point = {1., 0., 0.};     // Reference point at node 2
     model.SetBeamVelocityAboutPoint(beam_element, velocity, point);
 
     // Check velocities
@@ -163,10 +165,11 @@ TEST_F(ModelMotionTest, SetBeamVelocityAboutArbitraryPoint) {
 
 TEST_F(ModelMotionTest, SetBeamAccelerationAboutOrigin) {
     // Set an acceleration about the origin
-    Array_6 acceleration = {1., 0., 0.,
-                            0., 0., 1.};  // Linear acceleration in x, angular acceleration around z
-    Array_3 omega = {0., 0., 1.};         // Angular velocity vector (1 rad/s around z-axis)
-    Array_3 point = {0., 0., 0.};         // Reference point at origin
+    const Array_6 acceleration = {
+        1., 0., 0., 0., 0., 1.
+    };  // Linear acceleration in x, angular acceleration around z
+    const Array_3 omega = {0., 0., 1.};  // Angular velocity vector (1 rad/s around z-axis)
+    const Array_3 point = {0., 0., 0.};  // Reference point at origin
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, point);
 
     // Check acceleration at first node (at origin)
@@ -194,10 +197,11 @@ TEST_F(ModelMotionTest, SetBeamAccelerationAboutOrigin) {
 
 TEST_F(ModelMotionTest, SetBeamAccelerationAboutArbitraryPoint) {
     // Test with reference point at node 2
-    Array_6 acceleration = {0., 1., 0.,
-                            0., 1., 0.};  // Linear acceleration in y, angular acceleration around y
-    Array_3 omega = {0., 1., 0.};         // Angular velocity vector (1 rad/s around y-axis)
-    Array_3 point = {1., 0., 0.};         // Reference point at node 2
+    const Array_6 acceleration = {
+        0., 1., 0., 0., 1., 0.
+    };  // Linear acceleration in y, angular acceleration around y
+    const Array_3 omega = {0., 1., 0.};  // Angular velocity vector (1 rad/s around y-axis)
+    const Array_3 point = {1., 0., 0.};  // Reference point at node 2
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, point);
 
     // Check updated accelerations
@@ -235,8 +239,8 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     // ----------------------------------------------
     // Step 2: Rotate 90 degrees around x-axis
     // ----------------------------------------------
-    Array_4 rotation_x = {0.7071068, 0.7071068, 0., 0.};  // 90 degrees around x-axis
-    Array_3 origin = {0., 0., 0.};
+    const Array_4 rotation_x = {0.7071068, 0.7071068, 0., 0.};  // 90 degrees around x-axis
+    const Array_3 origin = {0., 0., 0.};
     model.RotateBeamAboutPoint(beam_element, rotation_x, origin);
 
     // Check intermediate positions after translation and rotation
@@ -257,7 +261,7 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     // Step 3: Set velocity about the origin
     // ----------------------------------------------
     // Linear velocity in y direction, angular velocity around z
-    Array_6 velocity = {0., 2., 0., 0., 0., 1.};
+    const Array_6 velocity = {0., 2., 0., 0., 0., 1.};
     model.SetBeamVelocityAboutPoint(beam_element, velocity, origin);
 
     // Check velocities after applying step 3
@@ -283,9 +287,9 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     // ----------------------------------------------
     // Step 4: Set acceleration about a different point (the first node)
     // ----------------------------------------------
-    Array_6 acceleration = {1., 0., 0., 0., 1., 0.};  // Linear x accel, angular y accel
-    Array_3 omega = {0., 0., 1.};                     // Current angular velocity is around z
-    Array_3 ref_point = {0., -1., 0.};                // Position of first node after transformations
+    const Array_6 acceleration = {1., 0., 0., 0., 1., 0.};  // Linear x accel, angular y accel
+    const Array_3 omega = {0., 0., 1.};                     // Current angular velocity is around z
+    const Array_3 ref_point = {0., -1., 0.};  // Position of first node after transformations
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, ref_point);
 
     // Check final accelerations
