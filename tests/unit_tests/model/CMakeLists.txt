@@ -6,4 +6,5 @@ target_sources(
     test_model.cpp
     test_copy_nodes_to_state.cpp
     test_mesh_connectivity.cpp
+    test_model_motion.cpp
 )
