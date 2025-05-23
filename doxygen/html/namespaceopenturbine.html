@@ -383,6 +383,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1MassesInput.html">MassesInput</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the input data for creating mass/rigid body elements.  <a href="structopenturbine_1_1MassesInput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to manage element-to-node connectivity information for a mesh.  <a href="classopenturbine_1_1MeshConnectivity.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html">Model</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to define a turbine model with nodes, elements, and constraints.  <a href="classopenturbine_1_1Model.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -842,8 +845,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a6bce4a0ea133697b8166de3f32939445" id="r_a6bce4a0ea133697b8166de3f32939445"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:a6bce4a0ea133697b8166de3f32939445"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445">UpdateTangentOperator</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
 <tr class="separator:a6bce4a0ea133697b8166de3f32939445"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f98d0c4da39a68c6faa89fcb1f3cbe5" id="r_a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3f98d0c4da39a68c6faa89fcb1f3cbe5">WriteLinesVTK</a> (const std::vector&lt; std::array&lt; size_t, 2 &gt; &gt; &amp;lines_data, const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;points, const std::string &amp;filename)</td></tr>
-<tr class="separator:a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -5571,48 +5572,6 @@ template&lt;typename VectorType , typename MatrixType &gt; </div>
 </div><div class="memdoc">
 
 <p>Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result. </p>
-
-</div>
-</div>
-<a id="a3f98d0c4da39a68c6faa89fcb1f3cbe5" name="a3f98d0c4da39a68c6faa89fcb1f3cbe5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f98d0c4da39a68c6faa89fcb1f3cbe5">&#9670;&#160;</a></span>WriteLinesVTK()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::WriteLinesVTK </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; std::array&lt; size_t, 2 &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>lines_data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;&#160;</td>
-          <td class="paramname"><em>points</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>filename</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

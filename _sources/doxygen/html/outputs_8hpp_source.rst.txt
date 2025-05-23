@@ -1,0 +1,14 @@
+.. meta::891f2e50f03bac8eae93f73ad3e66855f9d55d7f7fb2effaae10f57299a5dbe50b5eb6fc8277d4881a1079ce48f558a188cb20eb2bba758d3bc1a928a67df778
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/outputs.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/outputs.hpp Source File
+============================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: outputs_8hpp_source.html

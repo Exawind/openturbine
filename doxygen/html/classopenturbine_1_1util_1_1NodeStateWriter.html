@@ -186,6 +186,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1c373b9fff39fec370141d0f0e205805" id="r_a1c373b9fff39fec370141d0f0e205805"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html#a1c373b9fff39fec370141d0f0e205805">WriteStateDataAtTimestep</a> (size_t timestep, const std::string &amp;component_prefix, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z, const std::vector&lt; double &gt; &amp;i, const std::vector&lt; double &gt; &amp;j, const std::vector&lt; double &gt; &amp;k, const std::vector&lt; double &gt; &amp;w=std::vector&lt; double &gt;()) const</td></tr>
 <tr class="memdesc:a1c373b9fff39fec370141d0f0e205805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes state data for a specific timestep.  <br /></td></tr>
 <tr class="separator:a1c373b9fff39fec370141d0f0e205805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05fdda31a618c89c1df0aff2fc507827" id="r_a05fdda31a618c89c1df0aff2fc507827"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html#a05fdda31a618c89c1df0aff2fc507827">WriteDeformationDataAtTimestep</a> (size_t timestep, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z) const</td></tr>
+<tr class="memdesc:a05fdda31a618c89c1df0aff2fc507827"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write deformation data for all nodes at a timestep.  <br /></td></tr>
+<tr class="separator:a05fdda31a618c89c1df0aff2fc507827"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef3a2025c06952b39bcc4e4aa6ce5fdd" id="r_aef3a2025c06952b39bcc4e4aa6ce5fdd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html#aef3a2025c06952b39bcc4e4aa6ce5fdd">GetFile</a> () const</td></tr>
 <tr class="memdesc:aef3a2025c06952b39bcc4e4aa6ce5fdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the NetCDF file object.  <br /></td></tr>
 <tr class="separator:aef3a2025c06952b39bcc4e4aa6ce5fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +204,7 @@ Public Member Functions</h2></td></tr>
 <li>Velocity (x, y, z, i, j, k)</li>
 <li>Acceleration (x, y, z, i, j, k)</li>
 <li>Force (x, y, z, i, j, k)</li>
+<li>Deformation (x, y, z)</li>
 </ul>
 <p>Each item is stored as a separate variable in the NetCDF file, organized by timestep and node index. The file structure uses an unlimited time dimension to allow for continuous writing of timesteps during simulation. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -308,6 +312,65 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the number of nodes with state data in output file. </p>
+
+</div>
+</div>
+<a id="a05fdda31a618c89c1df0aff2fc507827" name="a05fdda31a618c89c1df0aff2fc507827"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05fdda31a618c89c1df0aff2fc507827">&#9670;&#160;</a></span>WriteDeformationDataAtTimestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::util::NodeStateWriter::WriteDeformationDataAtTimestep </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>z</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write deformation data for all nodes at a timestep. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timestep</td><td>Current timestep index </td></tr>
+    <tr><td class="paramname">x</td><td>Data for x component of deformation </td></tr>
+    <tr><td class="paramname">y</td><td>Data for y component of deformation </td></tr>
+    <tr><td class="paramname">z</td><td>Data for z component of deformation </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

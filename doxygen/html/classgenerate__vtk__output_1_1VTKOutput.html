@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: generate_vtk_output.VTKOutput Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: generate_vtk_output.VTKOutput Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classgenerate__vtk__output_1_1VTKOutput.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="generate-vtk-output-vtkoutput-class-reference">
+<h1>generate_vtk_output.VTKOutput Class Reference<a class="headerlink" href="#generate-vtk-output-vtkoutput-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: generate_vtk_output.VTKOutput Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacegenerate__vtk__output.html">generate_vtk_output</a></li><li class="navelem"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html">VTKOutput</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classgenerate__vtk__output_1_1VTKOutput-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">generate_vtk_output.VTKOutput Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ab7688a844824d1fb255517898cd4fc61" id="r_ab7688a844824d1fb255517898cd4fc61"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ab7688a844824d1fb255517898cd4fc61">__init__</a> (self, str <a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ae7057f0f64fd40f3adfac92fa64f7845">netcdf_path</a>, Optional[str] connectivity_path=None)</td></tr>
+<tr class="separator:ab7688a844824d1fb255517898cd4fc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab8ef32148338a52245fea3ba945b592" id="r_aab8ef32148338a52245fea3ba945b592"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#aab8ef32148338a52245fea3ba945b592">generate_visualization</a> (self, int timestep, str output_dir)</td></tr>
+<tr class="separator:aab8ef32148338a52245fea3ba945b592"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c5be616271fdf3ee040d93b88b84848" id="r_a0c5be616271fdf3ee040d93b88b84848"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a0c5be616271fdf3ee040d93b88b84848">visualize_all_timesteps</a> (self, str output_dir)</td></tr>
+<tr class="separator:a0c5be616271fdf3ee040d93b88b84848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ae7057f0f64fd40f3adfac92fa64f7845" id="r_ae7057f0f64fd40f3adfac92fa64f7845"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ae7057f0f64fd40f3adfac92fa64f7845">netcdf_path</a></td></tr>
+<tr class="separator:ae7057f0f64fd40f3adfac92fa64f7845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad701c9952daf36ab8e529c2f3c682f11" id="r_ad701c9952daf36ab8e529c2f3c682f11"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ad701c9952daf36ab8e529c2f3c682f11">data</a></td></tr>
+<tr class="separator:ad701c9952daf36ab8e529c2f3c682f11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ef34dc0ea60f4fe28a3eeb08d4f822f" id="r_a1ef34dc0ea60f4fe28a3eeb08d4f822f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a1ef34dc0ea60f4fe28a3eeb08d4f822f">mesh_connectivity</a></td></tr>
+<tr class="separator:a1ef34dc0ea60f4fe28a3eeb08d4f822f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9110f7e4eadb3571e109d70a4231c634" id="r_a9110f7e4eadb3571e109d70a4231c634"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a9110f7e4eadb3571e109d70a4231c634">num_nodes</a></td></tr>
+<tr class="separator:a9110f7e4eadb3571e109d70a4231c634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19312aaa5bbc133f4194739980ad353d" id="r_a19312aaa5bbc133f4194739980ad353d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a19312aaa5bbc133f4194739980ad353d">num_timesteps</a></td></tr>
+<tr class="separator:a19312aaa5bbc133f4194739980ad353d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a496be5079263ebb4694712b3339958eb" id="r_a496be5079263ebb4694712b3339958eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a496be5079263ebb4694712b3339958eb">_load_mesh_connectivity</a> (self, str connectivity_path)</td></tr>
+<tr class="separator:a496be5079263ebb4694712b3339958eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d887acd852535333c7aa91048373cca" id="r_a5d887acd852535333c7aa91048373cca"><td class="memItemLeft" align="right" valign="top">List[Dict[str, List[float]]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a5d887acd852535333c7aa91048373cca">_extract_node_data_at_timestep</a> (self, int timestep, Optional[List[int]] node_indices=None)</td></tr>
+<tr class="separator:a5d887acd852535333c7aa91048373cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20558d20caea7930267629778ca5a816" id="r_a20558d20caea7930267629778ca5a816"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a20558d20caea7930267629778ca5a816">_add_node_data_to_vtk_object</a> (self, vtk.vtkObject vtk_object, List[Dict[str, List[float]]] nodes)</td></tr>
+<tr class="separator:a20558d20caea7930267629778ca5a816"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66dacb8eabf38514af3c3355c70dd166" id="r_a66dacb8eabf38514af3c3355c70dd166"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a66dacb8eabf38514af3c3355c70dd166">_add_beams_to_grid</a> (self, grid, cell_types, element_ids, element_type_names)</td></tr>
+<tr class="separator:a66dacb8eabf38514af3c3355c70dd166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c160ff71b274b5be67c0cc33aff62d6" id="r_a1c160ff71b274b5be67c0cc33aff62d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a1c160ff71b274b5be67c0cc33aff62d6">_add_masses_to_grid</a> (self, grid, cell_types, element_ids, element_type_names)</td></tr>
+<tr class="separator:a1c160ff71b274b5be67c0cc33aff62d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc9c2a400d71fb1144ec6dfc35481410" id="r_afc9c2a400d71fb1144ec6dfc35481410"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#afc9c2a400d71fb1144ec6dfc35481410">_add_springs_to_grid</a> (self, grid, cell_types, element_ids, element_type_names)</td></tr>
+<tr class="separator:afc9c2a400d71fb1144ec6dfc35481410"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82977659b0ea43d5ae806ab876452b01" id="r_a82977659b0ea43d5ae806ab876452b01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a82977659b0ea43d5ae806ab876452b01">_add_constraints_to_grid</a> (self, grid, cell_types, element_ids, element_type_names)</td></tr>
+<tr class="separator:a82977659b0ea43d5ae806ab876452b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Class to generate VTK files from OpenTurbine (NetCDF-based) outputs and mesh connectivity (YAML-based).</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ab7688a844824d1fb255517898cd4fc61" name="ab7688a844824d1fb255517898cd4fc61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7688a844824d1fb255517898cd4fc61">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>netcdf_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[str] &#160;</td>
+          <td class="paramname"><em>connectivity_path</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Initializes the visualizer with the path to the NetCDF file and optional connectivity file.
+
+Args:
+    netcdf_path (str): Path to the NetCDF output file
+    connectivity_path (Optional[str]): Path to the mesh connectivity YAML file
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a66dacb8eabf38514af3c3355c70dd166" name="a66dacb8eabf38514af3c3355c70dd166"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66dacb8eabf38514af3c3355c70dd166">&#9670;&#160;</a></span>_add_beams_to_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._add_beams_to_grid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>grid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cell_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_type_names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Adds beam elements to the unstructured grid. Represented as polyline cells.
+
+Args:
+    grid (vtk.vtkUnstructuredGrid): Grid to add beams to
+    cell_types (Dict[int, int]): Dictionary to track cell types
+    element_ids (Dict[int, int]): Dictionary to track original element IDs
+    element_type_names (Dict[int, str]): Dictionary to track element type names
+</pre> 
+</div>
+</div>
+<a id="a82977659b0ea43d5ae806ab876452b01" name="a82977659b0ea43d5ae806ab876452b01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82977659b0ea43d5ae806ab876452b01">&#9670;&#160;</a></span>_add_constraints_to_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._add_constraints_to_grid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>grid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cell_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_type_names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Adds constraint elements to the unstructured grid. Represented as line cells.
+
+Args:
+    grid (vtk.vtkUnstructuredGrid): Grid to add constraints to
+    cell_types (Dict[int, int]): Dictionary to track cell types
+    element_ids (Dict[int, int]): Dictionary to track original element IDs
+    element_type_names (Dict[int, str]): Dictionary to track element type names
+</pre> 
+</div>
+</div>
+<a id="a1c160ff71b274b5be67c0cc33aff62d6" name="a1c160ff71b274b5be67c0cc33aff62d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c160ff71b274b5be67c0cc33aff62d6">&#9670;&#160;</a></span>_add_masses_to_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._add_masses_to_grid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>grid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cell_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_type_names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Adds mass elements to the unstructured grid. Represented as vertices.
+
+Args:
+    grid (vtk.vtkUnstructuredGrid): Grid to add masses to
+    cell_types (Dict[int, int]): Dictionary to track cell types
+    element_ids (Dict[int, int]): Dictionary to track original element IDs
+    element_type_names (Dict[int, str]): Dictionary to track element type names
+</pre> 
+</div>
+</div>
+<a id="a20558d20caea7930267629778ca5a816" name="a20558d20caea7930267629778ca5a816"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20558d20caea7930267629778ca5a816">&#9670;&#160;</a></span>_add_node_data_to_vtk_object()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._add_node_data_to_vtk_object </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vtk.vtkObject&#160;</td>
+          <td class="paramname"><em>vtk_object</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[Dict[str, List[float]]]&#160;</td>
+          <td class="paramname"><em>nodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Adds common node data to a VTK object (polydata or unstructured grid).
+
+Following data are added to the VTK object:
+- Orientation (as 3x3 rotation matrix)
+- Velocity (as 6x1 vector)
+- Acceleration (as 6x1 vector)
+
+Args:
+    vtk_object: VTK object to add data to
+    nodes: List of node data dictionaries
+</pre> 
+</div>
+</div>
+<a id="afc9c2a400d71fb1144ec6dfc35481410" name="afc9c2a400d71fb1144ec6dfc35481410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc9c2a400d71fb1144ec6dfc35481410">&#9670;&#160;</a></span>_add_springs_to_grid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._add_springs_to_grid </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>grid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>cell_types</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_ids</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>element_type_names</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Adds spring elements to the unstructured grid. Represented as line cells.
+
+Args:
+    grid (vtk.vtkUnstructuredGrid): Grid to add springs to
+    cell_types (Dict[int, int]): Dictionary to track cell types
+    element_ids (Dict[int, int]): Dictionary to track original element IDs
+    element_type_names (Dict[int, str]): Dictionary to track element type names
+</pre> 
+</div>
+</div>
+<a id="a5d887acd852535333c7aa91048373cca" name="a5d887acd852535333c7aa91048373cca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d887acd852535333c7aa91048373cca">&#9670;&#160;</a></span>_extract_node_data_at_timestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> List[Dict[str, List[float]]] generate_vtk_output.VTKOutput._extract_node_data_at_timestep </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Optional[List[int]] &#160;</td>
+          <td class="paramname"><em>node_indices</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Extracts node data for a specific timestep and returns a list of NodeData-like structures.
+
+Node data contains the following components:
+- Position: x_x, x_y, x_z, x_w, x_i, x_j, x_k
+- Velocity: v_x, v_y, v_z, v_i, v_j, v_k
+- Acceleration: a_x, a_y, a_z, a_i, a_j, a_k
+- Force (if available): f_x, f_y, f_z
+- Moment (if available): f_i, f_j, f_k
+- Deformation (if available): deformation_x, deformation_y, deformation_z
+
+Args:
+    timestep (int): The timestep to extract node data from
+    node_indices (Optional[List[int]]):
+        If provided, only extract data for these specific node indices.
+        If None, extract data for all nodes.
+
+Returns:
+    list[dict]: A list of NodeData-like structures (dicts)
+</pre> 
+</div>
+</div>
+<a id="a496be5079263ebb4694712b3339958eb" name="a496be5079263ebb4694712b3339958eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a496be5079263ebb4694712b3339958eb">&#9670;&#160;</a></span>_load_mesh_connectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput._load_mesh_connectivity </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>connectivity_path</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Loads mesh connectivity information from a YAML file.
+
+Args:
+    connectivity_path (str): Path to the connectivity YAML file
+</pre> 
+</div>
+</div>
+<a id="aab8ef32148338a52245fea3ba945b592" name="aab8ef32148338a52245fea3ba945b592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab8ef32148338a52245fea3ba945b592">&#9670;&#160;</a></span>generate_visualization()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.generate_visualization </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>output_dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Generates visualization for the specified timestep based on mesh connectivity.
+
+This method automatically determines what elements to create based on the
+available connectivity data.
+
+Args:
+    timestep (int): Timestep to visualize
+    output_dir (str): Directory to save the output files
+</pre> 
+</div>
+</div>
+<a id="a0c5be616271fdf3ee040d93b88b84848" name="a0c5be616271fdf3ee040d93b88b84848"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c5be616271fdf3ee040d93b88b84848">&#9670;&#160;</a></span>visualize_all_timesteps()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.visualize_all_timesteps </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>output_dir</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Generates visualization for all timesteps.
+
+Args:
+    output_dir (str): Directory to save the output files
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad701c9952daf36ab8e529c2f3c682f11" name="ad701c9952daf36ab8e529c2f3c682f11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad701c9952daf36ab8e529c2f3c682f11">&#9670;&#160;</a></span>data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1ef34dc0ea60f4fe28a3eeb08d4f822f" name="a1ef34dc0ea60f4fe28a3eeb08d4f822f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ef34dc0ea60f4fe28a3eeb08d4f822f">&#9670;&#160;</a></span>mesh_connectivity</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.mesh_connectivity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7057f0f64fd40f3adfac92fa64f7845" name="ae7057f0f64fd40f3adfac92fa64f7845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7057f0f64fd40f3adfac92fa64f7845">&#9670;&#160;</a></span>netcdf_path</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.netcdf_path</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9110f7e4eadb3571e109d70a4231c634" name="a9110f7e4eadb3571e109d70a4231c634"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9110f7e4eadb3571e109d70a4231c634">&#9670;&#160;</a></span>num_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.num_nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19312aaa5bbc133f4194739980ad353d" name="a19312aaa5bbc133f4194739980ad353d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19312aaa5bbc133f4194739980ad353d">&#9670;&#160;</a></span>num_timesteps</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">generate_vtk_output.VTKOutput.num_timesteps</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/viz/<a class="el" href="generate__vtk__output_8py.html">generate_vtk_output.py</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

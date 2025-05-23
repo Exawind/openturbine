@@ -174,6 +174,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Host-side mirror of the simulation state for a given time increment.  
+ <a href="structopenturbine_1_1interfaces_1_1HostState.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="host__state_8hpp_source.html">host_state.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -203,7 +206,17 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:ae87ddae5cdff44072c40ac742ded604b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of external forces.  <br /></td></tr>
 <tr class="separator:ae87ddae5cdff44072c40ac742ded604b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename DeviceType&gt;<br />
+struct openturbine::interfaces::HostState&lt; DeviceType &gt;</div><p>Host-side mirror of the simulation state for a given time increment. </p>
+<p>This struct maintains host-local copies of the key state variables required for the dynamic simulation, including:</p><ul>
+<li>Position: Current position and orientation [x, y, z, qw, qx, qy, qz] -&gt; 7 x 1</li>
+<li>Displacement: Current displacement and rotation [δx, δy, δz, δqw, δqx, δqy, δqz] -&gt; 7 x 1</li>
+<li>Velocity: Current linear and angular velocities [vx, vy, vz, wx, wy, wz] -&gt; 6 x 1</li>
+<li>Acceleration: Current linear and angular accelerations [ax, ay, az, αx, αy, αz] -&gt; 6 x 1</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>This struct serves as a host-side mirror of the device state, allowing for efficient data transfer between device and host memory. It's primarily used for the interfaces, I/O operations etc. </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a64b6ec8ab9e7755641e486f10321bbae" name="a64b6ec8ab9e7755641e486f10321bbae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a64b6ec8ab9e7755641e486f10321bbae">&#9670;&#160;</a></span>HostState()</h2>
 
@@ -231,12 +244,6 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Construct host state from state. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -268,12 +275,6 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Copy state data to host state. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

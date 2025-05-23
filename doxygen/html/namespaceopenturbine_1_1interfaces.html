@@ -168,8 +168,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -188,92 +187,13 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder class to construct a <a class="el" href="classopenturbine_1_1interfaces_1_1BladeInterface.html" title="Interface for blade simulation that manages state, solver, and components.">BladeInterface</a> by composing Blade and Solution components.  <a href="classopenturbine_1_1interfaces_1_1BladeInterfaceBuilder.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host-side mirror of the simulation state for a given time increment.  <a href="structopenturbine_1_1interfaces_1_1HostState.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1VTKOutput.html">VTKOutput</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html">Outputs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a32846bdbccd2c6a8dfff291fba42add4" id="r_a32846bdbccd2c6a8dfff291fba42add4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces.html#a32846bdbccd2c6a8dfff291fba42add4">WriteBeamVTK</a> (const std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt; &amp;nodes, const std::string &amp;file_path)</td></tr>
-<tr class="separator:a32846bdbccd2c6a8dfff291fba42add4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00a51e292b8580503ae787687a429691" id="r_a00a51e292b8580503ae787687a429691"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces.html#a00a51e292b8580503ae787687a429691">WriteNodesVTK</a> (const std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt; &amp;nodes, const std::string &amp;file_path)</td></tr>
-<tr class="separator:a00a51e292b8580503ae787687a429691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a32846bdbccd2c6a8dfff291fba42add4" name="a32846bdbccd2c6a8dfff291fba42add4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32846bdbccd2c6a8dfff291fba42add4">&#9670;&#160;</a></span>WriteBeamVTK()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::interfaces::WriteBeamVTK </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>nodes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>file_path</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a00a51e292b8580503ae787687a429691" name="a00a51e292b8580503ae787687a429691"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00a51e292b8580503ae787687a429691">&#9670;&#160;</a></span>WriteNodesVTK()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::interfaces::WriteNodesVTK </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>nodes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>file_path</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -314,6 +314,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaaaf33e11bcf34ee3fb40448385335c2" id="r_aaaaf33e11bcf34ee3fb40448385335c2"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
 <tr class="memitem:aaaaf33e11bcf34ee3fb40448385335c2"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aaaaf33e11bcf34ee3fb40448385335c2">CreateSystemWithSolver</a> () const</td></tr>
 <tr class="separator:aaaaf33e11bcf34ee3fb40448385335c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa355a0ec895f005a4ba10eba422cfbff" id="r_aa355a0ec895f005a4ba10eba422cfbff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aa355a0ec895f005a4ba10eba422cfbff">GetMeshConnectivity</a> () const</td></tr>
+<tr class="memdesc:aa355a0ec895f005a4ba10eba422cfbff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mesh connectivity (const/read-only version)  <br /></td></tr>
+<tr class="separator:aa355a0ec895f005a4ba10eba422cfbff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74aa8aad81447e36cbc84996b670d29c" id="r_a74aa8aad81447e36cbc84996b670d29c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a74aa8aad81447e36cbc84996b670d29c">GetMeshConnectivity</a> ()</td></tr>
+<tr class="memdesc:a74aa8aad81447e36cbc84996b670d29c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get mutable mesh connectivity (non-const version)  <br /></td></tr>
+<tr class="separator:a74aa8aad81447e36cbc84996b670d29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f594db3f3ca891dc8ef9f2a751822bd" id="r_a5f594db3f3ca891dc8ef9f2a751822bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a5f594db3f3ca891dc8ef9f2a751822bd">ExportMeshConnectivityToYAML</a> (const std::string &amp;filename=&quot;mesh_connectivity.yaml&quot;) const</td></tr>
+<tr class="memdesc:a5f594db3f3ca891dc8ef9f2a751822bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity to a YAML file.  <br /></td></tr>
+<tr class="separator:a5f594db3f3ca891dc8ef9f2a751822bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct to define a turbine model with nodes, elements, and constraints. </p>
@@ -1075,6 +1084,34 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 
 </div>
 </div>
+<a id="a5f594db3f3ca891dc8ef9f2a751822bd" name="a5f594db3f3ca891dc8ef9f2a751822bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f594db3f3ca891dc8ef9f2a751822bd">&#9670;&#160;</a></span>ExportMeshConnectivityToYAML()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::Model::ExportMeshConnectivityToYAML </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em> = <code>&quot;mesh_connectivity.yaml&quot;</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Export mesh connectivity to a YAML file. </p>
+
+</div>
+</div>
 <a id="a8aff23afd74649e7f9e8fc06f1ad2f85" name="a8aff23afd74649e7f9e8fc06f1ad2f85"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8aff23afd74649e7f9e8fc06f1ad2f85">&#9670;&#160;</a></span>GetBeamElement() <span class="overload">[1/2]</span></h2>
 
@@ -1238,6 +1275,60 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </div><div class="memdoc">
 
 <p>Returns a reference to the mass elements present in the model. </p>
+
+</div>
+</div>
+<a id="a74aa8aad81447e36cbc84996b670d29c" name="a74aa8aad81447e36cbc84996b670d29c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74aa8aad81447e36cbc84996b670d29c">&#9670;&#160;</a></span>GetMeshConnectivity() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a> &amp; openturbine::Model::GetMeshConnectivity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get mutable mesh connectivity (non-const version) </p>
+
+</div>
+</div>
+<a id="aa355a0ec895f005a4ba10eba422cfbff" name="aa355a0ec895f005a4ba10eba422cfbff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa355a0ec895f005a4ba10eba422cfbff">&#9670;&#160;</a></span>GetMeshConnectivity() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a> &amp; openturbine::Model::GetMeshConnectivity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the mesh connectivity (const/read-only version) </p>
 
 </div>
 </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/viz/vtk_lines.hpp File Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/model/mesh_connectivity.hpp File Reference &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -70,9 +70,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/viz/vtk_lines.hpp File Reference</li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/model/mesh_connectivity.hpp File Reference</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/doxygen/html/vtk__lines_8hpp.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/doxygen/html/mesh__connectivity_8hpp.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-viz-vtk-lines-hpp-file-reference">
-<h1>/home/runner/work/openturbine/openturbine/openturbine/src/viz/vtk_lines.hpp File Reference<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-viz-vtk-lines-hpp-file-reference" title="Permalink to this heading"></a></h1>
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-model-mesh-connectivity-hpp-file-reference">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/model/mesh_connectivity.hpp File Reference<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-model-mesh-connectivity-hpp-file-reference" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/viz/vtk_lines.hpp File Reference</title>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/model/mesh_connectivity.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -162,35 +162,33 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_bbc86518c9ef48d334e63881ed1a5751.html">viz</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_5dd65160827af56e6353642206b80129.html">model</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">vtk_lines.hpp File Reference</div></div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a>  </div>
+  <div class="headertitle"><div class="title">mesh_connectivity.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;array&gt;</code><br />
+<div class="textblock"><code>#include &lt;fstream&gt;</code><br />
+<code>#include &lt;unordered_map&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;vtkLine.h&gt;</code><br />
-<code>#include &lt;vtkPoints.h&gt;</code><br />
-<code>#include &lt;vtkPolyData.h&gt;</code><br />
-<code>#include &lt;vtkSmartPointer.h&gt;</code><br />
-<code>#include &lt;vtkXMLPolyDataWriter.h&gt;</code><br />
+<code>#include &quot;yaml-cpp/yaml.h&quot;</code><br />
 </div>
-<p><a href="vtk__lines_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="mesh__connectivity_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html">openturbine::MeshConnectivity</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to manage element-to-node connectivity information for a mesh.  <a href="classopenturbine_1_1MeshConnectivity.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceopenturbine" id="r_namespaceopenturbine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html">openturbine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a3f98d0c4da39a68c6faa89fcb1f3cbe5" id="r_a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3f98d0c4da39a68c6faa89fcb1f3cbe5">openturbine::WriteLinesVTK</a> (const std::vector&lt; std::array&lt; size_t, 2 &gt; &gt; &amp;lines_data, const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;points, const std::string &amp;filename)</td></tr>
-<tr class="separator:a3f98d0c4da39a68c6faa89fcb1f3cbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
