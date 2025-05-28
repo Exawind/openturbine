@@ -28,9 +28,10 @@ struct IntegrateResidualVectorElement {
             const auto coeff_c = weight * shape_deriv_(node, qp);
             const auto coeff_dig = weight * qp_jacobian_(qp) * shape_interp_(node, qp);
             for (auto component = 0U; component < 6U; ++component) {
-                local_residual[component] += coeff_c * qp_Fc_(qp, component) +
-                                         coeff_dig * (qp_Fd_(qp, component) + qp_Fi_(qp, component) -
-                                                      qp_Fe_(qp, component) - qp_Fg_(qp, component));
+                local_residual[component] +=
+                    coeff_c * qp_Fc_(qp, component) +
+                    coeff_dig * (qp_Fd_(qp, component) + qp_Fi_(qp, component) -
+                                 qp_Fe_(qp, component) - qp_Fg_(qp, component));
             }
         }
         for (auto component = 0U; component < 6U; ++component) {

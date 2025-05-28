@@ -30,10 +30,13 @@ struct IntegrateInertiaMatrixElement {
         const auto simd_node = (node_simd_node % num_simd_nodes) * width;
 
         auto local_M = Kokkos::Array<simd_type, 36>{};
-        
-        const auto qp_Muu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Muu_.data(), num_qps);
-        const auto qp_Guu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Guu_.data(), num_qps);
-        const auto gbl_M = Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
+
+        const auto qp_Muu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Muu_.data(), num_qps);
+        const auto qp_Guu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Guu_.data(), num_qps);
+        const auto gbl_M =
+            Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
 
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
@@ -43,7 +46,11 @@ struct IntegrateInertiaMatrixElement {
             phi_j.copy_from(&shape_interp_(simd_node, qp), tag_type());
             const auto coeff = phi_i * phi_j * w * jacobian;
             for (auto component = 0; component < 36; ++component) {
-                local_M[component] = local_M[component] + coeff * simd_type(beta_prime_ * qp_Muu(qp, component) + gamma_prime_ * qp_Guu(qp, component));
+                local_M[component] =
+                    local_M[component] + coeff * simd_type(
+                                                     beta_prime_ * qp_Muu(qp, component) +
+                                                     gamma_prime_ * qp_Guu(qp, component)
+                                                 );
             }
         }
         for (auto lane = 0U; lane < width && simd_node + lane < num_nodes; ++lane) {

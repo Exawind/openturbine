@@ -31,26 +31,32 @@ struct ContributeSpringsToSparseMatrix {
         constexpr auto num_nodes = 2;
         constexpr auto hint = 0;
 
-        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_nodes * num_nodes), [&](int node_12) {
-            const auto node_1 = node_12 / num_nodes;
-            const auto node_2 = node_12 % num_nodes;
-            const auto first_column = static_cast<int>(element_freedom_table(i_elem, node_2, 0));
+        Kokkos::parallel_for(
+            Kokkos::TeamVectorRange(member, num_nodes * num_nodes),
+            [&](int node_12) {
+                const auto node_1 = node_12 / num_nodes;
+                const auto node_2 = node_12 % num_nodes;
+                const auto first_column = static_cast<int>(element_freedom_table(i_elem, node_2, 0));
 
-            for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
-                const auto row_num = static_cast<int>(element_freedom_table(i_elem, node_1, component_1));
-                auto row = sparse.row(row_num);
-                auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_column, hint, is_sorted);
-                for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
-                    const auto contribution = dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
-                    if constexpr (force_atomic) {
-                        Kokkos::atomic_add(&(row.value(offset)), contribution);
-                    }
-                    else {
-                        row.value(offset) += contribution;
+                for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
+                    const auto row_num =
+                        static_cast<int>(element_freedom_table(i_elem, node_1, component_1));
+                    auto row = sparse.row(row_num);
+                    auto offset = KokkosSparse::findRelOffset(
+                        &(row.colidx(0)), row.length, first_column, hint, is_sorted
+                    );
+                    for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
+                        const auto contribution =
+                            dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
+                        if constexpr (force_atomic) {
+                            Kokkos::atomic_add(&(row.value(offset)), contribution);
+                        } else {
+                            row.value(offset) += contribution;
+                        }
                     }
                 }
             }
-        });
+        );
     };
 };
 

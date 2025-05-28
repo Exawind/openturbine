@@ -44,16 +44,14 @@ template <typename RowPtrType>
         ComputeSystemRowEntries<RowPtrType>{
             active_dofs, node_freedom_map_table, num_nodes_per_element, node_state_indices,
             base_active_dofs, target_active_dofs, base_node_freedom_table, target_node_freedom_table,
-            row_range, row_entries
-        }
+            row_range, row_entries}
     );
 
     Kokkos::parallel_for(
         "ComputeConstraintsRowEntries",
         Kokkos::RangePolicy<typename RowPtrType::execution_space>(0, num_constraints),
         ComputeConstraintsRowEntries<RowPtrType>{
-            num_system_dofs, base_active_dofs, target_active_dofs, row_range, row_entries
-        }
+            num_system_dofs, base_active_dofs, target_active_dofs, row_range, row_entries}
     );
 
     Kokkos::parallel_scan(

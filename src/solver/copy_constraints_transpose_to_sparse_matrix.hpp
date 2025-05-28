@@ -25,9 +25,11 @@ struct CopyConstraintsTransposeToSparseMatrix {
     void operator()(member_type member) const {
         const auto i_constraint = member.league_rank();
         constexpr bool is_sorted = true;
-        const auto num_cols = static_cast<int>(row_range(i_constraint).second - row_range(i_constraint).first);
+        const auto num_cols =
+            static_cast<int>(row_range(i_constraint).second - row_range(i_constraint).first);
         const auto first_col = static_cast<int>(row_range(i_constraint).first + num_system_cols);
-        const auto num_base_dofs = static_cast<int>(count_active_dofs(base_node_freedom_signature(i_constraint)));
+        const auto num_base_dofs =
+            static_cast<int>(count_active_dofs(base_node_freedom_signature(i_constraint)));
         const auto base_start_row = static_cast<int>(base_node_freedom_table(i_constraint, 0));
         const auto base_end_row = base_start_row + num_base_dofs;
         Kokkos::parallel_for(
@@ -37,14 +39,17 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 const auto hint = 0;
                 auto row = sparse.row(i);
 
-                auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+                auto offset = KokkosSparse::findRelOffset(
+                    &(row.colidx(0)), row.length, first_col, hint, is_sorted
+                );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
                     row.value(offset) = base_dense(i_constraint, row_number, entry);
                 }
             }
         );
 
-        const auto num_target_dofs = static_cast<int>(count_active_dofs(target_node_freedom_signature(i_constraint)));
+        const auto num_target_dofs =
+            static_cast<int>(count_active_dofs(target_node_freedom_signature(i_constraint)));
         const auto target_start_row = static_cast<int>(target_node_freedom_table(i_constraint, 0));
         const auto target_end_row = target_start_row + num_target_dofs;
         Kokkos::parallel_for(
@@ -54,7 +59,9 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 const auto hint = 0;
                 auto row = sparse.row(i);
 
-                auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+                auto offset = KokkosSparse::findRelOffset(
+                    &(row.colidx(0)), row.length, first_col, hint, is_sorted
+                );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
                     row.value(offset) = target_dense(i_constraint, row_number, entry);
                 }

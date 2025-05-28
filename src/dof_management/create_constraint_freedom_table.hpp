@@ -53,8 +53,7 @@ inline void create_constraint_freedom_table(
         CreateConstraintFreedomTable<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
             state.active_dofs, state.node_freedom_map_table, constraints.target_node_freedom_table,
-            constraints.base_node_freedom_table
-        }
+            constraints.base_node_freedom_table}
     );
 }
 

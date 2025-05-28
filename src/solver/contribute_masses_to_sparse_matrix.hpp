@@ -29,18 +29,19 @@ struct ContributeMassesToSparseMatrix {
 
         constexpr auto num_dofs = 6;
         constexpr auto hint = 0;
-        
+
         const auto first_column = static_cast<int>(element_freedom_table(i, 0));
         Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_dofs), [&](int component_1) {
             const auto row_num = static_cast<int>(element_freedom_table(i, component_1));
             auto row = sparse.row(row_num);
-            auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_column, hint, is_sorted);
+            auto offset = KokkosSparse::findRelOffset(
+                &(row.colidx(0)), row.length, first_column, hint, is_sorted
+            );
             for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
                 const auto contribution = dense(i, component_1, component_2) * conditioner;
                 if constexpr (force_atomic) {
                     Kokkos::atomic_add(&(row.value(offset)), contribution);
-                }
-                else {
+                } else {
                     row.value(offset) += contribution;
                 }
             }

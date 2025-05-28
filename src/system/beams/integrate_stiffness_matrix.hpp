@@ -33,13 +33,19 @@ struct IntegrateStiffnessMatrixElement {
 
         auto local_M = Kokkos::Array<simd_type, 36>{};
 
-        const auto qp_Kuu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Kuu_.data(), num_qps);
-        const auto qp_Puu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Puu_.data(), num_qps);
-        const auto qp_Cuu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Cuu_.data(), num_qps);
-        const auto qp_Ouu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Ouu_.data(), num_qps);
-        const auto qp_Quu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Quu_.data(), num_qps);
-        const auto gbl_M = Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
-        
+        const auto qp_Kuu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Kuu_.data(), num_qps);
+        const auto qp_Puu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Puu_.data(), num_qps);
+        const auto qp_Cuu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Cuu_.data(), num_qps);
+        const auto qp_Ouu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Ouu_.data(), num_qps);
+        const auto qp_Quu =
+            typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Quu_.data(), num_qps);
+        const auto gbl_M =
+            Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
+
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
             const auto jacobian = simd_type(qp_jacobian_(qp));
@@ -54,7 +60,11 @@ struct IntegrateStiffnessMatrixElement {
             const auto C = (phi_prime_i * phi_prime_j) * (w / jacobian);
             const auto O = (phi_prime_i * phi_j) * w;
             for (auto component = 0; component < 36; ++component) {
-                local_M[component] = local_M[component] + K * simd_type(qp_Kuu(qp, component) + qp_Quu(qp, component)) + P * simd_type(qp_Puu(qp, component)) + C * simd_type(qp_Cuu(qp, component)) + O * simd_type(qp_Ouu(qp, component));
+                local_M[component] = local_M[component] +
+                                     K * simd_type(qp_Kuu(qp, component) + qp_Quu(qp, component)) +
+                                     P * simd_type(qp_Puu(qp, component)) +
+                                     C * simd_type(qp_Cuu(qp, component)) +
+                                     O * simd_type(qp_Ouu(qp, component));
             }
         }
         for (auto lane = 0U; lane < width && simd_node + lane < num_nodes; ++lane) {

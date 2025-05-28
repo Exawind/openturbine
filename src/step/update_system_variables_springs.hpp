@@ -22,8 +22,7 @@ inline void UpdateSystemVariablesSprings(
         "Calculate System Variables Springs", range_policy,
         springs::CalculateQuadraturePointValues<DeviceType>{
             state.q, springs.node_state_indices, springs.x0, springs.l_ref, springs.k,
-            springs.residual_vector_terms, springs.stiffness_matrix_terms
-        }
+            springs.residual_vector_terms, springs.stiffness_matrix_terms}
     );
 }
 

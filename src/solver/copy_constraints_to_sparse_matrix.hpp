@@ -36,13 +36,17 @@ struct CopyConstraintsToSparseMatrix {
             constexpr auto hint = 0;
             auto row = sparse.row(static_cast<int>(real_row));
             auto first_col = static_cast<int>(base_node_freedom_table(i_constraint, 0));
-            auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+            auto offset = KokkosSparse::findRelOffset(
+                &(row.colidx(0)), row.length, first_col, hint, is_sorted
+            );
             for (auto entry = 0U; entry < num_base_dofs; ++entry, ++offset) {
                 row.value(offset) = base_dense(i_constraint, row_number, entry);
             }
 
             first_col = static_cast<int>(target_node_freedom_table(i_constraint, 0));
-            offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+            offset = KokkosSparse::findRelOffset(
+                &(row.colidx(0)), row.length, first_col, hint, is_sorted
+            );
             for (auto entry = 0U; entry < num_target_dofs; ++entry, ++offset) {
                 row.value(offset) = target_dense(i_constraint, row_number, entry);
             }

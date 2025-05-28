@@ -19,8 +19,7 @@ inline void UpdateConstraintPrediction(
     Kokkos::parallel_for(
         "UpdateLambdaPrediction", range_policy,
         UpdateLambdaPrediction<DeviceType>{
-            solver.num_system_dofs, constraints.row_range, solver.x, constraints.lambda
-        }
+            solver.num_system_dofs, constraints.row_range, solver.x, constraints.lambda}
     );
 }
 

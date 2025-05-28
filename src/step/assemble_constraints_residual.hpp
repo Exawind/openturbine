@@ -27,8 +27,7 @@ inline void AssembleConstraintsResidual(
         "ContributeConstraintsSystemResidualToVector", range_policy,
         ContributeConstraintsSystemResidualToVector<DeviceType>{
             constraints.target_node_freedom_table, constraints.target_active_dofs,
-            constraints.system_residual_terms, solver.b
-        }
+            constraints.system_residual_terms, solver.b}
     );
 
     Kokkos::parallel_for(
@@ -37,15 +36,13 @@ inline void AssembleConstraintsResidual(
             constraints.base_node_freedom_signature, constraints.target_node_freedom_signature,
             constraints.base_node_freedom_table, constraints.target_node_freedom_table,
             constraints.base_lambda_residual_terms, constraints.target_lambda_residual_terms,
-            solver.b
-        }
+            solver.b}
     );
 
     Kokkos::parallel_for(
         "CopyConstraintsResidualToVector", range_policy,
         CopyConstraintsResidualToVector<DeviceType>{
-            solver.num_system_dofs, constraints.row_range, constraints.residual_terms, solver.b
-        }
+            solver.num_system_dofs, constraints.row_range, constraints.residual_terms, solver.b}
     );
 }
 

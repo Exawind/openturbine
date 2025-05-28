@@ -20,8 +20,7 @@ TEST(InterpolateQPVectorTests, OneNodeOneQP) {
         num_qp,
         InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0U, num_nodes, shape_interp,
-            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
-        }
+            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;
@@ -40,8 +39,7 @@ TEST(InterpolateQPVectorTests, OneNodeTwoQP) {
         num_qp,
         InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0, num_nodes, shape_interp,
-            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
-        }
+            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;
@@ -70,8 +68,7 @@ TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
         num_qp,
         InterpolateQPVector<Kokkos::DefaultExecutionSpace>{
             0U, num_nodes, shape_interp,
-            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
-        }
+            Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot}
     );
     auto qp_u_dot_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_u_dot);
     constexpr auto tolerance = 1.e-16;

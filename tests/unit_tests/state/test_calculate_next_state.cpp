@@ -33,8 +33,7 @@ TEST(CalculateNextState, OneNode) {
     Kokkos::parallel_for(
         "CalculateNextState", 1,
         CalculateNextState<Kokkos::DefaultExecutionSpace>{
-            h, alpha_f, alpha_m, beta, gamma, q_delta, v, vd, a
-        }
+            h, alpha_f, alpha_m, beta, gamma, q_delta, v, vd, a}
     );
 
     constexpr auto q_delta_exact_data = std::array{-12.666666666666661, -17.333333333333339, -22.,

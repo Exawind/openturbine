@@ -62,8 +62,7 @@ struct CalculateQuadraturePointValues {
         {
             auto Mstar_data = Kokkos::Array<double, 36>{};
             const auto r0_data = Kokkos::Array<double, 4>{
-                node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)
-            };
+                node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)};
             const auto r_data =
                 Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
             auto xr_data = Kokkos::Array<double, 4>{};

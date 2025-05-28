@@ -90,8 +90,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     const auto qp_jacobian = Kokkos::View<double[kNumElems][kNumQPs]>("jacobian");
     const auto calculate_jacobian = CalculateJacobian<Kokkos::DefaultExecutionSpace>{
         kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
-        node_position_rotation, qp_position_derivative, qp_jacobian
-    };
+        node_position_rotation, qp_position_derivative, qp_jacobian};
     Kokkos::parallel_for("calculate_jacobian", 1, calculate_jacobian);
     const auto qp_jacobian_mirror =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_jacobian);
@@ -177,8 +176,7 @@ TEST(CurvedBeamTests, IntegrateResidualVectorForCurvedBeam) {
         "IntegrateResidualVectorElement", kNumNodes,
         beams::IntegrateResidualVectorElement<Kokkos::DefaultExecutionSpace>{
             0U, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, node_FX, qp_Fc, qp_Fd,
-            qp_Fi, qp_Fe, qp_Fg, residual_vector_terms
-        }
+            qp_Fi, qp_Fe, qp_Fg, residual_vector_terms}
     );
 
     const auto residual_vector_exact =
@@ -298,8 +296,7 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
         "IntegrateStiffnessMatrixElement", policy,
         beams::IntegrateStiffnessMatrixElement<Kokkos::DefaultExecutionSpace>{
             0U, kNumNodes, kNumQPs, qp_weights, qp_jacobian, shape_interp, shape_deriv, qp_Kuu,
-            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, stiffness_matrix_terms
-        }
+            qp_Puu, qp_Cuu, qp_Ouu, qp_Quu, stiffness_matrix_terms}
     );
 
     const auto stiffness_matrix_terms_mirror =
