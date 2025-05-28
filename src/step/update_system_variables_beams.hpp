@@ -13,14 +13,17 @@ template <typename DeviceType>
 inline void UpdateSystemVariablesBeams(
     StepParameters& parameters, const Beams<DeviceType>& beams, State<DeviceType>& state
 ) {
+    using simd_type = Kokkos::Experimental::simd<double>;
+    constexpr auto width = simd_type::size();
     const auto num_nodes = beams.max_elem_nodes;
     const auto num_qps = beams.max_elem_qps;
+    const auto padded_num_nodes = (num_nodes / width + 1) * width;
 
     const auto vector_length = std::min(static_cast<int>(num_nodes*num_nodes), Kokkos::TeamPolicy<typename DeviceType::execution_space>::vector_length_max());
     auto range_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
         static_cast<int>(beams.num_elems), Kokkos::AUTO(), vector_length
     );
-    const auto shape_size = Kokkos::View<double**>::shmem_size(num_nodes, num_qps);
+    const auto shape_size = Kokkos::View<double**>::shmem_size(padded_num_nodes, num_qps);
     const auto weight_size = Kokkos::View<double*>::shmem_size(num_qps);
     const auto node_variable_size = Kokkos::View<double* [7]>::shmem_size(num_nodes);
     const auto qp_variable_size = Kokkos::View<double* [6]>::shmem_size(num_qps);

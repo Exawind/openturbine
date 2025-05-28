@@ -15,23 +15,23 @@ struct ContributeBeamsToVector {
 
     KOKKOS_FUNCTION
     void operator()(member_type member) const {
-        const auto i_elem = static_cast<size_t>(member.league_rank());
-        const auto num_nodes = num_nodes_per_element(i_elem);
+        const auto element = static_cast<size_t>(member.league_rank());
+        const auto num_nodes = num_nodes_per_element(element);
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
-        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_nodes), [&](size_t i_node) {
-            auto first_component = element_freedom_table(i_elem, i_node, 0);
-            for (auto j = 0U; j < element_freedom_table.extent(2); ++j, ++first_component) {
-                if constexpr (force_atomic) {
-                    Kokkos::atomic_add(
-                        &vector(first_component, 0),
-                        elements(i_elem, i_node, j)
-                    );
-                } else {
-                    vector(first_component, 0) +=
-                        elements(i_elem, i_node, j);
-                }
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_nodes*6U), [&](size_t node_component) {
+            const auto node = node_component % num_nodes;
+            const auto component = node_component / num_nodes;
+            const auto entry = element_freedom_table(element, node, component);
+            if constexpr (force_atomic) {
+                Kokkos::atomic_add(
+                    &vector(entry, 0),
+                    elements(element, node, component)
+                );
+            } else {
+                vector(entry, 0) +=
+                    elements(element, node, component);
             }
         });
     }
