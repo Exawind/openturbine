@@ -35,8 +35,15 @@ struct IntegrateStiffnessMatrixElement {
         auto mask = mask_type([j_index, final_nodes = this->num_nodes](size_t lane) {
             return j_index + lane < final_nodes;
         });
-        auto local_M_data = Kokkos::Array<simd_type, 36>{};
-        const auto local_M = Kokkos::View<simd_type[6][6], DeviceType>(local_M_data.data());
+        auto local_M = Kokkos::Array<simd_type, 36>{};
+
+        const auto qp_Kuu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Kuu_.data(), num_qps);
+        const auto qp_Puu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Puu_.data(), num_qps);
+        const auto qp_Cuu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Cuu_.data(), num_qps);
+        const auto qp_Ouu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Ouu_.data(), num_qps);
+        const auto qp_Quu = typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Quu_.data(), num_qps);
+        const auto gbl_M = Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
+        
         for (auto k = 0U; k < num_qps; ++k) {
             const auto w = simd_type(qp_weight_(k));
             const auto jacobian = simd_type(qp_jacobian_(k));
@@ -52,35 +59,13 @@ struct IntegrateStiffnessMatrixElement {
             const auto P = (phi_i * phi_prime_j) * w;
             const auto C = (phi_prime_i * phi_prime_j) * (w / jacobian);
             const auto O = (phi_prime_i * phi_j) * w;
-            for (auto m = 0U; m < 6U; ++m) {
-                local_M(m, 0) = local_M(m, 0) + K * simd_type(qp_Kuu_(k, m, 0) + qp_Quu_(k, m, 0)) +
-                                P * simd_type(qp_Puu_(k, m, 0)) + C * simd_type(qp_Cuu_(k, m, 0)) +
-                                O * simd_type(qp_Ouu_(k, m, 0));
-                local_M(m, 1) = local_M(m, 1) + K * simd_type(qp_Kuu_(k, m, 1) + qp_Quu_(k, m, 1)) +
-                                P * simd_type(qp_Puu_(k, m, 1)) + C * simd_type(qp_Cuu_(k, m, 1)) +
-                                O * simd_type(qp_Ouu_(k, m, 1));
-                local_M(m, 2) = local_M(m, 2) + K * simd_type(qp_Kuu_(k, m, 2) + qp_Quu_(k, m, 2)) +
-                                P * simd_type(qp_Puu_(k, m, 2)) + C * simd_type(qp_Cuu_(k, m, 2)) +
-                                O * simd_type(qp_Ouu_(k, m, 2));
-                local_M(m, 3) = local_M(m, 3) + K * simd_type(qp_Kuu_(k, m, 3) + qp_Quu_(k, m, 3)) +
-                                P * simd_type(qp_Puu_(k, m, 3)) + C * simd_type(qp_Cuu_(k, m, 3)) +
-                                O * simd_type(qp_Ouu_(k, m, 3));
-                local_M(m, 4) = local_M(m, 4) + K * simd_type(qp_Kuu_(k, m, 4) + qp_Quu_(k, m, 4)) +
-                                P * simd_type(qp_Puu_(k, m, 4)) + C * simd_type(qp_Cuu_(k, m, 4)) +
-                                O * simd_type(qp_Ouu_(k, m, 4));
-                local_M(m, 5) = local_M(m, 5) + K * simd_type(qp_Kuu_(k, m, 5) + qp_Quu_(k, m, 5)) +
-                                P * simd_type(qp_Puu_(k, m, 5)) + C * simd_type(qp_Cuu_(k, m, 5)) +
-                                O * simd_type(qp_Ouu_(k, m, 5));
+            for (auto m = 0; m < 36; ++m) {
+                local_M[m] = local_M[m] + K * simd_type(qp_Kuu(k, m) + qp_Quu(k, m)) + P * simd_type(qp_Puu(k, m)) + C * simd_type(qp_Cuu(k, m)) + O * simd_type(qp_Ouu(k, m));
             }
         }
         for (auto lane = 0U; lane < width && mask[lane]; ++lane) {
-            for (auto m = 0U; m < 6U; ++m) {
-                gbl_M_(i_index, j_index + lane, m, 0) = local_M(m, 0)[lane];
-                gbl_M_(i_index, j_index + lane, m, 1) = local_M(m, 1)[lane];
-                gbl_M_(i_index, j_index + lane, m, 2) = local_M(m, 2)[lane];
-                gbl_M_(i_index, j_index + lane, m, 3) = local_M(m, 3)[lane];
-                gbl_M_(i_index, j_index + lane, m, 4) = local_M(m, 4)[lane];
-                gbl_M_(i_index, j_index + lane, m, 5) = local_M(m, 5)[lane];
+            for (auto m = 0; m < 36; ++m) {
+                gbl_M(i_index, j_index + lane, m) = local_M[m][lane];
             }
         }
     }

@@ -12,6 +12,8 @@ struct ContributeMassesToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     double conditioner{};
     typename Kokkos::View<FreedomSignature*, DeviceType>::const_type element_freedom_signature;
     typename Kokkos::View<size_t* [6], DeviceType>::const_type element_freedom_table;
@@ -19,29 +21,30 @@ struct ContributeMassesToSparseMatrix {
     CrsMatrixType sparse;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const {
+    void operator()(member_type member) const {
+        const auto i = member.league_rank();
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
-        const auto num_dofs = count_active_dofs(element_freedom_signature(i));
-        auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
-        auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 6>{};
-        auto row_data = RowDataType(row_data_data.data(), num_dofs);
-        auto col_idx = ColIdxType(col_idx_data.data(), num_dofs);
 
-        for (auto component_2 = 0U; component_2 < num_dofs; ++component_2) {
-            col_idx(component_2) = static_cast<int>(element_freedom_table(i, component_2));
-        }
-        for (auto component_1 = 0U; component_1 < num_dofs; ++component_1) {
-            const auto row_num = element_freedom_table(i, component_1);
-            for (auto component_2 = 0U; component_2 < num_dofs; ++component_2) {
-                row_data(component_2) = dense(i, component_1, component_2) * conditioner;
+        constexpr auto num_dofs = 6;
+        constexpr auto hint = 0;
+        
+        const auto first_column = static_cast<int>(element_freedom_table(i, 0));
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_dofs), [&](int component_1) {
+            const auto row_num = static_cast<int>(element_freedom_table(i, component_1));
+            auto row = sparse.row(row_num);
+            auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_column, hint, is_sorted);
+            for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
+                const auto contribution = dense(i, component_1, component_2) * conditioner;
+                if constexpr (force_atomic) {
+                    Kokkos::atomic_add(&(row.value(offset)), contribution);
+                }
+                else {
+                    row.value(offset) += contribution;
+                }
             }
-            sparse.sumIntoValues(
-                static_cast<int>(row_num), col_idx.data(), static_cast<int>(num_dofs),
-                row_data.data(), is_sorted, force_atomic
-            );
-        }
+        });
     }
 };
 

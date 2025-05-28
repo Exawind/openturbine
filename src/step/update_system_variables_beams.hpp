@@ -16,8 +16,9 @@ inline void UpdateSystemVariablesBeams(
     const auto num_nodes = beams.max_elem_nodes;
     const auto num_qps = beams.max_elem_qps;
 
+    const auto vector_length = std::min(static_cast<int>(num_nodes*num_nodes), Kokkos::TeamPolicy<typename DeviceType::execution_space>::vector_length_max());
     auto range_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(beams.num_elems), Kokkos::AUTO(), num_nodes * num_nodes
+        static_cast<int>(beams.num_elems), Kokkos::AUTO(), vector_length
     );
     const auto shape_size = Kokkos::View<double**>::shmem_size(num_nodes, num_qps);
     const auto weight_size = Kokkos::View<double*>::shmem_size(num_qps);
@@ -25,9 +26,10 @@ inline void UpdateSystemVariablesBeams(
     const auto qp_variable_size = Kokkos::View<double* [6]>::shmem_size(num_qps);
     const auto qp_matrix_size = Kokkos::View<double* [6][6]>::shmem_size(num_qps);
     const auto system_matrix_size = Kokkos::View<double** [6][6]>::shmem_size(num_nodes, num_nodes);
-    auto smem = 2 * shape_size + 2 * weight_size + 4 * node_variable_size + 5 * qp_variable_size +
-                7 * qp_matrix_size + 2 * system_matrix_size;
-    range_policy.set_scratch_size(1, Kokkos::PerTeam(smem));
+
+    const auto hbmem = 4 * node_variable_size + 5 * qp_variable_size + 7 * qp_matrix_size + 2 * system_matrix_size;
+    const auto smem = 2 * shape_size + 2 * weight_size;
+    range_policy.set_scratch_size(1, Kokkos::PerTeam(hbmem)).set_scratch_size(0, Kokkos::PerTeam(smem));
 
     Kokkos::parallel_for(
         "CalculateQuadraturePointValues", range_policy,

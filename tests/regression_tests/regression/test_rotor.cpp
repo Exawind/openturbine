@@ -118,7 +118,7 @@ TEST(RotorTest, IEA15Rotor) {
     constexpr double t_end(0.1);
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
 
-    constexpr size_t num_blades = 3;
+    constexpr size_t num_blades = 3000;
     auto model = CreateIEA15Blades<num_blades>(omega);
 
     auto prescribed_bc_ids = std::array<size_t, num_blades>{};
@@ -195,7 +195,7 @@ TEST(RotorTest, IEA15RotorHub) {
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);  // seconds
     constexpr double rho_inf(0.0);
-    constexpr double t_end(0.1);
+    constexpr double t_end(100.);
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.0);
 
     // Build vector of nodes (straight along x axis, no rotation)

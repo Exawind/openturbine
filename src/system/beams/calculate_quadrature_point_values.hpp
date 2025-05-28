@@ -56,14 +56,14 @@ struct CalculateQuadraturePointValues {
         const auto node_squared_simd_range = Kokkos::TeamVectorRange(member, num_nodes * simd_nodes);
 
         const auto shape_interp = Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>(
-            member.team_scratch(1), num_nodes, num_qps
+            member.team_scratch(0), num_nodes, num_qps
         );
         const auto shape_deriv = Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>(
-            member.team_scratch(1), num_nodes, num_qps
+            member.team_scratch(0), num_nodes, num_qps
         );
 
-        const auto qp_weight = Kokkos::View<double*, DeviceType>(member.team_scratch(1), num_qps);
-        const auto qp_jacobian = Kokkos::View<double*, DeviceType>(member.team_scratch(1), num_qps);
+        const auto qp_weight = Kokkos::View<double*, DeviceType>(member.team_scratch(0), num_qps);
+        const auto qp_jacobian = Kokkos::View<double*, DeviceType>(member.team_scratch(0), num_qps);
 
         const auto node_u = Kokkos::View<double* [7], DeviceType>(member.team_scratch(1), num_nodes);
         const auto node_u_dot =

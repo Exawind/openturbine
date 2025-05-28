@@ -25,45 +25,39 @@ struct CopyConstraintsTransposeToSparseMatrix {
     void operator()(member_type member) const {
         const auto i_constraint = member.league_rank();
         constexpr bool is_sorted = true;
-        const auto num_cols = row_range(i_constraint).second - row_range(i_constraint).first;
-        const auto first_col = row_range(i_constraint).first + num_system_cols;
-        const auto num_base_dofs = count_active_dofs(base_node_freedom_signature(i_constraint));
-        const auto base_start_row = base_node_freedom_table(i_constraint, 0);
+        const auto num_cols = static_cast<int>(row_range(i_constraint).second - row_range(i_constraint).first);
+        const auto first_col = static_cast<int>(row_range(i_constraint).first + num_system_cols);
+        const auto num_base_dofs = static_cast<int>(count_active_dofs(base_node_freedom_signature(i_constraint)));
+        const auto base_start_row = static_cast<int>(base_node_freedom_table(i_constraint, 0));
         const auto base_end_row = base_start_row + num_base_dofs;
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, base_start_row, base_end_row),
-            [&](size_t i) {
+            Kokkos::TeamVectorRange(member, base_start_row, base_end_row),
+            [&](int i) {
                 const auto row_number = i - base_start_row;
-                auto row_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
-                auto col_idx = Kokkos::Array<typename ColIdxType::value_type, 6>{};
-                for (auto entry = 0U; entry < num_cols; ++entry) {
-                    col_idx[entry] = static_cast<int>(first_col + entry);
-                    row_data[entry] = base_dense(i_constraint, row_number, entry);
+                const auto hint = 0;
+                auto row = sparse.row(i);
+
+                auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+                for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
+                    row.value(offset) = base_dense(i_constraint, row_number, entry);
                 }
-                sparse.replaceValues(
-                    static_cast<int>(i), col_idx.data(), static_cast<int>(num_cols), row_data.data(),
-                    is_sorted
-                );
             }
         );
 
-        const auto num_target_dofs = count_active_dofs(target_node_freedom_signature(i_constraint));
-        const auto target_start_row = target_node_freedom_table(i_constraint, 0);
+        const auto num_target_dofs = static_cast<int>(count_active_dofs(target_node_freedom_signature(i_constraint)));
+        const auto target_start_row = static_cast<int>(target_node_freedom_table(i_constraint, 0));
         const auto target_end_row = target_start_row + num_target_dofs;
         Kokkos::parallel_for(
-            Kokkos::TeamThreadRange(member, target_start_row, target_end_row),
-            [&](size_t i) {
+            Kokkos::TeamVectorRange(member, target_start_row, target_end_row),
+            [&](int i) {
                 const auto row_number = i - target_start_row;
-                auto row_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
-                auto col_idx = Kokkos::Array<typename ColIdxType::value_type, 6>{};
-                for (auto entry = 0U; entry < num_cols; ++entry) {
-                    col_idx[entry] = static_cast<int>(first_col + entry);
-                    row_data[entry] = target_dense(i_constraint, row_number, entry);
+                const auto hint = 0;
+                auto row = sparse.row(i);
+
+                auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+                for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
+                    row.value(offset) = target_dense(i_constraint, row_number, entry);
                 }
-                sparse.replaceValues(
-                    static_cast<int>(i), col_idx.data(), static_cast<int>(num_cols), row_data.data(),
-                    is_sorted
-                );
             }
         );
     }

@@ -30,27 +30,22 @@ struct CopyConstraintsToSparseMatrix {
         const auto num_base_dofs = count_active_dofs(base_node_freedom_signature(i_constraint));
         const auto num_target_dofs = count_active_dofs(target_node_freedom_signature(i_constraint));
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, start_row, end_row), [&](size_t i) {
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, start_row, end_row), [&](size_t i) {
             const auto row_number = i - start_row;
             const auto real_row = num_system_rows + i;
-            auto row_data = Kokkos::Array<typename RowDataType::value_type, 6>{};
-            auto col_idx = Kokkos::Array<typename ColIdxType::value_type, 6>{};
-            for (auto entry = 0U; entry < num_base_dofs; ++entry) {
-                col_idx[entry] = static_cast<int>(base_node_freedom_table(i_constraint, entry));
-                row_data[entry] = base_dense(i_constraint, row_number, entry);
+            constexpr auto hint = 0;
+            auto row = sparse.row(static_cast<int>(real_row));
+            auto first_col = static_cast<int>(base_node_freedom_table(i_constraint, 0));
+            auto offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+            for (auto entry = 0U; entry < num_base_dofs; ++entry, ++offset) {
+                row.value(offset) = base_dense(i_constraint, row_number, entry);
             }
-            sparse.replaceValues(
-                static_cast<int>(real_row), col_idx.data(), static_cast<int>(num_base_dofs),
-                row_data.data(), is_sorted
-            );
-            for (auto entry = 0U; entry < num_target_dofs; ++entry) {
-                col_idx[entry] = static_cast<int>(target_node_freedom_table(i_constraint, entry));
-                row_data[entry] = target_dense(i_constraint, row_number, entry);
+
+            first_col = static_cast<int>(target_node_freedom_table(i_constraint, 0));
+            offset = KokkosSparse::findRelOffset(&(row.colidx(0)), row.length, first_col, hint, is_sorted);
+            for (auto entry = 0U; entry < num_target_dofs; ++entry, ++offset) {
+                row.value(offset) = target_dense(i_constraint, row_number, entry);
             }
-            sparse.replaceValues(
-                static_cast<int>(real_row), col_idx.data(), static_cast<int>(num_target_dofs),
-                row_data.data(), is_sorted
-            );
         });
     }
 };

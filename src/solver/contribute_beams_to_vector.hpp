@@ -20,15 +20,16 @@ struct ContributeBeamsToVector {
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
-        Kokkos::parallel_for(Kokkos::TeamThreadRange(member, num_nodes), [&](size_t i_node) {
-            for (auto j = 0U; j < element_freedom_table.extent(2); ++j) {
+        Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_nodes), [&](size_t i_node) {
+            auto first_component = element_freedom_table(i_elem, i_node, 0);
+            for (auto j = 0U; j < element_freedom_table.extent(2); ++j, ++first_component) {
                 if constexpr (force_atomic) {
                     Kokkos::atomic_add(
-                        &vector(element_freedom_table(i_elem, i_node, j), 0),
+                        &vector(first_component, 0),
                         elements(i_elem, i_node, j)
                     );
                 } else {
-                    vector(element_freedom_table(i_elem, i_node, j), 0) +=
+                    vector(first_component, 0) +=
                         elements(i_elem, i_node, j);
                 }
             }
