@@ -36,7 +36,8 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     const auto integrator = beams::IntegrateInertiaMatrixElement<Kokkos::DefaultExecutionSpace>{
         0U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
         shape_interp, qp_Muu,          qp_Guu,        1.,         0.,
-        gbl_M};
+        gbl_M
+    };
 
     Kokkos::parallel_for(policy, integrator);
 
@@ -84,7 +85,8 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
     const auto integrator = beams::IntegrateInertiaMatrixElement<Kokkos::DefaultExecutionSpace>{
         0U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
         shape_interp, qp_Muu,          qp_Guu,        0.,         1.,
-        gbl_M};
+        gbl_M
+    };
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
@@ -127,7 +129,8 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
     const auto integrator = beams::IntegrateInertiaMatrixElement<Kokkos::DefaultExecutionSpace>{
         0U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
         shape_interp, qp_Muu,          qp_Guu,        1.,         0.,
-        gbl_M};
+        gbl_M
+    };
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data = std::array<double, 144>{
@@ -184,7 +187,8 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeTwoQPs() {
     const auto integrator = beams::IntegrateInertiaMatrixElement<Kokkos::DefaultExecutionSpace>{
         0U,           number_of_nodes, number_of_qps, qp_weights, qp_jacobian,
         shape_interp, qp_Muu,          qp_Guu,        1.,         0.,
-        gbl_M};
+        gbl_M
+    };
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =
@@ -227,7 +231,8 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
     const auto policy = Kokkos::RangePolicy(0, number_of_nodes * number_of_simd_nodes);
     const auto integrator = beams::IntegrateInertiaMatrixElement<Kokkos::DefaultExecutionSpace>{
         0U,     number_of_nodes, number_of_qps,         qp_weights, qp_jacobian, shape_interp,
-        qp_Muu, qp_Guu,          multiplication_factor, 0.,         gbl_M};
+        qp_Muu, qp_Guu,          multiplication_factor, 0.,         gbl_M
+    };
     Kokkos::parallel_for(policy, integrator);
 
     constexpr auto exact_M_data =

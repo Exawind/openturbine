@@ -16,7 +16,8 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     auto masses = Masses<DeviceType>(0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 1 beam element + 0 mass elements + 0 spring elements
+        beams, masses, springs
+    };  // 1 beam element + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -43,7 +44,8 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
     Kokkos::deep_copy(masses.state_indices, 0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 0 beam elements + 1 mass element + 0 spring elements
+        beams, masses, springs
+    };  // 0 beam elements + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -84,7 +86,8 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     Kokkos::deep_copy(mirror_node_state_indices, host_node_state_indices);
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 0 beam elements + 0 mass elements + 1 spring element
+        beams, masses, springs
+    };  // 0 beam elements + 0 mass elements + 1 spring element
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -129,7 +132,8 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     auto masses = Masses<DeviceType>(0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 1 beam element + 0 mass elements + 0 spring elements
+        beams, masses, springs
+    };  // 1 beam element + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 1);
 
@@ -170,7 +174,8 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
     Kokkos::deep_copy(masses.state_indices, 1U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 1 beam element + 1 mass element + 0 spring elements
+        beams, masses, springs
+    };  // 1 beam element + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -219,7 +224,8 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     auto masses = Masses<DeviceType>(0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -266,7 +272,8 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     auto masses = Masses<DeviceType>(0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -323,7 +330,8 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     auto masses = Masses<DeviceType>(0U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 2 beam elements + 0 mass elements + 0 spring elements
+        beams, masses, springs
+    };  // 2 beam elements + 0 mass elements + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 2);
 
@@ -381,7 +389,8 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
     Kokkos::deep_copy(masses.state_indices, 2U);
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{
-        beams, masses, springs};  // 2 beam elements + 1 mass element + 0 spring elements
+        beams, masses, springs
+    };  // 2 beam elements + 1 mass element + 0 spring elements
 
     EXPECT_EQ(elements.NumElementsInSystem(), 3);
 

@@ -19,8 +19,8 @@ struct ExecuteCalculateRevoluteJointOutput {
     KOKKOS_FUNCTION
     void operator()(int) const {
         CalculateRevoluteJointOutput<Kokkos::DefaultExecutionSpace>{
-            i_constraint, target_node_index, axes, node_x0, node_u, node_udot, node_uddot, outputs}(
-        );
+            i_constraint, target_node_index, axes, node_x0, node_u, node_udot, node_uddot, outputs
+        }();
     }
 };
 

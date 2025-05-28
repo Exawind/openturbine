@@ -22,7 +22,8 @@ inline void UpdateSystemVariablesMasses(
         masses::CalculateQuadraturePointValues<DeviceType>{
             parameters.beta_prime, parameters.gamma_prime, state.q, state.v, state.vd, state.tangent,
             masses.state_indices, masses.gravity, masses.qp_Mstar, masses.node_x0,
-            masses.residual_vector_terms, masses.system_matrix_terms}
+            masses.residual_vector_terms, masses.system_matrix_terms
+        }
     );
 }
 

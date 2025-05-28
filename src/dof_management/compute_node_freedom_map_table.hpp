@@ -31,7 +31,8 @@ inline void compute_node_freedom_map_table(State<DeviceType>& state) {
     Kokkos::parallel_scan(
         "Compute Node Freedom Map Table", scan_range,
         ComputeNodeFreedomMapTable<DeviceType>{
-            state.node_freedom_allocation_table, state.node_freedom_map_table},
+            state.node_freedom_allocation_table, state.node_freedom_map_table
+        },
         result
     );
 }

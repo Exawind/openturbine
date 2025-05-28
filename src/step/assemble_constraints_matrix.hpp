@@ -24,7 +24,8 @@ inline void AssembleConstraintsMatrix(
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_terms,
-            constraints.target_gradient_terms, solver.A}
+            constraints.target_gradient_terms, solver.A
+        }
     );
 
     Kokkos::parallel_for(
@@ -33,7 +34,8 @@ inline void AssembleConstraintsMatrix(
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,
-            constraints.target_gradient_transpose_terms, solver.A}
+            constraints.target_gradient_transpose_terms, solver.A
+        }
     );
 }
 }  // namespace openturbine

@@ -38,20 +38,22 @@ inline void AssembleSystemMatrix(
         ContributeBeamsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.beams.num_nodes_per_element,
             elements.beams.element_freedom_signature, elements.beams.element_freedom_table,
-            elements.beams.system_matrix_terms, solver.A}
+            elements.beams.system_matrix_terms, solver.A
+        }
     );
     Kokkos::parallel_for(
         "ContributeMassesToSparseMatrix", masses_sparse_matrix_policy,
         ContributeMassesToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.masses.element_freedom_signature,
-            elements.masses.element_freedom_table, elements.masses.system_matrix_terms, solver.A}
+            elements.masses.element_freedom_table, elements.masses.system_matrix_terms, solver.A
+        }
     );
     Kokkos::parallel_for(
         "ContributeSpringsToSparseMatrix", springs_sparse_matrix_policy,
         ContributeSpringsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             parameters.conditioner, elements.springs.element_freedom_signature,
-            elements.springs.element_freedom_table, elements.springs.stiffness_matrix_terms,
-            solver.A}
+            elements.springs.element_freedom_table, elements.springs.stiffness_matrix_terms, solver.A
+        }
     );
 }
 
