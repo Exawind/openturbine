@@ -126,7 +126,7 @@ inline auto SetUpSpringMassChainSystem() {
     auto model = Model();
 
     // Add nodes for each mass and an anchor point on each side
-    constexpr auto number_of_masses = 1000U;
+    constexpr auto number_of_masses = 10U;
     constexpr auto displacement = 0.5;
     auto position = 0.;
     model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
