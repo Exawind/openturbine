@@ -19,13 +19,16 @@ void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
+    constexpr auto max_simd_size = size_t{8U};
 
     const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_interp_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp_deriv", std::array{5.});
+    const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_interp", std::array<double, max_simd_size>{4.}
+    );
+    const auto shape_interp_deriv = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_interp_deriv", std::array<double, max_simd_size>{5.}
+    );
 
     auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
 
@@ -206,13 +209,16 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
     constexpr auto simd_width = Kokkos::Experimental::simd<double>::size();
     constexpr auto number_of_simd_nodes = (simd_width == 1) ? size_t{2U} : size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
+    constexpr auto max_simd_size = size_t{8U};
 
     const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{1.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{1.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1., 2.});
-    const auto shape_interp_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{1., 4.});
+    const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_interp", std::array<double, max_simd_size>{1., 2.}
+    );
+    const auto shape_interp_deriv = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_deriv", std::array<double, max_simd_size>{1., 4.}
+    );
 
     auto gbl_M = Kokkos::View<double[2][2][6][6]>("global_M");
 
@@ -393,13 +399,15 @@ void TestIntegrateStiffnessMatrix_1Element1Node2QPs(
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_simd_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{2U};
+    constexpr auto max_simd_size = size_t{8U};
 
     const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{1., 3.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{2., 4.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{1., 1.});
-    const auto shape_interp_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
-        "shape_interp_deriv", std::array{1., 1.}
+    const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_interp", std::array<double, max_simd_size * number_of_qps>{1., 1.}
+    );
+    const auto shape_interp_deriv = CreateLeftView<double[max_simd_size][number_of_qps]>(
+        "shape_interp_deriv", std::array<double, max_simd_size * number_of_qps>{1., 1.}
     );
 
     auto gbl_M = Kokkos::View<double[1][1][6][6]>("global_M");
