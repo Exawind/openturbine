@@ -93,4 +93,68 @@ static Array_6x6 GenerateStiffnessMatrix(
     return stiffness_matrix;
 }
 
+/**
+ * @brief Generates a 6x6 cross-sectional mass matrix for use in beam elements
+ *
+ * This function constructs the cross-sectional mass matrix that relates the generalized
+ * accelerations to the generalized inertial forces in a beam cross-section. The matrix
+ * accounts for coupling between translational and rotational accelerations due to offset
+ * center of gravity and principal inertia axis orientations.
+ *
+ * @param m Mass per unit length [Mass/Length]
+ * @param I_x Mass moment of inertia about local x-axis in principal frame [Mass×Length]
+ * @param I_y Mass moment of inertia about local y-axis in principal frame [Mass×Length]
+ * @param I_p Polar mass moment of inertia (I_x + I_y) [Mass×Length]
+ * @param x_G x-coordinate of center of gravity relative to reference point [Length]
+ * @param y_G y-coordinate of center of gravity relative to reference point [Length]
+ * @param theta_i Rotation angle from reference axes to principal inertia axes [radians]
+ *
+ * @return 6x6 cross-sectional mass matrix
+ */
+static Array_6x6 GenerateMassMatrix(
+    double m, double I_x, double I_y, double I_p, double x_G = 0., double y_G = 0.,
+    double theta_i = 0.
+) {
+    const double cos_theta_i = std::cos(theta_i);
+    const double sin_theta_i = std::sin(theta_i);
+
+    // Calculate mass moments of inertia in reference frame
+    const double inertia_xx = I_x * cos_theta_i * cos_theta_i + I_y * sin_theta_i * sin_theta_i;
+    const double inertia_yy = I_x * sin_theta_i * sin_theta_i + I_y * cos_theta_i * cos_theta_i;
+    const double inertia_xy = (I_y - I_x) * sin_theta_i * cos_theta_i;
+
+    //--------------------------------------------------------------------------
+    // Assemble mass matrix by blocks
+    //--------------------------------------------------------------------------
+    Array_6x6 mass_matrix = {};  // initialized to zeros
+
+    // Translational mass with CG coupling (rows 0-2, cols 0-2)
+    mass_matrix[0][0] = m;
+    mass_matrix[1][1] = m;
+    mass_matrix[2][2] = m;
+
+    // Translational-rotational coupling due to CG offset (rows 0-2, cols 3-5)
+    mass_matrix[0][5] = -m * y_G;  // F_x due to α_z
+    mass_matrix[1][5] = m * x_G;   // F_y due to α_z
+    mass_matrix[2][3] = m * y_G;   // F_z due to α_x
+    mass_matrix[2][4] = -m * x_G;  // F_z due to α_y
+
+    // Rotational-translational coupling due to CG offset (rows 3-5, cols 0-2)
+    mass_matrix[3][2] = m * y_G;   // M_x due to a_z
+    mass_matrix[4][2] = -m * x_G;  // M_y due to a_z
+    mass_matrix[5][0] = -m * y_G;  // M_z due to a_x
+    mass_matrix[5][1] = m * x_G;   // M_z due to a_y
+
+    // Rotational inertia with translational-rotational coupling (rows 3-4, cols 3-4)
+    mass_matrix[3][3] = inertia_xx + m * y_G * y_G;
+    mass_matrix[3][4] = -inertia_xy - m * x_G * y_G;
+    mass_matrix[4][3] = -inertia_xy - m * x_G * y_G;
+    mass_matrix[4][4] = inertia_yy + m * x_G * x_G;
+
+    // Polar inertia with CG coupling (row 5, col 5)
+    mass_matrix[5][5] = I_p + m * (x_G * x_G + y_G * y_G);
+
+    return mass_matrix;
+}
+
 }  // namespace openturbine
