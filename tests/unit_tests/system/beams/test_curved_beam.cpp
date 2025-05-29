@@ -277,9 +277,9 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
     const auto qp_weights = CreateView<double[kNumQPs]>("qp_weights", kGaussQuadratureWeights);
     const auto qp_jacobian = CreateView<double[kNumQPs]>("qp_jacobian", kExpectedJacobians);
     const auto shape_interp =
-        CreateLeftView<double[kNumNodes][kNumQPs]>("shape_interp", kInterpWeightsFlat);
+        CreateLeftView<double[kNumNodes+1][kNumQPs]>("shape_interp", kInterpWeightsFlat);
     const auto shape_deriv =
-        CreateLeftView<double[kNumNodes][kNumQPs]>("shape_deriv", kDerivWeightsFlat);
+        CreateLeftView<double[kNumNodes+1][kNumQPs]>("shape_deriv", kDerivWeightsFlat);
 
     const auto qp_Kuu = CreateView<double[kNumQPs][6][6]>("qp_Kuu", kKuu);
     const auto qp_Puu = CreateView<double[kNumQPs][6][6]>("qp_Puu", kPuu);

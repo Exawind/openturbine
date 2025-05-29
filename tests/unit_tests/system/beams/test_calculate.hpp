@@ -24,7 +24,7 @@ typename Kokkos::View<ValueType, Kokkos::LayoutLeft>::const_type CreateLeftView(
     const std::string& name, const DataType& data
 ) {
     const auto view = Kokkos::View<ValueType, Kokkos::LayoutLeft>(
-        Kokkos::view_alloc(name, Kokkos::WithoutInitializing, Kokkos::AllowPadding)
+        Kokkos::view_alloc(name, Kokkos::WithoutInitializing)
     );
     const auto host = typename Kokkos::View<ValueType, Kokkos::HostSpace>::const_type(data.data());
     const auto mirror = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, view);
