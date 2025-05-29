@@ -63,8 +63,8 @@ TEST_F(ModelMotionTest, TranslateBeam) {
 
 TEST_F(ModelMotionTest, RotateBeamAboutOrigin) {
     // Rotate 90 degrees around Z axis using quaternion [cos(π/4), 0, 0, sin(π/4)]
-    const Array_4 rotation = {0.7071068, 0.0, 0.0, 0.7071068};  // cos(45°), 0, 0, sin(45°)
-    const Array_3 center = {0.0, 0.0, 0.0};
+    const Array_4 rotation = {0.7071068, 0., 0., 0.7071068};  // cos(45°), 0, 0, sin(45°)
+    const Array_3 center = {0., 0., 0.};
     model.RotateBeamAboutPoint(beam_element, rotation, center);
 
     // Check that nodes were rotated properly
@@ -84,11 +84,11 @@ TEST_F(ModelMotionTest, RotateBeamAboutOrigin) {
 }
 
 TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
-    // First translate the beam to have Node 1 at (1,1,0) and Node 2 at (2,1,0)
+    // First translate the beam to have Node 1 at (1, 1, 0) and Node 2 at (2, 1, 0)
     model.TranslateBeam(beam_element, {1., 1., 0.});
 
-    // Now rotate around point (1,1,0) by 90 degrees around y-axis
-    const Array_4 rotation = {0.7071068, 0.0, 0.7071068, 0.0};  // 90 degrees around y-axis
+    // Now rotate around point (1, 1, 0) by 90 degrees around y-axis
+    const Array_4 rotation = {0.7071068, 0., 0.7071068, 0.};  // 90 degrees around y-axis
     const Array_3 center = {1., 1., 0.};
     model.RotateBeamAboutPoint(beam_element, rotation, center);
 
@@ -101,7 +101,7 @@ TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
     ASSERT_NEAR(n1.x[1], 1., 1e-6);
     ASSERT_NEAR(n1.x[2], 0., 1e-6);
 
-    // Node 2 was at (2,1,0) and should rotate around y to (1,1,-1)
+    // Node 2 was at (2, 1, 0) and should rotate around y to (1, 1, -1)
     ASSERT_NEAR(n2.x[0], 1., 1e-6);
     ASSERT_NEAR(n2.x[1], 1., 1e-6);
     ASSERT_NEAR(n2.x[2], -1., 1e-6);
@@ -109,8 +109,10 @@ TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
 
 TEST_F(ModelMotionTest, SetBeamVelocityAboutOrigin) {
     // Set a velocity about the origin
-    const Array_6 velocity = {1., 0., 0.,
-                              0., 0., 1.};  // Linear velocity in x, angular velocity around z
+    const Array_6 velocity = {
+        1., 0., 0.,  // Linear velocity in x
+        0., 0., 1.   // Angular velocity around z
+    };
     const Array_3 point = {0., 0., 0.};
     model.SetBeamVelocityAboutPoint(beam_element, velocity, point);
 
@@ -135,20 +137,22 @@ TEST_F(ModelMotionTest, SetBeamVelocityAboutOrigin) {
 }
 
 TEST_F(ModelMotionTest, SetBeamVelocityAboutArbitraryPoint) {
-    // Test with reference point at (1,0,0)
-    const Array_6 velocity = {0., 1., 0.,
-                              0., 0., 1.};  // Linear velocity in y, angular velocity around z
-    const Array_3 point = {1., 0., 0.};     // Reference point at node 2
+    // Test with reference point at (1, 0, 0)
+    const Array_6 velocity = {
+        0., 1., 0.,  // Linear velocity in y
+        0., 0., 1.   // Angular velocity around z
+    };
+    const Array_3 point = {1., 0., 0.};  // Reference point at node 2
     model.SetBeamVelocityAboutPoint(beam_element, velocity, point);
 
     // Check velocities
     auto n1 = model.GetNode(node_1);
     auto n2 = model.GetNode(node_2);
 
-    // Node 1 is at (-1,0,0) relative to the reference point (1,0,0)
+    // Node 1 is at (-1,0,0) relative to the reference point (1, 0, 0)
     // So it should get additional -1 in x direction from rotation around z
-    ASSERT_EQ(n1.v[0], -0.);  // No x velocity
-    ASSERT_EQ(n1.v[1], 0.);   // Base y velocity + contribution from rotation = 0
+    ASSERT_EQ(n1.v[0], 0.);
+    ASSERT_EQ(n1.v[1], 1. - 1.);  // Base y velocity + contribution from rotation = 0
     ASSERT_EQ(n1.v[2], 0.);
     ASSERT_EQ(n1.v[3], 0.);
     ASSERT_EQ(n1.v[4], 0.);
@@ -166,8 +170,9 @@ TEST_F(ModelMotionTest, SetBeamVelocityAboutArbitraryPoint) {
 TEST_F(ModelMotionTest, SetBeamAccelerationAboutOrigin) {
     // Set an acceleration about the origin
     const Array_6 acceleration = {
-        1., 0., 0., 0., 0., 1.
-    };  // Linear acceleration in x, angular acceleration around z
+        1., 0., 0.,  // Linear acceleration in x
+        0., 0., 1.   // Angular acceleration around z
+    };
     const Array_3 omega = {0., 0., 1.};  // Angular velocity vector (1 rad/s around z-axis)
     const Array_3 point = {0., 0., 0.};  // Reference point at origin
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, point);
@@ -177,15 +182,15 @@ TEST_F(ModelMotionTest, SetBeamAccelerationAboutOrigin) {
     ASSERT_EQ(n1.vd[0], 1.);  // Linear acceleration in x
     ASSERT_EQ(n1.vd[1], 0.);
     ASSERT_EQ(n1.vd[2], 0.);
-    ASSERT_EQ(n1.vd[3], 0.);  // Angular acceleration
+    ASSERT_EQ(n1.vd[3], 0.);
     ASSERT_EQ(n1.vd[4], 0.);
-    ASSERT_EQ(n1.vd[5], 1.);
+    ASSERT_EQ(n1.vd[5], 1.);  // Angular acceleration around z
 
     // Check acceleration at second node (at x=1)
     // For node at (1,0,0):
     // - Angular acceleration contribution: α × r = (0,0,1) × (1,0,0) = (0,1,0)
-    // - Centripetal acceleration: ω × (ω × r) = (0,0,1) × ((0,0,1) × (1,0,0)) = (0,0,1) × (0,1,0) =
-    //   (-1,0,0)
+    // - Centripetal acceleration: ω × (ω × r) = (0,0,1) × ((0,0,1) × (1,0,0))
+    //                                         = (0,0,1) × (0,1,0) = (-1,0,0)
     auto n2 = model.GetNode(node_2);
     ASSERT_EQ(n2.vd[0], 1. - 1.);  // Linear + centripetal acceleration (1 - 1 = 0)
     ASSERT_EQ(n2.vd[1], 1.);       // Angular acceleration contribution
@@ -198,8 +203,9 @@ TEST_F(ModelMotionTest, SetBeamAccelerationAboutOrigin) {
 TEST_F(ModelMotionTest, SetBeamAccelerationAboutArbitraryPoint) {
     // Test with reference point at node 2
     const Array_6 acceleration = {
-        0., 1., 0., 0., 1., 0.
-    };  // Linear acceleration in y, angular acceleration around y
+        0., 1., 0.,  // Linear acceleration in y
+        0., 1., 0.   // Angular acceleration around y
+    };
     const Array_3 omega = {0., 1., 0.};  // Angular velocity vector (1 rad/s around y-axis)
     const Array_3 point = {1., 0., 0.};  // Reference point at node 2
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, point);
@@ -208,10 +214,10 @@ TEST_F(ModelMotionTest, SetBeamAccelerationAboutArbitraryPoint) {
     auto n1 = model.GetNode(node_1);
     auto n2 = model.GetNode(node_2);
 
-    // Node1 is at position (-1,0,0) relative to reference point (1,0,0)
+    // Node 1 is at position (-1,0,0) relative to reference point (1,0,0)
     // - Angular acceleration contribution: α × r = (0,1,0) × (-1,0,0) = (0,0,1)
-    // - Centripetal acceleration: ω × (ω × r) = (0,1,0) × ((0,1,0) × (-1,0,0)) = (0,1,0) × (0,0,1)
-    // = (1,0,0)
+    // - Centripetal acceleration: ω × (ω × r) = (0,1,0) × ((0,1,0) × (-1,0,0))
+    //                                         = (0,1,0) × (0,0,1) = (1,0,0)
     ASSERT_EQ(n1.vd[0], 0. + 1.);  // Linear + centripetal
     ASSERT_EQ(n1.vd[1], 1.);
     ASSERT_EQ(n1.vd[2], 1.);  // From angular acceleration
@@ -287,8 +293,11 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     // ----------------------------------------------
     // Step 4: Set acceleration about a different point (the first node)
     // ----------------------------------------------
-    const Array_6 acceleration = {1., 0., 0., 0., 1., 0.};  // Linear x accel, angular y accel
-    const Array_3 omega = {0., 0., 1.};                     // Current angular velocity is around z
+    const Array_6 acceleration = {
+        1., 0., 0.,  // Linear x accleration
+        0., 1., 0.   // Angular y accleration
+    };
+    const Array_3 omega = {0., 0., 1.};       // Current angular velocity is around z
     const Array_3 ref_point = {0., -1., 0.};  // Position of first node after transformations
     model.SetBeamAccelerationAboutPoint(beam_element, acceleration, omega, ref_point);
 
@@ -304,10 +313,10 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     ASSERT_NEAR(n1.vd[4], 1., 1e-6);  // Angular y acceleration
     ASSERT_NEAR(n1.vd[5], 0., 1e-6);
 
-    // Node 2 is at (1,-1,0) relative to (0,-1,0), so (1,0,0) displacement vector
+    // Node 2 is at (1, -1, 0) relative to (0, -1, 0), so (1, 0, 0) displacement vector
     // - Angular acceln contribution: (0,1,0) × (1,0,0) = (0,0,-1)
-    // - Centripetal acceln from current omega: (0,0,1) × ((0,0,1) × (1,0,0)) = (0,0,1) × (0,1,0) =
-    // (-1,0,0)
+    // - Centripetal acceln from current omega: (0,0,1) × ((0,0,1) × (1,0,0))
+    //                                          = (0,0,1) × (0,1,0) = (-1,0,0)
     ASSERT_NEAR(n2.vd[0], 1. - 1., 1e-6);  // Linear + centripetal = 0
     ASSERT_NEAR(n2.vd[1], 0., 1e-6);       // Angular y acceleration
     ASSERT_NEAR(n2.vd[2], -1., 1e-6);      // From angular acceleration contribution
