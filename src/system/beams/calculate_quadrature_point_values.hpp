@@ -99,10 +99,12 @@ struct CalculateQuadraturePointValues {
         const auto inertia_matrix_terms =
             Kokkos::View<double** [6][6], DeviceType>(member.team_scratch(1), num_nodes, num_nodes);
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL), shape_interp
+            member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL),
+            Kokkos::subview(shape_interp, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_deriv_, i_elem, Kokkos::ALL, Kokkos::ALL), shape_deriv
+            member, Kokkos::subview(shape_deriv_, i_elem, Kokkos::ALL, Kokkos::ALL),
+            Kokkos::subview(shape_deriv, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
             member, Kokkos::subview(qp_FE_, i_elem, Kokkos::ALL, Kokkos::ALL), qp_Fe
