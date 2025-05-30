@@ -11,6 +11,7 @@ install(FILES
         calculate_QP_position.hpp
         create_beams.hpp
         generate_sectional_properties.hpp
+        hollow_circle_properties.hpp
         interpolate_QP_position.hpp
         interpolate_QP_rotation.hpp
         interpolate_QP_state.hpp

@@ -5,6 +5,7 @@ target_sources(
     test_beams_input.cpp
     test_beam_quadrature.cpp
     test_generate_sectional_properties.cpp
+    test_hollow_circle_properties.cpp
     test_interpolate_QP_state.cpp
     test_interpolate_QP_vector.cpp
     test_interpolation.cpp

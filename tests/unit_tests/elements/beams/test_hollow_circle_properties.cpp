@@ -43,6 +43,19 @@ protected:
     }
 };
 
+TEST_F(HollowCirclePropertiesTest, InvalidGeometryThrows) {
+    // Test that invalid geometry throws an exception
+    EXPECT_THROW(
+        CalculateHollowCircleProperties(1., 0.6, 0.3),  // thickness = radius
+        std::invalid_argument
+    );
+
+    EXPECT_THROW(
+        CalculateHollowCircleProperties(1., 0.5, 0.3),  // thickness > radius
+        std::invalid_argument
+    );
+}
+
 TEST_F(HollowCirclePropertiesTest, CalculateGeometricProperties) {
     // Test basic geometric property calculations
     auto properties =
@@ -63,6 +76,60 @@ TEST_F(HollowCirclePropertiesTest, CalculateGeometricProperties) {
     EXPECT_NEAR(properties.J, expected_J, kTolerance);
     EXPECT_NEAR(properties.kx, expected_kx, kTolerance);
     EXPECT_NEAR(properties.ky, expected_kx, kTolerance);  // Circular symmetry
+}
+
+TEST_F(HollowCirclePropertiesTest, GenerateStiffnessMatrix_Uncoupled) {
+    // Test stiffness matrix generation with no coupling
+    auto result = GenerateHollowCircleStiffnessMatrix(
+        tp_.E, tp_.G, tp_.outer_diameter, tp_.wall_thickness, tp_.nu, tp_.x_C, tp_.y_C, tp_.theta_p,
+        tp_.x_S, tp_.y_S, tp_.theta_s
+    );
+
+    // Calculate expected properties
+    auto properties =
+        CalculateHollowCircleProperties(tp_.outer_diameter, tp_.wall_thickness, tp_.nu);
+
+    const double EA = tp_.E * properties.area;
+    const double EI_x = tp_.E * properties.Ixx;
+    const double EI_y = tp_.E * properties.Iyy;
+    const double GKt = tp_.G * properties.J;
+    const double GA = tp_.G * properties.area;
+
+    Array_6x6 expected = {};
+    expected[0][0] = GA * properties.kx;  // Shear stiffness in x
+    expected[1][1] = GA * properties.ky;  // Shear stiffness in y
+    expected[2][2] = EA;                  // Axial stiffness
+    expected[3][3] = EI_x;                // Bending stiffness about x
+    expected[4][4] = EI_y;                // Bending stiffness about y
+    expected[5][5] = GKt;                 // Torsional stiffness
+
+    ExpectMatrixEqual(result, expected);
+}
+
+TEST_F(HollowCirclePropertiesTest, GenerateMassMatrix_Uncoupled) {
+    // Test mass matrix generation with no coupling
+    auto result = GenerateHollowCircleMassMatrix(
+        tp_.rho, tp_.outer_diameter, tp_.wall_thickness, tp_.nu, tp_.x_G, tp_.y_G, tp_.theta_i
+    );
+
+    // Calculate expected properties
+    auto properties =
+        CalculateHollowCircleProperties(tp_.outer_diameter, tp_.wall_thickness, tp_.nu);
+
+    const double m = tp_.rho * properties.area;
+    const double I_x = tp_.rho * properties.Ixx;
+    const double I_y = tp_.rho * properties.Iyy;
+    const double I_p = I_x + I_y;
+
+    Array_6x6 expected = {};
+    expected[0][0] = m;    // Translational mass in x
+    expected[1][1] = m;    // Translational mass in y
+    expected[2][2] = m;    // Translational mass in z
+    expected[3][3] = I_x;  // Rotational inertia about x
+    expected[4][4] = I_y;  // Rotational inertia about y
+    expected[5][5] = I_p;  // Polar rotational inertia
+
+    ExpectMatrixEqual(result, expected);
 }
 
 }  // namespace openturbine::tests

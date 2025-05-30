@@ -11,7 +11,7 @@ namespace openturbine {
 /**
  * @brief Struct containing geometric properties for a hollow circular cross-section
  */
-struct HollowCircularProperties {
+struct HollowCircleProperties {
     double area;  ///< Cross-sectional area [Length^2]
     double Ixx;   ///< Second moment of area about x-axis [Length^4]
     double Iyy;   ///< Second moment of area about y-axis [Length^4]
@@ -27,9 +27,9 @@ struct HollowCircularProperties {
  * @param wall_thickness Wall thickness [Length]
  * @param nu Poisson's ratio for shear correction factor calculation [dimensionless]
  *
- * @return HollowCircularProperties struct containing geometric properties
+ * @return HollowCircleProperties struct containing geometric properties
  */
-static HollowCircularProperties CalculateHollowCircularProperties(
+static HollowCircleProperties CalculateHollowCircleProperties(
     double outer_diameter, double wall_thickness, double nu = 0.33
 ) {
     //--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ static HollowCircularProperties CalculateHollowCircularProperties(
     const double kx = (6. * (1. + nu)) / (7. + 6. * nu);  // Timoshenko-Ehrenfest beam theory
     const double ky = kx;                                 // Circular symmetry
 
-    return HollowCircularProperties{area, Ixx, Iyy, J, kx, ky};
+    return HollowCircleProperties{area, Ixx, Iyy, J, kx, ky};
 }
 
 /**
@@ -85,13 +85,13 @@ static HollowCircularProperties CalculateHollowCircularProperties(
  *       at the geometric center, so offset parameters are typically zero.
  * @note Principal axes align with the reference axes due to circular symmetry.
  */
-static Array_6x6 GenerateHollowCircularStiffnessMatrix(
+static Array_6x6 GenerateHollowCircleStiffnessMatrix(
     double E, double G, double outer_diameter, double wall_thickness, double nu = 0.33,
     double x_C = 0., double y_C = 0., double theta_p = 0., double x_S = 0., double y_S = 0.,
     double theta_s = 0.
 ) {
     // Calculate geometric properties
-    auto properties = CalculateHollowCircularProperties(outer_diameter, wall_thickness, nu);
+    auto properties = CalculateHollowCircleProperties(outer_diameter, wall_thickness, nu);
 
     // Calculate stiffness values
     const double EA = E * properties.area;
@@ -127,12 +127,12 @@ static Array_6x6 GenerateHollowCircularStiffnessMatrix(
  *       geometric center, so offset parameters are typically zero.
  * @note Principal inertia axes align with the reference axes due to circular symmetry.
  */
-static Array_6x6 GenerateHollowCircularMassMatrix(
+static Array_6x6 GenerateHollowCircleMassMatrix(
     double rho, double outer_diameter, double wall_thickness, double nu = 0.33, double x_G = 0.,
     double y_G = 0., double theta_i = 0.
 ) {
     // Calculate geometric properties
-    auto properties = CalculateHollowCircularProperties(outer_diameter, wall_thickness, nu);
+    auto properties = CalculateHollowCircleProperties(outer_diameter, wall_thickness, nu);
 
     // Calculate mass properties
     const double m = rho * properties.area;   // Mass per unit length
