@@ -43,6 +43,15 @@ struct NodeData {
             this->acceleration[i] = host_state.vd(this->id, i);
         }
     }
+
+    /// @brief Updates the node loads in the host state
+    /// @param host_state Host state to update
+    template <typename DeviceType>
+    void UpdateHostStateExternalLoads(HostState<DeviceType>& host_state) const {
+        for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
+            host_state.f(this->id, i) = this->loads[i];
+        }
+    }
 };
 
 }  // namespace openturbine::interfaces

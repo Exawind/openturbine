@@ -29,12 +29,6 @@ public:
     /// @brief Blade node data
     std::vector<NodeData> nodes;
 
-    /// @brief Blade root node
-    NodeData root_node;
-
-    /// @brief ID of constraint connecting root node to first blade node
-    size_t root_blade_constraint_id{kInvalidID};
-
     /// @brief Constraint ID of prescribed root displacement
     size_t prescribed_root_constraint_id{kInvalidID};
 
@@ -47,7 +41,7 @@ public:
      * @param model Model to which the blade elements and nodes will be added
      * @throws std::invalid_argument If the input configuration is invalid
      */
-    Beam(const BeamInput& input, Model& model) : root_node(kInvalidID) {
+    Beam(const BeamInput& input, Model& model) {
         ValidateInput(input);
         SetupNodeLocations(input);
         CreateNodeGeometry(input);
@@ -243,16 +237,9 @@ private:
      * @param model Model to which constraints will be added
      */
     void SetupRootNode(const BeamInput& input, Model& model) {
-        // Add root node
-        this->root_node.id = model.AddNode().SetPosition(input.root.position).Build();
-
-        // Constraint first blade node to root node
-        this->root_blade_constraint_id =
-            model.AddRigidJointConstraint({this->root_node.id, this->nodes[0].id});
-
         // Add prescribed displacement constraint to root node if requested
         if (input.root.prescribe_root_motion) {
-            this->prescribed_root_constraint_id = model.AddPrescribedBC(this->root_node.id);
+            this->prescribed_root_constraint_id = model.AddPrescribedBC(this->nodes[0].id);
         }
     }
 

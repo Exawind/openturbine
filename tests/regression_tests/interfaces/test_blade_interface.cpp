@@ -247,35 +247,35 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     // Root Node
     //--------------------------------------------------------------------------
 
-    EXPECT_NEAR(interface.Blade().root_node.position[0], 1.9919054660239885, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[5], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[0], 1.9919054660239885, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.displacement[0], -0.0080945339760114532, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[5], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[0], -0.0080945339760114532, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.velocity[0], -0.17976259212149071, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[1], 1.9919719054875213, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[3], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[5], 1., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[0], -0.17976259212149071, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[1], 1.9919719054875213, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[5], 1., 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[0], -1.9920882238788629, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[1], -0.17977158309645525, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[3], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[0], -1.9920882238788629, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[1], -0.17977158309645525, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[5], 0., 1e-10);
 
     //--------------------------------------------------------------------------
     // Tip Node

@@ -144,7 +144,6 @@ private:
         this->host_state.CopyFromState(this->state);
 
         // Update all node motion
-        this->blade.root_node.UpdateMotion(this->host_state);
         for (auto& node : this->blade.nodes) {
             node.UpdateMotion(this->host_state);
         }

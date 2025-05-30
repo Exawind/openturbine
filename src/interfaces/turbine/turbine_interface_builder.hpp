@@ -1,7 +1,7 @@
 #pragma once
 
-#include "interfaces/components/beam_builder.hpp"
 #include "interfaces/components/solution_builder.hpp"
+#include "interfaces/components/turbine_builder.hpp"
 #include "turbine_interface.hpp"
 
 namespace openturbine::interfaces {
@@ -23,39 +23,20 @@ public:
     /// @return A reference to the SolutionBuilder for the solution component
     [[nodiscard]] components::SolutionBuilder& Solution() { return this->solution_builder; }
 
-    /// @brief Gets the builder for a specific blade
-    /// @param n The index of the blade (first blade is 0)
-    /// @return A reference to the BeamBuilder for the specified blade
-    [[nodiscard]] components::BeamBuilder& Blade(size_t n) {
-        if (n > this->blade_builders.size()) {
-            this->blade_builders.resize(n);
-        }
-        return this->blade_builders.at(n);
-    }
-
-    /// @brief Gets the builder for the tower
-    /// @return A reference to the BeamBuilder for the tower
-    [[nodiscard]] components::BeamBuilder& Tower() { return this->tower_builder; }
+    /// @brief Get the builder for the turbine component
+    /// @return A reference to the TurbineBuilder for the turbine component
+    [[nodiscard]] components::TurbineBuilder& Turbine() { return this->turbine_builder; }
 
     /**
      * @brief Builds the TurbineInterface by composing the blade, tower, nacelle, hub, and solution
      * components
      * @return A TurbineInterface object
      */
-    [[nodiscard]] TurbineInterface Build() const {
-        std::vector<components::BeamInput> blade_inputs;
-        for (const auto& builder : this->blade_builders) {
-            blade_inputs.push_back(builder.Input());
-        }
-        return TurbineInterface(
-            this->solution_builder.Input(), blade_inputs, this->tower_builder.Input()
-        );
-    }
+    [[nodiscard]] TurbineInterface Build() const {}
 
 private:
-    components::SolutionBuilder solution_builder;         ///< Builder for the Solution component
-    std::vector<components::BeamBuilder> blade_builders;  ///< Builder for the blades components
-    components::BeamBuilder tower_builder;                ///< Builder for the tower component
+    components::SolutionBuilder solution_builder;  ///< Builder for the Solution component
+    components::TurbineBuilder turbine_builder;    ///< Builder for the Turbine component
 };
 
 }  // namespace openturbine::interfaces
