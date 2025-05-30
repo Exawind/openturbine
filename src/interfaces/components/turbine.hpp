@@ -3,6 +3,7 @@
 #include "interfaces/components/beam.hpp"
 #include "interfaces/components/turbine_input.hpp"
 #include "interfaces/constraint_data.hpp"
+#include "interfaces/host_state.hpp"
 #include "interfaces/node_data.hpp"
 #include "model/model.hpp"
 
@@ -55,8 +56,6 @@ public:
           shaft_base_to_azimuth(kInvalidID),
           azimuth_to_hub(kInvalidID),
           hub_to_blades() {
-        ValidateInput(input);
-
         // Initialize blades from blade_inputs
         blades.reserve(input.blade_inputs.size());
         for (const auto& blade_input : input.blade_inputs) {
@@ -64,19 +63,37 @@ public:
         }
     }
 
+    /// @brief Populate node motion based on host state
+    /// @param host_state Host state containing position, displacement, velocity, and acceleration
+    template <typename DeviceType>
+    void UpdateNodeMotionFromState(const HostState<DeviceType>& host_state) {
+        for (auto& blade : blades) {
+            for (auto& node : blade.nodes) {
+                node.UpdateMotion(host_state);
+            }
+        }
+        for (auto& node : tower.nodes) {
+            node.UpdateMotion(host_state);
+        }
+    }
+
+    /// @brief Update the host state with current node forces and moments
+    /// @param host_state Host state to update
+    template <typename DeviceType>
+    void UpdateHostStateExternalLoads(HostState<DeviceType>& host_state) {
+        for (const auto& blade : blades) {
+            for (const auto& node : blade.nodes) {
+                node.UpdateHostStateExternalLoads(host_state);
+            }
+        }
+        for (auto& node : tower.nodes) {
+            node.UpdateHostStateExternalLoads(host_state);
+        }
+    }
+
 private:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-
-    /// @brief Validate the input configuration
-    /// @param input Blade input configuration
-    /// @throws std::invalid_argument If configuration is invalid
-    static void ValidateInput(const TurbineInput& input) {}
-
-    /// @brief Create beam element in the model
-    /// @param input Blade input configuration
-    /// @param model Model to which the beam element will be added
-    void CreateTurbine(const TurbineInput& input, Model& model) {}
 
     /// @brief  Create blades from input configuration
     /// @param blade_inputs Blade input configurations
