@@ -29,14 +29,16 @@ struct ContributeSpringsToSparseMatrix {
 
         constexpr auto num_dofs = 3;
         constexpr auto num_nodes = 2;
-        constexpr auto hint = 0;
+        constexpr auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
 
         Kokkos::parallel_for(
             Kokkos::TeamVectorRange(member, num_nodes * num_nodes),
             [&](int node_12) {
                 const auto node_1 = node_12 / num_nodes;
                 const auto node_2 = node_12 % num_nodes;
-                const auto first_column = static_cast<int>(element_freedom_table(i_elem, node_2, 0));
+                const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
+                    element_freedom_table(i_elem, node_2, 0)
+                );
 
                 for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
                     const auto row_num =

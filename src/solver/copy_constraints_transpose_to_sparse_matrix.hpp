@@ -27,7 +27,9 @@ struct CopyConstraintsTransposeToSparseMatrix {
         constexpr bool is_sorted = true;
         const auto num_cols =
             static_cast<int>(row_range(i_constraint).second - row_range(i_constraint).first);
-        const auto first_col = static_cast<int>(row_range(i_constraint).first + num_system_cols);
+        const auto first_col = static_cast<typename CrsMatrixType::ordinal_type>(
+            row_range(i_constraint).first + num_system_cols
+        );
         const auto num_base_dofs =
             static_cast<int>(count_active_dofs(base_node_freedom_signature(i_constraint)));
         const auto base_start_row = static_cast<int>(base_node_freedom_table(i_constraint, 0));
@@ -36,7 +38,7 @@ struct CopyConstraintsTransposeToSparseMatrix {
             Kokkos::TeamVectorRange(member, base_start_row, base_end_row),
             [&](int i) {
                 const auto row_number = i - base_start_row;
-                const auto hint = 0;
+                const auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
                 auto row = sparse.row(i);
 
                 auto offset = KokkosSparse::findRelOffset(
@@ -56,7 +58,7 @@ struct CopyConstraintsTransposeToSparseMatrix {
             Kokkos::TeamVectorRange(member, target_start_row, target_end_row),
             [&](int i) {
                 const auto row_number = i - target_start_row;
-                const auto hint = 0;
+                const auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
                 auto row = sparse.row(i);
 
                 auto offset = KokkosSparse::findRelOffset(

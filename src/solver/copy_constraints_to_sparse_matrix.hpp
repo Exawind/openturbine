@@ -33,9 +33,11 @@ struct CopyConstraintsToSparseMatrix {
         Kokkos::parallel_for(Kokkos::TeamVectorRange(member, start_row, end_row), [&](size_t i) {
             const auto row_number = i - start_row;
             const auto real_row = num_system_rows + i;
-            constexpr auto hint = 0;
+            constexpr auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
             auto row = sparse.row(static_cast<int>(real_row));
-            auto first_col = static_cast<int>(base_node_freedom_table(i_constraint, 0));
+            auto first_col = static_cast<typename CrsMatrixType::ordinal_type>(
+                base_node_freedom_table(i_constraint, 0)
+            );
             auto offset = KokkosSparse::findRelOffset(
                 &(row.colidx(0)), row.length, first_col, hint, is_sorted
             );
@@ -43,7 +45,9 @@ struct CopyConstraintsToSparseMatrix {
                 row.value(offset) = base_dense(i_constraint, row_number, entry);
             }
 
-            first_col = static_cast<int>(target_node_freedom_table(i_constraint, 0));
+            first_col = static_cast<typename CrsMatrixType::ordinal_type>(
+                target_node_freedom_table(i_constraint, 0)
+            );
             offset = KokkosSparse::findRelOffset(
                 &(row.colidx(0)), row.length, first_col, hint, is_sorted
             );

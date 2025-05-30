@@ -28,9 +28,10 @@ struct ContributeMassesToSparseMatrix {
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
         constexpr auto num_dofs = 6;
-        constexpr auto hint = 0;
+        constexpr auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
 
-        const auto first_column = static_cast<int>(element_freedom_table(i, 0));
+        const auto first_column =
+            static_cast<typename CrsMatrixType::ordinal_type>(element_freedom_table(i, 0));
         Kokkos::parallel_for(Kokkos::TeamVectorRange(member, num_dofs), [&](int component_1) {
             const auto row_num = static_cast<int>(element_freedom_table(i, component_1));
             auto row = sparse.row(row_num);

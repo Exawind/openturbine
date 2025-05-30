@@ -34,9 +34,12 @@ struct ContributeBeamsToSparseMatrix {
                 const auto node_1 = node_12 % num_nodes;
                 const auto node_2 = node_12 / num_nodes;
                 constexpr auto num_dofs = 6;
-                const auto hint = node_2 * num_dofs;
+                const auto hint =
+                    static_cast<typename CrsMatrixType::ordinal_type>(node_2 * num_dofs);
 
-                const auto first_column = static_cast<int>(element_freedom_table(i, node_2, 0));
+                const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
+                    element_freedom_table(i, node_2, 0)
+                );
                 for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
                     const auto row_num =
                         static_cast<int>(element_freedom_table(i, node_1, component_1));
