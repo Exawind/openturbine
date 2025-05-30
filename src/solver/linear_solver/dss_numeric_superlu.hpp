@@ -23,7 +23,6 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
         auto& perm_r = dss_handle.get_perm_r();
         auto& perm_c = dss_handle.get_perm_c();
         auto& etree = dss_handle.get_etree();
-        auto& work = dss_handle.get_work();
 
         SuperMatrix Amatrix;
         dCreate_CompCol_Matrix(
@@ -37,8 +36,8 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
         SuperMatrix AC;
         sp_preorder(&options, &Amatrix, perm_c.data(), etree.data(), &AC);
         dgstrf(
-            &options, &AC, relax, panel_size, etree.data(), work.data(),
-            static_cast<int>(work.size()), perm_c.data(), perm_r.data(), &L, &U, &Glu, &stat, &info
+            &options, &AC, relax, panel_size, etree.data(), nullptr,
+            0, perm_c.data(), perm_r.data(), &L, &U, &Glu, &stat, &info
         );
 
         Destroy_CompCol_Permuted(&AC);
