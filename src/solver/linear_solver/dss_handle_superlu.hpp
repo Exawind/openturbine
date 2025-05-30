@@ -14,7 +14,6 @@ class DSSHandle<DSSAlgorithm::SUPERLU> {
         std::vector<int> perm_r;
         std::vector<int> perm_c;
         std::vector<int> etree;
-        std::vector<char> work;
 
         superluDssHandleType() {
             set_default_options(&options);
@@ -47,7 +46,6 @@ public:
 
     std::vector<int>& get_perm_c() { return superlu_dss_handle->perm_c; }
     std::vector<int>& get_etree() { return superlu_dss_handle->etree; }
-    std::vector<char>& get_work() { return superlu_dss_handle->work; }
 };
 
 }  // namespace openturbine
