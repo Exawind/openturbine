@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "beam_section.hpp"
 #include "generate_sectional_properties.hpp"
 #include "types.hpp"
 
@@ -52,8 +53,6 @@ static HollowCircleProperties CalculateHollowCircleProperties(
     const double J = M_PI * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 2.;
 
     // Shear correction factors for hollow circular sections
-    // Based on "Timoshenko beam theory applied to long thin-walled open section beams"
-    // For hollow circles, these are typically around 0.5-0.9 depending on thickness ratio
     const double kx = (6. * (1. + nu)) / (7. + 6. * nu);  // Timoshenko-Ehrenfest beam theory
     const double ky = kx;                                 // Circular symmetry
 
@@ -61,14 +60,17 @@ static HollowCircleProperties CalculateHollowCircleProperties(
 }
 
 /**
- * @brief Generates a 6x6 stiffness matrix for a hollow circular cross-section
+ * @brief Generates a BeamSection with 6x6 mass and stiffness matrices for a hollow circular
+ * cross-section
  *
  * This is a convenience function specifically for hollow circular sections commonly
  * used in wind turbine towers. It calculates the geometric properties and then
- * calls the general GenerateStiffnessMatrix function.
+ * calls the general GenerateMassMatrix and GenerateStiffnessMatrix functions.
  *
+ * @param s Normalized position along beam element [dimensionless]
  * @param E Young's modulus [Force/Length²]
  * @param G Shear modulus [Force/Length²]
+ * @param rho Material density [Mass/Length³]
  * @param outer_diameter Outer diameter of the hollow circle [Length]
  * @param wall_thickness Wall thickness [Length]
  * @param nu Poisson's ratio [dimensionless]
@@ -78,60 +80,21 @@ static HollowCircleProperties CalculateHollowCircleProperties(
  * @param x_S x-coordinate of shear center relative to reference point [Length]
  * @param y_S y-coordinate of shear center relative to reference point [Length]
  * @param theta_s Rotation angle from reference axes to principal shear axes [radians]
- *
- * @return 6x6 cross-sectional stiffness matrix
- *
- * @note For hollow circular sections, the elastic centroid and shear center coincide
- *       at the geometric center, so offset parameters are typically zero.
- * @note Principal axes align with the reference axes due to circular symmetry.
- */
-static Array_6x6 GenerateHollowCircleStiffnessMatrix(
-    double E, double G, double outer_diameter, double wall_thickness, double nu = 0.33,
-    double x_C = 0., double y_C = 0., double theta_p = 0., double x_S = 0., double y_S = 0.,
-    double theta_s = 0.
-) {
-    // Calculate geometric properties
-    auto properties = CalculateHollowCircleProperties(outer_diameter, wall_thickness, nu);
-
-    // Calculate stiffness values
-    const double EA = E * properties.area;
-    const double EI_x = E * properties.Ixx;
-    const double EI_y = E * properties.Iyy;
-    const double GKt = G * properties.J;
-    const double GA = G * properties.area;
-
-    // Generate the stiffness matrix using the general function
-    return GenerateStiffnessMatrix(
-        EA, EI_x, EI_y, GKt, GA, properties.kx, properties.ky, x_C, y_C, theta_p, x_S, y_S, theta_s
-    );
-}
-
-/**
- * @brief Generates a 6x6 mass matrix for a hollow circular cross-section
- *
- * This is a convenience function specifically for hollow circular sections commonly
- * used in wind turbine towers. It calculates the mass properties and then
- * calls the general GenerateMassMatrix function.
- *
- * @param rho Material density [Mass/Length³]
- * @param outer_diameter Outer diameter of the hollow circle [Length]
- * @param wall_thickness Wall thickness [Length]
- * @param nu Poisson's ratio [dimensionless]
  * @param x_G x-coordinate of center of gravity relative to reference point [Length]
  * @param y_G y-coordinate of center of gravity relative to reference point [Length]
  * @param theta_i Rotation angle from reference axes to principal inertia axes [radians]
  *
- * @return 6x6 cross-sectional mass matrix
+ * @return BeamSection object containing stiffness matrix, mass matrix, and position
  *
- * @note For hollow circular sections, the center of gravity coincides with the
- *       geometric center, so offset parameters are typically zero.
- * @note Principal inertia axes align with the reference axes due to circular symmetry.
+ * @note For hollow circular sections, the elastic centroid, shear center, and center
+ *       of gravity all coincide at the geometric center, so offset parameters are typically zero.
+ * @note Principal axes align with the reference axes due to circular symmetry.
  */
-static Array_6x6 GenerateHollowCircleMassMatrix(
-    double rho, double outer_diameter, double wall_thickness, double nu = 0.33, double x_G = 0.,
-    double y_G = 0., double theta_i = 0.
+static BeamSection GenerateHollowCircleSection(
+    double s, double E, double G, double rho, double outer_diameter, double wall_thickness,
+    double nu, double x_C = 0., double y_C = 0., double theta_p = 0., double x_S = 0.,
+    double y_S = 0., double theta_s = 0., double x_G = 0., double y_G = 0., double theta_i = 0
 ) {
-    // Calculate geometric properties
     auto properties = CalculateHollowCircleProperties(outer_diameter, wall_thickness, nu);
 
     // Calculate mass properties
@@ -140,8 +103,19 @@ static Array_6x6 GenerateHollowCircleMassMatrix(
     const double I_y = rho * properties.Iyy;  // Mass moment of inertia about y-axis
     const double I_p = I_x + I_y;             // Polar mass moment of inertia
 
-    // Generate the mass matrix using the general function
-    return GenerateMassMatrix(m, I_x, I_y, I_p, x_G, y_G, theta_i);
+    // Calculate stiffness properties
+    const double EA = E * properties.area;
+    const double EI_x = E * properties.Ixx;
+    const double EI_y = E * properties.Iyy;
+    const double GKt = G * properties.J;
+    const double GA = G * properties.area;
+
+    // Generate mass and stiffness matrices and return BeamSection
+    const auto mass = GenerateMassMatrix(m, I_x, I_y, I_p, x_G, y_G, theta_i);
+    const auto stiffness = GenerateStiffnessMatrix(
+        EA, EI_x, EI_y, GKt, GA, properties.kx, properties.ky, x_C, y_C, theta_p, x_S, y_S, theta_s
+    );
+    return BeamSection(s, mass, stiffness);
 }
 
 }  // namespace openturbine
