@@ -16,6 +16,7 @@ inline void UpdateSystemVariablesMasses(
 
     auto range_policy =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, masses.num_elems);
+
     Kokkos::parallel_for(
         "masses::CalculateQuadraturePointValues", range_policy,
         masses::CalculateQuadraturePointValues<DeviceType>{

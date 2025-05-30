@@ -6,7 +6,7 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct IntegrateResidualVectorElement {
-    size_t i_elem;
+    size_t element;
     size_t num_qps;
     typename Kokkos::View<double*, DeviceType>::const_type qp_weight_;
     typename Kokkos::View<double*, DeviceType>::const_type qp_jacobian_;
@@ -21,21 +21,22 @@ struct IntegrateResidualVectorElement {
     Kokkos::View<double** [6], DeviceType> residual_vector_terms_;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_node) const {
+    void operator()(size_t node) const {
         auto local_residual = Kokkos::Array<double, 6>{};
-        for (auto j_qp = 0U; j_qp < num_qps; ++j_qp) {
-            const auto weight = qp_weight_(j_qp);
-            const auto coeff_c = weight * shape_deriv_(i_node, j_qp);
-            const auto coeff_dig = weight * qp_jacobian_(j_qp) * shape_interp_(i_node, j_qp);
-            for (auto k_dof = 0U; k_dof < 6U; ++k_dof) {
-                local_residual[k_dof] += coeff_c * qp_Fc_(j_qp, k_dof) +
-                                         coeff_dig * (qp_Fd_(j_qp, k_dof) + qp_Fi_(j_qp, k_dof) -
-                                                      qp_Fe_(j_qp, k_dof) - qp_Fg_(j_qp, k_dof));
+        for (auto qp = 0U; qp < num_qps; ++qp) {
+            const auto weight = qp_weight_(qp);
+            const auto coeff_c = weight * shape_deriv_(node, qp);
+            const auto coeff_dig = weight * qp_jacobian_(qp) * shape_interp_(node, qp);
+            for (auto component = 0U; component < 6U; ++component) {
+                local_residual[component] +=
+                    coeff_c * qp_Fc_(qp, component) +
+                    coeff_dig * (qp_Fd_(qp, component) + qp_Fi_(qp, component) -
+                                 qp_Fe_(qp, component) - qp_Fg_(qp, component));
             }
         }
-        for (auto k_dof = 0U; k_dof < 6U; ++k_dof) {
-            residual_vector_terms_(i_elem, i_node, k_dof) =
-                local_residual[k_dof] - node_FX_(i_node, k_dof);
+        for (auto component = 0U; component < 6U; ++component) {
+            residual_vector_terms_(element, node, component) =
+                local_residual[component] - node_FX_(node, component);
         }
     }
 };

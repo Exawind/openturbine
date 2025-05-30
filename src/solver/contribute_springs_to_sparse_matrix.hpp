@@ -11,6 +11,8 @@ struct ContributeSpringsToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
+    using member_type =
+        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
     double conditioner{};
     typename Kokkos::View<FreedomSignature* [2], DeviceType>::const_type element_freedom_signature;
     typename Kokkos::View<size_t* [2][3], DeviceType>::const_type element_freedom_table;
@@ -19,36 +21,45 @@ struct ContributeSpringsToSparseMatrix {
     CrsMatrixType sparse;  //< Global sparse stiffness matrix
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_elem) const {
+    void operator()(member_type member) const {
+        const auto i_elem = member.league_rank();
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
-        for (auto node_1 = 0U; node_1 < 2U; ++node_1) {
-            auto row_data_data = Kokkos::Array<typename RowDataType::value_type, 3U>{};
-            auto col_idx_data = Kokkos::Array<typename ColIdxType::value_type, 3U>{};
-            auto row_data = RowDataType(row_data_data.data(), 3U);
-            auto col_idx = ColIdxType(col_idx_data.data(), 3U);
+        constexpr auto num_dofs = 3;
+        constexpr auto num_nodes = 2;
+        constexpr auto hint = static_cast<typename CrsMatrixType::ordinal_type>(0);
 
-            for (auto node_2 = 0U; node_2 < 2U; ++node_2) {
-                for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
-                    col_idx(component_2) =
-                        static_cast<int>(element_freedom_table(i_elem, node_2, component_2));
-                }
-                for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
-                    const auto row_num = element_freedom_table(i_elem, node_1, component_1);
-                    for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
-                        row_data(component_2) =
-                            dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
-                    }
-                    sparse.sumIntoValues(
-                        static_cast<int>(row_num), col_idx.data(), 3, row_data.data(), is_sorted,
-                        force_atomic
+        Kokkos::parallel_for(
+            Kokkos::TeamVectorRange(member, num_nodes * num_nodes),
+            [&](int node_12) {
+                const auto node_1 = node_12 / num_nodes;
+                const auto node_2 = node_12 % num_nodes;
+                const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
+                    element_freedom_table(i_elem, node_2, 0)
+                );
+
+                for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
+                    const auto row_num =
+                        static_cast<int>(element_freedom_table(i_elem, node_1, component_1));
+                    auto row = sparse.row(row_num);
+                    auto offset = KokkosSparse::findRelOffset(
+                        &(row.colidx(0)), row.length, first_column, hint, is_sorted
                     );
+                    for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
+                        const auto contribution =
+                            dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
+                        if constexpr (force_atomic) {
+                            Kokkos::atomic_add(&(row.value(offset)), contribution);
+                        } else {
+                            row.value(offset) += contribution;
+                        }
+                    }
                 }
             }
-        }
-    }
+        );
+    };
 };
 
 }  // namespace openturbine

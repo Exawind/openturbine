@@ -25,7 +25,7 @@ inline double CalculateConvergenceError(
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             parameters.h,
-            state.node_freedom_allocation_table,
+            state.active_dofs,
             state.node_freedom_map_table,
             state.q_delta,
             solver.x,
