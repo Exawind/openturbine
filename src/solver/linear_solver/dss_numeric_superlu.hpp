@@ -36,8 +36,8 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
         SuperMatrix AC;
         sp_preorder(&options, &Amatrix, perm_c.data(), etree.data(), &AC);
         dgstrf(
-            &options, &AC, relax, panel_size, etree.data(), nullptr,
-            0, perm_c.data(), perm_r.data(), &L, &U, &Glu, &stat, &info
+            &options, &AC, relax, panel_size, etree.data(), nullptr, 0, perm_c.data(), perm_r.data(),
+            &L, &U, &Glu, &stat, &info
         );
 
         Destroy_CompCol_Permuted(&AC);
