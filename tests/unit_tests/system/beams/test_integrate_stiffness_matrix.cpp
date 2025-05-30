@@ -214,10 +214,10 @@ void TestIntegrateStiffnessMatrix_1Element2Nodes1QP(
     const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{1.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{1.});
     const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
-        "shape_interp", std::array<double, max_simd_size>{1., 2.}
+        "shape_interp", std::vector<double>{1., 2., 0., 0., 0., 0., 0., 0.}
     );
     const auto shape_interp_deriv = CreateLeftView<double[max_simd_size][number_of_qps]>(
-        "shape_deriv", std::array<double, max_simd_size>{1., 4.}
+        "shape_deriv", std::vector<double>{1., 4., 0., 0., 0., 0., 0., 0.}
     );
 
     auto gbl_M = Kokkos::View<double[2][2][6][6]>("global_M");

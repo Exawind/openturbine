@@ -68,7 +68,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Guu() {
     const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{2.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{3.});
     const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
-        "shape_interp", std::array<double, max_simd_size>{5.}
+        "shape_interp", std::vector<double>{5., 0., 0., 0., 0., 0., 0.}
     );
     const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
         "qp_Muu", std::array{0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
@@ -120,7 +120,8 @@ void IntegrateInertiaMatrix_TestOneElementTwoNodesOneQP() {
     const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{1.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{1.});
     const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
-        "shape_interp", std::array<double, max_simd_size * number_of_qps>{1., 2.}
+        "shape_interp",
+        std::vector<double>{1., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.}
     );
     const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
         "qp_Muu", std::array{001., 002., 003., 004., 005., 006., 101., 102., 103., 104., 105., 106.,
@@ -223,7 +224,7 @@ void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor(
     const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array{1.});
     const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array{1.});
     const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
-        "shape_interp", std::array<double, max_simd_size>{1.}
+        "shape_interp", std::vector<double>{1., 0., 0., 0., 0., 0., 0., 0.}
     );
     const auto qp_Muu = CreateView<double[number_of_qps][6][6]>(
         "qp_Muu", std::array{0001., 0002., 0003., 0004., 0005., 0006., 1001., 1002., 1003.,
