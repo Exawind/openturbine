@@ -12,22 +12,31 @@ namespace openturbine {
  *
  * This function constructs the cross-sectional stiffness matrix that relates the generalized
  * strains to the generalized forces/moments in a beam cross-section. The matrix accounts for
- * coupling between axial, bending, shear, and torsional deformations due to offset centers
- * and principal axis orientations.
+ * coupling between axial, bending, shear, and torsional deformations due to offset between
+ * the elastic centroid and shear center locations. Returns a 6x6 stiffness matrix at the cross
+ * section origin 'O', based on inputs at the centroid 'C' and shear center 'S' locations.
  *
  * @param EA Axial stiffness (E×A) [Force]
- * @param EI_x Bending stiffness around local x-axis in principal frame [Force × Length²]
- * @param EI_y Bending stiffness around local y-axis in principal frame [Force × Length²]
- * @param GKt Torsional stiffness (G×J) [Force × Length²]
- * @param GA Shear stiffness (G×A) [Force]
- * @param kxs Timoshenko shear correction factor in x-direction [dimensionless]
- * @param kys Timoshenko shear correction factor in y-direction [dimensionless]
- * @param x_C x-coordinate of elastic centroid relative to reference point [Length]
- * @param y_C y-coordinate of elastic centroid relative to reference point [Length]
- * @param theta_p Rotation angle from reference axes to principal bending axes [radians]
- * @param x_S x-coordinate of shear center relative to reference point [Length]
- * @param y_S y-coordinate of shear center relative to reference point [Length]
- * @param theta_s Rotation angle from reference axes to principal shear axes [radians]
+ * @param EI_x Bending stiffness around local x-axis in principal frame and at the
+               centroid 'C' [Force × Length²]
+ * @param EI_y Bending stiffness around local y-axis in principal frame and at the
+               centroid 'C' [Force × Length²]
+ * @param GKt Torsional stiffness around principal frame and at shear center 'S'
+              (G×J) [Force × Length²]
+ * @param GA Shear stiffness around principal frame and at shear center 'S'
+              (G×A) [Force]
+ * @param kxs Shear correction factor in x-direction [dimensionless]
+ * @param kys Shear correction factor in y-direction [dimensionless]
+ * @param x_C x-coordinate of elastic centroid relative to reference point i.e. distance
+             FROM 'O' TO 'C' [Length]
+ * @param y_C y-coordinate of elastic centroid relative to reference point i.e. distance
+             FROM 'O' TO 'C' [Length]
+ * @param theta_p Rotation angle (around z) FROM reference axes TO principal bending axes [radians]
+ * @param x_S x-coordinate of shear center relative to reference point i.e. distance
+             FROM 'O' TO 'S' [Length]
+ * @param y_S y-coordinate of shear center relative to reference point i.e. distance
+             FROM 'O' TO 'S' [Length]
+ * @param theta_s Rotation angle (around z) FROM reference axes TO principal shear axes [radians]
  *
  * @return 6x6 cross-sectional stiffness matrix
  */
@@ -94,20 +103,25 @@ static Array_6x6 GenerateStiffnessMatrix(
 }
 
 /**
- * @brief Generates a 6x6 cross-sectional mass matrix for use in beam elements
+ * @brief Generates a 6x6 cross-sectional mass matrix for use in beam elements.
  *
  * This function constructs the cross-sectional mass matrix that relates the generalized
- * accelerations to the generalized inertial forces in a beam cross-section. The matrix
- * accounts for coupling between translational and rotational accelerations due to offset
- * center of gravity and principal inertia axis orientations.
+ * accelerations to the generalized inertial forces in a beam cross-section. Returns the
+ * mass matrix at a given point 'O' and w.r.t. given orientation axes based on the values
+ * at the center of gravity 'G' and in the inertial axis frame.
  *
  * @param m Mass per unit length [Mass/Length]
- * @param I_x Mass moment of inertia about local x-axis in principal frame [Mass×Length]
- * @param I_y Mass moment of inertia about local y-axis in principal frame [Mass×Length]
- * @param I_p Polar mass moment of inertia (I_x + I_y) [Mass×Length]
- * @param x_G x-coordinate of center of gravity relative to reference point [Length]
- * @param y_G y-coordinate of center of gravity relative to reference point [Length]
- * @param theta_i Rotation angle from reference axes to principal inertia axes [radians]
+ * @param I_x Mass moment of inertia about local x-axis in principal/inertial frame and at
+              center of gravity G [Mass×Length]
+ * @param I_y Mass moment of inertia about local y-axis in principal/inertial frame and at
+              center of gravity G [Mass×Length]
+ * @param I_p Polar mass moment of inertia in principal/inertial frame and at center of
+              gravity G (I_x + I_y) [Mass×Length]
+ * @param x_G x-coordinate of center of gravity relative to reference point i.e. distance
+ *            FROM O TO G [Length]
+ * @param y_G y-coordinate of center of gravity relative to reference point i.e. distance
+ *            FROM O TO G [Length]
+ * @param theta_i Rotation angle (around z) FROM reference axes TO principal inertial axes [radians]
  *
  * @return 6x6 cross-sectional mass matrix
  */
