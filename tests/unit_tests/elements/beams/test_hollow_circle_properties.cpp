@@ -36,7 +36,7 @@ protected:
 
     TestParameters tp_;
 
-    void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
+    static void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
         for (size_t i = 0; i < 6; ++i) {
             for (size_t j = 0; j < 6; ++j) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)

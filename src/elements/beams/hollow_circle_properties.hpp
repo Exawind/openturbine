@@ -115,7 +115,7 @@ static BeamSection GenerateHollowCircleSection(
     const auto stiffness = GenerateStiffnessMatrix(
         EA, EI_x, EI_y, GKt, GA, properties.kx, properties.ky, x_C, y_C, theta_p, x_S, y_S, theta_s
     );
-    return BeamSection(s, mass, stiffness);
+    return BeamSection{s, mass, stiffness};
 }
 
 }  // namespace openturbine
