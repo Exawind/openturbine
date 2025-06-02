@@ -14,17 +14,28 @@ public:
     TurbineBuilder() = default;
 
     /**
-     * @brief Get the current blade input configuration
-     * @return Reference to the current blade input
+     * @brief Get the current turbine input configuration
+     * @return Reference to the current turbine input
      */
-    [[nodiscard]] const TurbineInput& Input() const { return this->input; }
+    [[nodiscard]] const TurbineInput& Input() {
+        // Add the blade inputs from the blade builders
+        this->input.blades.clear();
+        for (const auto& builder : this->blade_builders) {
+            this->input.blades.push_back(builder.Input());
+        }
+
+        // Get the tower input from the tower builder
+        this->input.tower = this->tower_builder.Input();
+
+        return input;
+    }
 
     /**
-     * @brief Build a Blade object from the current configuration
-     * @param model The model to associate with this blade
-     * @return A new Blade object
+     * @brief Build a Turbine object from the current configuration
+     * @param model The model to associate with this turbine
+     * @return A new Turbine object
      */
-    [[nodiscard]] Turbine Build(Model& model) const { return {this->input, model}; }
+    [[nodiscard]] Turbine Build(Model& model) { return {this->Input(), model}; }
 
     /**
      * @brief Get reference to builder for a specific blade
@@ -45,18 +56,13 @@ public:
      */
     [[nodiscard]] components::BeamBuilder& Tower() { return this->tower_builder; }
 
-    TurbineBuilder& SetNacelleMassPosition(const std::array<double, 3>& position) {
-        this->input.nacelle_mass_position = position;
-        return *this;
-    }
-
     /**
      * @brief Set the hub height above the tower top (meters)
      * @param height The hub height to set
      * @return Reference to the builder
      */
-    TurbineBuilder& SetHubHeightFromTowerTop(double height) {
-        this->input.tower_top_to_hub = height;
+    TurbineBuilder& SetTowerTopToRotorApex(double height) {
+        this->input.tower_top_to_rotor_apex = height;
         return *this;
     }
 
@@ -65,8 +71,17 @@ public:
      * @param distance The distance to set
      * @return Reference to the builder
      */
-    TurbineBuilder& SetTowerAxisToHub(double distance) {
-        this->input.tower_axis_to_hub = distance;
+    TurbineBuilder& SetTowerAxisToRotorApex(double distance) {
+        this->input.tower_axis_to_rotor_apex = distance;
+        return *this;
+    }
+
+    /**
+     * @brief Distance from rotor apex to hub center of mass (meters)
+     * @param distance The distance to set (meters)
+     */
+    TurbineBuilder& SetRotorApexToHub(double distance) {
+        this->input.rotor_apex_to_hub = distance;
         return *this;
     }
 
@@ -117,6 +132,24 @@ public:
      */
     TurbineBuilder& SetRotorSpeed(double speed) {
         this->input.rotor_speed = speed;
+        return *this;
+    }
+
+    /** @brief Set the hub radius (meters)
+     * @param radius The hub radius to set
+     * @return Reference to the builder
+     */
+    TurbineBuilder& SetHubDiameter(double radius) {
+        this->input.hub_diameter = radius;
+        return *this;
+    }
+
+    /** @brief Set the initial cone angle (radians)
+     * @param angle The cone angle to set
+     * @return Reference to the builder
+     */
+    TurbineBuilder& SetConeAngle(double angle) {
+        this->input.cone_angle = angle;
         return *this;
     }
 

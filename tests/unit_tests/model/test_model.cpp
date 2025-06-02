@@ -22,7 +22,7 @@ TEST(ModelTest, AddNodeToModel) {
                        .Build();
     auto node = model.GetNode(node_id);
     ASSERT_EQ(node_id, 0);
-    ASSERT_EQ(node.ID, 0);
+    ASSERT_EQ(node.id, 0);
     ASSERT_EQ(model.NumNodes(), 1);
 
     auto nodes = model.GetNodes();
@@ -44,7 +44,7 @@ TEST(ModelTest, TranslateModelNode) {
                        .Build();
 
     auto node_0 = model.GetNode(node_id);
-    ASSERT_EQ(node_0.ID, 0);
+    ASSERT_EQ(node_0.id, 0);
     ASSERT_EQ(node_0.x[0], pos[0]);  // 0.
     ASSERT_EQ(node_0.x[1], pos[1]);  // 0.
     ASSERT_EQ(node_0.x[2], pos[2]);  // 0.

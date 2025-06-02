@@ -33,7 +33,7 @@ struct NodeData {
     /// @brief Populates node position, displacement, velocity, acceleration from state data
     /// @param node
     template <typename DeviceType>
-    void UpdateMotion(const HostState<DeviceType>& host_state) {
+    void GetMotion(const HostState<DeviceType>& host_state) {
         for (auto i = 0U; i < kLieGroupComponents; ++i) {
             this->position[i] = host_state.x(this->id, i);
             this->displacement[i] = host_state.q(this->id, i);
@@ -47,7 +47,7 @@ struct NodeData {
     /// @brief Updates the node loads in the host state
     /// @param host_state Host state to update
     template <typename DeviceType>
-    void UpdateHostStateExternalLoads(HostState<DeviceType>& host_state) const {
+    void SetLoads(HostState<DeviceType>& host_state) const {
         for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
             host_state.f(this->id, i) = this->loads[i];
         }

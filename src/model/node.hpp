@@ -7,7 +7,7 @@
 namespace openturbine {
 
 struct Node {
-    size_t ID;   //< Node identifier
+    size_t id;   //< Node identifier
     Array_7 x;   //< Node positions and orientations
     Array_7 u;   //< Node displacement
     Array_6 v;   //< Node velocity
@@ -16,7 +16,7 @@ struct Node {
 
     /// @brief Construct a node with an ID
     explicit Node(size_t id)
-        : ID(id),
+        : id(id),
           x(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           v(Array_6{0., 0., 0., 0., 0., 0.}),
@@ -30,7 +30,7 @@ struct Node {
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
         Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     )
-        : ID(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
+        : id(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
 
     /// Translate node by a displacement vector
     void Translate(const Array_3& displacement) {
@@ -225,7 +225,7 @@ public:
     //--------------------------------------------------------------------------
 
     /// Build finalizes construction of node and returns the node's ID
-    [[nodiscard]] size_t Build() const { return this->node.ID; }
+    [[nodiscard]] size_t Build() const { return this->node.id; }
 
 private:
     Node& node;

@@ -35,6 +35,8 @@ public:
     /// @brief Location of nodes in blade element [-1, 1]
     std::vector<double> node_xi;
 
+    Beam() = default;
+
     /**
      * @brief Construct a new Blade using the provided input and model
      * @param input Configuration for the blade
@@ -86,6 +88,24 @@ public:
     void ClearLoads() {
         for (auto& node : this->nodes) {
             node.ClearLoads();
+        }
+    }
+
+    /// @brief Populate node motion based on host state
+    /// @param host_state Host state containing position, displacement, velocity, and acceleration
+    template <typename DeviceType>
+    void GetMotion(const HostState<DeviceType>& host_state) {
+        for (auto& node : this->nodes) {
+            node.GetMotion(host_state);
+        }
+    }
+
+    /// @brief Update the host state with current node forces and moments
+    /// @param host_state Host state to update
+    template <typename DeviceType>
+    void SetLoads(HostState<DeviceType>& host_state) const {
+        for (auto& node : this->nodes) {
+            node.SetLoads(host_state);
         }
     }
 

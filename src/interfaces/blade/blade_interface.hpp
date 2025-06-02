@@ -45,25 +45,27 @@ public:
           solver(CreateSolver<DeviceType>(state, elements, constraints)),
           state_save(CloneState(state)),
           host_state(state) {
-        // Update the blade motion to match state
-        UpdateNodeMotion();
+        // Update the host state with current node motion
+        this->host_state.CopyFromState(this->state);
+
+        // Update the blade motion from state
+        this->blade.GetMotion(this->host_state);
 
         // Initialize NetCDF writer and write mesh connectivity if output path is specified
         if (!solution_input.output_file_path.empty()) {
             // Create output directory if it doesn't exist
             std::filesystem::create_directories(solution_input.output_file_path);
 
-            // Initialize outputs
-            this->outputs_ = std::make_unique<Outputs>(
-                solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
-            );
-
             // Write mesh connectivity to YAML file
             model.ExportMeshConnectivityToYAML(
                 solution_input.output_file_path + "/mesh_connectivity.yaml"
             );
+
+            // Initialize outputs
+            this->outputs = std::make_unique<Outputs>(
+                solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
+            );
         }
-        Kokkos::deep_copy(this->host_state.f, 0.);
     }
 
     /// @brief Returns a reference to the blade model
@@ -90,14 +92,16 @@ public:
             return false;
         }
 
-        // Update the blade motion if there was convergence
-        UpdateNodeMotion();
+        // Update the host state with current node motion
+        this->host_state.CopyFromState(this->state);
+
+        // Update the blade motion from state
+        this->blade.GetMotion(this->host_state);
 
         // Write outputs and increment timestep counter
-        if (this->outputs_) {
-            outputs_->WriteNodeOutputsAtTimestep(this->host_state, this->current_timestep_);
+        if (this->outputs) {
+            outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
         }
-        this->current_timestep_++;
 
         return true;
     }
@@ -108,7 +112,12 @@ public:
     /// @brief Restores the previously saved state (in correction step)
     void RestoreState() {
         CopyStateData(this->state, this->state_save);
-        UpdateNodeMotion();
+
+        // Update the host state with current node motion
+        this->host_state.CopyFromState(this->state);
+
+        // Update the blade motion from state
+        this->blade.GetMotion(this->host_state);
     }
 
     /**
@@ -134,20 +143,8 @@ private:
     StepParameters parameters;     ///< OpenTurbine class containing solution parameters
     Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
     State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;   ///< Host local copy of node state data
-    size_t current_timestep_{0};        ///< Current timestep index
-    std::unique_ptr<Outputs> outputs_;  ///< handle to Output for writing to NetCDF
-
-    /// @brief  Updates motion data for all nodes (root and blade) in the interface
-    void UpdateNodeMotion() {
-        // Copy state motion members from device to host
-        this->host_state.CopyFromState(this->state);
-
-        // Update all node motion
-        for (auto& node : this->blade.nodes) {
-            node.UpdateMotion(this->host_state);
-        }
-    }
+    HostState<DeviceType> host_state;  ///< Host local copy of node state data
+    std::unique_ptr<Outputs> outputs;  ///< handle to Output for writing to NetCDF
 };
 
 }  // namespace openturbine::interfaces

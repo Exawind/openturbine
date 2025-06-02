@@ -6,6 +6,7 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline void CopyStateData(State<DeviceType>& copy, const State<DeviceType>& old) {
+    copy.time_step = old.time_step;
     Kokkos::deep_copy(copy.x, old.x);
     Kokkos::deep_copy(copy.q_delta, old.q_delta);
     Kokkos::deep_copy(copy.q_prev, old.q_prev);

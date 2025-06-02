@@ -32,7 +32,9 @@ public:
      * components
      * @return A TurbineInterface object
      */
-    [[nodiscard]] TurbineInterface Build() const {}
+    [[nodiscard]] TurbineInterface Build() {
+        return TurbineInterface(this->solution_builder.Input(), this->turbine_builder.Input());
+    }
 
 private:
     components::SolutionBuilder solution_builder;  ///< Builder for the Solution component

@@ -1,19 +1,16 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
+#include "elements/beams/hollow_circle_properties.hpp"
 #include "interfaces/turbine/turbine_interface_builder.hpp"
 #include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
 TEST(TurbineInterfaceTest, IEA15) {
-    // Model parameters
     const auto n_blades{3};        // Number of blades in turbine
     const auto n_blade_nodes{11};  // Number of nodes per blade
-    // const auto n_tower_nodes{11};  // Number of nodes in tower
-
-    // Read WindIO yaml file
-    const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
+    const auto n_tower_nodes{11};  // Number of nodes in tower
 
     // Create interface builder
     auto builder = interfaces::TurbineInterfaceBuilder{};
@@ -24,16 +21,38 @@ TEST(TurbineInterfaceTest, IEA15) {
         .EnableDynamicSolve()
         .SetTimeStep(time_step)
         .SetDampingFactor(0.0)
+        // .SetGravity({0., 0., -9.81})
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4)
         .SetOutputFile("TurbineInterfaceTest.IEA15");
 
+    // Read WindIO yaml file
+    const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
+
+    // WindIO components
+    const auto& wio_tower = wio["components"]["tower"];
+    const auto& wio_nacelle = wio["components"]["nacelle"];
+    const auto& wio_blade = wio["components"]["blade"];
+    const auto& wio_hub = wio["components"]["hub"];
+
+    //--------------------------------------------------------------------------
+    // Build Turbine
+    //--------------------------------------------------------------------------
+
     // Get turbine builder
     auto& turbine_builder = builder.Turbine();
+    turbine_builder.SetAzimuthAngle(0.)
+        .SetRotorApexToHub(1.)
+        .SetHubDiameter(wio_hub["diameter"].as<double>())
+        .SetConeAngle(wio_hub["cone_angle"].as<double>())
+        .SetShaftTiltAngle(wio_nacelle["drivetrain"]["uptilt"].as<double>())
+        .SetTowerAxisToRotorApex(wio_nacelle["drivetrain"]["overhang"].as<double>())
+        .SetTowerTopToRotorApex(wio_nacelle["drivetrain"]["distance_tt_hub"].as<double>());
 
-    // Get the WindIO blade input
-    const auto& wio_blade = wio["components"]["blade"];
+    //--------------------------------------------------------------------------
+    // Build Blades
+    //--------------------------------------------------------------------------
 
     // Loop through blades and set parameters
     for (auto j = 0U; j < n_blades; ++j) {
@@ -71,7 +90,6 @@ TEST(TurbineInterfaceTest, IEA15) {
         const auto k_grid = stiff_matrix["grid"].as<std::vector<double>>();
         const auto m_grid = inertia_matrix["grid"].as<std::vector<double>>();
         const auto n_sections = k_grid.size();
-
         if (m_grid.size() != k_grid.size()) {
             throw std::runtime_error("stiffness and mass matrices not on same grid");
         }
@@ -104,11 +122,89 @@ TEST(TurbineInterfaceTest, IEA15) {
         }
     }
 
+    //--------------------------------------------------------------------------
+    // Build Tower
+    //--------------------------------------------------------------------------
+
+    // Get the tower builder
+    auto& tower_builder = turbine_builder.Tower();
+
+    // Set tower parameters
+    tower_builder
+        .SetElementOrder(n_tower_nodes - 1)  // Set element order to num nodes -1
+        .PrescribedRootMotion(true);         // Fix displacement of tower base node
+
+    // Add reference axis coordinates (WindIO uses Z-axis as reference axis)
+    const auto t_ref_axis = wio["components"]["tower"]["outer_shape_bem"]["reference_axis"];
+    const auto axis_grid = t_ref_axis["x"]["grid"].as<std::vector<double>>();
+    const auto x_values = t_ref_axis["x"]["values"].as<std::vector<double>>();
+    const auto y_values = t_ref_axis["y"]["values"].as<std::vector<double>>();
+    const auto z_values = t_ref_axis["z"]["values"].as<std::vector<double>>();
+    for (auto i = 0U; i < axis_grid.size(); ++i) {
+        tower_builder.AddRefAxisPoint(
+            axis_grid[i], {x_values[i], y_values[i], z_values[i]},
+            interfaces::components::ReferenceAxisOrientation::Z
+        );
+    }
+
+    // Add reference axis twist (zero for tower)
+    tower_builder.AddRefAxisTwist(0.0, 0.0).AddRefAxisTwist(1.0, 0.0);
+
+    // Find the tower material properties
+    const auto t_layer = wio["components"]["tower"]["internal_structure_2d_fem"]["layers"][0];
+    const auto t_material_name = t_layer["material"].as<std::string>();
+    YAML::Node t_material;
+    for (const auto& m : wio["materials"]) {
+        if (m["name"] && m["name"].as<std::string>() == t_material_name) {
+            t_material = m.as<YAML::Node>();
+            break;
+        }
+    }
+    if (!t_material) {
+        throw std::runtime_error(
+            "Material '" + t_material_name + "' not found in materials section"
+        );
+    }
+
+    // Add tower section properties
+    const auto t_diameter = wio["components"]["tower"]["outer_shape_bem"]["outer_diameter"];
+    const auto t_diameter_grid = t_diameter["grid"].as<std::vector<double>>();
+    const auto t_diameter_values = t_diameter["values"].as<std::vector<double>>();
+    const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
+    for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
+        // Create mass matrix for hollow circle section
+        auto m = GenerateHollowCircleMassMatrix(
+            t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
+            t_material["nu"].as<double>()
+        );
+
+        // Create stiffness matrix for hollow circle section
+        auto k = GenerateHollowCircleStiffnessMatrix(
+            t_material["E"].as<double>(), t_material["G"].as<double>(), t_diameter_values[i],
+            t_wall_thickness[i], t_material["nu"].as<double>()
+        );
+
+        // Add section
+        tower_builder.AddSection(
+            t_diameter_grid[i], m, k, interfaces::components::ReferenceAxisOrientation::Z
+        );
+    }
+
+    //--------------------------------------------------------------------------
+    // Interface
+    //--------------------------------------------------------------------------
+
     // Build turbine interface
     auto interface = builder.Build();
 
+    //--------------------------------------------------------------------------
+    // Simulation
+    //--------------------------------------------------------------------------
+
+    // interface.Turbine().torque_control = 1e4;  // Set torque control to a constant value
+
     // Loop through solution iterations
-    for (auto i = 1U; i < 20U; ++i) {
+    for (auto i = 1U; i < 10U; ++i) {
         // Calculate time
         // const auto t{static_cast<double>(i) * time_step};
 
