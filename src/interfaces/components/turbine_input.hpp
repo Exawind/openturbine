@@ -53,8 +53,6 @@ struct TurbineInput {
 
     /// @brief Controller enabled flag
     bool controller_enabled{false};
-
-    
 };
 
 }  // namespace openturbine::interfaces::components
