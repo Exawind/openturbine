@@ -32,6 +32,10 @@ struct Node {
     )
         : id(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
 
+    //--------------------------------------------------------------------------
+    // Modify node position (x)
+    //--------------------------------------------------------------------------
+
     /// Translate node by a displacement vector
     void Translate(const Array_3& displacement) {
         this->x[0] += displacement[0];
@@ -41,7 +45,7 @@ struct Node {
 
     /// Rotate node by a quaternion about the given point
     void RotateAboutPoint(const Array_4& q, const Array_3& point) {
-        // Rotate position
+        // Rotate position i.e. x(0:2)
         auto x_new = RotateVectorByQuaternion(
             q, {this->x[0] - point[0], this->x[1] - point[1], this->x[2] - point[2]}
         );
@@ -49,7 +53,7 @@ struct Node {
         this->x[1] = x_new[1] + point[1];
         this->x[2] = x_new[2] + point[2];
 
-        // Rotate orientation
+        // Rotate orientation i.e. x(3:6)
         auto q_new = QuaternionCompose(q, {this->x[3], this->x[4], this->x[5], this->x[6]});
         this->x[3] = q_new[0];
         this->x[4] = q_new[1];
@@ -61,6 +65,41 @@ struct Node {
     void RotateAboutPoint(const Array_3& rv, const Array_3& point) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateAboutPoint(q, point);
+    }
+
+    //--------------------------------------------------------------------------
+    // Modify node displacement (u)
+    //--------------------------------------------------------------------------
+
+    /// Add translational displacement to node displacement vector
+    void TranslateDisplacement(const Array_3& displacement) {
+        this->u[0] += displacement[0];
+        this->u[1] += displacement[1];
+        this->u[2] += displacement[2];
+    }
+
+    /// Rotate node displacement by a quaternion about the given point
+    void RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
+        // Rotate displacement position i.e. u(0:2)
+        auto u_new = RotateVectorByQuaternion(
+            q, {this->u[0] - point[0], this->u[1] - point[1], this->u[2] - point[2]}
+        );
+        this->u[0] = u_new[0] + point[0];
+        this->u[1] = u_new[1] + point[1];
+        this->u[2] = u_new[2] + point[2];
+
+        // Rotate displacement orientation i.e. u(3:6)
+        auto q_new = QuaternionCompose(q, {this->u[3], this->u[4], this->u[5], this->u[6]});
+        this->u[3] = q_new[0];
+        this->u[4] = q_new[1];
+        this->u[5] = q_new[2];
+        this->u[6] = q_new[3];
+    }
+
+    /// Rotate node displacement by a rotation vector about the given point
+    void RotateDisplacementAboutPoint(const Array_3& rv, const Array_3& point) {
+        const auto q = RotationVectorToQuaternion(rv);
+        this->RotateDisplacementAboutPoint(q, point);
     }
 };
 

@@ -38,18 +38,18 @@ protected:
 
     TestParameters tp_;
 
-    Array_6x6 GenerateStiffnessMatrixWithParams() {
+    [[nodiscard]] Array_6x6 GenerateStiffnessMatrixWithParams() const {
         return GenerateStiffnessMatrix(
             tp_.EA, tp_.EI_x, tp_.EI_y, tp_.GKt, tp_.GA, tp_.kxs, tp_.kys, tp_.x_C, tp_.y_C,
             tp_.theta_p, tp_.x_S, tp_.y_S, tp_.theta_s
         );
     }
 
-    Array_6x6 GenerateMassMatrixWithParams() {
+    [[nodiscard]] Array_6x6 GenerateMassMatrixWithParams() const {
         return GenerateMassMatrix(tp_.m, tp_.I_x, tp_.I_y, tp_.I_p, tp_.x_G, tp_.y_G, tp_.theta_i);
     }
 
-    void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
+    static void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
         for (size_t i = 0; i < 6; ++i) {
             for (size_t j = 0; j < 6; ++j) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)

@@ -172,21 +172,17 @@ TEST(TurbineInterfaceTest, IEA15) {
     const auto t_diameter_values = t_diameter["values"].as<std::vector<double>>();
     const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
     for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
-        // Create mass matrix for hollow circle section
-        auto m = GenerateHollowCircleMassMatrix(
+        // Create section mass and stiffness matrices
+        const auto section = GenerateHollowCircleSection(
+            t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
             t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
             t_material["nu"].as<double>()
         );
 
-        // Create stiffness matrix for hollow circle section
-        auto k = GenerateHollowCircleStiffnessMatrix(
-            t_material["E"].as<double>(), t_material["G"].as<double>(), t_diameter_values[i],
-            t_wall_thickness[i], t_material["nu"].as<double>()
-        );
-
         // Add section
         tower_builder.AddSection(
-            t_diameter_grid[i], m, k, interfaces::components::ReferenceAxisOrientation::Z
+            t_diameter_grid[i], section.M_star, section.C_star,
+            interfaces::components::ReferenceAxisOrientation::Z
         );
     }
 
