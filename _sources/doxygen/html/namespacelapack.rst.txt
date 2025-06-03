@@ -1,0 +1,14 @@
+.. meta::1cccb7e1944e835845ae52a65eb577f62ed4394e7bdde5bc332954a8973e3fcefecede43ee8704e886ba598a6a79b59503119fb09b0950907bfe9ddc9ecad772
+
+:orphan:
+
+.. title:: OpenTurbine API: lapack Namespace Reference
+
+lapack Namespace Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: namespacelapack.html
