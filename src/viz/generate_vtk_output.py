@@ -5,12 +5,11 @@ import vtk
 import yaml
 
 from netCDF4 import Dataset
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 # -------------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------------
-
 
 def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
     """Converts a 4x1 quaternion [w, i, j, k] to a 3x3 rotation matrix.
@@ -37,20 +36,19 @@ def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
     # Create rotation matrix
     R = np.zeros((3, 3))
 
-    R[0, 0] = 1.0 - 2.0 * (jj + kk)
-    R[0, 1] = 2.0 * (ij - wk)
-    R[0, 2] = 2.0 * (ik + wj)
+    R[0, 0] = 1. - 2. * (jj + kk)
+    R[0, 1] = 2. * (ij - wk)
+    R[0, 2] = 2. * (ik + wj)
 
-    R[1, 0] = 2.0 * (ij + wk)
-    R[1, 1] = 1.0 - 2.0 * (ii + kk)
-    R[1, 2] = 2.0 * (jk - wi)
+    R[1, 0] = 2. * (ij + wk)
+    R[1, 1] = 1. - 2. * (ii + kk)
+    R[1, 2] = 2. * (jk - wi)
 
-    R[2, 0] = 2.0 * (ik - wj)
-    R[2, 1] = 2.0 * (jk + wi)
-    R[2, 2] = 1.0 - 2.0 * (ii + jj)
+    R[2, 0] = 2. * (ik - wj)
+    R[2, 1] = 2. * (jk + wi)
+    R[2, 2] = 1. - 2. * (ii + jj)
 
     return R
-
 
 def create_vector_array(name: str, num_components: int = 3):
     """Creates a VTK double array with the given name and number of components.
@@ -68,21 +66,19 @@ def create_vector_array(name: str, num_components: int = 3):
 
     return array
 
-
 # -------------------------------------------------------------------------------
-# VTK output logic
+# Core VTK output logic
 # -------------------------------------------------------------------------------
-
 
 class VTKOutput:
     """Class to generate VTK files from OpenTurbine (NetCDF-based) outputs and mesh connectivity (YAML-based)."""
 
-    def __init__(self, netcdf_path: str, connectivity_path: Optional[str] = None):
-        """Initializes the visualizer with the path to the NetCDF file and optional connectivity file.
+    def __init__(self, netcdf_path: str, connectivity_path: str):
+        """Initializes the visualizer with the path to the NetCDF file and mesh connectivity file.
 
         Args:
             netcdf_path (str): Path to the NetCDF output file
-            connectivity_path (Optional[str]): Path to the mesh connectivity YAML file
+            connectivity_path (str): Path to the mesh connectivity YAML file
         """
         self.netcdf_path = netcdf_path
         self.data = Dataset(netcdf_path, "r")
@@ -94,15 +90,14 @@ class VTKOutput:
             "springs": {},
             "constraints": {},
         }
-        if connectivity_path:
-            self._load_mesh_connectivity(connectivity_path)
+        self._load_mesh_connectivity(connectivity_path)
 
         # Get dimensions from the NetCDF file
         self.num_nodes = len(self.data.dimensions["nodes"])
         self.num_timesteps = len(self.data.dimensions["time"])
 
         print(
-            f"Loaded data with {self.num_nodes} nodes and {self.num_timesteps} timesteps"
+            f"Loaded output data from {self.netcdf_path} with {self.num_nodes} nodes and {self.num_timesteps} timesteps"
         )
 
     def _load_mesh_connectivity(self, connectivity_path: str):
@@ -133,7 +128,7 @@ class VTKOutput:
     def _extract_node_data_at_timestep(
         self, timestep: int, node_indices: Optional[List[int]] = None
     ) -> List[Dict[str, List[float]]]:
-        """Extracts node data for a specific timestep and returns a list of NodeData-like structures.
+        """Extracts node data for a specific timestep and returns a list of OpenTurbine's NodeData-like structures.
 
         Node data contains the following components:
         - Position: x_x, x_y, x_z, x_w, x_i, x_j, x_k
@@ -246,18 +241,15 @@ class VTKOutput:
                 "acceleration": [acceleration[j_comp][i_node] for j_comp in range(6)],
                 "force": (
                     [force[j_comp][i_node] for j_comp in range(3)]
-                    if force is not None
-                    else None
+                    if force is not None else None
                 ),
                 "moment": (
                     [moment[j_comp][i_node] for j_comp in range(3)]
-                    if moment is not None
-                    else None
+                    if moment is not None else None
                 ),
                 "deformation": (
                     [deformation[j_comp][i_node] for j_comp in range(3)]
-                    if deformation is not None
-                    else None
+                    if deformation is not None else None
                 ),
             }
             nodes.append(node)
@@ -357,19 +349,19 @@ class VTKOutput:
         element_type_names = {}
 
         # Add beam elements to the grid
-        if self.mesh_connectivity["beams"]:
+        if "beams" in self.mesh_connectivity:
             self._add_beams_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add mass nodes to the grid
-        if self.mesh_connectivity["masses"]:
+        if "masses" in self.mesh_connectivity:
             self._add_masses_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add spring elements to the grid
-        if self.mesh_connectivity["springs"]:
+        if "springs" in self.mesh_connectivity:
             self._add_springs_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add constraints to the grid
-        if self.mesh_connectivity["constraints"]:
+        if "constraints" in self.mesh_connectivity:
             self._add_constraints_to_grid(
                 grid, cell_types, element_ids, element_type_names
             )
@@ -542,18 +534,20 @@ class VTKOutput:
 
         print(f"Wrote PVD file to {pvd_filename}")
 
-
 # -------------------------------------------------------------------------------
 # Main function
 # -------------------------------------------------------------------------------
 
-
 def main():
     """Main function to parse arguments and generate VTK files.
 
-    Example usage:
-        python generate_vtk_output.py blade_interface.nc
-            --connectivity_file mesh_connectivity.yaml --output_dir vtk_output
+    Example usage (run from the build directory):
+        python ../src/viz/generate_vtk_output.py \
+            tests/regression_tests/TurbineInterfaceTest.IEA15/turbine_interface.nc \
+            tests/regression_tests/TurbineInterfaceTest.IEA15/mesh_connectivity.yaml \
+            --output_dir tests/regression_tests/TurbineInterfaceTest.IEA15/vtk_output \
+            --start-timestep 0 \
+            --end-timestep 5
 
     NOTE: Files are overwritten in the output directory if they already exist.
     """
@@ -565,35 +559,44 @@ def main():
     # Input arguments
     # ------------------------------------------------------------
 
-    # NetCDF input file
+    # NetCDF input file -- required argument
     parser.add_argument(
         "netcdf_file",
         type=str,
         help="Path to OpenTurbine NetCDF output file e.g. blade_interface.nc",
     )
 
-    # Mesh connectivity file
+    # Mesh connectivity file -- required argument
     parser.add_argument(
-        "--connectivity_file",
+        "connectivity_file",
         type=str,
-        default="mesh_connectivity.yaml",
         help="Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml",
     )
 
-    # Output directory
+    # Output directory -- optional argument
     parser.add_argument(
         "--output_dir",
+        "-o",
         type=str,
         default="vtk_output",
         help="Directory for writing the vtk output files",
     )
 
-    # Specific timestep to visualize
+    # Timestep range to visualize -- optional arguments
     parser.add_argument(
-        "--timestep",
+        "--start-timestep",
+        "-s",
         type=int,
         default=None,
-        help="Specific timestep to visualize (if not specified, all timesteps will be visualized)",
+        help="Starting timestep to visualize (default: 0)",
+    )
+
+    parser.add_argument(
+        "--end-timestep",
+        "-e",
+        type=int,
+        default=None,
+        help="Ending timestep to visualize (default: last timestep)",
     )
 
     args = parser.parse_args()
@@ -605,20 +608,34 @@ def main():
     # Issue warning before overwriting files
     if os.path.exists(args.output_dir):
         print(
-            f"* Warning: {args.output_dir} already exists -- files will be overwritten"
+            f"* Warning: {args.output_dir} already exists -- files may be overwritten"
         )
         os.makedirs(args.output_dir, exist_ok=True)
 
     # Create the VTK output object
     vtk_output = VTKOutput(args.netcdf_file, args.connectivity_file)
 
-    # Generate visualization
-    if args.timestep is not None:
-        vtk_output.generate_visualization(args.timestep, args.output_dir)
+    # Generate visualization for timestep range or all timesteps
+    if args.start_timestep is not None or args.end_timestep is not None:
+        start = args.start_timestep if args.start_timestep is not None else 0
+        end = args.end_timestep if args.end_timestep is not None else vtk_output.num_timesteps - 1
 
-    # Generate visualization for all timesteps
-    vtk_output.visualize_all_timesteps(args.output_dir)
+        # Validate range
+        if start < 0 or start >= vtk_output.num_timesteps:
+            raise ValueError(f"Start timestep {start} out of range (0-{vtk_output.num_timesteps-1})")
+        if end < 0 or end >= vtk_output.num_timesteps:
+            raise ValueError(f"End timestep {end} out of range (0-{vtk_output.num_timesteps-1})")
+        if start > end:
+            raise ValueError(f"Start timestep {start} cannot be greater than end timestep {end}")
 
+        # Generate visualization for the specified range
+        print(f"Generating visualization for timesteps {start} to {end}")
+        for timestep in range(start, end + 1):
+            vtk_output.generate_visualization(timestep, args.output_dir)
+    else:
+        # Generate visualization for all timesteps
+        print("Generating visualization for all timesteps")
+        vtk_output.visualize_all_timesteps(args.output_dir)
 
 if __name__ == "__main__":
     main()
