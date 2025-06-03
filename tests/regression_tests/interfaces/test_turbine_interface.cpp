@@ -21,7 +21,7 @@ TEST(TurbineInterfaceTest, IEA15) {
         .EnableDynamicSolve()
         .SetTimeStep(time_step)
         .SetDampingFactor(0.0)
-        // .SetGravity({0., 0., -9.81})
+        .SetGravity({0., 0., -9.81})
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
         .SetRelativeErrorTolerance(1e-4)
@@ -43,7 +43,7 @@ TEST(TurbineInterfaceTest, IEA15) {
     // Get turbine builder
     auto& turbine_builder = builder.Turbine();
     turbine_builder.SetAzimuthAngle(0.)
-        .SetRotorApexToHub(1.)
+        .SetRotorApexToHub(0.)
         .SetHubDiameter(wio_hub["diameter"].as<double>())
         .SetConeAngle(wio_hub["cone_angle"].as<double>())
         .SetShaftTiltAngle(wio_nacelle["drivetrain"]["uptilt"].as<double>())
@@ -132,10 +132,10 @@ TEST(TurbineInterfaceTest, IEA15) {
     // Set tower parameters
     tower_builder
         .SetElementOrder(n_tower_nodes - 1)  // Set element order to num nodes -1
-        .PrescribedRootMotion(true);         // Fix displacement of tower base node
+        .PrescribedRootMotion(false);        // Fix displacement of tower base node
 
     // Add reference axis coordinates (WindIO uses Z-axis as reference axis)
-    const auto t_ref_axis = wio["components"]["tower"]["outer_shape_bem"]["reference_axis"];
+    const auto t_ref_axis = wio_tower["outer_shape_bem"]["reference_axis"];
     const auto axis_grid = t_ref_axis["x"]["grid"].as<std::vector<double>>();
     const auto x_values = t_ref_axis["x"]["values"].as<std::vector<double>>();
     const auto y_values = t_ref_axis["y"]["values"].as<std::vector<double>>();
@@ -151,7 +151,7 @@ TEST(TurbineInterfaceTest, IEA15) {
     tower_builder.AddRefAxisTwist(0.0, 0.0).AddRefAxisTwist(1.0, 0.0);
 
     // Find the tower material properties
-    const auto t_layer = wio["components"]["tower"]["internal_structure_2d_fem"]["layers"][0];
+    const auto t_layer = wio_tower["internal_structure_2d_fem"]["layers"][0];
     const auto t_material_name = t_layer["material"].as<std::string>();
     YAML::Node t_material;
     for (const auto& m : wio["materials"]) {
@@ -167,7 +167,7 @@ TEST(TurbineInterfaceTest, IEA15) {
     }
 
     // Add tower section properties
-    const auto t_diameter = wio["components"]["tower"]["outer_shape_bem"]["outer_diameter"];
+    const auto t_diameter = wio_tower["outer_shape_bem"]["outer_diameter"];
     const auto t_diameter_grid = t_diameter["grid"].as<std::vector<double>>();
     const auto t_diameter_values = t_diameter["values"].as<std::vector<double>>();
     const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
@@ -197,12 +197,24 @@ TEST(TurbineInterfaceTest, IEA15) {
     // Simulation
     //--------------------------------------------------------------------------
 
-    // interface.Turbine().torque_control = 1e4;  // Set torque control to a constant value
+    interface.Turbine().tower.nodes.back().loads = {1e5, 0., 0., 0., 0., 0.};
+    interface.Turbine().torque_control = 1e8;
 
     // Loop through solution iterations
-    for (auto i = 1U; i < 10U; ++i) {
+    for (auto i = 1U; i < 1000U; ++i) {
         // Calculate time
-        // const auto t{static_cast<double>(i) * time_step};
+        const auto t{static_cast<double>(i) * time_step};
+
+        // Set the pitch on blade 3
+        interface.Turbine().blade_pitch_control[2] = t * 0.5;
+
+        // Set the yaw angle
+        interface.Turbine().yaw_control = t * 0.3;
+
+        // Turn off the torque control after 500 steps
+        if (i % 500 == 0) {
+            interface.Turbine().torque_control = 0.;
+        }
 
         // Take step
         const auto converged = interface.Step();

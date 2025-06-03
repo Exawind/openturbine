@@ -83,7 +83,7 @@ public:
      *       If the solver does not converge, the motion is not updated.
      */
     [[nodiscard]] bool Step() {
-        // Update the host state with current node motion and copy to state
+        // Update the host state with current node loads
         this->turbine.SetLoads(this->host_state);
         Kokkos::deep_copy(this->state.f, this->host_state.f);
 

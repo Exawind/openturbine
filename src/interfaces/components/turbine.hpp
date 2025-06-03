@@ -66,14 +66,13 @@ public:
     NodeData shaft_base_node;          //< Shaft base node
     NodeData yaw_bearing_node;         //< Yaw bearing node
 
-    ConstraintData tower_base;                   //< Tower base constraint
-    ConstraintData tower_top_to_yaw_bearing;     //< Tower top to yaw bearing constraint
-    ConstraintData yaw_bearing_to_nacelle_mass;  //< Yaw bearing to nacelle mass constraint
-    ConstraintData yaw_bearing_to_shaft_base;    //< Yaw bearing to shaft base constraint
-    ConstraintData shaft_base_to_azimuth;        //< Nacelle mass to generator constraint
-    ConstraintData azimuth_to_hub;               //< Azimuth to hub constraint
-    std::vector<ConstraintData> blade_pitch;     //< Blade root to apex constraints
-    std::vector<ConstraintData> apex_to_hub;     //< Apex to hub constraints
+    ConstraintData tower_base;                 //< Tower base constraint
+    ConstraintData tower_top_to_yaw_bearing;   //< Tower top to yaw bearing constraint
+    ConstraintData yaw_bearing_to_shaft_base;  //< Yaw bearing to shaft base constraint
+    ConstraintData shaft_base_to_azimuth;      //< Nacelle mass to generator constraint
+    ConstraintData azimuth_to_hub;             //< Azimuth to hub constraint
+    std::vector<ConstraintData> blade_pitch;   //< Blade root to apex constraints
+    std::vector<ConstraintData> apex_to_hub;   //< Apex to hub constraints
 
     std::vector<double> blade_pitch_control;  //< Blade pitch angles
     double torque_control{0.};                //< Torque control value
@@ -95,16 +94,22 @@ public:
           yaw_bearing_node(kInvalidID),
           tower_base(kInvalidID),
           tower_top_to_yaw_bearing(kInvalidID),
-          yaw_bearing_to_nacelle_mass(kInvalidID),
           yaw_bearing_to_shaft_base(kInvalidID),
           shaft_base_to_azimuth(kInvalidID),
           azimuth_to_hub(kInvalidID),
           blade_pitch(),
           blade_pitch_control(input.blades.size(), input.blade_pitch_angle) {
+        // Validate turbine input
         ValidateInput(input);
+
+        // Add intermediate nodes and position them to reference locations
         PositionNodes(input, model);
+
+        // Constraints must be added after all nodes are positioned because
+        // they depend on the initial positions of the nodes.
         AddConstraints(input, model);
-        SetInitialConditions(input, model);
+
+        // SetInitialConditions(input, model);
     }
 
     /// @brief Populate node motion from host state
@@ -250,12 +255,6 @@ private:
      * @brief Add constraints
      */
     void AddConstraints(const TurbineInput& input, Model& model) {
-        //----------------------------------------------------------------------
-        // Constraints
-        //----------------------------------------------------------------------
-        // Constraints must be created after all nodes are positioned because
-        // they depend on the initial positions of the nodes.
-
         // Loop through blades
         for (auto i = 0U; i < this->blades.size(); ++i) {
             // Get the blade apex node
@@ -272,12 +271,9 @@ private:
             };
 
             // Create pitch control constraint
-            // this->blade_pitch.emplace_back(model.AddRotationControl(
-            //     {root_node.id, apex_node.id}, pitch_axis, &this->blade_pitch_control[i]
-            // ));
-            this->blade_pitch.emplace_back(
-                ConstraintData(model.AddRigidJointConstraint({root_node.id, apex_node.id}))
-            );
+            this->blade_pitch.emplace_back(model.AddRotationControl(
+                {root_node.id, apex_node.id}, pitch_axis, &this->blade_pitch_control[i]
+            ));
 
             // Add rigid constraint between hub and blade apex
             this->apex_to_hub.emplace_back(
@@ -286,19 +282,15 @@ private:
         }
 
         // Add rigid constraint between hub and azimuth node
-        model.AddRigidJointConstraint({this->hub_node.id, this->azimuth_node.id});
-
-        // Add prescribed displacement constraint for the tower base
-        this->tower_base = ConstraintData(model.AddFixedBC(this->tower.nodes.front().id));
+        this->azimuth_to_hub =
+            ConstraintData(model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id})
+            );
 
         // Shaft axis constraint
-        // const Array_3 shaft_axis{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
-        // this->shaft_base_to_azimuth = ConstraintData(model.AddRevoluteJointConstraint(
-        //     {this->shaft_base_node.id, this->azimuth_node.id}, shaft_axis, &torque_control
-        // ));
-        this->shaft_base_to_azimuth = ConstraintData(
-            model.AddRigidJointConstraint({this->shaft_base_node.id, this->azimuth_node.id})
-        );
+        const Array_3 shaft_axis{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
+        this->shaft_base_to_azimuth = ConstraintData(model.AddRevoluteJointConstraint(
+            {this->shaft_base_node.id, this->azimuth_node.id}, shaft_axis, &torque_control
+        ));
 
         // Add constraint from yaw bearing to shaft base
         this->yaw_bearing_to_shaft_base = ConstraintData(
@@ -306,13 +298,13 @@ private:
         );
 
         // Add constraint from tower top to yaw bearing
-        // this->tower_top_to_yaw_bearing = ConstraintData(model.AddRotationControl(
-        //     {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.},
-        //     &this->yaw_control
-        // ));
-        this->tower_top_to_yaw_bearing = ConstraintData(
-            model.AddRigidJointConstraint({this->tower.nodes.back().id, this->yaw_bearing_node.id})
-        );
+        this->tower_top_to_yaw_bearing = ConstraintData(model.AddRotationControl(
+            {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.},
+            &this->yaw_control
+        ));
+
+        // Add fixed constraint at the tower base
+        this->tower_base = ConstraintData(model.AddFixedBC(this->tower.nodes.front().id));
     }
 
     /**
