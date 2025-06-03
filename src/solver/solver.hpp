@@ -33,7 +33,8 @@ struct Solver {
     // Define some types for the solver to make the code more readable
     using ValueType = double;
 #ifdef KOKKOS_ENABLE_CUDA
-    static constexpr bool use_device = std::is_same<typename DeviceType::execution_space, Kokkos::Cuda>::value;
+    static constexpr bool use_device =
+        std::is_same<typename DeviceType::execution_space, Kokkos::Cuda>::value;
 #if defined(OpenTurbine_ENABLE_CUDSS)
     static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::CUDSS;
 #elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
@@ -60,7 +61,8 @@ struct Solver {
     static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::NONE;
 #endif
 
-    static constexpr DSSAlgorithm algorithm = (use_device && algorithm_device != DSSAlgorithm::NONE) ? algorithm_device : algorithm_host;
+    static constexpr DSSAlgorithm algorithm =
+        (use_device && algorithm_device != DSSAlgorithm::NONE) ? algorithm_device : algorithm_host;
 
     static_assert(algorithm != DSSAlgorithm::NONE);
 
