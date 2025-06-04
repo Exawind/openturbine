@@ -9,43 +9,6 @@
 
 namespace openturbine::interfaces::components {
 
-/// Translate node by a displacement vector
-Array_7 TranslatePoint(const Array_7& point, const Array_3& displacement) {
-    return {
-        point[0] + displacement[0],
-        point[1] + displacement[1],
-        point[2] + displacement[2],
-        point[3],  // Orientation remains unchanged
-        point[4],
-        point[5],
-        point[6]
-    };
-}
-
-/// Rotate node by a quaternion about the given point
-Array_7 RotatePointAboutLoc(const Array_7& point, const Array_4& q, const Array_3& loc) {
-    // Rotate point
-    auto x_new =
-        RotateVectorByQuaternion(q, {point[0] - loc[0], point[1] - loc[1], point[2] - loc[2]});
-
-    // Rotate orientation
-    auto q_new = QuaternionCompose(q, {point[3], point[4], point[5], point[6]});
-
-    return {x_new[0] + loc[0], x_new[1] + loc[1], x_new[2] + loc[2], q_new[0],
-            q_new[1],          q_new[2],          q_new[3]};
-}
-
-/// Rotate node by a rotation vector about the given point
-Array_7 RotatePointAboutLoc(const Array_7& point, const Array_3& rv, const Array_3& loc) {
-    return RotatePointAboutLoc(point, RotationVectorToQuaternion(rv), loc);
-}
-
-Array_7 RotatePoint(const Array_7& point, const Array_4& q) {
-    // Rotate orientation
-    auto q_new = QuaternionCompose(q, {point[3], point[4], point[5], point[6]});
-    return {point[0], point[1], point[2], q_new[0], q_new[1], q_new[2], q_new[3]};
-}
-
 /**
  * @brief Represents a turbine with nodes, elements, and constraints
  *
