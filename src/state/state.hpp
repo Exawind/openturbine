@@ -35,8 +35,7 @@ struct State {
     Kokkos::View<double* [6][6], DeviceType> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
-        : time_step(0),
-          num_system_nodes(num_system_nodes_),
+        : num_system_nodes(num_system_nodes_),
           ID(Kokkos::view_alloc("ID", Kokkos::WithoutInitializing), num_system_nodes),
           node_freedom_allocation_table(
               Kokkos::view_alloc("node_freedom_allocation_table", Kokkos::WithoutInitializing),
