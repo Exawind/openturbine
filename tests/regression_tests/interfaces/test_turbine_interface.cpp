@@ -7,7 +7,12 @@
 
 namespace openturbine::tests {
 
-TEST(TurbineInterfaceTest, IEA15) {
+// This test builds the IEA-15-240-RWT turbine structure from WindIO yaml file
+// and applies a tower load, generator torque, blade pitch, and yaw angle to test the
+// structure's response.
+TEST(TurbineInterfaceTest, IEA15_Structure) {
+    const auto duration{0.1};      // Simulation duration in seconds
+    const auto time_step{0.01};    // Time step for the simulation
     const auto n_blades{3};        // Number of blades in turbine
     const auto n_blade_nodes{11};  // Number of nodes per blade
     const auto n_tower_nodes{11};  // Number of nodes in tower
@@ -16,7 +21,6 @@ TEST(TurbineInterfaceTest, IEA15) {
     auto builder = interfaces::TurbineInterfaceBuilder{};
 
     // Set solution parameters
-    const double time_step{0.01};
     builder.Solution()
         .EnableDynamicSolve()
         .SetTimeStep(time_step)
@@ -197,11 +201,17 @@ TEST(TurbineInterfaceTest, IEA15) {
     // Simulation
     //--------------------------------------------------------------------------
 
+    // Apply load to tower-top node
     interface.Turbine().tower.nodes.back().loads = {1e5, 0., 0., 0., 0., 0.};
+
+    // Apply torque to turbine shaft
     interface.Turbine().torque_control = 1e8;
 
+    // Calculate number of steps
+    const auto n_steps{static_cast<size_t>(duration / time_step)};
+
     // Loop through solution iterations
-    for (auto i = 1U; i < 1000U; ++i) {
+    for (auto i = 1U; i < n_steps; ++i) {
         // Calculate time
         const auto t{static_cast<double>(i) * time_step};
 
@@ -222,6 +232,16 @@ TEST(TurbineInterfaceTest, IEA15) {
         // Check convergence
         ASSERT_EQ(converged, true);
     }
+
+    // Check tower top position and orientation
+    const auto& tower_top_node = interface.Turbine().tower.nodes.back();
+    EXPECT_NEAR(tower_top_node.position[0], -0.0021007328117874217, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[1], 0.080005249432020489, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[2], 144.37967663726039, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[3], 0.70671658976836782, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[4], -0.0073048916494793149, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[5], -0.70744179764944992, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[6], -0.0049399638330683959, 1e-10);
 }
 
 }  // namespace openturbine::tests
