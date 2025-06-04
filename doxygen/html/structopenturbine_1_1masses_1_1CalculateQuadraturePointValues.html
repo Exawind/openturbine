@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues-members.html">List of all members</a>  </div>
@@ -176,6 +177,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="masses_2calculate__quadrature__point__values_8hpp_source.html">calculate_quadrature_point_values.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:abcc19c9b17c51a00d214cac22ce895be" id="r_abcc19c9b17c51a00d214cac22ce895be"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#abcc19c9b17c51a00d214cac22ce895be">member_type</a> = typename Kokkos::TeamPolicy&lt; typename DeviceType::execution_space &gt;::member_type</td></tr>
+<tr class="separator:abcc19c9b17c51a00d214cac22ce895be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7607517ecc41c710e2c72fb0fa162f11" id="r_a7607517ecc41c710e2c72fb0fa162f11"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a7607517ecc41c710e2c72fb0fa162f11">operator()</a> (size_t i_elem) const</td></tr>
@@ -208,6 +214,23 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a06e34d448624555399f5cc02c77ec337" id="r_a06e34d448624555399f5cc02c77ec337"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html#a06e34d448624555399f5cc02c77ec337">system_matrix_terms</a></td></tr>
 <tr class="separator:a06e34d448624555399f5cc02c77ec337"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="abcc19c9b17c51a00d214cac22ce895be" name="abcc19c9b17c51a00d214cac22ce895be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcc19c9b17c51a00d214cac22ce895be">&#9670;&#160;</a></span>member_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1masses_1_1CalculateQuadraturePointValues.html">openturbine::masses::CalculateQuadraturePointValues</a>&lt; DeviceType &gt;::member_type =  typename Kokkos::TeamPolicy&lt;typename DeviceType::execution_space&gt;::member_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7607517ecc41c710e2c72fb0fa162f11" name="a7607517ecc41c710e2c72fb0fa162f11"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7607517ecc41c710e2c72fb0fa162f11">&#9670;&#160;</a></span>operator()()</h2>

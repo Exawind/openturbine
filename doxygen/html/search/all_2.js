@@ -20,7 +20,7 @@ var searchData=
   ['beam_5fsection_2ehpp_17',['beam_section.hpp',['../beam__section_8hpp.html',1,'']]],
   ['beamelement_18',['beamelement',['../structopenturbine_1_1BeamElement.html#aaa80fe745db767ae4ceda1f8dc7d5297',1,'openturbine::BeamElement::BeamElement()'],['../structopenturbine_1_1BeamElement.html',1,'openturbine::BeamElement']]],
   ['beamquadrature_19',['BeamQuadrature',['../namespaceopenturbine.html#a1c94c5b16b1d9c6c62dc82988f8d3e81',1,'openturbine']]],
-  ['beams_20',['beams',['../structopenturbine_1_1Beams.html#aa62749cbe4f2d45b4087e38fe4cd31e6',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Elements.html#aa5cf5c3aa7465df41ebcbd66801269bd',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams&lt; DeviceType &gt;']]],
+  ['beams_20',['beams',['../structopenturbine_1_1Elements.html#aa5cf5c3aa7465df41ebcbd66801269bd',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html#aa62749cbe4f2d45b4087e38fe4cd31e6',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams&lt; DeviceType &gt;']]],
   ['beams_2ehpp_21',['beams.hpp',['../beams_8hpp.html',1,'']]],
   ['beams_5finput_2ehpp_22',['beams_input.hpp',['../beams__input_8hpp.html',1,'']]],
   ['beamsection_23',['beamsection',['../structopenturbine_1_1BeamSection.html',1,'openturbine::BeamSection'],['../structopenturbine_1_1BeamSection.html#a1254cca42d1bbdff45d0ecd419138896',1,'openturbine::BeamSection::BeamSection()']]],

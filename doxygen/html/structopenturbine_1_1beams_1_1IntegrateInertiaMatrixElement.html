@@ -178,13 +178,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9cebd2a1f8ab3ecfa599270c5d8532eb" id="r_a9cebd2a1f8ab3ecfa599270c5d8532eb"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a9cebd2a1f8ab3ecfa599270c5d8532eb">operator()</a> (size_t ij_index) const</td></tr>
-<tr class="separator:a9cebd2a1f8ab3ecfa599270c5d8532eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c48506cdce898ec03f846c1672a0b35" id="r_a3c48506cdce898ec03f846c1672a0b35"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a3c48506cdce898ec03f846c1672a0b35">operator()</a> (size_t node_simd_node) const</td></tr>
+<tr class="separator:a3c48506cdce898ec03f846c1672a0b35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a796082d825ab56fd28b207f25e2a74f4" id="r_a796082d825ab56fd28b207f25e2a74f4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a796082d825ab56fd28b207f25e2a74f4">i_elem</a></td></tr>
-<tr class="separator:a796082d825ab56fd28b207f25e2a74f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35b02b390e6c7eb40156ddb066f0df12" id="r_a35b02b390e6c7eb40156ddb066f0df12"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a35b02b390e6c7eb40156ddb066f0df12">element</a></td></tr>
+<tr class="separator:a35b02b390e6c7eb40156ddb066f0df12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83029060e017076e415969bf022a28f0" id="r_a83029060e017076e415969bf022a28f0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a83029060e017076e415969bf022a28f0">num_nodes</a></td></tr>
 <tr class="separator:a83029060e017076e415969bf022a28f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d51891cd15a924f30bb49808b2e43bd" id="r_a6d51891cd15a924f30bb49808b2e43bd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html#a6d51891cd15a924f30bb49808b2e43bd">num_qps</a></td></tr>
@@ -207,8 +207,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a6487caf9b1d4a3e484e1df01f9986a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9cebd2a1f8ab3ecfa599270c5d8532eb" name="a9cebd2a1f8ab3ecfa599270c5d8532eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cebd2a1f8ab3ecfa599270c5d8532eb">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a3c48506cdce898ec03f846c1672a0b35" name="a3c48506cdce898ec03f846c1672a0b35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c48506cdce898ec03f846c1672a0b35">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,7 +222,7 @@ template&lt;typename DeviceType &gt; </div>
           <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html">openturbine::beams::IntegrateInertiaMatrixElement</a>&lt; DeviceType &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>ij_index</em></td><td>)</td>
+          <td class="paramname"><em>node_simd_node</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -246,6 +246,22 @@ template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">double <a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html">openturbine::beams::IntegrateInertiaMatrixElement</a>&lt; DeviceType &gt;::beta_prime_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a35b02b390e6c7eb40156ddb066f0df12" name="a35b02b390e6c7eb40156ddb066f0df12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35b02b390e6c7eb40156ddb066f0df12">&#9670;&#160;</a></span>element</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html">openturbine::beams::IntegrateInertiaMatrixElement</a>&lt; DeviceType &gt;::element</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -278,22 +294,6 @@ template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Kokkos::View&lt;double** [6][6], DeviceType&gt; <a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html">openturbine::beams::IntegrateInertiaMatrixElement</a>&lt; DeviceType &gt;::gbl_M_</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a796082d825ab56fd28b207f25e2a74f4" name="a796082d825ab56fd28b207f25e2a74f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a796082d825ab56fd28b207f25e2a74f4">&#9670;&#160;</a></span>i_elem</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t <a class="el" href="structopenturbine_1_1beams_1_1IntegrateInertiaMatrixElement.html">openturbine::beams::IntegrateInertiaMatrixElement</a>&lt; DeviceType &gt;::i_elem</td>
         </tr>
       </table>
 </div><div class="memdoc">

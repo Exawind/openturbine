@@ -39,5 +39,6 @@ var searchData=
   ['updatesystemvariablesmasses_36',['UpdateSystemVariablesMasses',['../namespaceopenturbine.html#ae90ea3c8e7997ac4f2ac3057fd591a8c',1,'openturbine']]],
   ['updatesystemvariablessprings_37',['UpdateSystemVariablesSprings',['../namespaceopenturbine.html#abd3707277127727af6fe2bf96e37b744',1,'openturbine']]],
   ['updatetangentoperator_38',['UpdateTangentOperator',['../namespaceopenturbine.html#a6bce4a0ea133697b8166de3f32939445',1,'openturbine']]],
-  ['updateviews_39',['UpdateViews',['../structopenturbine_1_1Constraints.html#a42d41c630855921226a55cb7eabea592',1,'openturbine::Constraints']]]
+  ['updateviews_39',['UpdateViews',['../structopenturbine_1_1Constraints.html#a42d41c630855921226a55cb7eabea592',1,'openturbine::Constraints']]],
+  ['use_5fdevice_40',['use_device',['../structopenturbine_1_1Solver.html#a40a9150e8e69520a124cc7edcc318a52',1,'openturbine::Solver']]]
 ];

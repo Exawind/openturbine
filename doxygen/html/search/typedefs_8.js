@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['rowdatatype_0',['rowdatatype',['../structopenturbine_1_1ContributeBeamsToSparseMatrix.html#afe3a17ceddb3dacf3f903d9644ae7b4b',1,'openturbine::ContributeBeamsToSparseMatrix::RowDataType'],['../structopenturbine_1_1ContributeMassesToSparseMatrix.html#abd6072772f45041ef71dfbffc742940c',1,'openturbine::ContributeMassesToSparseMatrix::RowDataType'],['../structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a607e9ca91bc72f3393d9f8b5ea59f835',1,'openturbine::ContributeSpringsToSparseMatrix::RowDataType'],['../structopenturbine_1_1CopyConstraintsToSparseMatrix.html#af254d644e3cbd84435cc327525c3e16b',1,'openturbine::CopyConstraintsToSparseMatrix::RowDataType'],['../structopenturbine_1_1CopyConstraintsTransposeToSparseMatrix.html#a6f0026749d38e97b32d0c726e0094d86',1,'openturbine::CopyConstraintsTransposeToSparseMatrix::RowDataType']]],
-  ['rowptrvaluetype_1',['rowptrvaluetype',['../structopenturbine_1_1ComputeConstraintsColInds.html#a8834eb49289c6b94957031152c9fc617',1,'openturbine::ComputeConstraintsColInds::RowPtrValueType'],['../structopenturbine_1_1ComputeSystemColInds.html#a1c4131efcf4e10450ca82de90d4fe044',1,'openturbine::ComputeSystemColInds::RowPtrValueType']]]
+  ['native_5fhandle_5ftype_0',['native_handle_type',['../classopenturbine_1_1util_1_1dylib.html#a2cf04cfbb47a3f55d3b5c0230e551250',1,'openturbine::util::dylib']]],
+  ['native_5fsymbol_5ftype_1',['native_symbol_type',['../classopenturbine_1_1util_1_1dylib.html#a48ef45196b53422950bd1da492b5b9d0',1,'openturbine::util::dylib']]]
 ];

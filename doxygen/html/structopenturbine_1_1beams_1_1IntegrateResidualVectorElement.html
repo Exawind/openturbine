@@ -178,13 +178,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7523838eb8f9d7d6e1b28a20a04f32bf" id="r_a7523838eb8f9d7d6e1b28a20a04f32bf"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#a7523838eb8f9d7d6e1b28a20a04f32bf">operator()</a> (size_t i_node) const</td></tr>
-<tr class="separator:a7523838eb8f9d7d6e1b28a20a04f32bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2998c2805a6d16e7e080527ad9b3d50a" id="r_a2998c2805a6d16e7e080527ad9b3d50a"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#a2998c2805a6d16e7e080527ad9b3d50a">operator()</a> (size_t node) const</td></tr>
+<tr class="separator:a2998c2805a6d16e7e080527ad9b3d50a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:acc69c189408d950379a440498e5b64c2" id="r_acc69c189408d950379a440498e5b64c2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#acc69c189408d950379a440498e5b64c2">i_elem</a></td></tr>
-<tr class="separator:acc69c189408d950379a440498e5b64c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d782caaeae1b73c72cdb596d8124e40" id="r_a7d782caaeae1b73c72cdb596d8124e40"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#a7d782caaeae1b73c72cdb596d8124e40">element</a></td></tr>
+<tr class="separator:a7d782caaeae1b73c72cdb596d8124e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa54a7aa4b4316ff8880acf3a487a90d0" id="r_aa54a7aa4b4316ff8880acf3a487a90d0"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#aa54a7aa4b4316ff8880acf3a487a90d0">num_qps</a></td></tr>
 <tr class="separator:aa54a7aa4b4316ff8880acf3a487a90d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe95e0ed1cdf1404289f956eeb5aea8b" id="r_abe95e0ed1cdf1404289f956eeb5aea8b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html#abe95e0ed1cdf1404289f956eeb5aea8b">qp_weight_</a></td></tr>
@@ -211,8 +211,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a7c1a4ef851b22413e40a16f36b7b9519"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7523838eb8f9d7d6e1b28a20a04f32bf" name="a7523838eb8f9d7d6e1b28a20a04f32bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7523838eb8f9d7d6e1b28a20a04f32bf">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a2998c2805a6d16e7e080527ad9b3d50a" name="a2998c2805a6d16e7e080527ad9b3d50a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2998c2805a6d16e7e080527ad9b3d50a">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +226,7 @@ template&lt;typename DeviceType &gt; </div>
           <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html">openturbine::beams::IntegrateResidualVectorElement</a>&lt; DeviceType &gt;::operator() </td>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>i_node</em></td><td>)</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -240,8 +240,8 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="acc69c189408d950379a440498e5b64c2" name="acc69c189408d950379a440498e5b64c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc69c189408d950379a440498e5b64c2">&#9670;&#160;</a></span>i_elem</h2>
+<a id="a7d782caaeae1b73c72cdb596d8124e40" name="a7d782caaeae1b73c72cdb596d8124e40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d782caaeae1b73c72cdb596d8124e40">&#9670;&#160;</a></span>element</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,7 +249,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html">openturbine::beams::IntegrateResidualVectorElement</a>&lt; DeviceType &gt;::i_elem</td>
+          <td class="memname">size_t <a class="el" href="structopenturbine_1_1beams_1_1IntegrateResidualVectorElement.html">openturbine::beams::IntegrateResidualVectorElement</a>&lt; DeviceType &gt;::element</td>
         </tr>
       </table>
 </div><div class="memdoc">

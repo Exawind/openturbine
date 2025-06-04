@@ -185,11 +185,13 @@ Public Types</h2></td></tr>
 <tr class="separator:a607e9ca91bc72f3393d9f8b5ea59f835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8d456b12a9a7fbcdd11f77681ab788e" id="r_ab8d456b12a9a7fbcdd11f77681ab788e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#ab8d456b12a9a7fbcdd11f77681ab788e">ColIdxType</a> = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type</td></tr>
 <tr class="separator:ab8d456b12a9a7fbcdd11f77681ab788e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89d314706d0f7198cd2569dae3c5cf00" id="r_a89d314706d0f7198cd2569dae3c5cf00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a89d314706d0f7198cd2569dae3c5cf00">member_type</a> = typename Kokkos::TeamPolicy&lt; typename DeviceType::execution_space &gt;::member_type</td></tr>
+<tr class="separator:a89d314706d0f7198cd2569dae3c5cf00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6c31e33d1850652a6606cb90c9b8dbeb" id="r_a6c31e33d1850652a6606cb90c9b8dbeb"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a6c31e33d1850652a6606cb90c9b8dbeb">operator()</a> (size_t i_elem) const</td></tr>
-<tr class="separator:a6c31e33d1850652a6606cb90c9b8dbeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a970b2c3c2eb26363773f5e095d20d96f" id="r_a970b2c3c2eb26363773f5e095d20d96f"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a970b2c3c2eb26363773f5e095d20d96f">operator()</a> (<a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a89d314706d0f7198cd2569dae3c5cf00">member_type</a> member) const</td></tr>
+<tr class="separator:a970b2c3c2eb26363773f5e095d20d96f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -237,6 +239,22 @@ template&lt;typename CrsMatrixType &gt; </div>
 
 </div>
 </div>
+<a id="a89d314706d0f7198cd2569dae3c5cf00" name="a89d314706d0f7198cd2569dae3c5cf00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89d314706d0f7198cd2569dae3c5cf00">&#9670;&#160;</a></span>member_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename CrsMatrixType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::member_type =  typename Kokkos::TeamPolicy&lt;typename DeviceType::execution_space&gt;::member_type</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a607e9ca91bc72f3393d9f8b5ea59f835" name="a607e9ca91bc72f3393d9f8b5ea59f835"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a607e9ca91bc72f3393d9f8b5ea59f835">&#9670;&#160;</a></span>RowDataType</h2>
 
@@ -254,8 +272,8 @@ template&lt;typename CrsMatrixType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6c31e33d1850652a6606cb90c9b8dbeb" name="a6c31e33d1850652a6606cb90c9b8dbeb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c31e33d1850652a6606cb90c9b8dbeb">&#9670;&#160;</a></span>operator()()</h2>
+<a id="a970b2c3c2eb26363773f5e095d20d96f" name="a970b2c3c2eb26363773f5e095d20d96f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a970b2c3c2eb26363773f5e095d20d96f">&#9670;&#160;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -268,8 +286,8 @@ template&lt;typename CrsMatrixType &gt; </div>
         <tr>
           <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">openturbine::ContributeSpringsToSparseMatrix</a>&lt; CrsMatrixType &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>i_elem</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#a89d314706d0f7198cd2569dae3c5cf00">member_type</a>&#160;</td>
+          <td class="paramname"><em>member</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
