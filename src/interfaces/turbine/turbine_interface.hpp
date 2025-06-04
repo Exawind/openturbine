@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "interfaces/components/solution_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/components/turbine_input.hpp"

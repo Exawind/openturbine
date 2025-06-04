@@ -87,7 +87,6 @@ public:
     Turbine(const TurbineInput& input, Model& model)
         : blades(create_blades(input.blades, model)),
           tower(input.tower, model),
-          apex_nodes(),
           hub_node(kInvalidID),
           azimuth_node(kInvalidID),
           shaft_base_node(kInvalidID),
@@ -97,7 +96,6 @@ public:
           yaw_bearing_to_shaft_base(kInvalidID),
           shaft_base_to_azimuth(kInvalidID),
           azimuth_to_hub(kInvalidID),
-          blade_pitch(),
           blade_pitch_control(input.blades.size(), input.blade_pitch_angle) {
         // Validate turbine input
         ValidateInput(input);
@@ -177,7 +175,7 @@ private:
         };
 
         // Calculate angle between blades
-        const double blade_angle_delta = 2. * M_PI / this->blades.size();
+        const double blade_angle_delta = 2. * M_PI / static_cast<double>(this->blades.size());
 
         // Create hub node at origin
         this->hub_node = NodeData(
@@ -225,7 +223,7 @@ private:
             // Add blade apex node at the origin
             const auto apex_node_id =
                 model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
-            this->apex_nodes.push_back(NodeData(apex_node_id));
+            this->apex_nodes.emplace_back(apex_node_id);
             rotor_node_ids.push_back(apex_node_id);
             auto& apex_node = model.GetNode(apex_node_id);
 
