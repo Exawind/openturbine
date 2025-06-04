@@ -201,10 +201,14 @@ private:
         std::vector<size_t> rotor_node_ids{
             this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id
         };
+        // Add all blade nodes to rotor_node_ids
         for (const auto& blade : this->blades) {
-            for (const auto& node : blade.nodes) {
-                rotor_node_ids.push_back(node.id);
-            }
+            std::transform(
+                blade.nodes.begin(), blade.nodes.end(), std::back_inserter(rotor_node_ids),
+                [](const NodeData& node) {
+                    return node.id;
+                }
+            );
         }
 
         // Loop over blades
@@ -310,41 +314,7 @@ private:
     /**
      * @brief Initial displacements and velocities of the nodes
      */
-    void SetInitialConditions(const TurbineInput& input, Model& model) {
-        // Create vector of rotor node IDs (hub, apex, azimuth, and blades)
-        // std::vector<size_t> rotor_node_ids{
-        //     this->hub_node.id,
-        //     this->azimuth_node.id,
-        // };
-        // for (const auto& apex_node : this->apex_nodes) {
-        //     rotor_node_ids.push_back(apex_node.id);
-        // }
-        // for (const auto& blade : this->blades) {
-        //     for (const auto& node : blade.nodes) {
-        //         rotor_node_ids.push_back(node.id);
-        //     }
-        // }
-
-        // Calculate rotor speed in radians per second
-        const double rotor_speed_rad_s = input.rotor_speed * M_PI / 30.0;
-        const Array_6 v{
-            0., 0.,
-            0., rotor_speed_rad_s * cos(input.shaft_tilt_angle),
-            0., rotor_speed_rad_s * sin(input.shaft_tilt_angle),
-        };
-
-        // Get rotor apex position
-        const auto& rotor_apex_node = model.GetNode(this->apex_nodes.front().id);
-        const Array_3 rotor_apex_position{
-            rotor_apex_node.x[0],
-            rotor_apex_node.x[1],
-            rotor_apex_node.x[2],
-        };
-
-        for (const auto& blade : this->blades) {
-            model.SetBeamVelocityAboutPoint(blade.beam_element_id, v, rotor_apex_position);
-        }
-    }
+    // void SetInitialConditions(const TurbineInput& input, Model& model) {}
 
     /// @brief  Create blades from input configuration
     /// @param blade_inputs Blade input configurations
@@ -354,9 +324,13 @@ private:
         const std::vector<BeamInput>& blade_inputs, Model& model
     ) {
         std::vector<Beam> blades;
-        for (const auto& input : blade_inputs) {
-            blades.emplace_back(input, model);
-        }
+        std::transform(
+            blade_inputs.begin(), blade_inputs.end(), std::back_inserter(blades),
+            [&model](const BeamInput& input) {
+                return Beam(input, model);
+            }
+        );
+
         return blades;
     }
 };

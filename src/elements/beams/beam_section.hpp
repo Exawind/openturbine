@@ -10,8 +10,8 @@ struct BeamSection {
     std::array<std::array<double, 6>, 6> C_star;  // Stiffness matrix in material frame
 
     BeamSection(
-        double s, std::array<std::array<double, 6>, 6> mass,
-        std::array<std::array<double, 6>, 6> stiffness
+        double s, const std::array<std::array<double, 6>, 6>& mass,
+        const std::array<std::array<double, 6>, 6>& stiffness
     )
         : position(s), M_star(mass), C_star(stiffness) {}
 };

@@ -104,7 +104,7 @@ public:
     /// @param host_state Host state to update
     template <typename DeviceType>
     void SetLoads(HostState<DeviceType>& host_state) const {
-        for (auto& node : this->nodes) {
+        for (const auto& node : this->nodes) {
             node.SetLoads(host_state);
         }
     }

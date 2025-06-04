@@ -16,7 +16,7 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct State {
-    size_t time_step;
+    size_t time_step{0};
     size_t num_system_nodes;
     Kokkos::View<size_t*, DeviceType> ID;
     Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
