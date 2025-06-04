@@ -15,8 +15,8 @@ struct Node {
     double s;    //< Position of node in element on range [0, 1]
 
     /// @brief Construct a node with an ID
-    explicit Node(size_t id)
-        : id(id),
+    explicit Node(size_t id_)
+        : id(id_),
           x(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           v(Array_6{0., 0., 0., 0., 0., 0.}),
@@ -26,11 +26,11 @@ struct Node {
     /// @brief Construct a node with an ID, position, displacement, velocity, and acceleration
     /// vectors
     Node(
-        size_t id, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
+        size_t id_, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
         Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     )
-        : id(id), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
+        : id(id_), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
 
     //--------------------------------------------------------------------------
     // Modify node position (x)
