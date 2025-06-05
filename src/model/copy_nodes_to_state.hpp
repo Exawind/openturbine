@@ -27,7 +27,7 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
             host_v(i, j) = node.v[j];
             host_vd(i, j) = node.vd[j];
         }
-        host_id(i) = node.ID;
+        host_id(i) = node.id;
     }
 
     // Copy data to host

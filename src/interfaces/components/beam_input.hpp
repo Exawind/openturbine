@@ -5,18 +5,18 @@
 namespace openturbine::interfaces::components {
 
 /**
- * @brief Reference axis definition for a turbine blade
+ * @brief Reference axis definition for a beam
  *
- * Defines the centerline of the blade with position and twist information
+ * Defines the centerline of the beam with position and twist information
  */
 struct ReferenceAxis {
-    /// @brief Normalized coordinate locations [0, 1] along the blade
+    /// @brief Normalized coordinate locations [0, 1] along the beam
     std::vector<double> coordinate_grid;
 
     /// @brief X,Y,Z coordinates of reference axis points
     std::vector<std::array<double, 3>> coordinates;
 
-    /// @brief Normalized twist locations [0, 1] along the blade
+    /// @brief Normalized twist locations [0, 1] along the beam
     std::vector<double> twist_grid;
 
     /// @brief Structural twist values (in radians)
@@ -24,12 +24,12 @@ struct ReferenceAxis {
 };
 
 /**
- * @brief Sectional structural properties of the blade
+ * @brief Sectional structural properties of the beam
  *
- * Defines the section properties at a given location along the blade
+ * Defines the section properties at a given location along the beam
  */
 struct Section {
-    /// @brief Normalized section location [0, 1] along the blade
+    /// @brief Normalized section location [0, 1] along the beam
     double location;
 
     /// @brief Mass matrix (6x6) at the section
@@ -40,7 +40,7 @@ struct Section {
 
     /**
      * @brief Construct a new Section
-     * @param loc Normalized location [0,1] along the blade
+     * @param loc Normalized location [0,1] along the beam
      * @param m Mass matrix
      * @param k Stiffness matrix
      */
@@ -54,9 +54,9 @@ struct Section {
 };
 
 /**
- * @brief Root definition for a turbine blade
+ * @brief Root definition for a turbine beam
  *
- * Defines the root properties of the blade
+ * Defines the root properties of the beam
  */
 struct Root {
     /// @brief Flag to use root motion as an input to the model
@@ -73,11 +73,11 @@ struct Root {
 };
 
 /**
- * @brief Complete input specification for a blade
+ * @brief Complete input specification for a beam
  *
- * Defines the input configuration for a turbine blade
+ * Defines the input configuration for a turbine beam
  */
-struct BladeInput {
+struct BeamInput {
     /// @brief Spectral element order (num nodes - 1)
     size_t element_order{10};
 

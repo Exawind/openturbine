@@ -42,6 +42,8 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
             state.q,
         }
     );
+
+    state.time_step++;
 }
 
 }  // namespace openturbine

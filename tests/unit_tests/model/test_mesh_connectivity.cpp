@@ -105,7 +105,6 @@ TEST_F(MeshConnectivityTest, ConstraintConnectivity) {
 
 TEST_F(MeshConnectivityTest, ExportToYAML) {
     mesh_connectivity.ExportToYAML("test_connectivity.yaml");
-    ASSERT_TRUE(std::filesystem::exists("test_connectivity.yaml"));
 
     YAML::Node root = YAML::LoadFile("test_connectivity.yaml");
 

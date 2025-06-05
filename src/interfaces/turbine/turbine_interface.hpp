@@ -2,16 +2,15 @@
 
 #include <filesystem>
 
-#include "interfaces/components/beam.hpp"
-#include "interfaces/components/beam_input.hpp"
 #include "interfaces/components/solution_input.hpp"
+#include "interfaces/components/turbine.hpp"
+#include "interfaces/components/turbine_input.hpp"
 #include "interfaces/host_state.hpp"
 #include "interfaces/outputs.hpp"
 #include "model/model.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
-#include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::interfaces {
 
@@ -21,21 +20,22 @@ namespace openturbine::interfaces {
  * This class represents the primary interface for simulating a WT blade, connecting
  * the blade components with the solver and state management.
  */
-class BladeInterface {
+class TurbineInterface {
 public:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
     /**
-     * @brief Constructs a BladeInterface from solution and blade inputs
+     * @brief Constructs a TurbineInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
      * @param blade_input Configuration parameters for blade geometry
      */
-    explicit BladeInterface(
-        const components::SolutionInput& solution_input, const components::BeamInput& blade_input
+    explicit TurbineInterface(
+        const components::SolutionInput& solution_input,
+        const components::TurbineInput& turbine_input
     )
         : model(Model(solution_input.gravity)),
-          blade(blade_input, model),
+          turbine(turbine_input, model),
           state(model.CreateState<DeviceType>()),
           elements(model.CreateElements<DeviceType>()),
           constraints(model.CreateConstraints<DeviceType>()),
@@ -44,14 +44,14 @@ public:
               solution_input.rho_inf, solution_input.absolute_error_tolerance,
               solution_input.relative_error_tolerance
           ),
-          solver(CreateSolver<DeviceType>(state, elements, constraints)),
+          solver(CreateSolver(state, elements, constraints)),
           state_save(CloneState(state)),
           host_state(state) {
         // Update the host state with current node motion
         this->host_state.CopyFromState(this->state);
 
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
+        // Update the turbine node motion based on the host state
+        this->turbine.GetMotion(this->host_state);
 
         // Initialize NetCDF writer and write mesh connectivity if output path is specified
         if (!solution_input.output_file_path.empty()) {
@@ -65,31 +65,36 @@ public:
 
             // Initialize outputs
             this->outputs = std::make_unique<Outputs>(
-                solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
+                solution_input.output_file_path + "/turbine_interface.nc",
+                this->state.num_system_nodes
             );
+
+            // Write initial state
+            this->outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
         }
     }
 
-    /// @brief Returns a reference to the blade model
-    [[nodiscard]] components::Beam& Blade() { return this->blade; }
+    /// @brief Returns a reference to the turbine model
+    [[nodiscard]] components::Turbine& Turbine() { return this->turbine; }
 
     /**
      * @brief Steps forward in time
      * @return true if solver converged, false otherwise
+     * @note This function updates the host state with current node loads,
+     *       solves the dynamic system, and updates the node motion with the new state.
+     *       If the solver does not converge, the motion is not updated.
      */
     [[nodiscard]] bool Step() {
-        // Transfer node loads -> state
-        for (const auto& node : this->blade.nodes) {
-            for (auto i = 0U; i < 6; ++i) {
-                this->host_state.f(node.id, i) = node.loads[i];
-            }
-        }
+        // Update the host state with current node loads
+        this->turbine.SetLoads(this->host_state);
         Kokkos::deep_copy(this->state.f, this->host_state.f);
 
         // Solve for state at end of step
         auto converged = openturbine::Step(
             this->parameters, this->solver, this->elements, this->state, this->constraints
         );
+
+        // If not converged, return false
         if (!converged) {
             return false;
         }
@@ -97,8 +102,8 @@ public:
         // Update the host state with current node motion
         this->host_state.CopyFromState(this->state);
 
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
+        // Update the turbine node motion based on the host state
+        this->turbine.GetMotion(this->host_state);
 
         // Write outputs and increment timestep counter
         if (this->outputs) {
@@ -113,31 +118,20 @@ public:
 
     /// @brief Restores the previously saved state (in correction step)
     void RestoreState() {
+        // Copy saved state back to current state
         CopyStateData(this->state, this->state_save);
 
         // Update the host state with current node motion
         this->host_state.CopyFromState(this->state);
 
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
-    }
-
-    /**
-     * @brief Sets the displacement for the root node
-     * @param u Displacement array (7 components)
-     * @throws std::runtime_error if prescribed root motion was not enabled
-     */
-    void SetRootDisplacement(const std::array<double, 7>& u) const {
-        if (this->blade.prescribed_root_constraint_id == kInvalidID) {
-            throw std::runtime_error("prescribed root motion was not enabled");
-        }
-        this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);
+        // Update the turbine node motion based on the host state
+        this->turbine.GetMotion(this->host_state);
     }
 
 private:
-    Model model;              ///< OpenTurbine class for model construction
-    components::Beam blade;   ///< Blade model input/output data
-    State<DeviceType> state;  ///< OpenTurbine class for storing system state
+    Model model;                  ///< OpenTurbine class for model construction
+    components::Turbine turbine;  ///< Turbine model input/output data
+    State<DeviceType> state;      ///< OpenTurbine class for storing system state
     Elements<DeviceType>
         elements;  ///< OpenTurbine class for model elements (beams, masses, springs)
     Constraints<DeviceType>

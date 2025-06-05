@@ -4,6 +4,7 @@ target_sources(
     PRIVATE
     test_cfd_interface.cpp
     test_blade_interface.cpp
+    test_turbine_interface.cpp
 )
 
 add_custom_target(
