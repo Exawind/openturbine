@@ -49,23 +49,25 @@ struct CalculateQuadraturePointValues {
         constexpr auto width = simd_type::size();
         const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
         const auto simd_nodes = num_nodes / width + extra_component;
+        const auto padded_num_nodes = simd_nodes * width;
 
         const auto qp_pair = Kokkos::make_pair(0UL, num_qps);
         const auto node_pair = Kokkos::make_pair(0UL, num_nodes);
-        const auto qp_range = Kokkos::TeamThreadRange(member, num_qps);
-        const auto node_range = Kokkos::TeamThreadRange(member, num_nodes);
-        const auto node_squared_range = Kokkos::TeamThreadRange(member, num_nodes * num_nodes);
-        const auto node_squared_simd_range = Kokkos::TeamThreadRange(member, num_nodes * simd_nodes);
+
+        const auto qp_range = Kokkos::TeamVectorRange(member, num_qps);
+        const auto node_range = Kokkos::TeamVectorRange(member, num_nodes);
+        const auto node_squared_range = Kokkos::TeamVectorRange(member, num_nodes * num_nodes);
+        const auto node_squared_simd_range = Kokkos::TeamVectorRange(member, num_nodes * simd_nodes);
 
         const auto shape_interp = Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>(
-            member.team_scratch(1), num_nodes, num_qps
+            member.team_scratch(0), padded_num_nodes, num_qps
         );
         const auto shape_deriv = Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>(
-            member.team_scratch(1), num_nodes, num_qps
+            member.team_scratch(0), padded_num_nodes, num_qps
         );
 
-        const auto qp_weight = Kokkos::View<double*, DeviceType>(member.team_scratch(1), num_qps);
-        const auto qp_jacobian = Kokkos::View<double*, DeviceType>(member.team_scratch(1), num_qps);
+        const auto qp_weight = Kokkos::View<double*, DeviceType>(member.team_scratch(0), num_qps);
+        const auto qp_jacobian = Kokkos::View<double*, DeviceType>(member.team_scratch(0), num_qps);
 
         const auto node_u = Kokkos::View<double* [7], DeviceType>(member.team_scratch(1), num_nodes);
         const auto node_u_dot =
@@ -100,10 +102,12 @@ struct CalculateQuadraturePointValues {
         const auto inertia_matrix_terms =
             Kokkos::View<double** [6][6], DeviceType>(member.team_scratch(1), num_nodes, num_nodes);
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_interp_, i_elem, node_pair, qp_pair), shape_interp
+            member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL),
+            Kokkos::subview(shape_interp, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_deriv_, i_elem, node_pair, qp_pair), shape_deriv
+            member, Kokkos::subview(shape_deriv_, i_elem, Kokkos::ALL, Kokkos::ALL),
+            Kokkos::subview(shape_deriv, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
             member, Kokkos::subview(qp_FE_, i_elem, qp_pair, Kokkos::ALL), qp_Fe

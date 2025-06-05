@@ -18,14 +18,19 @@ inline void AssembleSystemMatrix(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
+    const auto num_nodes = elements.beams.max_elem_nodes;
+    const auto vector_length = std::min(
+        static_cast<int>(num_nodes),
+        Kokkos::TeamPolicy<typename DeviceType::execution_space>::vector_length_max()
+    );
     auto beams_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(elements.beams.num_elems), Kokkos::AUTO()
+        static_cast<int>(elements.beams.num_elems), Kokkos::AUTO(), vector_length
     );
-    auto masses_sparse_matrix_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
-        0, static_cast<int>(elements.masses.num_elems)
+    auto masses_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
+        static_cast<int>(elements.masses.num_elems), Kokkos::AUTO()
     );
-    auto springs_sparse_matrix_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
-        0, static_cast<int>(elements.springs.num_elems)
+    auto springs_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
+        static_cast<int>(elements.springs.num_elems), Kokkos::AUTO()
     );
 
     Kokkos::parallel_for(
