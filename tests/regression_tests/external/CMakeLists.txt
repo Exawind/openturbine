@@ -6,6 +6,11 @@ if (OpenTurbine_BUILD_ROSCO_CONTROLLER AND
         PRIVATE
         test_rosco_controller.cpp
     )
+    add_custom_target(
+        copy_external_test_files ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+                ${CMAKE_CURRENT_SOURCE_DIR}/IEA-15-240-RWT
+                $<TARGET_FILE_DIR:openturbine_regression_tests>/IEA-15-240-RWT)
 endif()
 
 # Test AeroDyn Inflow

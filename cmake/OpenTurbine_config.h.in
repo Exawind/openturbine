@@ -7,3 +7,4 @@
 #cmakedefine OpenTurbine_ENABLE_UMFPACK
 #cmakedefine OpenTurbine_ENABLE_SUPERLU
 #cmakedefine OpenTurbine_ENABLE_SUPERLU_MT
+#define OpenTurbine_ROSCO_LIBRARY "${OpenTurbine_ROSCO_LIBRARY}"
