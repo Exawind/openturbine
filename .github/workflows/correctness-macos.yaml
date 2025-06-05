@@ -24,7 +24,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: macos-spack_v3
+        key: macos-spack_v4
     - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |
@@ -38,6 +38,8 @@ jobs:
         spack install suite-sparse
         spack install superlu
         spack install lapack
+        spack install rosco
+        spack install openfast
         spack install kokkos-kernels
     - name: Clone
       uses: actions/checkout@v4
@@ -58,6 +60,8 @@ jobs:
         spack load googletest
         spack load yaml-cpp
         spack load lapack
+        spack load rosco
+        spack load openfast
         cd openturbine
         mkdir build
         cd build
