@@ -1,9 +1,10 @@
 
 #include <gtest/gtest.h>
 
-#include "OpenTurbine_config.h"
 #include "regression/test_utilities.hpp"
 #include "utilities/aerodynamics/aerodyn_inflow.hpp"
+
+#include "OpenTurbine_config.h"
 
 namespace openturbine::tests {
 
