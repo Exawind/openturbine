@@ -76,27 +76,8 @@ function(openturbine_setup_dependencies)
   # OpenFAST/AerodynInflow (ADI) library
   #----------------------------------------
   if(OpenTurbine_BUILD_OPENFAST_ADI)
-    message(STATUS "Building OpenFAST AerodynInflow (ADI) library")
-    include(ExternalProject)
-    ExternalProject_Add(OpenFAST_ADI
-      PREFIX ${CMAKE_BINARY_DIR}/external
-      GIT_REPOSITORY https://github.com/OpenFAST/openfast.git
-      GIT_TAG v4.0.0                 # Pin to a specific release
-      GIT_SHALLOW TRUE               # Clone only the latest commit
-      GIT_SUBMODULES ""              # Skip downloading r-test
-      CMAKE_ARGS
-        -DBUILD_TESTING=OFF          # Disable testing
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}  # Use the same build type as the main project
-      BUILD_IN_SOURCE OFF            # Build in a separate directory for cleaner output
-      BINARY_DIR ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build
-      # Build only the aerodyn_inflow_c_binding target and do it sequentially (avoid parallel build)
-      BUILD_COMMAND ${CMAKE_COMMAND} --build . --target aerodyn_inflow_c_binding -- -j 1
-      INSTALL_COMMAND
-        # Copy the built library to the tests directory
-        ${CMAKE_COMMAND} -E copy
-        ${CMAKE_BINARY_DIR}/OpenFAST_ADI_build/modules/aerodyn/${CMAKE_SHARED_LIBRARY_PREFIX}aerodyn_inflow_c_binding${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${CMAKE_BINARY_DIR}/tests/regression_tests/aerodyn_inflow_c_binding.dll
-    )
+    find_library(OpenFast_ADI_LIBRARY NAMES aerodyn_inflow_c_binding)
+    set(OpenTurbine_ADI_LIBRARY ${OpenFast_ADI_LIBRARY} CACHE PATH "ADI library")
   endif()
 
   #----------------------------------------
