@@ -1,8 +1,8 @@
 
 install(FILES
-        blade.hpp
-        blade_builder.hpp
-        blade_input.hpp
+        beam.hpp
+        beam_builder.hpp
+        beam_input.hpp
         solution_builder.hpp
         solution_input.hpp
         turbine.hpp
