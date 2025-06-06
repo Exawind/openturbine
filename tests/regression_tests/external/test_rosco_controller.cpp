@@ -10,7 +10,7 @@
 namespace openturbine::tests {
 
 TEST(ROSCO_Controller, initialize) {
-    const auto shared_lib_path = std::string{OpenTurbine_ROSCO_LIBRARY};
+    const auto shared_lib_path = std::string{static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)};
     const auto controller_function_name = std::string{"DISCON"};
 
     auto controller = util::TurbineController(
