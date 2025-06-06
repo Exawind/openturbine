@@ -363,9 +363,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     for (size_t i = 0; i < n_blades; ++i) {
         // Calculate pitch axis from hub node to blade root node
         const Array_3 pitch_axis{
-            model.GetNode(hub_node_id).x[0] - model.GetNode(root_node_ids[i]).x[0],
-            model.GetNode(hub_node_id).x[1] - model.GetNode(root_node_ids[i]).x[1],
-            model.GetNode(hub_node_id).x[2] - model.GetNode(root_node_ids[i]).x[2],
+            model.GetNode(hub_node_id).x0[0] - model.GetNode(root_node_ids[i]).x0[0],
+            model.GetNode(hub_node_id).x0[1] - model.GetNode(root_node_ids[i]).x0[1],
+            model.GetNode(hub_node_id).x0[2] - model.GetNode(root_node_ids[i]).x0[2],
         };
 
         // Add rotation control constraint between hub and root node

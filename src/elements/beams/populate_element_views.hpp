@@ -15,7 +15,7 @@ inline void PopulateNodeX0(
 ) {
     for (size_t j = 0; j < elem.node_ids.size(); ++j) {
         for (size_t k = 0U; k < 7U; ++k) {
-            node_x0(j, k) = nodes[elem.node_ids[j]].x[k];
+            node_x0(j, k) = nodes[elem.node_ids[j]].x0[k];
         }
     }
 }

@@ -20,7 +20,7 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
     for (auto i = 0U; i < nodes.size(); ++i) {
         const auto& node = nodes[i];
         for (auto j = 0U; j < kLieGroupComponents; ++j) {
-            host_x0(i, j) = node.x[j];
+            host_x0(i, j) = node.x0[j];
             host_q(i, j) = node.u[j];
         }
         for (auto j = 0U; j < kLieAlgebraComponents; ++j) {

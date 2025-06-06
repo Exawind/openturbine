@@ -33,14 +33,14 @@ TEST_F(ModelMotionTest, TranslateBeam) {
     auto n2 = model.GetNode(node_2);
 
     // Node 1 should be translated by the displacement i.e. at (0, 1, 2)
-    ASSERT_EQ(n1.x[0], 0.);
-    ASSERT_EQ(n1.x[1], 1.);
-    ASSERT_EQ(n1.x[2], 2.);
+    ASSERT_EQ(n1.x0[0], 0.);
+    ASSERT_EQ(n1.x0[1], 1.);
+    ASSERT_EQ(n1.x0[2], 2.);
 
     // Node 2 should be translated by the displacement i.e. at (1, 1, 2)
-    ASSERT_EQ(n2.x[0], 1.);
-    ASSERT_EQ(n2.x[1], 1.);
-    ASSERT_EQ(n2.x[2], 2.);
+    ASSERT_EQ(n2.x0[0], 1.);
+    ASSERT_EQ(n2.x0[1], 1.);
+    ASSERT_EQ(n2.x0[2], 2.);
 
     // Test additional translation (should accumulate)
     const Array_3 displacement2 = {1., 1., -1.};
@@ -51,14 +51,14 @@ TEST_F(ModelMotionTest, TranslateBeam) {
     n2 = model.GetNode(node_2);
 
     // Node 1 should be translated by the displacement i.e. at (1, 2, 1)
-    ASSERT_EQ(n1.x[0], 1.);
-    ASSERT_EQ(n1.x[1], 2.);
-    ASSERT_EQ(n1.x[2], 1.);
+    ASSERT_EQ(n1.x0[0], 1.);
+    ASSERT_EQ(n1.x0[1], 2.);
+    ASSERT_EQ(n1.x0[2], 1.);
 
     // Node 2 should be translated by the displacement i.e. at (2, 2, 1)
-    ASSERT_EQ(n2.x[0], 2.);
-    ASSERT_EQ(n2.x[1], 2.);
-    ASSERT_EQ(n2.x[2], 1.);
+    ASSERT_EQ(n2.x0[0], 2.);
+    ASSERT_EQ(n2.x0[1], 2.);
+    ASSERT_EQ(n2.x0[2], 1.);
 }
 
 TEST_F(ModelMotionTest, RotateBeamAboutOrigin) {
@@ -72,15 +72,15 @@ TEST_F(ModelMotionTest, RotateBeamAboutOrigin) {
     auto n2 = model.GetNode(node_2);
 
     // Node 1 is at origin, so it shouldn't move
-    ASSERT_NEAR(n1.x[0], 0., 1e-6);
-    ASSERT_NEAR(n1.x[1], 0., 1e-6);
-    ASSERT_NEAR(n1.x[2], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[0], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[1], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[2], 0., 1e-6);
 
     // Node 2 should rotate 90 degrees around the z-axis
     // Final position should be approximately (0, 1, 0)
-    ASSERT_NEAR(n2.x[0], 0., 1e-6);
-    ASSERT_NEAR(n2.x[1], 1., 1e-6);
-    ASSERT_NEAR(n2.x[2], 0., 1e-6);
+    ASSERT_NEAR(n2.x0[0], 0., 1e-6);
+    ASSERT_NEAR(n2.x0[1], 1., 1e-6);
+    ASSERT_NEAR(n2.x0[2], 0., 1e-6);
 }
 
 TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
@@ -97,14 +97,14 @@ TEST_F(ModelMotionTest, RotateBeamAboutArbitraryPoint) {
     auto n2 = model.GetNode(node_2);
 
     // Node 1 was at the center of rotation, so it shouldn't move
-    ASSERT_NEAR(n1.x[0], 1., 1e-6);
-    ASSERT_NEAR(n1.x[1], 1., 1e-6);
-    ASSERT_NEAR(n1.x[2], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[0], 1., 1e-6);
+    ASSERT_NEAR(n1.x0[1], 1., 1e-6);
+    ASSERT_NEAR(n1.x0[2], 0., 1e-6);
 
     // Node 2 was at (2, 1, 0) and should rotate around y to (1, 1, -1)
-    ASSERT_NEAR(n2.x[0], 1., 1e-6);
-    ASSERT_NEAR(n2.x[1], 1., 1e-6);
-    ASSERT_NEAR(n2.x[2], -1., 1e-6);
+    ASSERT_NEAR(n2.x0[0], 1., 1e-6);
+    ASSERT_NEAR(n2.x0[1], 1., 1e-6);
+    ASSERT_NEAR(n2.x0[2], -1., 1e-6);
 }
 
 TEST_F(ModelMotionTest, SetBeamVelocityAboutOrigin) {
@@ -254,14 +254,14 @@ TEST_F(ModelMotionTest, ComplexMotionSequence) {
     auto n2 = model.GetNode(node_2);
 
     // Node 1 should be at (0,0,1) rotated to (0,-1,0)
-    ASSERT_NEAR(n1.x[0], 0., 1e-6);
-    ASSERT_NEAR(n1.x[1], -1., 1e-6);
-    ASSERT_NEAR(n1.x[2], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[0], 0., 1e-6);
+    ASSERT_NEAR(n1.x0[1], -1., 1e-6);
+    ASSERT_NEAR(n1.x0[2], 0., 1e-6);
 
     // Node 2 should be at (1,0,1) rotated to (1,-1,0)
-    ASSERT_NEAR(n2.x[0], 1., 1e-6);
-    ASSERT_NEAR(n2.x[1], -1., 1e-6);
-    ASSERT_NEAR(n2.x[2], 0., 1e-6);
+    ASSERT_NEAR(n2.x0[0], 1., 1e-6);
+    ASSERT_NEAR(n2.x0[1], -1., 1e-6);
+    ASSERT_NEAR(n2.x0[2], 0., 1e-6);
 
     // ----------------------------------------------
     // Step 3: Set velocity about the origin

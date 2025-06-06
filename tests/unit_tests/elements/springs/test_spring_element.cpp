@@ -35,8 +35,8 @@ TEST(SpringElement, CreateSpringElement_NonZeroUndeformedLength) {
 
     EXPECT_EQ(spring.stiffness, k);
     EXPECT_EQ(spring.undeformed_length, l0);
-    EXPECT_EQ(model.GetNode(spring.node_ids[0]).x[0], 0.);
-    EXPECT_EQ(model.GetNode(spring.node_ids[1]).x[0], 2.);
+    EXPECT_EQ(model.GetNode(spring.node_ids[0]).x0[0], 0.);
+    EXPECT_EQ(model.GetNode(spring.node_ids[1]).x0[0], 2.);
 }
 
 }  // namespace openturbine::tests

@@ -125,9 +125,9 @@ private:
         // Get tower top position from the last tower node
         const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
         const Array_3 tower_top_position{
-            tower_top_node.x[0],
-            tower_top_node.x[1],
-            tower_top_node.x[2],
+            tower_top_node.x0[0],
+            tower_top_node.x0[1],
+            tower_top_node.x0[2],
         };
 
         // Calculate hub position based on tower top and hub offset
@@ -155,7 +155,7 @@ private:
 
         // Create yaw bearing node at tower top position
         this->yaw_bearing_node = NodeData(
-            model.AddNode().SetPosition(tower_top_node.x).SetOrientation({1., 0., 0., 0.}).Build()
+            model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
         );
 
         // Create vector of rotor node IDs (hub, azimuth, shaft base, and blades)
@@ -230,9 +230,9 @@ private:
 
             // Calculate the pitch axis for the blade
             const Array_3 pitch_axis{
-                root_node.x[0] - apex_node.x[0],
-                root_node.x[1] - apex_node.x[1],
-                root_node.x[2] - apex_node.x[2],
+                root_node.x0[0] - apex_node.x0[0],
+                root_node.x0[1] - apex_node.x0[1],
+                root_node.x0[2] - apex_node.x0[2],
             };
 
             // Create pitch control constraint
