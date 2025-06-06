@@ -149,6 +149,65 @@ struct Node {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateDisplacementAboutPoint(q, point);
     }
+
+    //--------------------------------------------------------------------------
+    // Modify node velocity (v)
+    //--------------------------------------------------------------------------
+
+    /// Set node velocity based on rigid body motion about a reference point
+    void SetVelocityAboutPoint(const Array_6& velocity, const Array_3& point) {
+        // Get distance from reference point to displaced node position
+        const auto displaced_position = this->DisplacedPosition();
+        const Array_3 r{
+            displaced_position[0] - point[0], displaced_position[1] - point[1],
+            displaced_position[2] - point[2]
+        };
+
+        // Calculate velocity contribution from angular velocity
+        const Array_3 omega{velocity[3], velocity[4], velocity[5]};
+        const auto omega_cross_r = CrossProduct(omega, r);
+
+        // Set node translational velocity
+        this->v[0] = velocity[0] + omega_cross_r[0];
+        this->v[1] = velocity[1] + omega_cross_r[1];
+        this->v[2] = velocity[2] + omega_cross_r[2];
+
+        // Set node angular velocity
+        this->v[3] = velocity[3];
+        this->v[4] = velocity[4];
+        this->v[5] = velocity[5];
+    }
+
+    //--------------------------------------------------------------------------
+    // Modify node acceleration (vd)
+    //--------------------------------------------------------------------------
+
+    /// Set node acceleration based on rigid body motion about a reference point
+    void SetAccelerationAboutPoint(
+        const Array_6& acceleration, const Array_3& omega, const Array_3& point
+    ) {
+        // Get distance from reference point to displaced node position
+        const auto displaced_position = this->DisplacedPosition();
+        const Array_3 r{
+            displaced_position[0] - point[0], displaced_position[1] - point[1],
+            displaced_position[2] - point[2]
+        };
+
+        // Calculate translational acceleration contribution from angular velocity
+        const Array_3 alpha{acceleration[3], acceleration[4], acceleration[5]};
+        const auto alpha_cross_r = CrossProduct(alpha, r);
+        const auto omega_cross_omega_cross_r = CrossProduct(omega, CrossProduct(omega, r));
+
+        // Set node translational acceleration
+        this->vd[0] = acceleration[0] + alpha_cross_r[0] + omega_cross_omega_cross_r[0];
+        this->vd[1] = acceleration[1] + alpha_cross_r[1] + omega_cross_omega_cross_r[1];
+        this->vd[2] = acceleration[2] + alpha_cross_r[2] + omega_cross_omega_cross_r[2];
+
+        // Set node angular acceleration
+        this->vd[3] = alpha[0];
+        this->vd[4] = alpha[1];
+        this->vd[5] = alpha[2];
+    }
 };
 
 /**
