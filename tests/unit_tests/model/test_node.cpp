@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
+#include "model/node.hpp"
 
 namespace openturbine::tests {
 
@@ -234,6 +235,74 @@ TEST(NodeTest, RotateDisplacementAboutPoint) {
     ASSERT_NEAR(node_0.u[4], 0., 1e-12);
     ASSERT_NEAR(node_0.u[5], 0., 1e-12);
     ASSERT_NEAR(node_0.u[6], 0.382683, 1e-6);
+}
+
+TEST(NodeTest, SetVelocityAboutPoint) {
+    Model model;
+
+    // Create node with initial position and displacement
+    constexpr auto init_position = std::array{1., 0., 0.};
+    constexpr auto init_orientation = std::array{1., 0., 0., 0.};
+    constexpr auto displacement = std::array{1., 1., 0.};  // displaced position = (2, 1, 0)
+    auto node_id =
+        model.AddNode()
+            .SetPosition(
+                init_position[0], init_position[1], init_position[2], init_orientation[0],
+                init_orientation[1], init_orientation[2], init_orientation[3]
+            )
+            .SetDisplacement(displacement[0], displacement[1], displacement[2], 1., 0., 0., 0.)
+            .Build();
+
+    auto node = model.GetNode(node_id);
+
+    // Set angular velocity about origin
+    Array_6 velocity = {0., 0., 0., 0., 0., 1.};
+    Array_3 point = {0., 0., 0.};
+    node.SetVelocityAboutPoint(velocity, point);
+
+    // r = displaced_position - point = (2, 1, 0) - (0, 0, 0) = (2, 1, 0)
+    // ω × r = (0, 0, 1) × (2, 1, 0) = (-1, 2, 0)
+    ASSERT_NEAR(node.v[0], -1., 1e-12);  // vx
+    ASSERT_NEAR(node.v[1], 2., 1e-12);   // vy
+    ASSERT_NEAR(node.v[2], 0., 1e-12);   // vz
+    ASSERT_NEAR(node.v[3], 0., 1e-12);   // ωx
+    ASSERT_NEAR(node.v[4], 0., 1e-12);   // ωy
+    ASSERT_NEAR(node.v[5], 1., 1e-12);   // ωz
+}
+
+TEST(NodeTest, SetAccelerationAboutPoint) {
+    Model model;
+
+    // Create node at position (0, 1, 0)
+    constexpr auto init_position = std::array{0., 1., 0.};
+    constexpr auto init_orientation = std::array{1., 0., 0., 0.};
+    auto node_id = model.AddNode()
+                       .SetPosition(
+                           init_position[0], init_position[1], init_position[2], init_orientation[0],
+                           init_orientation[1], init_orientation[2], init_orientation[3]
+                       )
+                       .SetDisplacement(0., 0., 0., 1., 0., 0., 0.)
+                       .Build();
+
+    auto node = model.GetNode(node_id);
+
+    // Set combined translational acceleration, angular acceleration, and angular velocity
+    Array_6 acceleration = {1., 0., 0., 0., 0., 2.};  // ax=1, αz=2
+    Array_3 omega = {0., 0., 1.};                     // ωz=1
+    Array_3 point = {0., 0., 0.};
+    node.SetAccelerationAboutPoint(acceleration, omega, point);
+
+    // r = (0, 1, 0)
+    // α × r = (0, 0, 2) × (0, 1, 0) = (-2, 0, 0)
+    // ω × r = (0, 0, 1) × (0, 1, 0) = (-1, 0, 0)
+    // ω × (ω × r) = (0, 0, 1) × (-1, 0, 0) = (0, -1, 0)
+    // a_total = a_ref + α × r + ω × (ω × r) = (1, 0, 0) + (-2, 0, 0) + (0, -1, 0) = (-1, -1, 0)
+    ASSERT_NEAR(node.vd[0], -1., 1e-12);  // ax = 1 + (-2) + 0
+    ASSERT_NEAR(node.vd[1], -1., 1e-12);  // ay = 0 + 0 + (-1)
+    ASSERT_NEAR(node.vd[2], 0., 1e-12);   // az
+    ASSERT_NEAR(node.vd[3], 0., 1e-12);   // αx
+    ASSERT_NEAR(node.vd[4], 0., 1e-12);   // αy
+    ASSERT_NEAR(node.vd[5], 2., 1e-12);   // αz
 }
 
 }  // namespace openturbine::tests
