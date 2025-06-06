@@ -22,10 +22,6 @@
 
 #include "OpenTurbine_config.h"
 
-#ifdef OpenTurbine_ENABLE_VTK
-#include "regression/vtkout.hpp"
-#endif
-
 namespace openturbine::tests {
 
 constexpr bool use_node_loads = true;
@@ -546,14 +542,6 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Perform time steps and check for convergence within max_iter iterations
     for (size_t i = 0; i < num_steps; ++i) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
-#ifdef OpenTurbine_ENABLE_VTK
-        auto tmp = std::to_string(i);
-        tmp.insert(0, 5 - tmp.size(), '0');
-        WriteVTKBeamsQP(state, elements.beams, step_dir / (std::string("step_qp.") + tmp + ".vtu"));
-        WriteVTKBeamsNodes(
-            state, elements.beams, step_dir / (std::string("step_node.") + tmp + ".vtu")
-        );
-#endif
 
         // Get current time and next time
         const auto current_time{step_size * static_cast<double>(i)};

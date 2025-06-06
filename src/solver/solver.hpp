@@ -32,54 +32,49 @@ template <typename DeviceType>
 struct Solver {
     // Define some types for the solver to make the code more readable
     using ValueType = double;
-#if defined(OpenTurbine_ENABLE_MKL) && !defined(KOKKOS_ENABLE_CUDA)
-    using IndexType = MKL_INT;
+#ifdef KOKKOS_ENABLE_CUDA
+    static constexpr bool use_device =
+        std::is_same<typename DeviceType::execution_space, Kokkos::Cuda>::value;
+#if defined(OpenTurbine_ENABLE_CUDSS)
+    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::CUDSS;
+#elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
+    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::CUSOLVER_SP;
+#else
+    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::NONE;
+#endif
+#else
+    static constexpr bool use_device = false;
+    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::NONE;
+#endif
+
+#if defined(OpenTurbine_ENABLE_KLU)
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::KLU;
+#elif defined(OpenTurbine_ENABLE_SUPERLU)
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::SUPERLU;
+#elif defined(OpenTurbine_ENABLE_MKL)
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::MKL;
+#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::SUPERLU_MT;
+#elif defined(OpenTurbine_ENABLE_UMFPACK)
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::UMFPACK;
+#else
+    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::NONE;
+#endif
+
+    static constexpr DSSAlgorithm algorithm =
+        (use_device && algorithm_device != DSSAlgorithm::NONE) ? algorithm_device : algorithm_host;
+
+    static_assert(algorithm != DSSAlgorithm::NONE);
+
+    using HandleType = DSSHandle<algorithm>;
+#if defined(OpenTurbine_ENABLE_MKL)
+    using IndexType = std::conditional<algorithm == DSSAlgorithm::MKL, MKL_INT, int>;
 #else
     using IndexType = int;
 #endif
+
     using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
     using MultiVectorType = Kokkos::View<ValueType* [1], Kokkos::LayoutLeft, DeviceType>;
-#ifdef KOKKOS_ENABLE_CUDA
-#if defined(OpenTurbine_ENABLE_CUDSS)
-    using HandleType = DSSHandle<DSSAlgorithm::CUDSS>;
-#elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
-    using HandleType = DSSHandle<DSSAlgorithm::CUSOLVER_SP>;
-#elif defined(OpenTurbine_ENABLE_MKL)
-    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
-#elif defined(OpenTurbine_ENABLE_KLU)
-    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
-#elif defined(OpenTurbine_ENABLE_UMFPACK)
-    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
-#endif
-#elif defined(KOKKOS_ENABLE_HIP)
-#if defined(OpenTurbine_ENABLE_MKL)
-    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
-#elif defined(OpenTurbine_ENABLE_KLU)
-    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
-#elif defined(OpenTurbine_ENABLE_UMFPACK)
-    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
-#endif
-#else
-#if defined(OpenTurbine_ENABLE_MKL)
-    using HandleType = DSSHandle<DSSAlgorithm::MKL>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU_MT>;
-#elif defined(OpenTurbine_ENABLE_KLU)
-    using HandleType = DSSHandle<DSSAlgorithm::KLU>;
-#elif defined(OpenTurbine_ENABLE_UMFPACK)
-    using HandleType = DSSHandle<DSSAlgorithm::UMFPACK>;
-#elif defined(OpenTurbine_ENABLE_SUPERLU)
-    using HandleType = DSSHandle<DSSAlgorithm::SUPERLU>;
-#endif
-#endif
 
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom

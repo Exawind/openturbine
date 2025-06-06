@@ -12,6 +12,7 @@ enum class DSSAlgorithm : std::uint8_t {
     SUPERLU,
     SUPERLU_MT,
     MKL,
+    NONE,
 };
 
 template <DSSAlgorithm>

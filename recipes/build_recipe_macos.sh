@@ -49,7 +49,6 @@ install_if_missing suite-sparse
 install_if_missing lapack
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
-#install_if_missing "vtk~mpi~opengl2" # add if VTK is needed
 
 spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp #llvm vtk cppcheck
 
@@ -57,7 +56,7 @@ spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cp
 mkdir -p build-from-script
 cd build-from-script
 cmake .. \
-  -DOpenTurbine_ENABLE_VTK=ON \
+  -DOpenTurbine_WRITE_OUTPUTS=ON \
   -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
   -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
   -DOpenTurbine_ENABLE_KLU=ON \

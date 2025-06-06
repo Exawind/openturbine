@@ -5,7 +5,10 @@
 #include <vector>
 
 #include <Kokkos_Core.hpp>
+
+namespace lapack {
 #include <lapacke.h>
+}
 
 #include "elements/beams/interpolation.hpp"
 
@@ -166,7 +169,7 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     // Solve the least squares problem for each dimension of B
     const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
 
-    LAPACKE_dgesv(
+    lapack::LAPACKE_dgesv(
         LAPACK_COL_MAJOR, static_cast<int>(p), 3, A.data(), static_cast<int>(p), IPIV.data(),
         B.data(), static_cast<int>(p)
     );

@@ -43,10 +43,9 @@ target_link_system_libraries(openturbine_regression_tests PRIVATE
   GTest::gtest_main
 )
 
-# Conditional linking for VTK if enabled
-if(OpenTurbine_ENABLE_VTK)
-  target_link_system_libraries(openturbine_regression_tests PRIVATE VTK::IOXML)
-  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_ENABLE_VTK)
+# Add compile definition for writing outputs
+if(OpenTurbine_WRITE_OUTPUTS)
+  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_WRITE_OUTPUTS)
 endif()
 
 # Add compile definitions for OpenTurbine_BUILD_OPENFAST_ADI if enabled
