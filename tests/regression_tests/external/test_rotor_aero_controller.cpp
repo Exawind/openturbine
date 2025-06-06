@@ -20,6 +20,8 @@
 #include "utilities/controllers/turbine_controller.hpp"
 #include "vendor/dylib/dylib.hpp"
 
+#include "OpenTurbine_config.h"
+
 namespace openturbine::tests {
 
 constexpr bool use_node_loads = true;
@@ -159,13 +161,14 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr auto gravity = std::array{0., 0., -9.81};      // Gravity (m/s/s)
 
     // Controller parameters
-    const std::string controller_shared_lib_path{"./ROSCO.dll"};
+    const std::string controller_shared_lib_path{static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)
+    };
     const std::string controller_function_name{"DISCON"};
     const std::string controller_input_file_path{"./IEA-15-240-RWT/DISCON.IN"};
     const std::string controller_simulation_name{"./IEA-15-240-RWT"};
 
     // Aerodynamics and Inflow library
-    const std::string adi_shared_lib_path{"./aerodyn_inflow_c_binding.dll"};
+    const std::string adi_shared_lib_path{static_cast<const char*>(OpenTurbine_ADI_LIBRARY)};
     const std::string aerodyn_input_path{"./IEA-15-240-RWT/AeroDyn15.dat"};
     const std::string inflowwind_input_path{"./IEA-15-240-RWT/InflowFile.dat"};
 
