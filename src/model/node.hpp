@@ -8,16 +8,16 @@ namespace openturbine {
 
 struct Node {
     size_t id;   //< Node identifier
-    Array_7 x;   //< Node positions and orientations
+    Array_7 x0;  //< Initial node positions and orientations
     Array_7 u;   //< Node displacement
     Array_6 v;   //< Node velocity
     Array_6 vd;  //< Node acceleration
     double s;    //< Position of node in element on range [0, 1]
 
     /// @brief Construct a node with an ID
-    explicit Node(size_t id_)
-        : id(id_),
-          x(Array_7{0., 0., 0., 1., 0., 0., 0.}),
+    explicit Node(size_t node_id)
+        : id(node_id),
+          x0(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
           v(Array_6{0., 0., 0., 0., 0., 0.}),
           vd(Array_6{0., 0., 0., 0., 0., 0.}),
@@ -26,11 +26,38 @@ struct Node {
     /// @brief Construct a node with an ID, position, displacement, velocity, and acceleration
     /// vectors
     Node(
-        size_t id_, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
+        size_t node_id, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
         Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
         Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
     )
-        : id(id_), x(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
+        : id(node_id), x0(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
+
+    //--------------------------------------------------------------------------
+    // Compute displaced/current position
+    //--------------------------------------------------------------------------
+
+    /// @brief Get the displaced position (initial position + displacement)
+    /// @return Array_7 containing displaced position and orientation
+    [[nodiscard]] Array_7 DisplacedPosition() const {
+        Array_7 displaced_position{0., 0., 0., 1., 0., 0., 0.};
+
+        // Add translational components (x, y, z)
+        displaced_position[0] = this->x0[0] + this->u[0];
+        displaced_position[1] = this->x0[1] + this->u[1];
+        displaced_position[2] = this->x0[2] + this->u[2];
+
+        // Compose quaternions for orientation (w, i, j, k)
+        auto q_displaced = QuaternionCompose(
+            {this->x0[3], this->x0[4], this->x0[5], this->x0[6]},  // initial orientation
+            {this->u[3], this->u[4], this->u[5], this->u[6]}       // displacement orientation
+        );
+        displaced_position[3] = q_displaced[0];
+        displaced_position[4] = q_displaced[1];
+        displaced_position[5] = q_displaced[2];
+        displaced_position[6] = q_displaced[3];
+
+        return displaced_position;
+    }
 
     //--------------------------------------------------------------------------
     // Modify node position (x)
@@ -38,27 +65,27 @@ struct Node {
 
     /// Translate node by a displacement vector
     void Translate(const Array_3& displacement) {
-        this->x[0] += displacement[0];
-        this->x[1] += displacement[1];
-        this->x[2] += displacement[2];
+        this->x0[0] += displacement[0];
+        this->x0[1] += displacement[1];
+        this->x0[2] += displacement[2];
     }
 
     /// Rotate node by a quaternion about the given point
     void RotateAboutPoint(const Array_4& q, const Array_3& point) {
         // Rotate position i.e. x(0:2)
         auto x_new = RotateVectorByQuaternion(
-            q, {this->x[0] - point[0], this->x[1] - point[1], this->x[2] - point[2]}
+            q, {this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]}
         );
-        this->x[0] = x_new[0] + point[0];
-        this->x[1] = x_new[1] + point[1];
-        this->x[2] = x_new[2] + point[2];
+        this->x0[0] = x_new[0] + point[0];
+        this->x0[1] = x_new[1] + point[1];
+        this->x0[2] = x_new[2] + point[2];
 
         // Rotate orientation i.e. x(3:6)
-        auto q_new = QuaternionCompose(q, {this->x[3], this->x[4], this->x[5], this->x[6]});
-        this->x[3] = q_new[0];
-        this->x[4] = q_new[1];
-        this->x[5] = q_new[2];
-        this->x[6] = q_new[3];
+        auto q_new = QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
+        this->x0[3] = q_new[0];
+        this->x0[4] = q_new[1];
+        this->x0[5] = q_new[2];
+        this->x0[6] = q_new[3];
     }
 
     /// Rotate node by a rotation vector about the given point
@@ -117,26 +144,26 @@ public:
     //--------------------------------------------------------------------------
 
     NodeBuilder& SetPosition(const Array_7& p) {
-        this->node.x = p;
+        this->node.x0 = p;
         return *this;
     }
 
     NodeBuilder& SetPosition(double x, double y, double z, double w, double i, double j, double k) {
-        this->node.x = {x, y, z, w, i, j, k};
+        this->node.x0 = {x, y, z, w, i, j, k};
         return *this;
     }
 
     NodeBuilder& SetPosition(const Array_3& p) {
-        this->node.x[0] = p[0];
-        this->node.x[1] = p[1];
-        this->node.x[2] = p[2];
+        this->node.x0[0] = p[0];
+        this->node.x0[1] = p[1];
+        this->node.x0[2] = p[2];
         return *this;
     }
 
     NodeBuilder& SetPosition(double x, double y, double z) {
-        this->node.x[0] = x;
-        this->node.x[1] = y;
-        this->node.x[2] = z;
+        this->node.x0[0] = x;
+        this->node.x0[1] = y;
+        this->node.x0[2] = z;
         return *this;
     }
 
@@ -147,20 +174,20 @@ public:
     /// @brief Sets the node orientation from quaternion
     /// @param p quaternion (w,i,j,k)
     NodeBuilder& SetOrientation(const Array_4& p) {
-        this->node.x[3] = p[0];
-        this->node.x[4] = p[1];
-        this->node.x[5] = p[2];
-        this->node.x[6] = p[3];
+        this->node.x0[3] = p[0];
+        this->node.x0[4] = p[1];
+        this->node.x0[5] = p[2];
+        this->node.x0[6] = p[3];
         return *this;
     }
 
     /// @brief Sets the node orientation from quaternion components
     /// @param p quaternion (w,i,j,k)
     NodeBuilder& SetOrientation(double w, double i, double j, double k) {
-        this->node.x[3] = w;
-        this->node.x[4] = i;
-        this->node.x[5] = j;
-        this->node.x[6] = k;
+        this->node.x0[3] = w;
+        this->node.x0[4] = i;
+        this->node.x0[5] = j;
+        this->node.x0[6] = k;
         return *this;
     }
 

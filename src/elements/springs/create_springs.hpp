@@ -24,7 +24,7 @@ inline Springs<DeviceType> CreateSprings(
         host_node_state_indices(i_elem, 1U) = static_cast<size_t>(element.node_ids[1]);
 
         for (size_t i = 0; i < 3; i++) {
-            host_x0(i_elem, i) = nodes[element.node_ids[1]].x[i] - nodes[element.node_ids[0]].x[i];
+            host_x0(i_elem, i) = nodes[element.node_ids[1]].x0[i] - nodes[element.node_ids[0]].x0[i];
         }
 
         host_l_ref(i_elem) = element.undeformed_length;

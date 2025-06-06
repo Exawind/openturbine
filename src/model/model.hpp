@@ -193,7 +193,7 @@ public:
             auto& node = this->GetNode(node_id);
 
             // Get distance from reference point to node
-            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
+            const Array_3 r{node.x0[0] - point[0], node.x0[1] - point[1], node.x0[2] - point[2]};
 
             // Get angular velocity
             const Array_3 omega{velocity[3], velocity[4], velocity[5]};
@@ -222,7 +222,7 @@ public:
             auto& node = this->GetNode(node_id);
 
             // Get distance from reference point to node
-            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
+            const Array_3 r{node.x0[0] - point[0], node.x0[1] - point[1], node.x0[2] - point[2]};
 
             // Get angular acceleration
             const Array_3 alpha{acceleration[3], acceleration[4], acceleration[5]};
