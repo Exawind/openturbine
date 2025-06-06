@@ -165,8 +165,8 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr auto gravity = std::array{0., 0., -9.81};      // Gravity (m/s/s)
 
     // Controller parameters
-    const std::string controller_shared_lib_path{
-        static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)};
+    const std::string controller_shared_lib_path{static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)
+    };
     const std::string controller_function_name{"DISCON"};
     const std::string controller_input_file_path{"./IEA-15-240-RWT/DISCON.IN"};
     const std::string controller_simulation_name{"./IEA-15-240-RWT"};
