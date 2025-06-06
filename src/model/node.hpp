@@ -6,6 +6,25 @@
 
 namespace openturbine {
 
+/*
+ * @brief Represents a node in the finite element model
+ *
+ * @details A node is a point in 3D space that can have position, orientation, displacement,
+ * velocity, and acceleration. Nodes are the fundamental building blocks that connect elements
+ * in the structural model. Each node has:
+ * - Unique identifier (id) -> used to reference the node in elements and constraints
+ * - Initial position and orientation (x0) -> 7 x 1 vector
+ * - Displacement from initial position (u) -> 7 x 1 vector
+ * - Velocity (v) -> 6 x 1 vector
+ * - Acceleration (vd) -> 6 x 1 vector
+ * - Parametric position within an element (s) -> scalar
+ *
+ * The position and displacement vectors contain 7 components: [x, y, z, qw, qx, qy, qz]
+ * where the first 3 are translational and the last 4 represent orientation as a quaternion.
+ *
+ * The velocity and acceleration vectors contain 6 components: [vx, vy, vz, wx, wy, wz]
+ * where the first 3 are translational and the last 3 are rotational components.
+ */
 struct Node {
     size_t id;   //< Node identifier
     Array_7 x0;  //< Initial node positions and orientations
@@ -36,8 +55,10 @@ struct Node {
     // Compute displaced/current position
     //--------------------------------------------------------------------------
 
-    /// @brief Get the displaced position (initial position + displacement)
-    /// @return Array_7 containing displaced position and orientation
+    /*
+     * @brief Get the displaced position (initial position + displacement)
+     * @return Array_7 containing displaced position and orientation
+     */
     [[nodiscard]] Array_7 DisplacedPosition() const {
         Array_7 displaced_position{0., 0., 0., 1., 0., 0., 0.};
 
@@ -130,6 +151,26 @@ struct Node {
     }
 };
 
+/**
+ * @brief Builder class for constructing and configuring Node objects
+ *
+ * @details NodeBuilder implements the builder pattern to provide a fluent interface
+ * for setting node properties. It allows for method chaining to configure multiple
+ * node properties in a single expression, making node creation more readable and
+ * maintainable.
+ *
+ * The builder operates on a reference to an existing Node object and provides
+ * methods to set:
+ * - Position (initial position and orientation)
+ * - Displacement (from initial position)
+ * - Velocity (translational and rotational)
+ * - Acceleration (translational and rotational)
+ * - Element location (parametric position within an element)
+ *
+ * @note The builder holds a reference to the node being constructed and is not
+ * copyable or movable to prevent accidental misuse. All setter methods return
+ * a reference to the builder to enable method chaining.
+ */
 class NodeBuilder {
 public:
     explicit NodeBuilder(Node& n) : node(n) {}
@@ -143,16 +184,35 @@ public:
     // Set position
     //--------------------------------------------------------------------------
 
+    /*
+     * @brief Sets the node position from a 7 x 1 vector
+     * @param p -> 7 x 1 vector (x, y, z, w, i, j, k)
+     */
     NodeBuilder& SetPosition(const Array_7& p) {
         this->node.x0 = p;
         return *this;
     }
 
+    /*
+     * @brief Sets the node position from position and orientation components
+     * @param x position X component
+     * @param y position Y component
+     * @param z position Z component
+     * @param w quaternion w component (scalar part)
+     * @param i quaternion i component (x vector part)
+     * @param j quaternion j component (y vector part)
+     * @param k quaternion k component (z vector part)
+     */
     NodeBuilder& SetPosition(double x, double y, double z, double w, double i, double j, double k) {
-        this->node.x0 = {x, y, z, w, i, j, k};
-        return *this;
+        return this->SetPosition(Array_7{x, y, z, w, i, j, k});
     }
 
+    /*
+     * @brief Sets the node position from translational components
+     * @param x X position component
+     * @param y Y position component
+     * @param z Z position component
+     */
     NodeBuilder& SetPosition(const Array_3& p) {
         this->node.x0[0] = p[0];
         this->node.x0[1] = p[1];
@@ -160,19 +220,24 @@ public:
         return *this;
     }
 
+    /*
+     * @brief Sets the node position from translational components
+     * @param x X position component
+     * @param y Y position component
+     * @param z Z position component
+     */
     NodeBuilder& SetPosition(double x, double y, double z) {
-        this->node.x0[0] = x;
-        this->node.x0[1] = y;
-        this->node.x0[2] = z;
-        return *this;
+        return this->SetPosition(Array_3{x, y, z});
     }
 
     //--------------------------------------------------------------------------
     // Set orientation
     //--------------------------------------------------------------------------
 
-    /// @brief Sets the node orientation from quaternion
-    /// @param p quaternion (w,i,j,k)
+    /*
+     * @brief Sets the node orientation from quaternion
+     * @param p quaternion (w,i,j,k)
+     */
     NodeBuilder& SetOrientation(const Array_4& p) {
         this->node.x0[3] = p[0];
         this->node.x0[4] = p[1];
@@ -181,32 +246,52 @@ public:
         return *this;
     }
 
-    /// @brief Sets the node orientation from quaternion components
-    /// @param p quaternion (w,i,j,k)
+    /*
+     * @brief Sets the node orientation from quaternion components
+     * @param w quaternion w component (scalar part)
+     * @param i quaternion i component (x vector part)
+     * @param j quaternion j component (y vector part)
+     * @param k quaternion k component (z vector part)
+     */
     NodeBuilder& SetOrientation(double w, double i, double j, double k) {
-        this->node.x0[3] = w;
-        this->node.x0[4] = i;
-        this->node.x0[5] = j;
-        this->node.x0[6] = k;
-        return *this;
+        return this->SetOrientation(Array_4{w, i, j, k});
     }
 
     //--------------------------------------------------------------------------
     // Set displacement
     //--------------------------------------------------------------------------
 
+    /*
+     * @brief Sets the node displacement from a 7 x 1 vector
+     * @param p -> 7 x 1 vector (x, y, z, w, i, j, k)
+     */
     NodeBuilder& SetDisplacement(const Array_7& p) {
         this->node.u = p;
         return *this;
     }
 
+    /*
+     * @brief Sets the node displacement from displacement components
+     * @param x displacement X component
+     * @param y displacement Y component
+     * @param z displacement Z component
+     * @param w quaternion w component (scalar part)
+     * @param i quaternion i component (x vector part)
+     * @param j quaternion j component (y vector part)
+     * @param k quaternion k component (z vector part)
+     */
     NodeBuilder& SetDisplacement(
         double x, double y, double z, double w, double i, double j, double k
     ) {
-        this->node.u = {x, y, z, w, i, j, k};
-        return *this;
+        return this->SetDisplacement(Array_7{x, y, z, w, i, j, k});
     }
 
+    /*
+     * @brief Sets the node displacement from translational components
+     * @param x displacement X component
+     * @param y displacement Y component
+     * @param z displacement Z component
+     */
     NodeBuilder& SetDisplacement(const Array_3& p) {
         this->node.u[0] = p[0];
         this->node.u[1] = p[1];
@@ -214,27 +299,48 @@ public:
         return *this;
     }
 
+    /*
+     * @brief Sets the node displacement from translational components
+     * @param x displacement X component
+     * @param y displacement Y component
+     * @param z displacement Z component
+     */
     NodeBuilder& SetDisplacement(double x, double y, double z) {
-        this->node.u[0] = x;
-        this->node.u[1] = y;
-        this->node.u[2] = z;
-        return *this;
+        return this->SetDisplacement(Array_3{x, y, z});
     }
 
     //--------------------------------------------------------------------------
     // Set velocity
     //--------------------------------------------------------------------------
 
+    /*
+     * @brief Sets the node velocity from 6 vector components
+     * @param x x-component of translational velocity
+     * @param y y-component of translational velocity
+     * @param z z-component of translational velocity
+     * @param rx x-component of rotational velocity
+     * @param ry y-component of rotational velocity
+     * @param rz z-component of rotational velocity
+     */
     NodeBuilder& SetVelocity(double x, double y, double z, double rx, double ry, double rz) {
         this->node.v = {x, y, z, rx, ry, rz};
         return *this;
     }
 
+    /*
+     * @brief Sets the node velocity from a vector
+     * @param v -> 6 x 1 vector (x, y, z, rx, ry, rz)
+     */
     NodeBuilder& SetVelocity(const Array_6& v) {
-        this->node.v = v;
-        return *this;
+        return this->SetVelocity(v[0], v[1], v[2], v[3], v[4], v[5]);
     }
 
+    /*
+     * @brief Sets the node velocity from 3 vector components
+     * @param x x-component of translational velocity
+     * @param y y-component of translational velocity
+     * @param z z-component of translational velocity
+     */
     NodeBuilder& SetVelocity(double x, double y, double z) {
         this->node.v[0] = x;
         this->node.v[1] = y;
@@ -242,27 +348,44 @@ public:
         return *this;
     }
 
-    NodeBuilder& SetVelocity(const Array_3& v) {
-        this->node.v[0] = v[0];
-        this->node.v[1] = v[1];
-        this->node.v[2] = v[2];
-        return *this;
-    }
+    /*
+     * @brief Sets the node velocity from a 3 x 1 vector
+     * @param v -> 3D vector (x, y, z)
+     */
+    NodeBuilder& SetVelocity(const Array_3& v) { return this->SetVelocity(v[0], v[1], v[2]); }
 
     //--------------------------------------------------------------------------
     // Set acceleration
     //--------------------------------------------------------------------------
 
+    /*
+     * @brief Sets the node acceleration from 6 vector components
+     * @param x x-component of translational acceleration
+     * @param y y-component of translational acceleration
+     * @param z z-component of translational acceleration
+     * @param rx x-component of rotational acceleration
+     * @param ry y-component of rotational acceleration
+     * @param rz z-component of rotational acceleration
+     */
     NodeBuilder& SetAcceleration(double x, double y, double z, double rx, double ry, double rz) {
         this->node.vd = {x, y, z, rx, ry, rz};
         return *this;
     }
 
+    /*
+     * @brief Sets the node acceleration from a vector
+     * @param v -> 6 x 1 vector (x, y, z, rx, ry, rz)
+     */
     NodeBuilder& SetAcceleration(const Array_6& v) {
-        this->node.vd = v;
-        return *this;
+        return this->SetAcceleration(v[0], v[1], v[2], v[3], v[4], v[5]);
     }
 
+    /*
+     * @brief Sets the node acceleration from vector components
+     * @param x x-component of acceleration
+     * @param y y-component of acceleration
+     * @param z z-component of acceleration
+     */
     NodeBuilder& SetAcceleration(double x, double y, double z) {
         this->node.vd[0] = x;
         this->node.vd[1] = y;
@@ -270,19 +393,24 @@ public:
         return *this;
     }
 
+    /*
+     * @brief Sets the node acceleration from a vector
+     * @param v -> 3 x 1 vector (x, y, z)
+     */
     NodeBuilder& SetAcceleration(const Array_3& v) {
-        this->node.vd[0] = v[0];
-        this->node.vd[1] = v[1];
-        this->node.vd[2] = v[2];
-        return *this;
+        return this->SetAcceleration(v[0], v[1], v[2]);
     }
 
     //--------------------------------------------------------------------------
     // Element location
     //--------------------------------------------------------------------------
 
-    NodeBuilder& SetElemLocation(double loc) {
-        this->node.s = loc;
+    /*
+     * @brief Sets the parametric position of the node within the element
+     * @param location -> position within element on range [0, 1]
+     */
+    NodeBuilder& SetElemLocation(double location) {
+        this->node.s = location;
         return *this;
     }
 
