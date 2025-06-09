@@ -204,7 +204,7 @@ const Kokkos::View<double[6], Kokkos::HostSpace>::const_type kExpectedFd(kExpect
 // Residual calculation: inputs and expected values
 //--------------------------------------------------------------------------
 
-constexpr std::array<double, 21> kInterpWeightsFlat = {
+constexpr std::array<double, 56> kInterpWeightsFlat = {
     0.924956870807194,
     0.6456998424079191,
     0.2852777191369698,
@@ -225,10 +225,10 @@ constexpr std::array<double, 21> kInterpWeightsFlat = {
     0.,
     0.2852777191369698,
     0.6456998424079191,
-    0.924956870807194
+    0.924956870807194,
 };
 
-constexpr std::array<double, 21> kDerivWeightsFlat = {
+constexpr std::array<double, 56> kDerivWeightsFlat = {
     -1.449107912342756,
     -1.241531185599395,
     -0.905845151377397,
@@ -249,7 +249,7 @@ constexpr std::array<double, 21> kDerivWeightsFlat = {
     0.5,
     0.905845151377397,
     1.241531185599395,
-    1.449107912342756
+    1.449107912342756,
 };
 
 constexpr std::array<double, kNumQPs * 6> kFc = {
