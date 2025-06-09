@@ -424,7 +424,7 @@ TEST(Milestone, IEA15RotorAeroController) {
                 beam_elem_node_ids[i_blade].begin(), beam_elem_node_ids[i_blade].end(),
                 std::back_inserter(mesh_positions),
                 [&model](const size_t& node_id) {
-                    return model.GetNode(node_id).x;
+                    return model.GetNode(node_id).x0;
                 }
             );
         } else {
@@ -434,18 +434,18 @@ TEST(Milestone, IEA15RotorAeroController) {
             }
         }
         return util::TurbineConfig::BladeInitialState{
-            model.GetNode(root_node_ids[i_blade]).x,  // Root node
-            mesh_positions,                           // Blade nodes
+            model.GetNode(root_node_ids[i_blade]).x0,  // Root node
+            mesh_positions,                            // Blade nodes
         };
     };
 
     // Define turbine initial position
     const std::vector<util::TurbineConfig> turbine_configs{
         util::TurbineConfig(
-            true,                          // is horizontal axis wind turbine
-            {0., 0., 0.},                  // reference position
-            model.GetNode(hub_node_id).x,  // hub initial position
-            model.GetNode(hub_node_id).x,  // nacelle initial position
+            true,                           // is horizontal axis wind turbine
+            {0., 0., 0.},                   // reference position
+            model.GetNode(hub_node_id).x0,  // hub initial position
+            model.GetNode(hub_node_id).x0,  // nacelle initial position
             {
                 build_blade_config(0),  // Blade 1 config
                 build_blade_config(1),  // Blade 2 config
