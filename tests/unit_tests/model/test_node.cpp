@@ -125,7 +125,7 @@ TEST(NodeTest, Translate) {
     ASSERT_EQ(node_0.x0[2], pos[2]);  // 0.
 
     // Now translate the node and check the new position
-    Array_3 displacement = {1., 2., 3.};
+    constexpr auto displacement = std::array{1., 2., 3.};
     node_0.Translate(displacement);
     ASSERT_EQ(node_0.x0[0], pos[0] + displacement[0]);  // 1.
     ASSERT_EQ(node_0.x0[1], pos[1] + displacement[1]);  // 2.
@@ -177,7 +177,7 @@ TEST(NodeTest, TranslateDisplacement) {
             .Build();
 
     // Add some displacement to the node and check the new displacement
-    Array_3 displacement_1 = {1., 2., 3.};
+    constexpr auto displacement_1 = std::array{1., 2., 3.};
     auto node_0 = model.GetNode(node_id);
     node_0.TranslateDisplacement(displacement_1);
     ASSERT_EQ(node_0.u[0], u_pos[0] + displacement_1[0]);  // 1.
@@ -185,7 +185,7 @@ TEST(NodeTest, TranslateDisplacement) {
     ASSERT_EQ(node_0.u[2], u_pos[2] + displacement_1[2]);  // 3.
 
     // Add another displacement and check the cumulative effect
-    Array_3 displacement_2 = {2., 1., 0.};
+    constexpr auto displacement_2 = std::array{2., 1., 0.};
     node_0.TranslateDisplacement(displacement_2);
     ASSERT_EQ(node_0.u[0], u_pos[0] + displacement_1[0] + displacement_2[0]);  // 3.
     ASSERT_EQ(node_0.u[1], u_pos[1] + displacement_1[1] + displacement_2[1]);  // 3.
@@ -256,8 +256,8 @@ TEST(NodeTest, SetVelocityAboutPoint) {
     auto node = model.GetNode(node_id);
 
     // Set angular velocity about origin
-    Array_6 velocity = {0., 0., 0., 0., 0., 1.};
-    Array_3 point = {0., 0., 0.};
+    constexpr auto velocity = std::array{0., 0., 0., 0., 0., 1.};
+    constexpr auto point = std::array{0., 0., 0.};
     node.SetVelocityAboutPoint(velocity, point);
 
     // r = displaced_position - point = (2, 1, 0) - (0, 0, 0) = (2, 1, 0)
@@ -287,9 +287,9 @@ TEST(NodeTest, SetAccelerationAboutPoint) {
     auto node = model.GetNode(node_id);
 
     // Set combined translational acceleration, angular acceleration, and angular velocity
-    Array_6 acceleration = {1., 0., 0., 0., 0., 2.};  // ax=1, αz=2
-    Array_3 omega = {0., 0., 1.};                     // ωz=1
-    Array_3 point = {0., 0., 0.};
+    constexpr auto acceleration = std::array{1., 0., 0., 0., 0., 2.};  // ax=1, αz=2
+    constexpr auto omega = std::array{0., 0., 1.};                     // ωz=1
+    constexpr auto point = std::array{0., 0., 0.};
     node.SetAccelerationAboutPoint(acceleration, omega, point);
 
     // r = (0, 1, 0)
