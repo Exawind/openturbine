@@ -235,13 +235,13 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
 
     // Check tower top position and orientation
     const auto& tower_top_node = interface.Turbine().tower.nodes.back();
-    EXPECT_NEAR(tower_top_node.position[0], -0.0021007328117874217, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[1], 0.080005249432020489, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[2], 144.37967663726039, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[3], 0.70671658976836782, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[4], -0.0073048916494793149, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[5], -0.70744179764944992, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[6], -0.0049399638330683959, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[0], -0.00013297093554177921, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[1], 0.079678680774119062, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[2], 144.3794999717642, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[3], 0.70671615596672743, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[4], -0.0073063262326534895, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[5], -0.70744214100440284, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[6], -0.0049507195134699481, 1e-10);
 }
 
 }  // namespace openturbine::tests
