@@ -1,0 +1,14 @@
+.. meta::3a4d01d3eab4779cfefffb4f3f3e4b38b755cb5951d045abb6094891d7310d71f0c2bacaa19c88068e4eeb0ada4b56ebbed80dc046f3eadc4498c21f43e92ca8
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::TurbineInterfaceBuilder Class Reference
+
+TurbineInterfaceBuilder Class Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1interfaces_1_1TurbineInterfaceBuilder.html

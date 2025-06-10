@@ -5,7 +5,7 @@ var indexSectionsWithContent =
   2: "glow",
   3: "abcdefghilmnopqrstuvw",
   4: "_abcdefghilmnopqrstuvw~",
-  5: "abcdefghiklmnopqrstuvwxy",
+  5: "abcdefghijklmnopqrstuvwxy",
   6: "abcdghimnrv",
   7: "cdeforw",
   8: "acjkmnsuxz",

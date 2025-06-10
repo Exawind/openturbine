@@ -1,0 +1,14 @@
+.. meta::6fd8bee3498324924e29ddffa582053fb8b8a31b197dcb44bcbab483cd3b65ddbfeca7d5303b87044803af1964049e9bc1510d0d980f4454dd41c0e322bd9b9d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::HollowCircleProperties Struct Reference
+
+HollowCircleProperties Struct Reference
+=======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1HollowCircleProperties.html

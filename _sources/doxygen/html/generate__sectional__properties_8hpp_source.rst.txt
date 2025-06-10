@@ -1,0 +1,14 @@
+.. meta::c955e6ca221909f3e2643d119326cbe6fd4195b7bd55af29c1638eed84d348870dac9351b0228f68431521583b6200ef5e6e4925222b4ffffd23dd2d6237ca24
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate\_sectional\_properties.hpp Source File
+========================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: generate__sectional__properties_8hpp_source.html

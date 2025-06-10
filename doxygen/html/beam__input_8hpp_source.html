@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam_input.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam_input.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/beam__input_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-beam-input-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam_input.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-beam-input-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam_input.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ee3f1a7951c308657a65f8199076c1d6.html">interfaces</a></li><li class="navelem"><a class="el" href="dir_ec19d290f88d8e9c8cebb340555e4418.html">components</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">beam_input.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="beam__input_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="types_8hpp.html">types.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a> {</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html">ReferenceAxis</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">   14</a></span>    std::vector&lt;double&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">coordinate_grid</a>;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">   17</a></span>    std::vector&lt;std::array&lt;double, 3&gt;&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">coordinates</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a957ed2660726f39a8f20157d24cff635">   20</a></span>    std::vector&lt;double&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a957ed2660726f39a8f20157d24cff635">twist_grid</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a5ea4bb92e2cbc3171549bde9937b0858">   23</a></span>    std::vector&lt;double&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a5ea4bb92e2cbc3171549bde9937b0858">twist</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="};">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">   31</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">Section</a> {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2a88ed6ac70bd485a292e66761022b0a">   33</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2a88ed6ac70bd485a292e66761022b0a">location</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf">   36</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf">mass_matrix</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a932d22d782741ae4963e80d0b2be3225">   39</a></span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a932d22d782741ae4963e80d0b2be3225">stiffness_matrix</a>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a3fc94775736d0c1c9a8f329c4e3b13fa">   47</a></span>    <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a3fc94775736d0c1c9a8f329c4e3b13fa">Section</a>(<span class="keywordtype">double</span> loc, <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> m, <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> k)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        : <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2a88ed6ac70bd485a292e66761022b0a">location</a>(loc), <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf">mass_matrix</a>(m), <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a932d22d782741ae4963e80d0b2be3225">stiffness_matrix</a>(k) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="comment">// Check that the section location is in range [0,1]</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keywordflow">if</span> (loc &lt; 0. || loc &gt; 1.) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Section location must be in range [0, 1]&quot;</span>);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
+</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="};">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html">   61</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html">Root</a> {</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#adf39595258eeda83f826bae392bb9ccb">   63</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#adf39595258eeda83f826bae392bb9ccb">prescribe_root_motion</a>{<span class="keyword">false</span>};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a5c74ea2d44c267230e07a421eed28843">   66</a></span>    std::array&lt;double, 7&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a5c74ea2d44c267230e07a421eed28843">position</a>{0., 0., 0., 1., 0., 0., 0.};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a0616a7773d8511f3a6920ce2fdb6555c">   69</a></span>    std::array&lt;double, 6&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a0616a7773d8511f3a6920ce2fdb6555c">velocity</a>{0., 0., 0., 0., 0., 0.};</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a714d497800a8d31fc2b131e67982048c">   72</a></span>    std::array&lt;double, 6&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a714d497800a8d31fc2b131e67982048c">acceleration</a>{0., 0., 0., 0., 0., 0.};</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="foldopen" id="foldopen00080" data-start="{" data-end="};">
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">   80</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#ac74ca8b9c3461f2bd5e097e42a6a7eae">   82</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#ac74ca8b9c3461f2bd5e097e42a6a7eae">element_order</a>{10};</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#add3a0c71dab32eca42f1fb2f09164a2c">   85</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#add3a0c71dab32eca42f1fb2f09164a2c">section_refinement</a>{0};</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">   88</a></span>    <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html">ReferenceAxis</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">ref_axis</a>;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a478896adbc52a78dfc3060f04bbccb3f">   91</a></span>    <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1Root.html">Root</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a478896adbc52a78dfc3060f04bbccb3f">root</a>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a19ed7e699a680ee5d40d91c6be30971b">   94</a></span>    std::vector&lt;Section&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a19ed7e699a680ee5d40d91c6be30971b">sections</a>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>};</div>
+</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>}  <span class="comment">// namespace openturbine::interfaces::components</span></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_1_1components_html"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a></div><div class="ttdef"><b>Definition</b> beam.hpp:12</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a6add52579dfe9e78b0da9c842b2ed4f0"><div class="ttname"><a href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">openturbine::Array_6x6</a></div><div class="ttdeci">std::array&lt; Array_6, 6 &gt; Array_6x6</div><div class="ttdef"><b>Definition</b> types.hpp:45</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">openturbine::interfaces::components::BeamInput</a></div><div class="ttdoc">Complete input specification for a beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:80</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_a19ed7e699a680ee5d40d91c6be30971b"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a19ed7e699a680ee5d40d91c6be30971b">openturbine::interfaces::components::BeamInput::sections</a></div><div class="ttdeci">std::vector&lt; Section &gt; sections</div><div class="ttdoc">Section properties.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:94</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_a478896adbc52a78dfc3060f04bbccb3f"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a478896adbc52a78dfc3060f04bbccb3f">openturbine::interfaces::components::BeamInput::root</a></div><div class="ttdeci">Root root</div><div class="ttdoc">Blade root.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:91</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_ac74ca8b9c3461f2bd5e097e42a6a7eae"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#ac74ca8b9c3461f2bd5e097e42a6a7eae">openturbine::interfaces::components::BeamInput::element_order</a></div><div class="ttdeci">size_t element_order</div><div class="ttdoc">Spectral element order (num nodes - 1)</div><div class="ttdef"><b>Definition</b> beam_input.hpp:82</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_acca700be5f002a44007fb7ce222a22fd"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">openturbine::interfaces::components::BeamInput::ref_axis</a></div><div class="ttdeci">ReferenceAxis ref_axis</div><div class="ttdoc">Structural reference axis data.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:88</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_add3a0c71dab32eca42f1fb2f09164a2c"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#add3a0c71dab32eca42f1fb2f09164a2c">openturbine::interfaces::components::BeamInput::section_refinement</a></div><div class="ttdeci">size_t section_refinement</div><div class="ttdoc">Trapezoidal quadrature point refinement (0 = none)</div><div class="ttdef"><b>Definition</b> beam_input.hpp:85</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html">openturbine::interfaces::components::ReferenceAxis</a></div><div class="ttdoc">Reference axis definition for a beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_a113359e46817a2feff0467fdf2b71aa6"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">openturbine::interfaces::components::ReferenceAxis::coordinate_grid</a></div><div class="ttdeci">std::vector&lt; double &gt; coordinate_grid</div><div class="ttdoc">Normalized coordinate locations [0, 1] along the beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_a5ea4bb92e2cbc3171549bde9937b0858"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a5ea4bb92e2cbc3171549bde9937b0858">openturbine::interfaces::components::ReferenceAxis::twist</a></div><div class="ttdeci">std::vector&lt; double &gt; twist</div><div class="ttdoc">Structural twist values (in radians)</div><div class="ttdef"><b>Definition</b> beam_input.hpp:23</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_a957ed2660726f39a8f20157d24cff635"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a957ed2660726f39a8f20157d24cff635">openturbine::interfaces::components::ReferenceAxis::twist_grid</a></div><div class="ttdeci">std::vector&lt; double &gt; twist_grid</div><div class="ttdoc">Normalized twist locations [0, 1] along the beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:20</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_abeda368d7fc537a7672dfdd3987cefa3"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">openturbine::interfaces::components::ReferenceAxis::coordinates</a></div><div class="ttdeci">std::vector&lt; std::array&lt; double, 3 &gt; &gt; coordinates</div><div class="ttdoc">X,Y,Z coordinates of reference axis points.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:17</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Root_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html">openturbine::interfaces::components::Root</a></div><div class="ttdoc">Root definition for a turbine beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:61</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Root_html_a0616a7773d8511f3a6920ce2fdb6555c"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a0616a7773d8511f3a6920ce2fdb6555c">openturbine::interfaces::components::Root::velocity</a></div><div class="ttdeci">std::array&lt; double, 6 &gt; velocity</div><div class="ttdoc">Initial translation/rotational velocity [vx, vy, vz, wx, wy, wz].</div><div class="ttdef"><b>Definition</b> beam_input.hpp:69</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Root_html_a5c74ea2d44c267230e07a421eed28843"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a5c74ea2d44c267230e07a421eed28843">openturbine::interfaces::components::Root::position</a></div><div class="ttdeci">std::array&lt; double, 7 &gt; position</div><div class="ttdoc">Inital position/orientation [x, y, z, qw, qx, qy, qz].</div><div class="ttdef"><b>Definition</b> beam_input.hpp:66</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Root_html_a714d497800a8d31fc2b131e67982048c"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#a714d497800a8d31fc2b131e67982048c">openturbine::interfaces::components::Root::acceleration</a></div><div class="ttdeci">std::array&lt; double, 6 &gt; acceleration</div><div class="ttdoc">Initial translation/rotational acceleration [ax, ay, az, αx, αy, αz].</div><div class="ttdef"><b>Definition</b> beam_input.hpp:72</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Root_html_adf39595258eeda83f826bae392bb9ccb"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Root.html#adf39595258eeda83f826bae392bb9ccb">openturbine::interfaces::components::Root::prescribe_root_motion</a></div><div class="ttdeci">bool prescribe_root_motion</div><div class="ttdoc">Flag to use root motion as an input to the model.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:63</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Section_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html">openturbine::interfaces::components::Section</a></div><div class="ttdoc">Sectional structural properties of the beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Section_html_a2a88ed6ac70bd485a292e66761022b0a"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2a88ed6ac70bd485a292e66761022b0a">openturbine::interfaces::components::Section::location</a></div><div class="ttdeci">double location</div><div class="ttdoc">Normalized section location [0, 1] along the beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:33</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Section_html_a2ce24fb2e3c070d3a02efb209e5927cf"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a2ce24fb2e3c070d3a02efb209e5927cf">openturbine::interfaces::components::Section::mass_matrix</a></div><div class="ttdeci">Array_6x6 mass_matrix</div><div class="ttdoc">Mass matrix (6x6) at the section.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:36</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Section_html_a3fc94775736d0c1c9a8f329c4e3b13fa"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a3fc94775736d0c1c9a8f329c4e3b13fa">openturbine::interfaces::components::Section::Section</a></div><div class="ttdeci">Section(double loc, Array_6x6 m, Array_6x6 k)</div><div class="ttdoc">Construct a new Section.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:47</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Section_html_a932d22d782741ae4963e80d0b2be3225"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Section.html#a932d22d782741ae4963e80d0b2be3225">openturbine::interfaces::components::Section::stiffness_matrix</a></div><div class="ttdeci">Array_6x6 stiffness_matrix</div><div class="ttdoc">Stiffness matrix (6x6) at the section.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:39</div></div>
+<div class="ttc" id="atypes_8hpp_html"><div class="ttname"><a href="types_8hpp.html">types.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+.. meta::cb738e6621acd381ef0e70c4f0690643b9ad6721b1fdb50242998be8e1076e4578c3dee6246244963e80d0a10e36171b82ed1a575db3a5d521dab3d3f3590149
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File
+====================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: beam_8hpp_source.html

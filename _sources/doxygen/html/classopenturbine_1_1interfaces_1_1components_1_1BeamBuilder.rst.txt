@@ -1,0 +1,14 @@
+.. meta::255a64bc81c5894cd3daae245b17641cdb176440e249d3f1f2ec81d56dba9f82367e3a1666d97ede1bad59a58f190258ac6264307cec87886c3e40c68148ace7
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::BeamBuilder Class Reference
+
+BeamBuilder Class Reference
+===========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html

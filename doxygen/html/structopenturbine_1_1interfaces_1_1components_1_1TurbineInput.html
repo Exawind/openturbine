@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::components::TurbineInput Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::components::TurbineInput Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="turbineinput-struct-reference">
+<h1>TurbineInput Struct Reference<a class="headerlink" href="#turbineinput-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::components::TurbineInput Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html">components</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::components::TurbineInput Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Complete input specification for a turbine.  
+ <a href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="components_2turbine__input_8hpp_source.html">turbine_input.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a1082d625d7b1587906c5054e3bb2d4d8" id="r_a1082d625d7b1587906c5054e3bb2d4d8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a1082d625d7b1587906c5054e3bb2d4d8">blades</a></td></tr>
+<tr class="memdesc:a1082d625d7b1587906c5054e3bb2d4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the blades.  <br /></td></tr>
+<tr class="separator:a1082d625d7b1587906c5054e3bb2d4d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe53c02daba9af14841ea0acdc9be932" id="r_afe53c02daba9af14841ea0acdc9be932"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#afe53c02daba9af14841ea0acdc9be932">tower</a></td></tr>
+<tr class="memdesc:afe53c02daba9af14841ea0acdc9be932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the tower.  <br /></td></tr>
+<tr class="separator:afe53c02daba9af14841ea0acdc9be932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b70aeb4d858d605fc6883116470e79" id="r_a72b70aeb4d858d605fc6883116470e79"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 7 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a72b70aeb4d858d605fc6883116470e79">tower_base_position</a> {0., 0., 0., 1., 0., 0., 0.}</td></tr>
+<tr class="memdesc:a72b70aeb4d858d605fc6883116470e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Position of the tower base node in the global coordinate system.  <br /></td></tr>
+<tr class="separator:a72b70aeb4d858d605fc6883116470e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf64dbd206b358301b45da5f351e4c1" id="r_a2bf64dbd206b358301b45da5f351e4c1"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a2bf64dbd206b358301b45da5f351e4c1">yaw_bearing_inertia_matrix</a> {{{}, {}, {}, {}, {}, {}}}</td></tr>
+<tr class="memdesc:a2bf64dbd206b358301b45da5f351e4c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yaw bearing inertia matrix (6x6) includes yaw bearing and nacelle mass with inertia about yaw bearing.  <br /></td></tr>
+<tr class="separator:a2bf64dbd206b358301b45da5f351e4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5694a58e7e98f294a5a7f9235da49da8" id="r_a5694a58e7e98f294a5a7f9235da49da8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a5694a58e7e98f294a5a7f9235da49da8">tower_top_to_rotor_apex</a> {0.}</td></tr>
+<tr class="memdesc:a5694a58e7e98f294a5a7f9235da49da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from tower top to rotor apex (meters)  <br /></td></tr>
+<tr class="separator:a5694a58e7e98f294a5a7f9235da49da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a619a0299598512c8d91c1a47a1a20ec9" id="r_a619a0299598512c8d91c1a47a1a20ec9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a619a0299598512c8d91c1a47a1a20ec9">tower_axis_to_rotor_apex</a> {0.}</td></tr>
+<tr class="memdesc:a619a0299598512c8d91c1a47a1a20ec9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from tower centerline to rotor apex (meters)  <br /></td></tr>
+<tr class="separator:a619a0299598512c8d91c1a47a1a20ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a213cd25b50656022c6afa401240233ae" id="r_a213cd25b50656022c6afa401240233ae"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a213cd25b50656022c6afa401240233ae">rotor_apex_to_hub</a> {0.}</td></tr>
+<tr class="memdesc:a213cd25b50656022c6afa401240233ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from rotor apex to hub center of mass (meters)  <br /></td></tr>
+<tr class="separator:a213cd25b50656022c6afa401240233ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac270c1d4a4d92034c147e153d7dfabc1" id="r_ac270c1d4a4d92034c147e153d7dfabc1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac270c1d4a4d92034c147e153d7dfabc1">shaft_tilt_angle</a> {0.}</td></tr>
+<tr class="memdesc:ac270c1d4a4d92034c147e153d7dfabc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shaft tilt angle (radians)  <br /></td></tr>
+<tr class="separator:ac270c1d4a4d92034c147e153d7dfabc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66c7782e0370d4883747c15080ff6673" id="r_a66c7782e0370d4883747c15080ff6673"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a66c7782e0370d4883747c15080ff6673">azimuth_angle</a> {0.}</td></tr>
+<tr class="memdesc:a66c7782e0370d4883747c15080ff6673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Azimuth angle (radians)  <br /></td></tr>
+<tr class="separator:a66c7782e0370d4883747c15080ff6673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36d4bb1652a7bc870f690a9923eaa8f5" id="r_a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a36d4bb1652a7bc870f690a9923eaa8f5">nacelle_yaw_angle</a> {0.}</td></tr>
+<tr class="memdesc:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial nacelle yaw angle (radians)  <br /></td></tr>
+<tr class="separator:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcd174cee1be9a5ce27a992c7c8dd250" id="r_afcd174cee1be9a5ce27a992c7c8dd250"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#afcd174cee1be9a5ce27a992c7c8dd250">blade_pitch_angle</a> {0.}</td></tr>
+<tr class="memdesc:afcd174cee1be9a5ce27a992c7c8dd250"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial blade pitch angle (radians)  <br /></td></tr>
+<tr class="separator:afcd174cee1be9a5ce27a992c7c8dd250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4399f01fc5d0138163f6db273e4d7591" id="r_a4399f01fc5d0138163f6db273e4d7591"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a4399f01fc5d0138163f6db273e4d7591">rotor_speed</a> {0.}</td></tr>
+<tr class="memdesc:a4399f01fc5d0138163f6db273e4d7591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial rotor speed (RPM)  <br /></td></tr>
+<tr class="separator:a4399f01fc5d0138163f6db273e4d7591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c1034802f27a9126375343f4ff99d07" id="r_a9c1034802f27a9126375343f4ff99d07"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a9c1034802f27a9126375343f4ff99d07">hub_diameter</a> {1e-7}</td></tr>
+<tr class="memdesc:a9c1034802f27a9126375343f4ff99d07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hub diameter (meters)  <br /></td></tr>
+<tr class="separator:a9c1034802f27a9126375343f4ff99d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4f2b7f08a71e685a8cc3ea0073c9d38" id="r_ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac4f2b7f08a71e685a8cc3ea0073c9d38">cone_angle</a> {0.}</td></tr>
+<tr class="memdesc:ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define blade cone angle (radians)  <br /></td></tr>
+<tr class="separator:ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Complete input specification for a turbine. </p>
+<p>Defines the input configuration for a turbine including blades, tower, hub, and nacelle. </p>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a66c7782e0370d4883747c15080ff6673" name="a66c7782e0370d4883747c15080ff6673"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66c7782e0370d4883747c15080ff6673">&#9670;&#160;</a></span>azimuth_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::azimuth_angle {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Azimuth angle (radians) </p>
+
+</div>
+</div>
+<a id="afcd174cee1be9a5ce27a992c7c8dd250" name="afcd174cee1be9a5ce27a992c7c8dd250"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcd174cee1be9a5ce27a992c7c8dd250">&#9670;&#160;</a></span>blade_pitch_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::blade_pitch_angle {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial blade pitch angle (radians) </p>
+
+</div>
+</div>
+<a id="a1082d625d7b1587906c5054e3bb2d4d8" name="a1082d625d7b1587906c5054e3bb2d4d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1082d625d7b1587906c5054e3bb2d4d8">&#9670;&#160;</a></span>blades</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a>&gt; openturbine::interfaces::components::TurbineInput::blades</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Configuration for the blades. </p>
+
+</div>
+</div>
+<a id="ac4f2b7f08a71e685a8cc3ea0073c9d38" name="ac4f2b7f08a71e685a8cc3ea0073c9d38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4f2b7f08a71e685a8cc3ea0073c9d38">&#9670;&#160;</a></span>cone_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::cone_angle {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Define blade cone angle (radians) </p>
+
+</div>
+</div>
+<a id="a9c1034802f27a9126375343f4ff99d07" name="a9c1034802f27a9126375343f4ff99d07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c1034802f27a9126375343f4ff99d07">&#9670;&#160;</a></span>hub_diameter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::hub_diameter {1e-7}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hub diameter (meters) </p>
+
+</div>
+</div>
+<a id="a36d4bb1652a7bc870f690a9923eaa8f5" name="a36d4bb1652a7bc870f690a9923eaa8f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36d4bb1652a7bc870f690a9923eaa8f5">&#9670;&#160;</a></span>nacelle_yaw_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::nacelle_yaw_angle {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial nacelle yaw angle (radians) </p>
+
+</div>
+</div>
+<a id="a213cd25b50656022c6afa401240233ae" name="a213cd25b50656022c6afa401240233ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a213cd25b50656022c6afa401240233ae">&#9670;&#160;</a></span>rotor_apex_to_hub</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::rotor_apex_to_hub {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Distance from rotor apex to hub center of mass (meters) </p>
+
+</div>
+</div>
+<a id="a4399f01fc5d0138163f6db273e4d7591" name="a4399f01fc5d0138163f6db273e4d7591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4399f01fc5d0138163f6db273e4d7591">&#9670;&#160;</a></span>rotor_speed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::rotor_speed {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial rotor speed (RPM) </p>
+
+</div>
+</div>
+<a id="ac270c1d4a4d92034c147e153d7dfabc1" name="ac270c1d4a4d92034c147e153d7dfabc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac270c1d4a4d92034c147e153d7dfabc1">&#9670;&#160;</a></span>shaft_tilt_angle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::shaft_tilt_angle {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Shaft tilt angle (radians) </p>
+
+</div>
+</div>
+<a id="afe53c02daba9af14841ea0acdc9be932" name="afe53c02daba9af14841ea0acdc9be932"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe53c02daba9af14841ea0acdc9be932">&#9670;&#160;</a></span>tower</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> openturbine::interfaces::components::TurbineInput::tower</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Configuration for the tower. </p>
+
+</div>
+</div>
+<a id="a619a0299598512c8d91c1a47a1a20ec9" name="a619a0299598512c8d91c1a47a1a20ec9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a619a0299598512c8d91c1a47a1a20ec9">&#9670;&#160;</a></span>tower_axis_to_rotor_apex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::tower_axis_to_rotor_apex {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Distance from tower centerline to rotor apex (meters) </p>
+
+</div>
+</div>
+<a id="a72b70aeb4d858d605fc6883116470e79" name="a72b70aeb4d858d605fc6883116470e79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72b70aeb4d858d605fc6883116470e79">&#9670;&#160;</a></span>tower_base_position</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;double, 7&gt; openturbine::interfaces::components::TurbineInput::tower_base_position {0., 0., 0., 1., 0., 0., 0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Position of the tower base node in the global coordinate system. </p>
+
+</div>
+</div>
+<a id="a5694a58e7e98f294a5a7f9235da49da8" name="a5694a58e7e98f294a5a7f9235da49da8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5694a58e7e98f294a5a7f9235da49da8">&#9670;&#160;</a></span>tower_top_to_rotor_apex</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::tower_top_to_rotor_apex {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Distance from tower top to rotor apex (meters) </p>
+
+</div>
+</div>
+<a id="a2bf64dbd206b358301b45da5f351e4c1" name="a2bf64dbd206b358301b45da5f351e4c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bf64dbd206b358301b45da5f351e4c1">&#9670;&#160;</a></span>yaw_bearing_inertia_matrix</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;std::array&lt;double, 6&gt;, 6&gt; openturbine::interfaces::components::TurbineInput::yaw_bearing_inertia_matrix {{{}, {}, {}, {}, {}, {}}}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Yaw bearing inertia matrix (6x6) includes yaw bearing and nacelle mass with inertia about yaw bearing. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="components_2turbine__input_8hpp_source.html">turbine_input.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

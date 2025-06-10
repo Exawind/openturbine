@@ -352,6 +352,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container providing handle to all structural elements present in the model.  <a href="structopenturbine_1_1Elements.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1HollowCircleProperties.html">HollowCircleProperties</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct containing geometric properties for a hollow circular cross-section.  <a href="structopenturbine_1_1HollowCircleProperties.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">InterpolateQPPosition</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolates quadrature point positions from nodal positions using shape functions.  <a href="structopenturbine_1_1InterpolateQPPosition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -576,6 +579,18 @@ Functions</h2></td></tr>
 <tr class="memitem:af984b601608050be09485b044eb900a7" id="r_af984b601608050be09485b044eb900a7"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:af984b601608050be09485b044eb900a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af984b601608050be09485b044eb900a7">CreateBeams</a> (const <a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a> &amp;beams_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
 <tr class="separator:af984b601608050be09485b044eb900a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae34497c1adc8912f2decacdfba95fbde" id="r_ae34497c1adc8912f2decacdfba95fbde"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae34497c1adc8912f2decacdfba95fbde">GenerateStiffnessMatrix</a> (double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C, double y_C, double theta_p, double x_S, double y_S, double theta_s)</td></tr>
+<tr class="memdesc:ae34497c1adc8912f2decacdfba95fbde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional stiffness matrix for use in beam elements.  <br /></td></tr>
+<tr class="separator:ae34497c1adc8912f2decacdfba95fbde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51b13fdf62fb27c122c8ff68a5a20c91" id="r_a51b13fdf62fb27c122c8ff68a5a20c91"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a51b13fdf62fb27c122c8ff68a5a20c91">GenerateMassMatrix</a> (double m, double I_x, double I_y, double I_p, double x_G=0., double y_G=0., double theta_i=0.)</td></tr>
+<tr class="memdesc:a51b13fdf62fb27c122c8ff68a5a20c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional mass matrix for use in beam elements.  <br /></td></tr>
+<tr class="separator:a51b13fdf62fb27c122c8ff68a5a20c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01b0000c5534a6d45904580d6de55850" id="r_a01b0000c5534a6d45904580d6de55850"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structopenturbine_1_1HollowCircleProperties.html">HollowCircleProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a01b0000c5534a6d45904580d6de55850">CalculateHollowCircleProperties</a> (double outer_diameter, double wall_thickness, double nu=0.33)</td></tr>
+<tr class="memdesc:a01b0000c5534a6d45904580d6de55850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates geometric properties for a hollow circular cross-section.  <br /></td></tr>
+<tr class="separator:a01b0000c5534a6d45904580d6de55850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba008b3bc6e6267dedceab420db6a548" id="r_aba008b3bc6e6267dedceab420db6a548"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aba008b3bc6e6267dedceab420db6a548">GenerateHollowCircleSection</a> (double s, double E, double G, double rho, double outer_diameter, double wall_thickness, double nu, double x_C=0., double y_C=0., double theta_p=0., double x_S=0., double y_S=0., double theta_s=0., double x_G=0., double y_G=0., double theta_i=0)</td></tr>
+<tr class="memdesc:aba008b3bc6e6267dedceab420db6a548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section.  <br /></td></tr>
+<tr class="separator:aba008b3bc6e6267dedceab420db6a548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8211d7f6377e8997cc7bc582b0026cf1" id="r_a8211d7f6377e8997cc7bc582b0026cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a8211d7f6377e8997cc7bc582b0026cf1">LinearInterpWeights</a> (double x, const std::vector&lt; double &gt; &amp;xs, std::vector&lt; double &gt; &amp;weights)</td></tr>
 <tr class="memdesc:a8211d7f6377e8997cc7bc582b0026cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes weights for linear interpolation.  <br /></td></tr>
 <tr class="separator:a8211d7f6377e8997cc7bc582b0026cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1741,6 +1756,59 @@ template&lt;typename DeviceType &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a01b0000c5534a6d45904580d6de55850" name="a01b0000c5534a6d45904580d6de55850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01b0000c5534a6d45904580d6de55850">&#9670;&#160;</a></span>CalculateHollowCircleProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structopenturbine_1_1HollowCircleProperties.html">HollowCircleProperties</a> openturbine::CalculateHollowCircleProperties </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>outer_diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>wall_thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>nu</em> = <code>0.33</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculates geometric properties for a hollow circular cross-section. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">outer_diameter</td><td>Outer diameter of the hollow circle [Length] </td></tr>
+    <tr><td class="paramname">wall_thickness</td><td>Wall thickness [Length] </td></tr>
+    <tr><td class="paramname">nu</td><td>Poisson's ratio for shear correction factor calculation [dimensionless]</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structopenturbine_1_1HollowCircleProperties.html" title="Struct containing geometric properties for a hollow circular cross-section.">HollowCircleProperties</a> struct containing geometric properties </dd></dl>
 
 </div>
 </div>
@@ -3237,6 +3305,360 @@ template&lt;typename DSSHandleType , typename CrsMatrixType &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aba008b3bc6e6267dedceab420db6a548" name="aba008b3bc6e6267dedceab420db6a548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba008b3bc6e6267dedceab420db6a548">&#9670;&#160;</a></span>GenerateHollowCircleSection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> openturbine::GenerateHollowCircleSection </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>E</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>G</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rho</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>outer_diameter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>wall_thickness</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>nu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_C</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_C</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_p</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_S</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_S</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_s</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_G</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_G</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_i</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section. </p>
+<p>This is a convenience function specifically for hollow circular sections commonly used in wind turbine towers. It calculates the geometric properties and then calls the general GenerateMassMatrix and GenerateStiffnessMatrix functions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>Normalized position along beam element [dimensionless] </td></tr>
+    <tr><td class="paramname">E</td><td>Young's modulus [Force/Length²] </td></tr>
+    <tr><td class="paramname">G</td><td>Shear modulus [Force/Length²] </td></tr>
+    <tr><td class="paramname">rho</td><td>Material density [Mass/Length³] </td></tr>
+    <tr><td class="paramname">outer_diameter</td><td>Outer diameter of the hollow circle [Length] </td></tr>
+    <tr><td class="paramname">wall_thickness</td><td>Wall thickness [Length] </td></tr>
+    <tr><td class="paramname">nu</td><td>Poisson's ratio [dimensionless] </td></tr>
+    <tr><td class="paramname">x_C</td><td>x-coordinate of elastic centroid relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">y_C</td><td>y-coordinate of elastic centroid relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">theta_p</td><td>Rotation angle from reference axes to principal bending axes [radians] </td></tr>
+    <tr><td class="paramname">x_S</td><td>x-coordinate of shear center relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">y_S</td><td>y-coordinate of shear center relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">theta_s</td><td>Rotation angle from reference axes to principal shear axes [radians] </td></tr>
+    <tr><td class="paramname">x_G</td><td>x-coordinate of center of gravity relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">y_G</td><td>y-coordinate of center of gravity relative to reference point [Length] </td></tr>
+    <tr><td class="paramname">theta_i</td><td>Rotation angle from reference axes to principal inertia axes [radians]</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> object containing stiffness matrix, mass matrix, and position</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>For hollow circular sections, the elastic centroid, shear center, and center of gravity all coincide at the geometric center, so offset parameters are typically zero. </dd>
+<dd>
+Principal axes align with the reference axes due to circular symmetry. </dd></dl>
+
+</div>
+</div>
+<a id="a51b13fdf62fb27c122c8ff68a5a20c91" name="a51b13fdf62fb27c122c8ff68a5a20c91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b13fdf62fb27c122c8ff68a5a20c91">&#9670;&#160;</a></span>GenerateMassMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> openturbine::GenerateMassMatrix </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>I_x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>I_y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>I_p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_G</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_G</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_i</em> = <code>0.</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a 6x6 cross-sectional mass matrix for use in beam elements. </p>
+<p>This function constructs the cross-sectional mass matrix that relates the generalized accelerations to the generalized inertial forces in a beam cross-section. Returns the mass matrix at a given point 'O' and w.r.t. given orientation axes based on the values at the center of gravity 'G' and in the inertial axis frame.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Mass per unit length [Mass/Length] </td></tr>
+    <tr><td class="paramname">I_x</td><td>Mass moment of inertia about local x-axis in principal/inertial frame and at center of gravity G [Mass×Length] </td></tr>
+    <tr><td class="paramname">I_y</td><td>Mass moment of inertia about local y-axis in principal/inertial frame and at center of gravity G [Mass×Length] </td></tr>
+    <tr><td class="paramname">I_p</td><td>Polar mass moment of inertia in principal/inertial frame and at center of gravity G (I_x + I_y) [Mass×Length] </td></tr>
+    <tr><td class="paramname">x_G</td><td>x-coordinate of center of gravity relative to reference point i.e. distance FROM O TO G [Length] </td></tr>
+    <tr><td class="paramname">y_G</td><td>y-coordinate of center of gravity relative to reference point i.e. distance FROM O TO G [Length] </td></tr>
+    <tr><td class="paramname">theta_i</td><td>Rotation angle (around z) FROM reference axes TO principal inertial axes [radians]</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>6x6 cross-sectional mass matrix </dd></dl>
+
+</div>
+</div>
+<a id="ae34497c1adc8912f2decacdfba95fbde" name="ae34497c1adc8912f2decacdfba95fbde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae34497c1adc8912f2decacdfba95fbde">&#9670;&#160;</a></span>GenerateStiffnessMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> openturbine::GenerateStiffnessMatrix </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>EA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>EI_x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>EI_y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>GKt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>GA</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>kxs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>kys</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x_S</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>y_S</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>theta_s</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generates a 6x6 cross-sectional stiffness matrix for use in beam elements. </p>
+<p>This function constructs the cross-sectional stiffness matrix that relates the generalized strains to the generalized forces/moments in a beam cross-section. The matrix accounts for coupling between axial, bending, shear, and torsional deformations due to offset between the elastic centroid and shear center locations. Returns a 6x6 stiffness matrix at the cross section origin 'O', based on inputs at the centroid 'C' and shear center 'S' locations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">EA</td><td>Axial stiffness (E×A) [Force] </td></tr>
+    <tr><td class="paramname">EI_x</td><td>Bending stiffness around local x-axis in principal frame and at the centroid 'C' [Force × Length²] </td></tr>
+    <tr><td class="paramname">EI_y</td><td>Bending stiffness around local y-axis in principal frame and at the centroid 'C' [Force × Length²] </td></tr>
+    <tr><td class="paramname">GKt</td><td>Torsional stiffness around principal frame and at shear center 'S' (G×J) [Force × Length²] </td></tr>
+    <tr><td class="paramname">GA</td><td>Shear stiffness around principal frame and at shear center 'S' (G×A) [Force] </td></tr>
+    <tr><td class="paramname">kxs</td><td>Shear correction factor in x-direction [dimensionless] </td></tr>
+    <tr><td class="paramname">kys</td><td>Shear correction factor in y-direction [dimensionless] </td></tr>
+    <tr><td class="paramname">x_C</td><td>x-coordinate of elastic centroid relative to reference point i.e. distance FROM 'O' TO 'C' [Length] </td></tr>
+    <tr><td class="paramname">y_C</td><td>y-coordinate of elastic centroid relative to reference point i.e. distance FROM 'O' TO 'C' [Length] </td></tr>
+    <tr><td class="paramname">theta_p</td><td>Rotation angle (around z) FROM reference axes TO principal bending axes [radians] </td></tr>
+    <tr><td class="paramname">x_S</td><td>x-coordinate of shear center relative to reference point i.e. distance FROM 'O' TO 'S' [Length] </td></tr>
+    <tr><td class="paramname">y_S</td><td>y-coordinate of shear center relative to reference point i.e. distance FROM 'O' TO 'S' [Length] </td></tr>
+    <tr><td class="paramname">theta_s</td><td>Rotation angle (around z) FROM reference axes TO principal shear axes [radians]</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>6x6 cross-sectional stiffness matrix </dd></dl>
 
 </div>
 </div>

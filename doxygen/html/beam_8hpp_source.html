@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/beam_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-beam-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-beam-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ee3f1a7951c308657a65f8199076c1d6.html">interfaces</a></li><li class="navelem"><a class="el" href="dir_ec19d290f88d8e9c8cebb340555e4418.html">components</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">beam.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="beam_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="interpolation_8hpp.html">elements/beams/interpolation.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="beam__input_8hpp.html">interfaces/components/beam_input.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="node__data_8hpp.html">interfaces/node_data.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="least__squares__fit_8hpp.html">math/least_squares_fit.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="matrix__operations_8hpp.html">math/matrix_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="project__points__to__target__polynomial_8hpp.html">math/project_points_to_target_polynomial.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="model_8hpp.html">model/model.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="}">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1interfaces_1_1components.html">   12</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">   21</a></span><span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416">   24</a></span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416">kMaxGeometryPoints</a>{10};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">   27</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a>{<a class="code hl_variable" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>};</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">   30</a></span>    std::vector&lt;NodeData&gt; <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">nodes</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">   33</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">prescribed_root_constraint_id</a>{<a class="code hl_variable" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>};</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a78600b3d4567ed0a8f1e97bb124c6fca">   36</a></span>    std::vector&lt;double&gt; <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a78600b3d4567ed0a8f1e97bb124c6fca">node_xi</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a3314305e227a7326f251406f9c300698">   38</a></span>    <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a3314305e227a7326f251406f9c300698">Beam</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a70c62989608056880f0822442d4fe2d5">   46</a></span>    <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a70c62989608056880f0822442d4fe2d5">Beam</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a>&amp; input, <a class="code hl_class" href="classopenturbine_1_1Model.html">Model</a>&amp; model) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        ValidateInput(input);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        SetupNodeLocations(input);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        CreateNodeGeometry(input);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        CreateBeamElement(input, model);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        PositionBladeInSpace(input, model);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        SetupRootNode(input, model);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
+</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2229918fd86f8692e2cabd7b8176b915">   60</a></span>    [[nodiscard]] std::vector&lt;double&gt; <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2229918fd86f8692e2cabd7b8176b915">GetNodeWeights</a>(<span class="keywordtype">double</span> s)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        std::vector&lt;double&gt; weights(this-&gt;node_xi.size());</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keyword">auto</span> xi = 2. * s - 1.;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <a class="code hl_function" href="namespaceopenturbine.html#a62d02ced85c6d34a155ffe003d33044b">LagrangePolynomialDerivWeights</a>(xi, this-&gt;node_xi, weights);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> weights;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
+</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="foldopen" id="foldopen00074" data-start="{" data-end="}">
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#adf141e78f89e5090134a68ec28c4c1ae">   74</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#adf141e78f89e5090134a68ec28c4c1ae">AddPointLoad</a>(<span class="keywordtype">double</span> s, std::array&lt;double, 6&gt; loads) {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">if</span> (s &lt; 0. || s &gt; 1.) {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Invalid position: &quot;</span> + std::to_string(s));</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">const</span> <span class="keyword">auto</span> weights = this-&gt;<a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2229918fd86f8692e2cabd7b8176b915">GetNodeWeights</a>(s);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0U; i &lt; this-&gt;nodes.size(); ++i) {</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0U; j &lt; 6; ++j) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                this-&gt;nodes[i].loads[j] += weights[i] * loads[j];</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
+</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00088" data-start="{" data-end="}">
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad1d465e461370f95b40152b70a932475">   88</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad1d465e461370f95b40152b70a932475">ClearLoads</a>() {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; node : this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">nodes</a>) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            node.ClearLoads();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
+</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
+<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2166eaf9f7c52537ee0a76f2b969e47b">   97</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2166eaf9f7c52537ee0a76f2b969e47b">GetMotion</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState&lt;DeviceType&gt;</a>&amp; host_state) {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; node : this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">nodes</a>) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            node.GetMotion(host_state);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    }</div>
+</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
+<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ab1caa1ad302677bb223e8fb2f2e5373c">  106</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ab1caa1ad302677bb223e8fb2f2e5373c">SetLoads</a>(<a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState&lt;DeviceType&gt;</a>&amp; host_state)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; node : this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">nodes</a>) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            node.SetLoads(host_state);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    }</div>
+</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    std::vector&lt;std::array&lt;double, 3&gt;&gt; node_coordinates;  </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    std::vector&lt;std::array&lt;double, 3&gt;&gt; node_tangents;     </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> ValidateInput(<span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a>&amp; input) {</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">ref_axis</a>.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">coordinate_grid</a>.size() &lt; 2 || input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">ref_axis</a>.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">coordinates</a>.size() &lt; 2) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;At least two reference axis points are required&quot;</span>);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        }</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">ref_axis</a>.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">coordinate_grid</a>.size() != input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">ref_axis</a>.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">coordinates</a>.size()) {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;Mismatch between coordinate_grid and coordinates sizes&quot;</span>);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        }</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a19ed7e699a680ee5d40d91c6be30971b">sections</a>.empty()) {</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;At least one section is required&quot;</span>);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keywordflow">if</span> (input.<a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#ac74ca8b9c3461f2bd5e097e42a6a7eae">element_order</a> &lt; 1) {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="keywordflow">throw</span> std::invalid_argument(</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="stringliteral">&quot;Element order must be at least 1 i.e. linear element for discretization&quot;</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            );</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        }</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    }</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordtype">void</span> SetupNodeLocations(<span class="keyword">const</span> BeamInput&amp; input) {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="comment">// Generate node locations within element [-1,1]</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        this-&gt;node_xi = <a class="code hl_function" href="namespaceopenturbine.html#aeb44d63028c659a18ee7fd14ac650550">GenerateGLLPoints</a>(input.element_order);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keywordtype">void</span> CreateNodeGeometry(<span class="keyword">const</span> BeamInput&amp; input) {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keyword">const</span> <span class="keyword">auto</span> n_nodes = input.element_order + 1;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keyword">const</span> <span class="keyword">auto</span> n_geometry_pts =</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            std::min({input.ref_axis.coordinate_grid.size(), n_nodes, <a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416">kMaxGeometryPoints</a>});</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordflow">if</span> (n_geometry_pts &lt; n_nodes) {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            <span class="comment">// We need to project from n_geometry_pts -&gt; element_order</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            <span class="keyword">const</span> std::vector&lt;double&gt; kp_xi(<a class="code hl_function" href="namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6">MapGeometricLocations</a>(input.ref_axis.coordinate_grid));</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keyword">const</span> <span class="keyword">auto</span> [phi_kn_geometry, phi_prime_kn_geometry] =</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                <a class="code hl_function" href="namespaceopenturbine.html#ae376a2d9dff8ebb21504140773963bb2">ShapeFunctionMatrices</a>(kp_xi, <a class="code hl_function" href="namespaceopenturbine.html#aeb44d63028c659a18ee7fd14ac650550">GenerateGLLPoints</a>(n_geometry_pts - 1));</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keyword">const</span> <span class="keyword">auto</span> geometry_points = <a class="code hl_function" href="namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5">PerformLeastSquaresFitting</a>(</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            );</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keyword">const</span> <span class="keyword">auto</span> node_coords =</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                <a class="code hl_function" href="namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852">ProjectPointsToTargetPolynomial</a>(n_geometry_pts, n_nodes, geometry_points);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            this-&gt;node_coordinates.clear();</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            this-&gt;node_coordinates.reserve(node_coords.size());</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            std::copy(</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                node_coords.begin(), node_coords.end(), std::back_inserter(this-&gt;node_coordinates)</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            );</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="comment">// Fit node coordinates to key points</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keyword">const</span> std::vector&lt;double&gt; kp_xi(<a class="code hl_function" href="namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6">MapGeometricLocations</a>(input.ref_axis.coordinate_grid));</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            <span class="keyword">const</span> <span class="keyword">auto</span> [phi_kn, phi_prime_kn] = <a class="code hl_function" href="namespaceopenturbine.html#ae376a2d9dff8ebb21504140773963bb2">ShapeFunctionMatrices</a>(kp_xi, this-&gt;node_xi);</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            this-&gt;node_coordinates =</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                <a class="code hl_function" href="namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5">PerformLeastSquaresFitting</a>(n_nodes, phi_kn, input.ref_axis.coordinates);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <span class="comment">// Calculate tangent vectors at each node</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        this-&gt;CalcNodeTangents();</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keywordtype">void</span> CreateBeamElement(<span class="keyword">const</span> BeamInput&amp; input, Model&amp; model) {</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="comment">// Add nodes to model</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        std::vector&lt;size_t&gt; node_ids;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; this-&gt;node_xi.size(); ++i) {</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; pos = this-&gt;node_coordinates[i];</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="keyword">const</span> <span class="keyword">auto</span> q_rot = <a class="code hl_function" href="namespaceopenturbine.html#af976511aa26b2d3708f71ecaa49627e5">TangentTwistToQuaternion</a>(this-&gt;node_tangents[i], 0.);</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="keyword">const</span> <span class="keyword">auto</span> node_id =</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                model.AddNode()</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                    .SetElemLocation((this-&gt;node_xi[i] + 1.) / 2.)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                    .SetPosition(pos[0], pos[1], pos[2], q_rot[0], q_rot[1], q_rot[2], q_rot[3])</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                    .Build();</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            node_ids.emplace_back(node_id);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            this-&gt;nodes.emplace_back(node_id);</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="comment">// Build beam sections</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keyword">const</span> <span class="keyword">auto</span> sections = BuildBeamSections(input);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        std::vector&lt;double&gt; section_grid(sections.size());</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        std::transform(</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            sections.begin(), sections.end(), section_grid.begin(),</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; section) {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                return section.position;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            }</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        );</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="comment">// Calculate trapezoidal quadrature based on section locations</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keyword">const</span> <span class="keyword">auto</span> trapezoidal_quadrature = <a class="code hl_function" href="namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3">CreateTrapezoidalQuadrature</a>(section_grid);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="comment">// Add beam element and get ID</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a> = model.AddBeamElement(node_ids, sections, trapezoidal_quadrature);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    }</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keywordtype">void</span> PositionBladeInSpace(<span class="keyword">const</span> BeamInput&amp; input, Model&amp; model)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="comment">// Extract root location, orientation, and velocity</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="keyword">const</span> std::array&lt;double, 3&gt; root_location{</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            input.root.position[0], input.root.position[1], input.root.position[2]</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        };</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> root_orientation{</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            input.root.position[3], input.root.position[4], input.root.position[5],</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            input.root.position[6]</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        };</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keyword">const</span> std::array&lt;double, 3&gt; root_omega{</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            input.root.velocity[3], input.root.velocity[4], input.root.velocity[5]</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        };</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="comment">// Translate beam element to root location</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        model.TranslateBeam(this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a>, root_location);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <span class="comment">// Rotate beam element about root location</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        model.RotateBeamAboutPoint(this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a>, root_orientation, root_location);</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="comment">// Set beam velocity about root location</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        model.SetBeamVelocityAboutPoint(this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a>, input.root.velocity, root_location);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="comment">// Set beam acceleration about root location</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        model.SetBeamAccelerationAboutPoint(</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a>, input.root.acceleration, root_omega, root_location</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        );</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keywordtype">void</span> SetupRootNode(<span class="keyword">const</span> BeamInput&amp; input, Model&amp; model) {</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="comment">// Add prescribed displacement constraint to root node if requested</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keywordflow">if</span> (input.root.prescribe_root_motion) {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            this-&gt;<a class="code hl_variable" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">prescribed_root_constraint_id</a> = model.AddPrescribedBC(this-&gt;nodes[0].<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        }</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    }</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <span class="keywordtype">void</span> CalcNodeTangents() {</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keyword">const</span> <span class="keyword">auto</span> n_nodes{this-&gt;node_coordinates.size()};</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        <span class="comment">// Calculate the derivative shape function matrix for the nodes</span></div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="keyword">const</span> <span class="keyword">auto</span> [phi, phi_prime] = <a class="code hl_function" href="namespaceopenturbine.html#ae376a2d9dff8ebb21504140773963bb2">ShapeFunctionMatrices</a>(this-&gt;node_xi, this-&gt;node_xi);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        <span class="comment">// Calculate tangent vectors for each node</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        this-&gt;node_tangents.resize(n_nodes, {0., 0., 0.});</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; n_nodes; ++i) {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; 3; ++j) {</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; n_nodes; ++k) {</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                    this-&gt;node_tangents[i][j] += phi_prime[k][i] * this-&gt;node_coordinates[k][j];</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                }</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            }</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        }</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="comment">// Normalize tangent vectors</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        std::transform(</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            this-&gt;node_tangents.begin(), this-&gt;node_tangents.end(), this-&gt;node_tangents.begin(),</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            [](std::array&lt;double, 3&gt;&amp; tangent) {</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                const auto norm = Norm(tangent);</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                    return v / norm;</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>                });</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>                <span class="keywordflow">return</span> tangent;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            }</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        );</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    }</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keyword">static</span> std::vector&lt;BeamSection&gt; BuildBeamSections(<span class="keyword">const</span> BeamInput&amp; input) {</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="comment">// Extraction section stiffness and mass matrices from blade definition</span></div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        std::vector&lt;BeamSection&gt; sections;</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        <span class="comment">// Add first section after rotating matrices to account for twist</span></div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <span class="keyword">auto</span> twist = <a class="code hl_function" href="namespaceopenturbine.html#a1db20fcfb13ca8cebee42efbe709969c">LinearInterp</a>(</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>            input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        );</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="keyword">auto</span> q_twist = <a class="code hl_function" href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">RotationVectorToQuaternion</a>({twist * M_PI / 180., 0., 0.});</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        sections.emplace_back(</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            input.sections[0].location, <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(input.sections[0].mass_matrix, q_twist),</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(input.sections[0].stiffness_matrix, q_twist)</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        );</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="comment">// Loop through remaining section locations</span></div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 1U; i &lt; input.sections.size(); ++i) {</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>            <span class="comment">// Add refinement sections if requested</span></div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; input.section_refinement; ++j) {</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>                <span class="comment">// Calculate interpolation ratio between bounding sections</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                <span class="keyword">const</span> <span class="keyword">auto</span> alpha =</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                    <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(j + 1) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(input.section_refinement + 1);</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                <span class="comment">// Interpolate grid location</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                <span class="keyword">const</span> <span class="keyword">auto</span> grid_value = (1. - alpha) * input.sections[i - 1].location +</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>                                        alpha * input.sections[i].location;</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="comment">// Interpolate mass and stiffness matrices from bounding sections</span></div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> mass_matrix;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> stiffness_matrix;</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> mi = 0U; mi &lt; 6; ++mi) {</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> ni = 0U; ni &lt; 6; ++ni) {</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                        mass_matrix[mi][ni] =</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                            (1. - alpha) * input.sections[i - 1].mass_matrix[mi][ni] +</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                            alpha * input.sections[i].mass_matrix[mi][ni];</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                        stiffness_matrix[mi][ni] =</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>                            (1. - alpha) * input.sections[i - 1].stiffness_matrix[mi][ni] +</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>                            alpha * input.sections[i].stiffness_matrix[mi][ni];</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>                    }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                }</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                <span class="comment">// Calculate twist at current section location via linear interpolation</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                twist = <a class="code hl_function" href="namespaceopenturbine.html#a1db20fcfb13ca8cebee42efbe709969c">LinearInterp</a>(</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                    input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                );</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>                <span class="comment">// Add refinement section</span></div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>                q_twist = <a class="code hl_function" href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">RotationVectorToQuaternion</a>({twist * M_PI / 180., 0., 0.});</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>                sections.emplace_back(</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                    grid_value, <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(mass_matrix, q_twist),</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                    <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(stiffness_matrix, q_twist)</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>                );</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            }</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            <span class="comment">// Add ending section</span></div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            twist = <a class="code hl_function" href="namespaceopenturbine.html#a1db20fcfb13ca8cebee42efbe709969c">LinearInterp</a>(</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                input.sections[i].location, input.ref_axis.twist_grid, input.ref_axis.twist</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            );</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            q_twist = <a class="code hl_function" href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">RotationVectorToQuaternion</a>({twist * M_PI / 180., 0., 0.});</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            sections.emplace_back(</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                input.sections[i].location, <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(input.sections[i].mass_matrix, q_twist),</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(input.sections[i].stiffness_matrix, q_twist)</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>            );</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>        }</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        <span class="keywordflow">return</span> sections;</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    }</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>};</div>
+</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>}  <span class="comment">// namespace openturbine::interfaces::components</span></div>
+</div>
+<div class="ttc" id="abeam__input_8hpp_html"><div class="ttname"><a href="beam__input_8hpp.html">beam_input.hpp</a></div></div>
+<div class="ttc" id="aclassopenturbine_1_1Model_html"><div class="ttname"><a href="classopenturbine_1_1Model.html">openturbine::Model</a></div><div class="ttdoc">Struct to define a turbine model with nodes, elements, and constraints.</div><div class="ttdef"><b>Definition</b> model.hpp:75</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">openturbine::interfaces::components::Beam</a></div><div class="ttdoc">Represents a turbine blade with nodes, elements, and constraints.</div><div class="ttdef"><b>Definition</b> beam.hpp:21</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a2166eaf9f7c52537ee0a76f2b969e47b"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2166eaf9f7c52537ee0a76f2b969e47b">openturbine::interfaces::components::Beam::GetMotion</a></div><div class="ttdeci">void GetMotion(const HostState&lt; DeviceType &gt; &amp;host_state)</div><div class="ttdoc">Populate node motion based on host state.</div><div class="ttdef"><b>Definition</b> beam.hpp:97</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a2229918fd86f8692e2cabd7b8176b915"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a2229918fd86f8692e2cabd7b8176b915">openturbine::interfaces::components::Beam::GetNodeWeights</a></div><div class="ttdeci">std::vector&lt; double &gt; GetNodeWeights(double s) const</div><div class="ttdoc">Returns a vector of weights for distributing a point load to the nodes.</div><div class="ttdef"><b>Definition</b> beam.hpp:60</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a3314305e227a7326f251406f9c300698"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a3314305e227a7326f251406f9c300698">openturbine::interfaces::components::Beam::Beam</a></div><div class="ttdeci">Beam()=default</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a5002aa04d62c2b5b1e5b0cd190ec2fb6"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">openturbine::interfaces::components::Beam::beam_element_id</a></div><div class="ttdeci">size_t beam_element_id</div><div class="ttdoc">Beam element ID.</div><div class="ttdef"><b>Definition</b> beam.hpp:27</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a70c62989608056880f0822442d4fe2d5"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a70c62989608056880f0822442d4fe2d5">openturbine::interfaces::components::Beam::Beam</a></div><div class="ttdeci">Beam(const BeamInput &amp;input, Model &amp;model)</div><div class="ttdoc">Construct a new Blade using the provided input and model.</div><div class="ttdef"><b>Definition</b> beam.hpp:46</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a78600b3d4567ed0a8f1e97bb124c6fca"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a78600b3d4567ed0a8f1e97bb124c6fca">openturbine::interfaces::components::Beam::node_xi</a></div><div class="ttdeci">std::vector&lt; double &gt; node_xi</div><div class="ttdoc">Location of nodes in blade element [-1, 1].</div><div class="ttdef"><b>Definition</b> beam.hpp:36</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_a9fabf8f7bd7e295d918c466f4827f5ae"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">openturbine::interfaces::components::Beam::nodes</a></div><div class="ttdeci">std::vector&lt; NodeData &gt; nodes</div><div class="ttdoc">Blade node data.</div><div class="ttdef"><b>Definition</b> beam.hpp:30</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_ab1caa1ad302677bb223e8fb2f2e5373c"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ab1caa1ad302677bb223e8fb2f2e5373c">openturbine::interfaces::components::Beam::SetLoads</a></div><div class="ttdeci">void SetLoads(HostState&lt; DeviceType &gt; &amp;host_state) const</div><div class="ttdoc">Update the host state with current node forces and moments.</div><div class="ttdef"><b>Definition</b> beam.hpp:106</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_ad1d465e461370f95b40152b70a932475"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad1d465e461370f95b40152b70a932475">openturbine::interfaces::components::Beam::ClearLoads</a></div><div class="ttdeci">void ClearLoads()</div><div class="ttdoc">Sets blade point loads to zero.</div><div class="ttdef"><b>Definition</b> beam.hpp:88</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_ad7263570d80ab0bee18093930ee7397e"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">openturbine::interfaces::components::Beam::prescribed_root_constraint_id</a></div><div class="ttdeci">size_t prescribed_root_constraint_id</div><div class="ttdoc">Constraint ID of prescribed root displacement.</div><div class="ttdef"><b>Definition</b> beam.hpp:33</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_adf141e78f89e5090134a68ec28c4c1ae"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#adf141e78f89e5090134a68ec28c4c1ae">openturbine::interfaces::components::Beam::AddPointLoad</a></div><div class="ttdeci">void AddPointLoad(double s, std::array&lt; double, 6 &gt; loads)</div><div class="ttdoc">Adds a point load (Fx, Fy, Fz, Mx, My, Mz) to the blade at location 's' [0, 1] along the material axi...</div><div class="ttdef"><b>Definition</b> beam.hpp:74</div></div>
+<div class="ttc" id="aclassopenturbine_1_1interfaces_1_1components_1_1Beam_html_afc81598422cdea806934ce9ef33be416"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416">openturbine::interfaces::components::Beam::kMaxGeometryPoints</a></div><div class="ttdeci">static constexpr size_t kMaxGeometryPoints</div><div class="ttdoc">Maximum number of points allowed in blade geometry definition.</div><div class="ttdef"><b>Definition</b> beam.hpp:24</div></div>
+<div class="ttc" id="ainterpolation_8hpp_html"><div class="ttname"><a href="interpolation_8hpp.html">interpolation.hpp</a></div></div>
+<div class="ttc" id="aleast__squares__fit_8hpp_html"><div class="ttname"><a href="least__squares__fit_8hpp.html">least_squares_fit.hpp</a></div></div>
+<div class="ttc" id="amatrix__operations_8hpp_html"><div class="ttname"><a href="matrix__operations_8hpp.html">matrix_operations.hpp</a></div></div>
+<div class="ttc" id="amodel_8hpp_html"><div class="ttname"><a href="model_8hpp.html">model.hpp</a></div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_1_1components_html"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a></div><div class="ttdef"><b>Definition</b> beam.hpp:12</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a0205ddd45198a3c2892ebfb251c18be6"><div class="ttname"><a href="namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6">openturbine::MapGeometricLocations</a></div><div class="ttdeci">std::vector&lt; double &gt; MapGeometricLocations(const std::vector&lt; double &gt; &amp;geom_locations)</div><div class="ttdoc">Maps input geometric locations -&gt; normalized domain using linear mapping.</div><div class="ttdef"><b>Definition</b> least_squares_fit.hpp:26</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a1db20fcfb13ca8cebee42efbe709969c"><div class="ttname"><a href="namespaceopenturbine.html#a1db20fcfb13ca8cebee42efbe709969c">openturbine::LinearInterp</a></div><div class="ttdeci">double LinearInterp(double x, const std::vector&lt; double &gt; &amp;xs, const std::vector&lt; double &gt; &amp;values)</div><div class="ttdoc">Computes linear interpolation.</div><div class="ttdef"><b>Definition</b> interpolation.hpp:51</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a3e67abffe51377e6892666229beae505"><div class="ttname"><a href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">openturbine::kInvalidID</a></div><div class="ttdeci">static constexpr size_t kInvalidID</div><div class="ttdef"><b>Definition</b> types.hpp:14</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a62d02ced85c6d34a155ffe003d33044b"><div class="ttname"><a href="namespaceopenturbine.html#a62d02ced85c6d34a155ffe003d33044b">openturbine::LagrangePolynomialDerivWeights</a></div><div class="ttdeci">void LagrangePolynomialDerivWeights(double x, const std::vector&lt; double &gt; &amp;xs, std::vector&lt; double &gt; &amp;weights)</div><div class="ttdoc">Computes weights for Lagrange polynomial derivative interpolation.</div><div class="ttdef"><b>Definition</b> interpolation.hpp:98</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a6add52579dfe9e78b0da9c842b2ed4f0"><div class="ttname"><a href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">openturbine::Array_6x6</a></div><div class="ttdeci">std::array&lt; Array_6, 6 &gt; Array_6x6</div><div class="ttdef"><b>Definition</b> types.hpp:45</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a9f941e64c14f9edcfb3d8f62efc34633"><div class="ttname"><a href="namespaceopenturbine.html#a9f941e64c14f9edcfb3d8f62efc34633">openturbine::RotationVectorToQuaternion</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(const Vector &amp;phi, const Quaternion &amp;quaternion)</div><div class="ttdoc">Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:207</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_aad19d7b7244cc18f631e0cd4d7a5e4fc"><div class="ttname"><a href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">openturbine::RotateMatrix6</a></div><div class="ttdeci">Array_6x6 RotateMatrix6(const Array_6x6 &amp;m, const Array_4 &amp;q)</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:51</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_abf227a76a63e51fdd3f8c22aae66bce3"><div class="ttname"><a href="namespaceopenturbine.html#abf227a76a63e51fdd3f8c22aae66bce3">openturbine::CreateTrapezoidalQuadrature</a></div><div class="ttdeci">BeamQuadrature CreateTrapezoidalQuadrature(const std::vector&lt; double &gt; &amp;grid)</div><div class="ttdef"><b>Definition</b> beam_quadrature.hpp:12</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ac477866f341264e321869bc6d75c0852"><div class="ttname"><a href="namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852">openturbine::ProjectPointsToTargetPolynomial</a></div><div class="ttdeci">std::vector&lt; std::array&lt; double, 3 &gt; &gt; ProjectPointsToTargetPolynomial(size_t num_inputs, size_t num_outputs, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;input_points)</div><div class="ttdoc">Projects 3D points from a given (lower) polynomial representation to a target (higher) polynomial rep...</div><div class="ttdef"><b>Definition</b> project_points_to_target_polynomial.hpp:30</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_acdb38d2cae9f133089ae4e7e2ad71a19"><div class="ttname"><a href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">openturbine::Array_4</a></div><div class="ttdeci">std::array&lt; double, 4 &gt; Array_4</div><div class="ttdef"><b>Definition</b> types.hpp:39</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ad8684936dbf65ffcd95d6d760e5808f5"><div class="ttname"><a href="namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5">openturbine::PerformLeastSquaresFitting</a></div><div class="ttdeci">std::vector&lt; std::array&lt; double, 3 &gt; &gt; PerformLeastSquaresFitting(size_t p, const Matrix &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</div><div class="ttdoc">Performs least squares fitting to determine interpolation coefficients.</div><div class="ttdef"><b>Definition</b> least_squares_fit.hpp:128</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_ae376a2d9dff8ebb21504140773963bb2"><div class="ttname"><a href="namespaceopenturbine.html#ae376a2d9dff8ebb21504140773963bb2">openturbine::ShapeFunctionMatrices</a></div><div class="ttdeci">std::tuple&lt; Matrix, Matrix, std::vector&lt; double &gt; &gt; ShapeFunctionMatrices(size_t n, size_t p, const std::vector&lt; double &gt; &amp;evaluation_pts)</div><div class="ttdoc">Computes shape function matrices ϕg and their derivatives dϕg at points ξg.</div><div class="ttdef"><b>Definition</b> least_squares_fit.hpp:53</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_aeb44d63028c659a18ee7fd14ac650550"><div class="ttname"><a href="namespaceopenturbine.html#aeb44d63028c659a18ee7fd14ac650550">openturbine::GenerateGLLPoints</a></div><div class="ttdeci">std::vector&lt; double &gt; GenerateGLLPoints(const size_t order)</div><div class="ttdoc">Generates Gauss-Lobatto-Legendre (GLL) points for spectral element discretization.</div><div class="ttdef"><b>Definition</b> interpolation.hpp:185</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_af976511aa26b2d3708f71ecaa49627e5"><div class="ttname"><a href="namespaceopenturbine.html#af976511aa26b2d3708f71ecaa49627e5">openturbine::TangentTwistToQuaternion</a></div><div class="ttdeci">Array_4 TangentTwistToQuaternion(const Array_3 &amp;tangent, const double twist)</div><div class="ttdoc">Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:310</div></div>
+<div class="ttc" id="anode__data_8hpp_html"><div class="ttname"><a href="node__data_8hpp.html">node_data.hpp</a></div></div>
+<div class="ttc" id="aproject__points__to__target__polynomial_8hpp_html"><div class="ttname"><a href="project__points__to__target__polynomial_8hpp.html">project_points_to_target_polynomial.hpp</a></div></div>
+<div class="ttc" id="aquaternion__operations_8hpp_html"><div class="ttname"><a href="quaternion__operations_8hpp.html">quaternion_operations.hpp</a></div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1HostState_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a></div><div class="ttdoc">Host-side mirror of the simulation state for a given time increment.</div><div class="ttdef"><b>Definition</b> host_state.hpp:23</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">openturbine::interfaces::components::BeamInput</a></div><div class="ttdoc">Complete input specification for a beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:80</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_a19ed7e699a680ee5d40d91c6be30971b"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#a19ed7e699a680ee5d40d91c6be30971b">openturbine::interfaces::components::BeamInput::sections</a></div><div class="ttdeci">std::vector&lt; Section &gt; sections</div><div class="ttdoc">Section properties.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:94</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_ac74ca8b9c3461f2bd5e097e42a6a7eae"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#ac74ca8b9c3461f2bd5e097e42a6a7eae">openturbine::interfaces::components::BeamInput::element_order</a></div><div class="ttdeci">size_t element_order</div><div class="ttdoc">Spectral element order (num nodes - 1)</div><div class="ttdef"><b>Definition</b> beam_input.hpp:82</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1BeamInput_html_acca700be5f002a44007fb7ce222a22fd"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html#acca700be5f002a44007fb7ce222a22fd">openturbine::interfaces::components::BeamInput::ref_axis</a></div><div class="ttdeci">ReferenceAxis ref_axis</div><div class="ttdoc">Structural reference axis data.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:88</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_a113359e46817a2feff0467fdf2b71aa6"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#a113359e46817a2feff0467fdf2b71aa6">openturbine::interfaces::components::ReferenceAxis::coordinate_grid</a></div><div class="ttdeci">std::vector&lt; double &gt; coordinate_grid</div><div class="ttdoc">Normalized coordinate locations [0, 1] along the beam.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis_html_abeda368d7fc537a7672dfdd3987cefa3"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1ReferenceAxis.html#abeda368d7fc537a7672dfdd3987cefa3">openturbine::interfaces::components::ReferenceAxis::coordinates</a></div><div class="ttdeci">std::vector&lt; std::array&lt; double, 3 &gt; &gt; coordinates</div><div class="ttdoc">X,Y,Z coordinates of reference axis points.</div><div class="ttdef"><b>Definition</b> beam_input.hpp:17</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::components::Turbine Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::components::Turbine Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classopenturbine_1_1interfaces_1_1components_1_1Turbine.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="turbine-class-reference">
+<h1>Turbine Class Reference<a class="headerlink" href="#turbine-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::components::Turbine Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html">components</a></li><li class="navelem"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">Turbine</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="classopenturbine_1_1interfaces_1_1components_1_1Turbine-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::components::Turbine Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Represents a turbine with nodes, elements, and constraints.  
+ <a href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="components_2turbine_8hpp_source.html">turbine.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2c841b009db0a3b1b3f0297e4e963a24" id="r_a2c841b009db0a3b1b3f0297e4e963a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a2c841b009db0a3b1b3f0297e4e963a24">Turbine</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a> &amp;input, <a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;model)</td></tr>
+<tr class="separator:a2c841b009db0a3b1b3f0297e4e963a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2" id="r_ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ab83bfaa2586b322e86ba82b4b303bbe2">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state)</td></tr>
+<tr class="memdesc:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate node motion from host state.  <br /></td></tr>
+<tr class="separator:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a495c21ba774c902d4e098e34a27f37af" id="r_a495c21ba774c902d4e098e34a27f37af"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a495c21ba774c902d4e098e34a27f37af"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a495c21ba774c902d4e098e34a27f37af">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state) const</td></tr>
+<tr class="memdesc:a495c21ba774c902d4e098e34a27f37af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the host state with current node forces and moments.  <br /></td></tr>
+<tr class="separator:a495c21ba774c902d4e098e34a27f37af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ae1bf96e6c5e52197878963f19fe465b5" id="r_ae1bf96e6c5e52197878963f19fe465b5"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ae1bf96e6c5e52197878963f19fe465b5">blades</a></td></tr>
+<tr class="separator:ae1bf96e6c5e52197878963f19fe465b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3272669b2395495025782612c7b3f951" id="r_a3272669b2395495025782612c7b3f951"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a3272669b2395495025782612c7b3f951">tower</a></td></tr>
+<tr class="separator:a3272669b2395495025782612c7b3f951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a531c7ee4532d2477f4ca98d468014568" id="r_a531c7ee4532d2477f4ca98d468014568"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a531c7ee4532d2477f4ca98d468014568">hub_mass_element_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="separator:a531c7ee4532d2477f4ca98d468014568"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abed03b4649f52da99176d59ac3787026" id="r_abed03b4649f52da99176d59ac3787026"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#abed03b4649f52da99176d59ac3787026">yaw_bearing_mass_element_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="separator:abed03b4649f52da99176d59ac3787026"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a052dd7c93555df61a6335fe1c11440b3" id="r_a052dd7c93555df61a6335fe1c11440b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a052dd7c93555df61a6335fe1c11440b3">apex_nodes</a></td></tr>
+<tr class="separator:a052dd7c93555df61a6335fe1c11440b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d051eb446c6ed56f9763617d4e4a1c" id="r_ac3d051eb446c6ed56f9763617d4e4a1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ac3d051eb446c6ed56f9763617d4e4a1c">hub_node</a></td></tr>
+<tr class="separator:ac3d051eb446c6ed56f9763617d4e4a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae83cde3ff0dbe004e0b2538b89524346" id="r_ae83cde3ff0dbe004e0b2538b89524346"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ae83cde3ff0dbe004e0b2538b89524346">azimuth_node</a></td></tr>
+<tr class="separator:ae83cde3ff0dbe004e0b2538b89524346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd3a5b5c352bf85e827c0aabf49e0d2d" id="r_afd3a5b5c352bf85e827c0aabf49e0d2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#afd3a5b5c352bf85e827c0aabf49e0d2d">shaft_base_node</a></td></tr>
+<tr class="separator:afd3a5b5c352bf85e827c0aabf49e0d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7766482cfebab90f502bb831fb72ba4" id="r_ad7766482cfebab90f502bb831fb72ba4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ad7766482cfebab90f502bb831fb72ba4">yaw_bearing_node</a></td></tr>
+<tr class="separator:ad7766482cfebab90f502bb831fb72ba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669b11b87e15a257bf63e0f7ebe64d2a" id="r_a669b11b87e15a257bf63e0f7ebe64d2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a669b11b87e15a257bf63e0f7ebe64d2a">tower_base</a></td></tr>
+<tr class="separator:a669b11b87e15a257bf63e0f7ebe64d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c247a61c8356b581f465b463dbedefb" id="r_a1c247a61c8356b581f465b463dbedefb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a1c247a61c8356b581f465b463dbedefb">tower_top_to_yaw_bearing</a></td></tr>
+<tr class="separator:a1c247a61c8356b581f465b463dbedefb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7edce9b4c45090d57bad98c1d3f3ac52" id="r_a7edce9b4c45090d57bad98c1d3f3ac52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a7edce9b4c45090d57bad98c1d3f3ac52">yaw_bearing_to_shaft_base</a></td></tr>
+<tr class="separator:a7edce9b4c45090d57bad98c1d3f3ac52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66ad9dae573ccda12beca334a13c866c" id="r_a66ad9dae573ccda12beca334a13c866c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a66ad9dae573ccda12beca334a13c866c">shaft_base_to_azimuth</a></td></tr>
+<tr class="separator:a66ad9dae573ccda12beca334a13c866c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf47fc390ad2340a702b680adf84b938" id="r_abf47fc390ad2340a702b680adf84b938"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#abf47fc390ad2340a702b680adf84b938">azimuth_to_hub</a></td></tr>
+<tr class="separator:abf47fc390ad2340a702b680adf84b938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d0ad29b012cf474833c27aedd93c8b9" id="r_a9d0ad29b012cf474833c27aedd93c8b9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a9d0ad29b012cf474833c27aedd93c8b9">blade_pitch</a></td></tr>
+<tr class="separator:a9d0ad29b012cf474833c27aedd93c8b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc03f3d1b905668b03382a5d8cdf4e1b" id="r_acc03f3d1b905668b03382a5d8cdf4e1b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#acc03f3d1b905668b03382a5d8cdf4e1b">apex_to_hub</a></td></tr>
+<tr class="separator:acc03f3d1b905668b03382a5d8cdf4e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5537226710ba7f58f9cc442c022a9d2" id="r_af5537226710ba7f58f9cc442c022a9d2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#af5537226710ba7f58f9cc442c022a9d2">blade_pitch_control</a></td></tr>
+<tr class="separator:af5537226710ba7f58f9cc442c022a9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8756a74c48a72fa73ebc7f5b0cf7a07" id="r_ad8756a74c48a72fa73ebc7f5b0cf7a07"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ad8756a74c48a72fa73ebc7f5b0cf7a07">torque_control</a> {0.}</td></tr>
+<tr class="separator:ad8756a74c48a72fa73ebc7f5b0cf7a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a3e2fd190870407f3663e44f1507009" id="r_a2a3e2fd190870407f3663e44f1507009"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a2a3e2fd190870407f3663e44f1507009">yaw_control</a> {0.}</td></tr>
+<tr class="separator:a2a3e2fd190870407f3663e44f1507009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents a turbine with nodes, elements, and constraints. </p>
+<p>This class is responsible for creating and managing a turbine on input specifications. It handles the creation of nodes, mass elements, and constraints within the provided model. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2c841b009db0a3b1b3f0297e4e963a24" name="a2c841b009db0a3b1b3f0297e4e963a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c841b009db0a3b1b3f0297e4e963a24">&#9670;&#160;</a></span>Turbine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::interfaces::components::Turbine::Turbine </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;&#160;</td>
+          <td class="paramname"><em>model</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>Configuration for the turbine </td></tr>
+    <tr><td class="paramname">model</td><td><a class="el" href="classopenturbine_1_1Model.html" title="Struct to define a turbine model with nodes, elements, and constraints.">Model</a> to which the turbine elements and nodes will be added </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::invalid_argument</td><td>If the input configuration is invalid </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ab83bfaa2586b322e86ba82b4b303bbe2" name="ab83bfaa2586b322e86ba82b4b303bbe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab83bfaa2586b322e86ba82b4b303bbe2">&#9670;&#160;</a></span>GetMotion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::components::Turbine::GetMotion </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>host_state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Populate node motion from host state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_state</td><td>Host state containing position, displacement, velocity, and acceleration </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a495c21ba774c902d4e098e34a27f37af" name="a495c21ba774c902d4e098e34a27f37af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a495c21ba774c902d4e098e34a27f37af">&#9670;&#160;</a></span>SetLoads()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::components::Turbine::SetLoads </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>host_state</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the host state with current node forces and moments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_state</td><td>Host state to update </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a052dd7c93555df61a6335fe1c11440b3" name="a052dd7c93555df61a6335fe1c11440b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a052dd7c93555df61a6335fe1c11440b3">&#9670;&#160;</a></span>apex_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a>&gt; openturbine::interfaces::components::Turbine::apex_nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc03f3d1b905668b03382a5d8cdf4e1b" name="acc03f3d1b905668b03382a5d8cdf4e1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc03f3d1b905668b03382a5d8cdf4e1b">&#9670;&#160;</a></span>apex_to_hub</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&gt; openturbine::interfaces::components::Turbine::apex_to_hub</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae83cde3ff0dbe004e0b2538b89524346" name="ae83cde3ff0dbe004e0b2538b89524346"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae83cde3ff0dbe004e0b2538b89524346">&#9670;&#160;</a></span>azimuth_node</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> openturbine::interfaces::components::Turbine::azimuth_node</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abf47fc390ad2340a702b680adf84b938" name="abf47fc390ad2340a702b680adf84b938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf47fc390ad2340a702b680adf84b938">&#9670;&#160;</a></span>azimuth_to_hub</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> openturbine::interfaces::components::Turbine::azimuth_to_hub</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d0ad29b012cf474833c27aedd93c8b9" name="a9d0ad29b012cf474833c27aedd93c8b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d0ad29b012cf474833c27aedd93c8b9">&#9670;&#160;</a></span>blade_pitch</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a>&gt; openturbine::interfaces::components::Turbine::blade_pitch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5537226710ba7f58f9cc442c022a9d2" name="af5537226710ba7f58f9cc442c022a9d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5537226710ba7f58f9cc442c022a9d2">&#9670;&#160;</a></span>blade_pitch_control</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::Turbine::blade_pitch_control</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae1bf96e6c5e52197878963f19fe465b5" name="ae1bf96e6c5e52197878963f19fe465b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1bf96e6c5e52197878963f19fe465b5">&#9670;&#160;</a></span>blades</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a>&gt; openturbine::interfaces::components::Turbine::blades</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a531c7ee4532d2477f4ca98d468014568" name="a531c7ee4532d2477f4ca98d468014568"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a531c7ee4532d2477f4ca98d468014568">&#9670;&#160;</a></span>hub_mass_element_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::Turbine::hub_mass_element_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3d051eb446c6ed56f9763617d4e4a1c" name="ac3d051eb446c6ed56f9763617d4e4a1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d051eb446c6ed56f9763617d4e4a1c">&#9670;&#160;</a></span>hub_node</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> openturbine::interfaces::components::Turbine::hub_node</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afd3a5b5c352bf85e827c0aabf49e0d2d" name="afd3a5b5c352bf85e827c0aabf49e0d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd3a5b5c352bf85e827c0aabf49e0d2d">&#9670;&#160;</a></span>shaft_base_node</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> openturbine::interfaces::components::Turbine::shaft_base_node</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a66ad9dae573ccda12beca334a13c866c" name="a66ad9dae573ccda12beca334a13c866c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66ad9dae573ccda12beca334a13c866c">&#9670;&#160;</a></span>shaft_base_to_azimuth</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> openturbine::interfaces::components::Turbine::shaft_base_to_azimuth</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad8756a74c48a72fa73ebc7f5b0cf7a07" name="ad8756a74c48a72fa73ebc7f5b0cf7a07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8756a74c48a72fa73ebc7f5b0cf7a07">&#9670;&#160;</a></span>torque_control</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::Turbine::torque_control {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3272669b2395495025782612c7b3f951" name="a3272669b2395495025782612c7b3f951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3272669b2395495025782612c7b3f951">&#9670;&#160;</a></span>tower</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a> openturbine::interfaces::components::Turbine::tower</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a669b11b87e15a257bf63e0f7ebe64d2a" name="a669b11b87e15a257bf63e0f7ebe64d2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669b11b87e15a257bf63e0f7ebe64d2a">&#9670;&#160;</a></span>tower_base</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> openturbine::interfaces::components::Turbine::tower_base</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c247a61c8356b581f465b463dbedefb" name="a1c247a61c8356b581f465b463dbedefb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c247a61c8356b581f465b463dbedefb">&#9670;&#160;</a></span>tower_top_to_yaw_bearing</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> openturbine::interfaces::components::Turbine::tower_top_to_yaw_bearing</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abed03b4649f52da99176d59ac3787026" name="abed03b4649f52da99176d59ac3787026"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abed03b4649f52da99176d59ac3787026">&#9670;&#160;</a></span>yaw_bearing_mass_element_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::Turbine::yaw_bearing_mass_element_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad7766482cfebab90f502bb831fb72ba4" name="ad7766482cfebab90f502bb831fb72ba4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7766482cfebab90f502bb831fb72ba4">&#9670;&#160;</a></span>yaw_bearing_node</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> openturbine::interfaces::components::Turbine::yaw_bearing_node</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7edce9b4c45090d57bad98c1d3f3ac52" name="a7edce9b4c45090d57bad98c1d3f3ac52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7edce9b4c45090d57bad98c1d3f3ac52">&#9670;&#160;</a></span>yaw_bearing_to_shaft_base</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1ConstraintData.html">ConstraintData</a> openturbine::interfaces::components::Turbine::yaw_bearing_to_shaft_base</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a3e2fd190870407f3663e44f1507009" name="a2a3e2fd190870407f3663e44f1507009"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a3e2fd190870407f3663e44f1507009">&#9670;&#160;</a></span>yaw_control</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::Turbine::yaw_control {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="components_2turbine_8hpp_source.html">turbine.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -184,10 +184,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1508085cf5730d129ca12f8130ec922" id="r_ae1508085cf5730d129ca12f8130ec922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#ae1508085cf5730d129ca12f8130ec922">ClearLoads</a> ()</td></tr>
 <tr class="memdesc:ae1508085cf5730d129ca12f8130ec922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set point loads and moments to zero.  <br /></td></tr>
 <tr class="separator:ae1508085cf5730d129ca12f8130ec922"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57e244058c1421e70d541924aa84f02d" id="r_a57e244058c1421e70d541924aa84f02d"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a57e244058c1421e70d541924aa84f02d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a57e244058c1421e70d541924aa84f02d">UpdateMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state)</td></tr>
-<tr class="memdesc:a57e244058c1421e70d541924aa84f02d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates node position, displacement, velocity, acceleration from state data.  <br /></td></tr>
-<tr class="separator:a57e244058c1421e70d541924aa84f02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ed1d770d78015d9fd592b25484d4071" id="r_a1ed1d770d78015d9fd592b25484d4071"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a1ed1d770d78015d9fd592b25484d4071"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a1ed1d770d78015d9fd592b25484d4071">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state)</td></tr>
+<tr class="memdesc:a1ed1d770d78015d9fd592b25484d4071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates node position, displacement, velocity, acceleration from state data.  <br /></td></tr>
+<tr class="separator:a1ed1d770d78015d9fd592b25484d4071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac514f52842a1d0ab0a27630ee5ddfc1" id="r_aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#aac514f52842a1d0ab0a27630ee5ddfc1">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state) const</td></tr>
+<tr class="memdesc:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the node loads in the host state.  <br /></td></tr>
+<tr class="separator:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -273,8 +277,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a57e244058c1421e70d541924aa84f02d" name="a57e244058c1421e70d541924aa84f02d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57e244058c1421e70d541924aa84f02d">&#9670;&#160;</a></span>UpdateMotion()</h2>
+<a id="a1ed1d770d78015d9fd592b25484d4071" name="a1ed1d770d78015d9fd592b25484d4071"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ed1d770d78015d9fd592b25484d4071">&#9670;&#160;</a></span>GetMotion()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,7 +289,7 @@ template&lt;typename DeviceType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void openturbine::interfaces::NodeData::UpdateMotion </td>
+          <td class="memname">void openturbine::interfaces::NodeData::GetMotion </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em></td><td>)</td>
@@ -303,6 +307,42 @@ template&lt;typename DeviceType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aac514f52842a1d0ab0a27630ee5ddfc1" name="aac514f52842a1d0ab0a27630ee5ddfc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac514f52842a1d0ab0a27630ee5ddfc1">&#9670;&#160;</a></span>SetLoads()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::NodeData::SetLoads </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>host_state</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the node loads in the host state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_state</td><td>Host state to update </td></tr>
   </table>
   </dd>
 </dl>

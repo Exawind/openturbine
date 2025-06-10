@@ -236,9 +236,13 @@ Returns:
 </div><div class="memdoc">
 <pre class="fragment">Main function to parse arguments and generate VTK files.
 
-Example usage:
-    python generate_vtk_output.py blade_interface.nc
-        --connectivity_file mesh_connectivity.yaml --output_dir vtk_output
+Example usage (run from the build directory):
+    python ../src/viz/generate_vtk_output.py \
+        tests/regression_tests/TurbineInterfaceTest.IEA15/turbine_interface.nc \
+        tests/regression_tests/TurbineInterfaceTest.IEA15/mesh_connectivity.yaml \
+        --output_dir tests/regression_tests/TurbineInterfaceTest.IEA15/vtk_output \
+        --start-timestep 0 \
+        --end-timestep 5
 
 NOTE: Files are overwritten in the output directory if they already exist.
 </pre> 

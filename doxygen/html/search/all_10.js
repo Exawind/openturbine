@@ -1,7 +1,7 @@
 var searchData=
 [
   ['packinternalstatetofile_0',['PackInternalStateToFile',['../namespaceopenturbine_1_1util.html#a200656442bd337d1e7ae645ccbf8d0d9',1,'openturbine::util']]],
-  ['parameters_1',['parameters',['../classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b',1,'openturbine::cfd::Interface::parameters'],['../structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html#abadb7132493730a0f3851c8d8c39b17d',1,'openturbine::interfaces::components::SolutionInput::Parameters()']]],
+  ['parameters_1',['parameters',['../structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html#abadb7132493730a0f3851c8d8c39b17d',1,'openturbine::interfaces::components::SolutionInput::Parameters()'],['../classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b',1,'openturbine::cfd::Interface::parameters']]],
   ['path_2',['path',['../classwindio_1_1Schema.html#a1583d4418da3ccccbcd8d15379e3a5fd',1,'windio.Schema.path'],['../classwindio_1_1Field.html#aeec042a40c37ba82c69f39672c1b96c7',1,'windio.Field.path']]],
   ['performleastsquaresfitting_3',['PerformLeastSquaresFitting',['../namespaceopenturbine.html#ad8684936dbf65ffcd95d6d760e5808f5',1,'openturbine']]],
   ['pitch_5factuator_5ftype_5freq_4',['pitch_actuator_type_req',['../structopenturbine_1_1util_1_1ControllerIO.html#a2399ee85baf71ed3ec563a44a7a19a9e',1,'openturbine::util::ControllerIO']]],
@@ -33,10 +33,10 @@ var searchData=
   ['prefix_30',['prefix',['../structopenturbine_1_1util_1_1dylib_1_1filename__components.html#acf5768d81a1b07abd34792274cb50f16',1,'openturbine::util::dylib::filename_components']]],
   ['preinitialize_31',['PreInitialize',['../classopenturbine_1_1util_1_1AeroDynInflowLibrary.html#a02c3354eeddb8fb8401a897ec53dcb07',1,'openturbine::util::AeroDynInflowLibrary']]],
   ['prescribe_5froot_5fmotion_32',['prescribe_root_motion',['../structopenturbine_1_1interfaces_1_1components_1_1Root.html#adf39595258eeda83f826bae392bb9ccb',1,'openturbine::interfaces::components::Root']]],
-  ['prescribed_5froot_5fconstraint_5fid_33',['prescribed_root_constraint_id',['../classopenturbine_1_1interfaces_1_1components_1_1Blade.html#a8aec1850b8bbc32a6a019264291e1f41',1,'openturbine::interfaces::components::Blade']]],
+  ['prescribed_5froot_5fconstraint_5fid_33',['prescribed_root_constraint_id',['../classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e',1,'openturbine::interfaces::components::Beam']]],
   ['prescribedbc_34',['PrescribedBC',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#a556fc1421b28fecb881388ebde9cc813',1,'openturbine::CalculateConstraintResidualGradient']]],
   ['prescribedbc3dof_35',['PrescribedBC3DOF',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#aa1b28cd4bb38b3b49467870cd5d3b431',1,'openturbine::CalculateConstraintResidualGradient']]],
-  ['prescribedrootmotion_36',['PrescribedRootMotion',['../classopenturbine_1_1interfaces_1_1components_1_1BladeBuilder.html#a609d1899906478f7799a2b1264096606',1,'openturbine::interfaces::components::BladeBuilder']]],
+  ['prescribedrootmotion_36',['PrescribedRootMotion',['../classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#aec80a67054f66e493103fcafcf6b88d6',1,'openturbine::interfaces::components::BeamBuilder']]],
   ['project_5fpoints_5fto_5ftarget_5fpolynomial_2ehpp_37',['project_points_to_target_polynomial.hpp',['../project__points__to__target__polynomial_8hpp.html',1,'']]],
   ['projectpointstotargetpolynomial_38',['ProjectPointsToTargetPolynomial',['../namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852',1,'openturbine']]],
   ['properties_39',['properties',['../classwindio_1_1Schema.html#a074b8fba20cd3bad77af2bd63d8b9c4e',1,'windio::Schema']]]

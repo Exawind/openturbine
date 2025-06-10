@@ -177,8 +177,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab7688a844824d1fb255517898cd4fc61" id="r_ab7688a844824d1fb255517898cd4fc61"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ab7688a844824d1fb255517898cd4fc61">__init__</a> (self, str <a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ae7057f0f64fd40f3adfac92fa64f7845">netcdf_path</a>, Optional[str] connectivity_path=None)</td></tr>
-<tr class="separator:ab7688a844824d1fb255517898cd4fc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3f8522ab3af7410d8e9b1e4d450f51c" id="r_aa3f8522ab3af7410d8e9b1e4d450f51c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#aa3f8522ab3af7410d8e9b1e4d450f51c">__init__</a> (self, str <a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#ae7057f0f64fd40f3adfac92fa64f7845">netcdf_path</a>, str connectivity_path)</td></tr>
+<tr class="separator:aa3f8522ab3af7410d8e9b1e4d450f51c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab8ef32148338a52245fea3ba945b592" id="r_aab8ef32148338a52245fea3ba945b592"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#aab8ef32148338a52245fea3ba945b592">generate_visualization</a> (self, int timestep, str output_dir)</td></tr>
 <tr class="separator:aab8ef32148338a52245fea3ba945b592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c5be616271fdf3ee040d93b88b84848" id="r_a0c5be616271fdf3ee040d93b88b84848"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgenerate__vtk__output_1_1VTKOutput.html#a0c5be616271fdf3ee040d93b88b84848">visualize_all_timesteps</a> (self, str output_dir)</td></tr>
@@ -216,8 +216,8 @@ Protected Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><pre class="fragment">Class to generate VTK files from OpenTurbine (NetCDF-based) outputs and mesh connectivity (YAML-based).</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab7688a844824d1fb255517898cd4fc61" name="ab7688a844824d1fb255517898cd4fc61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7688a844824d1fb255517898cd4fc61">&#9670;&#160;</a></span>__init__()</h2>
+<a id="aa3f8522ab3af7410d8e9b1e4d450f51c" name="aa3f8522ab3af7410d8e9b1e4d450f51c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3f8522ab3af7410d8e9b1e4d450f51c">&#9670;&#160;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,8 +237,8 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Optional[str] &#160;</td>
-          <td class="paramname"><em>connectivity_path</em> = <code>None</code>&#160;</td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>connectivity_path</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -247,11 +247,11 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<pre class="fragment">Initializes the visualizer with the path to the NetCDF file and optional connectivity file.
+<pre class="fragment">Initializes the visualizer with the path to the NetCDF file and mesh connectivity file.
 
 Args:
     netcdf_path (str): Path to the NetCDF output file
-    connectivity_path (Optional[str]): Path to the mesh connectivity YAML file
+    connectivity_path (str): Path to the mesh connectivity YAML file
 </pre> 
 </div>
 </div>
@@ -463,7 +463,8 @@ Args:
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">List[Dict[str, List[float]]]&#160;</td>
+          <td class="paramtype">List[Dict[str, List[float]]]
+    &#160;</td>
           <td class="paramname"><em>nodes</em>&#160;</td>
         </tr>
         <tr>
@@ -591,7 +592,7 @@ Args:
   </tr>
 </table>
 </div><div class="memdoc">
-<pre class="fragment">Extracts node data for a specific timestep and returns a list of NodeData-like structures.
+<pre class="fragment">Extracts node data for a specific timestep and returns a list of OpenTurbine's NodeData-like structures.
 
 Node data contains the following components:
 - Position: x_x, x_y, x_z, x_w, x_i, x_j, x_k

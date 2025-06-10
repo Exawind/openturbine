@@ -1,0 +1,14 @@
+.. meta::4181b4909311b19f870d244bdf0f2a06e22c4c5057d7b93d0d17f272a4dc89a46412a05e9a4e0805a5160af1674b595db3a47b1807dc3715e2bf45692b8ca7a6
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/hollow_circle_properties.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/hollow\_circle\_properties.hpp File Reference
+======================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: hollow__circle__properties_8hpp.html

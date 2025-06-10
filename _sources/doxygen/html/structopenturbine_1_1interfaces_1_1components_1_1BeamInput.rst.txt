@@ -1,0 +1,14 @@
+.. meta::f0034d2d37e6106b617c3fb6042dc99dbeaca296e3f14b431a523ccae882de39a7511253b75e98166c7b1242cb0a467cf605ed3563e83ac5bc3b3a3c726856d4
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::BeamInput Struct Reference
+
+BeamInput Struct Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html
