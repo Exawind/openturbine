@@ -9,6 +9,9 @@
 
 namespace openturbine::interfaces::components {
 
+//< Minimum valid hub diameter
+static constexpr double kMinHubDiameter{1e-8};
+
 /**
  * @brief Represents a turbine with nodes, elements, and constraints
  *
@@ -18,16 +21,28 @@ namespace openturbine::interfaces::components {
  */
 class Turbine {
 public:
+    //--------------------------------------------------------------------------
+    // Elements
+    //--------------------------------------------------------------------------
+
     std::vector<Beam> blades;                        //< Blades in the turbine
     Beam tower;                                      //< Tower in the turbine
     size_t hub_mass_element_id{kInvalidID};          //< Hub mass element ID
     size_t yaw_bearing_mass_element_id{kInvalidID};  //< Yaw bearing mass element ID
+
+    //--------------------------------------------------------------------------
+    // Nodes
+    //--------------------------------------------------------------------------
 
     std::vector<NodeData> apex_nodes;  //< Blade root nodes
     NodeData hub_node;                 //< Hub node
     NodeData azimuth_node;             //< Azimuth node
     NodeData shaft_base_node;          //< Shaft base node
     NodeData yaw_bearing_node;         //< Yaw bearing node
+
+    //--------------------------------------------------------------------------
+    // Constraints
+    //--------------------------------------------------------------------------
 
     ConstraintData tower_base;                 //< Tower base constraint
     ConstraintData tower_top_to_yaw_bearing;   //< Tower top to yaw bearing constraint
@@ -36,6 +51,10 @@ public:
     ConstraintData azimuth_to_hub;             //< Azimuth to hub constraint
     std::vector<ConstraintData> blade_pitch;   //< Blade root to apex constraints
     std::vector<ConstraintData> apex_to_hub;   //< Apex to hub constraints
+
+    //--------------------------------------------------------------------------
+    // Controls
+    //--------------------------------------------------------------------------
 
     std::vector<double> blade_pitch_control;  //< Blade pitch angles
     double torque_control{0.};                //< Torque control value
@@ -48,7 +67,7 @@ public:
      * @throws std::invalid_argument If the input configuration is invalid
      */
     Turbine(const TurbineInput& input, Model& model)
-        : blades(create_blades(input.blades, model)),
+        : blades(CreateBlades(input.blades, model)),
           tower(input.tower, model),
           hub_node(kInvalidID),
           azimuth_node(kInvalidID),
@@ -101,9 +120,16 @@ private:
      * @brief ValidateInput
      */
     static void ValidateInput(const TurbineInput& input) {
-        if (input.hub_diameter <= 1e-8) {
+        if (input.hub_diameter <= kMinHubDiameter) {
             throw std::invalid_argument(
-                "Invalid hub diameter: " + std::to_string(input.hub_diameter)
+                "Hub diameter must be > " + std::to_string(kMinHubDiameter) +
+                ", got: " + std::to_string(input.hub_diameter)
+            );
+        }
+
+        if (input.rotor_speed < 0.) {
+            throw std::invalid_argument(
+                "rotor speed must be >= 0, got: " + std::to_string(input.rotor_speed)
             );
         }
     }
@@ -122,19 +148,12 @@ private:
         const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
         model.RotateBeamAboutPoint(this->tower.beam_element_id, q_x_to_z, origin);
 
-        // Get tower top position from the last tower node
+        // Calculate hub position based on tower top and apex offset
         const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
-        const Array_3 tower_top_position{
-            tower_top_node.x0[0],
-            tower_top_node.x0[1],
-            tower_top_node.x0[2],
-        };
-
-        // Calculate hub position based on tower top and hub offset
         const Array_3 apex_position{
-            tower_top_position[0] - input.tower_axis_to_rotor_apex,
-            tower_top_position[1],
-            tower_top_position[2] + input.tower_top_to_rotor_apex,
+            tower_top_node.x0[0] - input.tower_axis_to_rotor_apex,
+            tower_top_node.x0[1],
+            tower_top_node.x0[2] + input.tower_top_to_rotor_apex,
         };
 
         // Calculate angle between blades
@@ -158,61 +177,63 @@ private:
             model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
         );
 
-        // Create vector of rotor node IDs (hub, azimuth, shaft base, and blades)
+        // Create vector of rotor node IDs (hub, azimuth, shaft base)
         std::vector<size_t> rotor_node_ids{
             this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id
         };
-        // Add all blade nodes to rotor_node_ids
-        for (const auto& blade : this->blades) {
+
+        // Loop over blades
+        for (auto i = 0U; i < this->blades.size(); ++i) {
+            // Get node IDs for this blade
+            std::vector<size_t> node_ids;
             std::transform(
-                blade.nodes.begin(), blade.nodes.end(), std::back_inserter(rotor_node_ids),
+                this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+                std::back_inserter(node_ids),
                 [](const NodeData& node) {
                     return node.id;
                 }
             );
-        }
 
-        // Loop over blades
-        for (auto i = 0U; i < this->blades.size(); ++i) {
-            // Get element ID of the current blade
-            const auto blade_element_id = this->blades[i].beam_element_id;
+            // Loop through node IDs and rotate them to align with global Z-axis
+            // then translate to hub radius so blade root is at the hub radius
+            for (const auto& node_id : node_ids) {
+                model.GetNode(node_id)
+                    .RotateAboutPoint(q_x_to_z, origin)
+                    .Translate({0., 0., input.hub_diameter / 2.});
+            }
 
-            // Rotate each blade to align with global Z-axis
-            model.RotateBeamAboutPoint(blade_element_id, q_x_to_z, origin);
-
-            // Translate blade by hub radius so blade root is at the hub radius
-            model.TranslateBeam(blade_element_id, {0., 0., input.hub_diameter / 2.});
-
-            // Add blade apex node at the origin
+            // Add blade apex node at the origin and add node ID to node_ids
             const auto apex_node_id =
                 model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
+            node_ids.push_back(apex_node_id);
+
+            // Add apex node to the model and rotor node IDs
             this->apex_nodes.emplace_back(apex_node_id);
-            rotor_node_ids.push_back(apex_node_id);
-            auto& apex_node = model.GetNode(apex_node_id);
 
-            // Rotate blade for cone angle
+            // Calculate cone angle rotation quaternion
             const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
-            model.RotateBeamAboutPoint(blade_element_id, q_cone, origin);
-            apex_node.RotateAboutPoint(q_cone, origin);
 
-            // Rotate blade to azimuth angle
+            // Calculate azimuth angle rotation quaternion
             const auto q_azimuth =
                 RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
-            model.RotateBeamAboutPoint(blade_element_id, q_azimuth, origin);
-            apex_node.RotateAboutPoint(q_azimuth, origin);
+
+            // Rotate blade nodes and apex node to cone angle and then to azimuth angle
+            for (const auto& node_id : node_ids) {
+                model.GetNode(node_id)
+                    .RotateAboutPoint(q_cone, origin)
+                    .RotateAboutPoint(q_azimuth, origin);
+            }
+
+            // Add blade and apex node IDs to rotor node IDs
+            rotor_node_ids.insert(rotor_node_ids.end(), node_ids.begin(), node_ids.end());
         }
 
         // Create shaft rotation quaternion
-        const auto shaft_rotation = RotationVectorToQuaternion({0., input.shaft_tilt_angle, 0.});
+        const auto q_shaft_tilt = RotationVectorToQuaternion({0., input.shaft_tilt_angle, 0.});
 
-        // Rotate rotor nodes by shaft tilt angle
+        // Rotate rotor nodes by shaft tilt angle and translate to apex position
         for (const auto& node_id : rotor_node_ids) {
-            model.GetNode(node_id).RotateAboutPoint(shaft_rotation, origin);
-        }
-
-        // Translate rotor to global position
-        for (const auto& node_id : rotor_node_ids) {
-            model.GetNode(node_id).Translate(apex_position);
+            model.GetNode(node_id).RotateAboutPoint(q_shaft_tilt, origin).Translate(apex_position);
         }
     }
 
@@ -281,7 +302,7 @@ private:
     /// @param blade_inputs Blade input configurations
     /// @param model Model to which the blades will be added
     /// @return Vector of blades
-    [[nodiscard]] static std::vector<Beam> create_blades(
+    [[nodiscard]] static std::vector<Beam> CreateBlades(
         const std::vector<BeamInput>& blade_inputs, Model& model
     ) {
         std::vector<Beam> blades;

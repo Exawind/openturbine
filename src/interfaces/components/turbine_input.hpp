@@ -17,19 +17,12 @@ struct TurbineInput {
     /// @brief Configuration for the tower
     BeamInput tower;
 
+    /// @brief Position of the tower base node in the global coordinate system
+    std::array<double, 7> tower_base_position{0., 0., 0., 1., 0., 0., 0.};
+
     /// @brief Yaw bearing inertia matrix (6x6)
     /// includes yaw bearing and nacelle mass with inertia about yaw bearing
-    std::array<std::array<double, 6>, 6> yaw_bearing_inertia_matrix{
-        {{0., 0., 0., 0., 0., 0.},
-         {0., 0., 0., 0., 0., 0.},
-         {0., 0., 0., 0., 0., 0.},
-         {0., 0., 0., 0., 0., 0.},
-         {0., 0., 0., 0., 0., 0.},
-         {0., 0., 0., 0., 0., 1.}}
-    };
-
-    /// @brief Nacelle center of mass location relative to tower top
-    std::array<double, 3> nacelle_mass_location{0., 0., 0.};
+    std::array<std::array<double, 6>, 6> yaw_bearing_inertia_matrix{{{}, {}, {}, {}, {}, {}}};
 
     /// @brief Distance from tower top to rotor apex (meters)
     double tower_top_to_rotor_apex{0.};
@@ -56,13 +49,10 @@ struct TurbineInput {
     double rotor_speed{0.};
 
     /// @brief Hub diameter (meters)
-    double hub_diameter{0.};
+    double hub_diameter{1e-7};
 
     /// @brief Define blade cone angle (radians)
     double cone_angle{0.};
-
-    /// @brief Position of the tower base node in the global coordinate system
-    std::array<double, 7> tower_base_position{0., 0., 0., 1., 0., 0., 0.};
 };
 
 }  // namespace openturbine::interfaces::components

@@ -85,14 +85,16 @@ struct Node {
     //--------------------------------------------------------------------------
 
     /// Translate node by a displacement vector
-    void Translate(const Array_3& displacement) {
+    Node& Translate(const Array_3& displacement) {
         this->x0[0] += displacement[0];
         this->x0[1] += displacement[1];
         this->x0[2] += displacement[2];
+
+        return *this;
     }
 
     /// Rotate node by a quaternion about the given point
-    void RotateAboutPoint(const Array_4& q, const Array_3& point) {
+    Node& RotateAboutPoint(const Array_4& q, const Array_3& point) {
         // Rotate position i.e. x(0:2)
         auto x_new = RotateVectorByQuaternion(
             q, {this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]}
@@ -107,12 +109,16 @@ struct Node {
         this->x0[4] = q_new[1];
         this->x0[5] = q_new[2];
         this->x0[6] = q_new[3];
+
+        return *this;
     }
 
     /// Rotate node by a rotation vector about the given point
-    void RotateAboutPoint(const Array_3& rv, const Array_3& point) {
+    Node& RotateAboutPoint(const Array_3& rv, const Array_3& point) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateAboutPoint(q, point);
+
+        return *this;
     }
 
     //--------------------------------------------------------------------------
@@ -120,14 +126,15 @@ struct Node {
     //--------------------------------------------------------------------------
 
     /// Add translational displacement to node displacement vector
-    void TranslateDisplacement(const Array_3& displacement) {
+    Node& TranslateDisplacement(const Array_3& displacement) {
         this->u[0] += displacement[0];
         this->u[1] += displacement[1];
         this->u[2] += displacement[2];
+        return *this;
     }
 
     /// Rotate node displacement by a quaternion about the given point
-    void RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
+    Node& RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
         // Rotate displacement position i.e. u(0:2)
         auto u_new = RotateVectorByQuaternion(
             q, {this->u[0] - point[0], this->u[1] - point[1], this->u[2] - point[2]}
@@ -142,12 +149,15 @@ struct Node {
         this->u[4] = q_new[1];
         this->u[5] = q_new[2];
         this->u[6] = q_new[3];
+
+        return *this;
     }
 
     /// Rotate node displacement by a rotation vector about the given point
-    void RotateDisplacementAboutPoint(const Array_3& rv, const Array_3& point) {
+    Node& RotateDisplacementAboutPoint(const Array_3& rv, const Array_3& point) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateDisplacementAboutPoint(q, point);
+        return *this;
     }
 
     //--------------------------------------------------------------------------

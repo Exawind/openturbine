@@ -104,7 +104,6 @@ public:
 
         std::ofstream file(filename);
         file << root;
-        file.close();
     }
 
     /**

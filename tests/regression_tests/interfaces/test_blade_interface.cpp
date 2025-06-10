@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
+#include "KokkosSparse_IOUtils.hpp"
 #include "interfaces/blade/blade_interface_builder.hpp"
+#include "interfaces/components/beam_builder.hpp"
 #include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
@@ -278,6 +280,99 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[3], -0.000046709402446003812, 1e-10);
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[4], 0.000008256203749646939, 1e-10);
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[5], 0.00020635762959181575, 1e-10);
+}
+
+template <typename T>
+void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << "\n";
+        return;
+    }
+    for (const auto& innerVector : data) {
+        for (const auto& element : innerVector) {
+            file << element << ",";
+        }
+        file << "\n";
+    }
+    file.close();
+}
+
+TEST(BladeInterfaceTest, TwoBeams) {
+    // Create interface builder
+    auto builder = interfaces::components::BeamBuilder{};
+
+    const auto n_nodes = 4;
+
+    builder.SetElementOrder(n_nodes - 1)
+        .PrescribedRootMotion(false)
+        .SetRootPosition({0., 0., 0., 1., 0., 0., 0.})
+        .AddRefAxisTwist(0., 0.)
+        .AddRefAxisTwist(1., 0.);
+
+    // Add reference axis coordinates and twist
+    const auto n_kps = 12;
+    for (auto i = 0U; i < n_kps; ++i) {
+        const auto s = static_cast<double>(i) / (n_kps - 1);
+        builder.AddRefAxisPoint(
+            s, {10. * s, 0., 0.}, interfaces::components::ReferenceAxisOrientation::X
+        );
+    }
+
+    // Beam section locations
+    const std::vector<double> section_s{0.,   0.05, 0.1,  0.15, 0.2,  0.25, 0.3,
+                                        0.35, 0.4,  0.45, 0.5,  0.55, 0.6,  0.65,
+                                        0.7,  0.75, 0.8,  0.85, 0.9,  0.95, 1.};
+
+    // Add reference axis coordinates and twist
+    for (const auto s : section_s) {
+        builder.AddSection(
+            s,
+            std::array{
+                std::array{8.538e-2, 0., 0., 0., 0., 0.},
+                std::array{0., 8.538e-2, 0., 0., 0., 0.},
+                std::array{0., 0., 8.538e-2, 0., 0., 0.},
+                std::array{0., 0., 0., 1.4433e-2, 0., 0.},
+                std::array{0., 0., 0., 0., 0.40972e-2, 0.},
+                std::array{0., 0., 0., 0., 0., 1.0336e-2},
+            },
+            std::array{
+                std::array{1368.17e3, 0., 0., 0., 0., 0.},
+                std::array{0., 88.56e3, 0., 0., 0., 0.},
+                std::array{0., 0., 38.78e3, 0., 0., 0.},
+                std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
+                std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
+                std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
+            },
+            interfaces::components::ReferenceAxisOrientation::X
+        );
+    }
+
+    Model model({0., 0., -9.81});
+
+    auto beam_1 = builder.Build(model);
+    auto beam_2 = builder.Build(model);
+
+    for (auto& node : beam_2.nodes) {
+        model.GetNode(node.id).x0[0] += 10.;
+    }
+
+    model.AddPrescribedBC(beam_1.nodes[0].id);
+    model.AddRigidJointConstraint({beam_1.nodes[n_nodes - 1].id, beam_2.nodes[0].id});
+
+    // Create solver parameters
+    auto parameters = StepParameters(true, 6, 0.01, 0.);
+
+    // Create solver, elements, constraints, and state
+    auto [state, elements, constraints] = model.CreateSystem();
+    auto solver = CreateSolver<>(state, elements, constraints);
+
+    Step(parameters, solver, elements, state, constraints);
+
+    for (auto i = 0U; i < solver.b.size(); ++i) {
+        std::cout << "b[" << i << "] = " << solver.b(i, 0) << "\n";
+    }
+    KokkosSparse::Impl::write_kokkos_crst_matrix(solver.A, "A.mtx");
 }
 
 TEST(BladeInterfaceTest, StaticCurledBeam) {
