@@ -39,7 +39,8 @@ RUN git clone https://github.com/spack/spack.git && \
     spack install netcdf-c && \
     spack install suite-sparse && \
     spack install lapack && \
-    spack --insecure install vtk~mpi~opengl2
+    spack install rosco && \
+    spack install openfast
 
 # Step 3: Set up the working directory and copy the OpenTurbine repository
 WORKDIR /projects/openturbine
@@ -54,7 +55,7 @@ ARG CMAKE_OPTIONS="-DOpenTurbine_WRITE_OUTPUTS=ON \
 ARG N_PARALLEL_JOBS=4
 
 RUN . /spack/share/spack/setup-env.sh && \
-    spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp && \
+    spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp rosco openfast && \
     mkdir docker-build && \
     cd docker-build && \
     cmake .. ${CMAKE_OPTIONS} && \
