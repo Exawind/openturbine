@@ -189,27 +189,7 @@ public:
     ) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
-            // Get node
-            auto& node = this->GetNode(node_id);
-
-            // Get distance from reference point to node
-            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
-
-            // Get angular velocity
-            const Array_3 omega{velocity[3], velocity[4], velocity[5]};
-
-            // Calculate velocity contribution from angular velocity
-            const auto omega_cross_r = CrossProduct(omega, r);
-
-            // Set node translation velocity
-            node.v[0] = velocity[0] + omega_cross_r[0];
-            node.v[1] = velocity[1] + omega_cross_r[1];
-            node.v[2] = velocity[2] + omega_cross_r[2];
-
-            // Set node angular velocity
-            node.v[3] = velocity[3];
-            node.v[4] = velocity[4];
-            node.v[5] = velocity[5];
+            this->GetNode(node_id).SetVelocityAboutPoint(velocity, point);
         }
     }
 
@@ -218,30 +198,7 @@ public:
     ) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
-            // Get node
-            auto& node = this->GetNode(node_id);
-
-            // Get distance from reference point to node
-            const Array_3 r{node.x[0] - point[0], node.x[1] - point[1], node.x[2] - point[2]};
-
-            // Get angular acceleration
-            const Array_3 alpha{acceleration[3], acceleration[4], acceleration[5]};
-
-            // Calculate translational acceleration contribution from angular acceleration
-            const auto alpha_cross_r = CrossProduct(alpha, r);
-
-            // Calculate translational acceleration contribution from angular velocity
-            const auto omega_cross_omega_cross_r = CrossProduct(omega, CrossProduct(omega, r));
-
-            // Set node translation acceleration
-            node.vd[0] = acceleration[0] + alpha_cross_r[0] + omega_cross_omega_cross_r[0];
-            node.vd[1] = acceleration[1] + alpha_cross_r[1] + omega_cross_omega_cross_r[1];
-            node.vd[2] = acceleration[2] + alpha_cross_r[2] + omega_cross_omega_cross_r[2];
-
-            // Set node angular acceleration
-            node.vd[3] = alpha[0];
-            node.vd[4] = alpha[1];
-            node.vd[5] = alpha[2];
+            this->GetNode(node_id).SetAccelerationAboutPoint(acceleration, omega, point);
         }
     }
 

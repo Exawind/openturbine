@@ -354,7 +354,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
     auto beam_2 = builder.Build(model);
 
     for (auto& node : beam_2.nodes) {
-        model.GetNode(node.id).x[0] += 10.;
+        model.GetNode(node.id).x0[0] += 10.;
     }
 
     model.AddPrescribedBC(beam_1.nodes[0].id);

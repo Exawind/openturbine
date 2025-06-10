@@ -265,16 +265,16 @@ struct Constraints {
         // Set X0 to the prescribed displacement for fixed and prescribed BCs i.e. constraints
         // with 1 node
         if (GetNumberOfNodes(constraint.type) == 1) {
-            x0[0] = target_node.x[0] - constraint.vec[0];
-            x0[1] = target_node.x[1] - constraint.vec[1];
-            x0[2] = target_node.x[2] - constraint.vec[2];
+            x0[0] = target_node.x0[0] - constraint.vec[0];
+            x0[1] = target_node.x0[1] - constraint.vec[1];
+            x0[2] = target_node.x0[2] - constraint.vec[2];
             return x0;
         }
 
         // Default: set X0 to the relative position between nodes
-        x0[0] = target_node.x[0] - base_node.x[0];
-        x0[1] = target_node.x[1] - base_node.x[1];
-        x0[2] = target_node.x[2] - base_node.x[2];
+        x0[0] = target_node.x0[0] - base_node.x0[0];
+        x0[1] = target_node.x0[1] - base_node.x0[1];
+        x0[2] = target_node.x0[2] - base_node.x0[2];
         return x0;
     }
 

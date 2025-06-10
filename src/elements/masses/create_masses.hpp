@@ -26,8 +26,8 @@ inline Masses<DeviceType> CreateMasses(
     for (size_t i_elem = 0; i_elem < masses_input.NumElements(); i_elem++) {
         host_state_indices(i_elem) = static_cast<size_t>(masses_input.elements[i_elem].node_id);
         const auto& elem = masses_input.elements[i_elem];
-        for (auto i_dof = 0U; i_dof < nodes[elem.node_id].x.size(); ++i_dof) {
-            host_x0(i_elem, i_dof) = nodes[elem.node_id].x[i_dof];
+        for (auto i_dof = 0U; i_dof < nodes[elem.node_id].x0.size(); ++i_dof) {
+            host_x0(i_elem, i_dof) = nodes[elem.node_id].x0[i_dof];
         }
         for (auto m = 0U; m < 6U; ++m) {
             for (auto n = 0U; n < 6U; ++n) {

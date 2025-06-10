@@ -363,9 +363,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     for (size_t i = 0; i < n_blades; ++i) {
         // Calculate pitch axis from hub node to blade root node
         const Array_3 pitch_axis{
-            model.GetNode(hub_node_id).x[0] - model.GetNode(root_node_ids[i]).x[0],
-            model.GetNode(hub_node_id).x[1] - model.GetNode(root_node_ids[i]).x[1],
-            model.GetNode(hub_node_id).x[2] - model.GetNode(root_node_ids[i]).x[2],
+            model.GetNode(hub_node_id).x0[0] - model.GetNode(root_node_ids[i]).x0[0],
+            model.GetNode(hub_node_id).x0[1] - model.GetNode(root_node_ids[i]).x0[1],
+            model.GetNode(hub_node_id).x0[2] - model.GetNode(root_node_ids[i]).x0[2],
         };
 
         // Add rotation control constraint between hub and root node
@@ -424,7 +424,7 @@ TEST(Milestone, IEA15RotorAeroController) {
                 beam_elem_node_ids[i_blade].begin(), beam_elem_node_ids[i_blade].end(),
                 std::back_inserter(mesh_positions),
                 [&model](const size_t& node_id) {
-                    return model.GetNode(node_id).x;
+                    return model.GetNode(node_id).x0;
                 }
             );
         } else {
@@ -434,18 +434,18 @@ TEST(Milestone, IEA15RotorAeroController) {
             }
         }
         return util::TurbineConfig::BladeInitialState{
-            model.GetNode(root_node_ids[i_blade]).x,  // Root node
-            mesh_positions,                           // Blade nodes
+            model.GetNode(root_node_ids[i_blade]).x0,  // Root node
+            mesh_positions,                            // Blade nodes
         };
     };
 
     // Define turbine initial position
     const std::vector<util::TurbineConfig> turbine_configs{
         util::TurbineConfig(
-            true,                          // is horizontal axis wind turbine
-            {0., 0., 0.},                  // reference position
-            model.GetNode(hub_node_id).x,  // hub initial position
-            model.GetNode(hub_node_id).x,  // nacelle initial position
+            true,                           // is horizontal axis wind turbine
+            {0., 0., 0.},                   // reference position
+            model.GetNode(hub_node_id).x0,  // hub initial position
+            model.GetNode(hub_node_id).x0,  // nacelle initial position
             {
                 build_blade_config(0),  // Blade 1 config
                 build_blade_config(1),  // Blade 2 config
