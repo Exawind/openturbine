@@ -1,7 +1,7 @@
 #pragma once
 
-#include "blade.hpp"
-#include "blade_input.hpp"
+#include "beam.hpp"
+#include "beam_input.hpp"
 
 namespace openturbine::interfaces::components {
 
@@ -16,19 +16,19 @@ enum class ReferenceAxisOrientation : std::uint8_t {
 /**
  * @brief Builder class for creating Blade objects with a fluent interface pattern
  */
-class BladeBuilder {
+class BeamBuilder {
 public:
-    BladeBuilder& SetElementOrder(size_t element_order) {
+    BeamBuilder& SetElementOrder(size_t element_order) {
         input.element_order = element_order;
         return *this;
     }
 
-    BladeBuilder& SetSectionRefinement(size_t section_refinement) {
+    BeamBuilder& SetSectionRefinement(size_t section_refinement) {
         input.section_refinement = section_refinement;
         return *this;
     }
 
-    BladeBuilder& ClearReferenceAxisPoints() {
+    BeamBuilder& ClearReferenceAxisPoints() {
         input.ref_axis.coordinate_grid.clear();
         input.ref_axis.coordinates.clear();
         return *this;
@@ -41,7 +41,7 @@ public:
      * @param ref_axis Reference axis orientation ('X' or 'Z')
      * @return Reference to this builder for method chaining
      */
-    BladeBuilder& AddRefAxisPoint(
+    BeamBuilder& AddRefAxisPoint(
         double grid_location, const std::array<double, 3>& coordinates,
         ReferenceAxisOrientation ref_axis
     ) {
@@ -58,33 +58,33 @@ public:
         throw std::invalid_argument("Invalid reference axis orientation");
     }
 
-    BladeBuilder& AddRefAxisTwist(double grid_location, double twist) {
+    BeamBuilder& AddRefAxisTwist(double grid_location, double twist) {
         input.ref_axis.twist_grid.emplace_back(grid_location);
         input.ref_axis.twist.emplace_back(twist * M_PI / 180.);
         return *this;
     }
 
-    BladeBuilder& PrescribedRootMotion(bool enable) {
+    BeamBuilder& PrescribedRootMotion(bool enable) {
         input.root.prescribe_root_motion = enable;
         return *this;
     }
 
-    BladeBuilder& SetRootPosition(const std::array<double, 7>& p) {
+    BeamBuilder& SetRootPosition(const std::array<double, 7>& p) {
         input.root.position = p;
         return *this;
     }
 
-    BladeBuilder& SetRootVelocity(const std::array<double, 6>& v) {
+    BeamBuilder& SetRootVelocity(const std::array<double, 6>& v) {
         input.root.velocity = v;
         return *this;
     }
 
-    BladeBuilder& SetRootAcceleration(const std::array<double, 6>& a) {
+    BeamBuilder& SetRootAcceleration(const std::array<double, 6>& a) {
         input.root.acceleration = a;
         return *this;
     }
 
-    BladeBuilder& ClearSections() {
+    BeamBuilder& ClearSections() {
         input.ref_axis.coordinate_grid.clear();
         input.ref_axis.coordinates.clear();
         return *this;
@@ -97,7 +97,7 @@ public:
     /// @param stiffness_matrix sectional stiffness matrix
     /// @param ref_axis Reference axis ('X' or 'Z')
     /// @return Reference to this builder for method chaining
-    BladeBuilder& AddSection(
+    BeamBuilder& AddSection(
         double grid_location, const Array_6x6& mass_matrix, const Array_6x6& stiffness_matrix,
         ReferenceAxisOrientation ref_axis
     ) {
@@ -106,7 +106,7 @@ public:
             return *this;
         }
         if (ref_axis == ReferenceAxisOrientation::Z) {
-            const auto q_z_to_x = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+            const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
             input.sections.emplace_back(
                 grid_location, RotateMatrix6(mass_matrix, q_z_to_x),
                 RotateMatrix6(stiffness_matrix, q_z_to_x)
@@ -120,17 +120,17 @@ public:
      * @brief Get the current blade input configuration
      * @return Reference to the current blade input
      */
-    [[nodiscard]] const BladeInput& Input() const { return this->input; }
+    [[nodiscard]] const BeamInput& Input() const { return this->input; }
 
     /**
      * @brief Build a Blade object from the current configuration
      * @param model The model to associate with this blade
      * @return A new Blade object
      */
-    [[nodiscard]] Blade Build(Model& model) const { return {this->input, model}; }
+    [[nodiscard]] Beam Build(Model& model) const { return {this->input, model}; }
 
 private:
-    BladeInput input;
+    BeamInput input;
 };
 
 }  // namespace openturbine::interfaces::components

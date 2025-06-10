@@ -5,11 +5,11 @@ import vtk
 import yaml
 
 from netCDF4 import Dataset
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Helper functions
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
     """Converts a 4x1 quaternion [w, i, j, k] to a 3x3 rotation matrix.
@@ -29,9 +29,9 @@ def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
     w, i, j, k = quaternion
 
     # Compute intermediate products
-    ii, jj, kk = i*i, j*j, k*k
-    ij, ik, jk = i*j, i*k, j*k
-    wi, wj, wk = w*i, w*j, w*k
+    ii, jj, kk = i * i, j * j, k * k
+    ij, ik, jk = i * j, i * k, j * k
+    wi, wj, wk = w * i, w * j, w * k
 
     # Create rotation matrix
     R = np.zeros((3, 3))
@@ -50,7 +50,6 @@ def quaternion_to_rotation_matrix(quaternion: List[float]) -> np.ndarray:
 
     return R
 
-
 def create_vector_array(name: str, num_components: int = 3):
     """Creates a VTK double array with the given name and number of components.
 
@@ -67,40 +66,39 @@ def create_vector_array(name: str, num_components: int = 3):
 
     return array
 
-
-#-------------------------------------------------------------------------------
-# VTK output logic
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# Core VTK output logic
+# -------------------------------------------------------------------------------
 
 class VTKOutput:
     """Class to generate VTK files from OpenTurbine (NetCDF-based) outputs and mesh connectivity (YAML-based)."""
 
-    def __init__(self, netcdf_path: str, connectivity_path: Optional[str] = None):
-        """Initializes the visualizer with the path to the NetCDF file and optional connectivity file.
+    def __init__(self, netcdf_path: str, connectivity_path: str):
+        """Initializes the visualizer with the path to the NetCDF file and mesh connectivity file.
 
         Args:
             netcdf_path (str): Path to the NetCDF output file
-            connectivity_path (Optional[str]): Path to the mesh connectivity YAML file
+            connectivity_path (str): Path to the mesh connectivity YAML file
         """
         self.netcdf_path = netcdf_path
-        self.data = Dataset(netcdf_path, 'r')
+        self.data = Dataset(netcdf_path, "r")
 
         # Initialize mesh connectivity data
         self.mesh_connectivity = {
-            'beams': {},
-            'masses': {},
-            'springs': {},
-            'constraints': {}
+            "beams": {},
+            "masses": {},
+            "springs": {},
+            "constraints": {},
         }
-        if connectivity_path:
-            self._load_mesh_connectivity(connectivity_path)
+        self._load_mesh_connectivity(connectivity_path)
 
         # Get dimensions from the NetCDF file
-        self.num_nodes = len(self.data.dimensions['nodes'])
-        self.num_timesteps = len(self.data.dimensions['time'])
+        self.num_nodes = len(self.data.dimensions["nodes"])
+        self.num_timesteps = len(self.data.dimensions["time"])
 
-        print(f"Loaded data with {self.num_nodes} nodes and {self.num_timesteps} timesteps")
-
+        print(
+            f"Loaded output data from {self.netcdf_path} with {self.num_nodes} nodes and {self.num_timesteps} timesteps"
+        )
 
     def _load_mesh_connectivity(self, connectivity_path: str):
         """Loads mesh connectivity information from a YAML file.
@@ -109,11 +107,11 @@ class VTKOutput:
             connectivity_path (str): Path to the connectivity YAML file
         """
         try:
-            with open(connectivity_path, 'r') as file:
+            with open(connectivity_path, "r") as file:
                 data = yaml.safe_load(file)
 
                 # Process all element types
-                for elem_type in ['beams', 'masses', 'springs', 'constraints']:
+                for elem_type in ["beams", "masses", "springs", "constraints"]:
                     if elem_type in data:
                         for elem_id, node_ids in data[elem_type].items():
                             self.mesh_connectivity[elem_type][int(elem_id)] = node_ids
@@ -127,13 +125,10 @@ class VTKOutput:
         except Exception as e:
             print(f"Error loading connectivity data: {e}")
 
-
     def _extract_node_data_at_timestep(
-        self,
-        timestep: int,
-        node_indices: Optional[List[int]] = None
+        self, timestep: int, node_indices: Optional[List[int]] = None
     ) -> List[Dict[str, List[float]]]:
-        """Extracts node data for a specific timestep and returns a list of NodeData-like structures.
+        """Extracts node data for a specific timestep and returns a list of OpenTurbine's NodeData-like structures.
 
         Node data contains the following components:
         - Position: x_x, x_y, x_z, x_w, x_i, x_j, x_k
@@ -153,13 +148,17 @@ class VTKOutput:
             list[dict]: A list of NodeData-like structures (dicts)
         """
         if timestep >= self.num_timesteps:
-            raise ValueError(f"Timestep {timestep} out of range (max: {self.num_timesteps-1})")
+            raise ValueError(
+                f"Timestep {timestep} out of range (max: {self.num_timesteps-1})"
+            )
 
         # Validate that all requested indices are within range
         if node_indices is not None:
             for idx in node_indices:
                 if idx < 0 or idx >= self.num_nodes:
-                    raise ValueError(f"Node index {idx} out of range (max: {self.num_nodes-1})")
+                    raise ValueError(
+                        f"Node index {idx} out of range (max: {self.num_nodes-1})"
+                    )
             indices_to_extract = node_indices
 
         # If no specific nodes requested, use all nodes
@@ -172,29 +171,29 @@ class VTKOutput:
 
         # Read all data from NetCDF file at once for the requested timestep
         position = [
-            self.data.variables['x_x'][timestep, :],
-            self.data.variables['x_y'][timestep, :],
-            self.data.variables['x_z'][timestep, :],
-            self.data.variables['x_w'][timestep, :],
-            self.data.variables['x_i'][timestep, :],
-            self.data.variables['x_j'][timestep, :],
-            self.data.variables['x_k'][timestep, :]
+            self.data.variables["x_x"][timestep, :],
+            self.data.variables["x_y"][timestep, :],
+            self.data.variables["x_z"][timestep, :],
+            self.data.variables["x_w"][timestep, :],
+            self.data.variables["x_i"][timestep, :],
+            self.data.variables["x_j"][timestep, :],
+            self.data.variables["x_k"][timestep, :],
         ]
         velocity = [
-            self.data.variables['v_x'][timestep, :],
-            self.data.variables['v_y'][timestep, :],
-            self.data.variables['v_z'][timestep, :],
-            self.data.variables['v_i'][timestep, :],
-            self.data.variables['v_j'][timestep, :],
-            self.data.variables['v_k'][timestep, :]
+            self.data.variables["v_x"][timestep, :],
+            self.data.variables["v_y"][timestep, :],
+            self.data.variables["v_z"][timestep, :],
+            self.data.variables["v_i"][timestep, :],
+            self.data.variables["v_j"][timestep, :],
+            self.data.variables["v_k"][timestep, :],
         ]
         acceleration = [
-            self.data.variables['a_x'][timestep, :],
-            self.data.variables['a_y'][timestep, :],
-            self.data.variables['a_z'][timestep, :],
-            self.data.variables['a_i'][timestep, :],
-            self.data.variables['a_j'][timestep, :],
-            self.data.variables['a_k'][timestep, :]
+            self.data.variables["a_x"][timestep, :],
+            self.data.variables["a_y"][timestep, :],
+            self.data.variables["a_z"][timestep, :],
+            self.data.variables["a_i"][timestep, :],
+            self.data.variables["a_j"][timestep, :],
+            self.data.variables["a_k"][timestep, :],
         ]
 
         # ------------------------------------------------------------
@@ -205,45 +204,61 @@ class VTKOutput:
         moment = None
         deformation = None
 
-        force_available = all(f'f_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+        force_available = all(
+            f"f_{comp}" in self.data.variables for comp in ["x", "y", "z"]
+        )
         if force_available:
             force = [
-                self.data.variables['f_x'][timestep, :],
-                self.data.variables['f_y'][timestep, :],
-                self.data.variables['f_z'][timestep, :]
+                self.data.variables["f_x"][timestep, :],
+                self.data.variables["f_y"][timestep, :],
+                self.data.variables["f_z"][timestep, :],
             ]
-        moment_available = all(f'f_{comp}' in self.data.variables for comp in ['i', 'j', 'k'])
+        moment_available = all(
+            f"f_{comp}" in self.data.variables for comp in ["i", "j", "k"]
+        )
         if moment_available:
             moment = [
-                self.data.variables['f_i'][timestep, :],
-                self.data.variables['f_j'][timestep, :],
-                self.data.variables['f_k'][timestep, :]
+                self.data.variables["f_i"][timestep, :],
+                self.data.variables["f_j"][timestep, :],
+                self.data.variables["f_k"][timestep, :],
             ]
-        deformation_available = all(f'deformation_{comp}' in self.data.variables for comp in ['x', 'y', 'z'])
+        deformation_available = all(
+            f"deformation_{comp}" in self.data.variables for comp in ["x", "y", "z"]
+        )
         if deformation_available:
             deformation = [
-                self.data.variables['deformation_x'][timestep, :],
-                self.data.variables['deformation_y'][timestep, :],
-                self.data.variables['deformation_z'][timestep, :]
+                self.data.variables["deformation_x"][timestep, :],
+                self.data.variables["deformation_y"][timestep, :],
+                self.data.variables["deformation_z"][timestep, :],
             ]
 
         # Create node data dictionaries only for the requested indices
         nodes = []
         for i_node in indices_to_extract:
             node = {
-                'position': [position[j_comp][i_node] for j_comp in range(7)],
-                'velocity': [velocity[j_comp][i_node] for j_comp in range(6)],
-                'acceleration': [acceleration[j_comp][i_node] for j_comp in range(6)],
-                'force': [force[j_comp][i_node] for j_comp in range(3)] if force is not None else None,
-                'moment': [moment[j_comp][i_node] for j_comp in range(3)] if moment is not None else None,
-                'deformation': [deformation[j_comp][i_node] for j_comp in range(3)] if deformation is not None else None
+                "position": [position[j_comp][i_node] for j_comp in range(7)],
+                "velocity": [velocity[j_comp][i_node] for j_comp in range(6)],
+                "acceleration": [acceleration[j_comp][i_node] for j_comp in range(6)],
+                "force": (
+                    [force[j_comp][i_node] for j_comp in range(3)]
+                    if force is not None else None
+                ),
+                "moment": (
+                    [moment[j_comp][i_node] for j_comp in range(3)]
+                    if moment is not None else None
+                ),
+                "deformation": (
+                    [deformation[j_comp][i_node] for j_comp in range(3)]
+                    if deformation is not None else None
+                ),
             }
             nodes.append(node)
 
         return nodes
 
-
-    def _add_node_data_to_vtk_object(self, vtk_object: vtk.vtkObject, nodes: List[Dict[str, List[float]]]):
+    def _add_node_data_to_vtk_object(
+        self, vtk_object: vtk.vtkObject, nodes: List[Dict[str, List[float]]]
+    ):
         """Adds common node data to a VTK object (polydata or unstructured grid).
 
         Following data are added to the VTK object:
@@ -257,17 +272,16 @@ class VTKOutput:
         """
         # Add orientation data
         orientation_arrays = {
-            axis: create_vector_array(f"Orientation{axis}")
-            for axis in ["X", "Y", "Z"]
+            axis: create_vector_array(f"Orientation{axis}") for axis in ["X", "Y", "Z"]
         }
 
         for node in nodes:
             # Convert quaternion to rotation matrix
             quaternion = [
-                node['position'][3],  # w
-                node['position'][4],  # i
-                node['position'][5],  # j
-                node['position'][6]   # k
+                node["position"][3],  # w
+                node["position"][4],  # i
+                node["position"][5],  # j
+                node["position"][6],  # k
             ]
             R = quaternion_to_rotation_matrix(quaternion)
 
@@ -283,8 +297,8 @@ class VTKOutput:
         rotation_velocity = create_vector_array("RotationalVelocity")
 
         for node in nodes:
-            translation_velocity.InsertNextTuple3(*node['velocity'][0:3])
-            rotation_velocity.InsertNextTuple3(*node['velocity'][3:6])
+            translation_velocity.InsertNextTuple3(*node["velocity"][0:3])
+            rotation_velocity.InsertNextTuple3(*node["velocity"][3:6])
 
         vtk_object.GetPointData().AddArray(translation_velocity)
         vtk_object.GetPointData().AddArray(rotation_velocity)
@@ -294,12 +308,11 @@ class VTKOutput:
         rot_accel = create_vector_array("RotationalAcceleration")
 
         for node in nodes:
-            trans_accel.InsertNextTuple3(*node['acceleration'][0:3])
-            rot_accel.InsertNextTuple3(*node['acceleration'][3:6])
+            trans_accel.InsertNextTuple3(*node["acceleration"][0:3])
+            rot_accel.InsertNextTuple3(*node["acceleration"][3:6])
 
         vtk_object.GetPointData().AddArray(trans_accel)
         vtk_object.GetPointData().AddArray(rot_accel)
-
 
     def generate_visualization(self, timestep: int, output_dir: str):
         """Generates visualization for the specified timestep based on mesh connectivity.
@@ -320,7 +333,7 @@ class VTKOutput:
         points = vtk.vtkPoints()
         node_id_array = create_vector_array("NodeID", 1)
         for i in range(len(nodes)):
-            position = nodes[i]['position'][0:3]
+            position = nodes[i]["position"][0:3]
             points.InsertNextPoint(position)
             node_id_array.InsertNextValue(i)  # Add node ID
 
@@ -336,20 +349,22 @@ class VTKOutput:
         element_type_names = {}
 
         # Add beam elements to the grid
-        if self.mesh_connectivity['beams']:
+        if "beams" in self.mesh_connectivity:
             self._add_beams_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add mass nodes to the grid
-        if self.mesh_connectivity['masses']:
+        if "masses" in self.mesh_connectivity:
             self._add_masses_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add spring elements to the grid
-        if self.mesh_connectivity['springs']:
+        if "springs" in self.mesh_connectivity:
             self._add_springs_to_grid(grid, cell_types, element_ids, element_type_names)
 
         # Add constraints to the grid
-        if self.mesh_connectivity['constraints']:
-            self._add_constraints_to_grid(grid, cell_types, element_ids, element_type_names)
+        if "constraints" in self.mesh_connectivity:
+            self._add_constraints_to_grid(
+                grid, cell_types, element_ids, element_type_names
+            )
 
         # Add element type array
         type_array = create_vector_array("ElementType", 1)
@@ -378,7 +393,6 @@ class VTKOutput:
 
         return filename
 
-
     def _add_beams_to_grid(self, grid, cell_types, element_ids, element_type_names):
         """Adds beam elements to the unstructured grid. Represented as polyline cells.
 
@@ -390,7 +404,7 @@ class VTKOutput:
         """
         beam_type_id = 1  # ID for beam elements -> 1
 
-        for beam_id, node_ids in self.mesh_connectivity['beams'].items():
+        for beam_id, node_ids in self.mesh_connectivity["beams"].items():
             # Beams should have at least two nodes i.e. be linear element
             if len(node_ids) < 2:
                 continue
@@ -407,7 +421,6 @@ class VTKOutput:
             element_ids[cell_id] = beam_id
             element_type_names[cell_id] = "Beam"
 
-
     def _add_masses_to_grid(self, grid, cell_types, element_ids, element_type_names):
         """Adds mass elements to the unstructured grid. Represented as vertices.
 
@@ -419,7 +432,7 @@ class VTKOutput:
         """
         mass_type_id = 2  # ID for mass elements -> 2
 
-        for mass_id, node_ids in self.mesh_connectivity['masses'].items():
+        for mass_id, node_ids in self.mesh_connectivity["masses"].items():
             # Masses should have exactly one node i.e. be point element
             if len(node_ids) != 1:
                 continue
@@ -433,7 +446,6 @@ class VTKOutput:
             element_ids[cell_id] = mass_id
             element_type_names[cell_id] = "Mass"
 
-
     def _add_springs_to_grid(self, grid, cell_types, element_ids, element_type_names):
         """Adds spring elements to the unstructured grid. Represented as line cells.
 
@@ -444,7 +456,7 @@ class VTKOutput:
             element_type_names (Dict[int, str]): Dictionary to track element type names
         """
         spring_type_id = 3  # ID for spring elements -> 3
-        for spring_id, node_ids in self.mesh_connectivity['springs'].items():
+        for spring_id, node_ids in self.mesh_connectivity["springs"].items():
             # Springs should have exactly two nodes i.e. be linear element
             if len(node_ids) != 2:
                 continue
@@ -459,8 +471,9 @@ class VTKOutput:
             element_ids[cell_id] = spring_id
             element_type_names[cell_id] = "Spring"
 
-
-    def _add_constraints_to_grid(self, grid, cell_types, element_ids, element_type_names):
+    def _add_constraints_to_grid(
+        self, grid, cell_types, element_ids, element_type_names
+    ):
         """Adds constraint elements to the unstructured grid. Represented as line cells.
 
         Args:
@@ -471,7 +484,7 @@ class VTKOutput:
         """
         constraint_type_id = 4  # ID for constraint elements -> 4
 
-        for constraint_id, node_ids in self.mesh_connectivity['constraints'].items():
+        for constraint_id, node_ids in self.mesh_connectivity["constraints"].items():
             # NOTE: We are not considering single node constraints for viz
             if len(node_ids) != 2:
                 continue
@@ -486,7 +499,6 @@ class VTKOutput:
             element_ids[cell_id] = constraint_id
             element_type_names[cell_id] = "Constraint"
 
-
     def visualize_all_timesteps(self, output_dir: str):
         """Generates visualization for all timesteps.
 
@@ -498,10 +510,10 @@ class VTKOutput:
 
         # Create PVD file to group all timesteps
         pvd_filename = os.path.join(output_dir, "simulation.pvd")
-        with open(pvd_filename, 'w') as pvd_file:
+        with open(pvd_filename, "w") as pvd_file:
             pvd_file.write('<?xml version="1.0"?>\n')
             pvd_file.write('<VTKFile type="Collection" version="0.1">\n')
-            pvd_file.write('  <Collection>\n')
+            pvd_file.write("  <Collection>\n")
 
             # Get time values
             times = np.arange(self.num_timesteps, dtype=float)
@@ -513,61 +525,78 @@ class VTKOutput:
 
                 # Add to collection
                 time_value = times[timestep]
-                pvd_file.write(f'    <DataSet timestep="{time_value}" file="{vtu_basename}"/>\n')
+                pvd_file.write(
+                    f'    <DataSet timestep="{time_value}" file="{vtu_basename}"/>\n'
+                )
 
-            pvd_file.write('  </Collection>\n')
-            pvd_file.write('</VTKFile>\n')
+            pvd_file.write("  </Collection>\n")
+            pvd_file.write("</VTKFile>\n")
 
         print(f"Wrote PVD file to {pvd_filename}")
 
-
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Main function
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 def main():
     """Main function to parse arguments and generate VTK files.
 
-    Example usage:
-        python generate_vtk_output.py blade_interface.nc
-            --connectivity_file mesh_connectivity.yaml --output_dir vtk_output
+    Example usage (run from the build directory):
+        python ../src/viz/generate_vtk_output.py \
+            tests/regression_tests/TurbineInterfaceTest.IEA15/turbine_interface.nc \
+            tests/regression_tests/TurbineInterfaceTest.IEA15/mesh_connectivity.yaml \
+            --output_dir tests/regression_tests/TurbineInterfaceTest.IEA15/vtk_output \
+            --start-timestep 0 \
+            --end-timestep 5
 
     NOTE: Files are overwritten in the output directory if they already exist.
     """
-    parser = argparse.ArgumentParser(description='Generate VTK files from OpenTurbine NetCDF output')
+    parser = argparse.ArgumentParser(
+        description="Generate VTK files from OpenTurbine NetCDF output"
+    )
 
     # ------------------------------------------------------------
     # Input arguments
     # ------------------------------------------------------------
 
-    # NetCDF input file
+    # NetCDF input file -- required argument
     parser.add_argument(
-        'netcdf_file',
+        "netcdf_file",
         type=str,
-        help='Path to OpenTurbine NetCDF output file e.g. blade_interface.nc'
+        help="Path to OpenTurbine NetCDF output file e.g. blade_interface.nc",
     )
 
-    # Mesh connectivity file
+    # Mesh connectivity file -- required argument
     parser.add_argument(
-        '--connectivity_file',
+        "connectivity_file",
         type=str,
-        help='Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml'
+        help="Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml",
     )
 
-    # Output directory
+    # Output directory -- optional argument
     parser.add_argument(
-        '--output_dir',
+        "--output_dir",
+        "-o",
         type=str,
-        default='vtk_output',
-        help='Directory for writing the vtk output files'
+        default="vtk_output",
+        help="Directory for writing the vtk output files",
     )
 
-    # Specific timestep to visualize
+    # Timestep range to visualize -- optional arguments
     parser.add_argument(
-        '--timestep',
+        "--start-timestep",
+        "-s",
         type=int,
         default=None,
-        help='Specific timestep to visualize (if not specified, all timesteps will be visualized)'
+        help="Starting timestep to visualize (default: 0)",
+    )
+
+    parser.add_argument(
+        "--end-timestep",
+        "-e",
+        type=int,
+        default=None,
+        help="Ending timestep to visualize (default: last timestep)",
     )
 
     args = parser.parse_args()
@@ -578,19 +607,35 @@ def main():
 
     # Issue warning before overwriting files
     if os.path.exists(args.output_dir):
-        print(f"* Warning: {args.output_dir} already exists -- files will be overwritten")
+        print(
+            f"* Warning: {args.output_dir} already exists -- files may be overwritten"
+        )
         os.makedirs(args.output_dir, exist_ok=True)
 
     # Create the VTK output object
     vtk_output = VTKOutput(args.netcdf_file, args.connectivity_file)
 
-    # Generate visualization
-    if args.timestep is not None:
-        vtk_output.generate_visualization(args.timestep, args.output_dir)
+    # Generate visualization for timestep range or all timesteps
+    if args.start_timestep is not None or args.end_timestep is not None:
+        start = args.start_timestep if args.start_timestep is not None else 0
+        end = args.end_timestep if args.end_timestep is not None else vtk_output.num_timesteps - 1
 
-    # Generate visualization for all timesteps
-    vtk_output.visualize_all_timesteps(args.output_dir)
+        # Validate range
+        if start < 0 or start >= vtk_output.num_timesteps:
+            raise ValueError(f"Start timestep {start} out of range (0-{vtk_output.num_timesteps-1})")
+        if end < 0 or end >= vtk_output.num_timesteps:
+            raise ValueError(f"End timestep {end} out of range (0-{vtk_output.num_timesteps-1})")
+        if start > end:
+            raise ValueError(f"Start timestep {start} cannot be greater than end timestep {end}")
 
+        # Generate visualization for the specified range
+        print(f"Generating visualization for timesteps {start} to {end}")
+        for timestep in range(start, end + 1):
+            vtk_output.generate_visualization(timestep, args.output_dir)
+    else:
+        # Generate visualization for all timesteps
+        print("Generating visualization for all timesteps")
+        vtk_output.visualize_all_timesteps(args.output_dir)
 
 if __name__ == "__main__":
     main()

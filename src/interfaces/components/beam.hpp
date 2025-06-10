@@ -1,7 +1,7 @@
 #pragma once
 
 #include "elements/beams/interpolation.hpp"
-#include "interfaces/components/blade_input.hpp"
+#include "interfaces/components/beam_input.hpp"
 #include "interfaces/node_data.hpp"
 #include "math/least_squares_fit.hpp"
 #include "math/matrix_operations.hpp"
@@ -18,7 +18,7 @@ namespace openturbine::interfaces::components {
  * specifications. It handles the creation of nodes, beam elements, and constraints
  * within the provided model.
  */
-class Blade {
+class Beam {
 public:
     /// @brief Maximum number of points allowed in blade geometry definition
     static constexpr size_t kMaxGeometryPoints{10};
@@ -29,17 +29,13 @@ public:
     /// @brief Blade node data
     std::vector<NodeData> nodes;
 
-    /// @brief Blade root node
-    NodeData root_node;
-
-    /// @brief ID of constraint connecting root node to first blade node
-    size_t root_blade_constraint_id{kInvalidID};
-
     /// @brief Constraint ID of prescribed root displacement
     size_t prescribed_root_constraint_id{kInvalidID};
 
     /// @brief Location of nodes in blade element [-1, 1]
     std::vector<double> node_xi;
+
+    Beam() = default;
 
     /**
      * @brief Construct a new Blade using the provided input and model
@@ -47,7 +43,7 @@ public:
      * @param model Model to which the blade elements and nodes will be added
      * @throws std::invalid_argument If the input configuration is invalid
      */
-    Blade(const BladeInput& input, Model& model) : root_node(kInvalidID) {
+    Beam(const BeamInput& input, Model& model) {
         ValidateInput(input);
         SetupNodeLocations(input);
         CreateNodeGeometry(input);
@@ -95,6 +91,24 @@ public:
         }
     }
 
+    /// @brief Populate node motion based on host state
+    /// @param host_state Host state containing position, displacement, velocity, and acceleration
+    template <typename DeviceType>
+    void GetMotion(const HostState<DeviceType>& host_state) {
+        for (auto& node : this->nodes) {
+            node.GetMotion(host_state);
+        }
+    }
+
+    /// @brief Update the host state with current node forces and moments
+    /// @param host_state Host state to update
+    template <typename DeviceType>
+    void SetLoads(HostState<DeviceType>& host_state) const {
+        for (const auto& node : this->nodes) {
+            node.SetLoads(host_state);
+        }
+    }
+
 private:
     std::vector<std::array<double, 3>> node_coordinates;  ///< Node coordinates
     std::vector<std::array<double, 3>> node_tangents;     ///< Node tangents
@@ -104,7 +118,7 @@ private:
      * @param input Blade input configuration
      * @throws std::invalid_argument If configuration is invalid
      */
-    static void ValidateInput(const BladeInput& input) {
+    static void ValidateInput(const BeamInput& input) {
         if (input.ref_axis.coordinate_grid.size() < 2 || input.ref_axis.coordinates.size() < 2) {
             throw std::invalid_argument("At least two reference axis points are required");
         }
@@ -125,7 +139,7 @@ private:
      * @brief Setup node locations based on input configuration
      * @param input Blade input configuration
      */
-    void SetupNodeLocations(const BladeInput& input) {
+    void SetupNodeLocations(const BeamInput& input) {
         // Generate node locations within element [-1,1]
         this->node_xi = GenerateGLLPoints(input.element_order);
     }
@@ -134,7 +148,7 @@ private:
      * @brief Create node geometry from reference axis points
      * @param input Blade input configuration
      */
-    void CreateNodeGeometry(const BladeInput& input) {
+    void CreateNodeGeometry(const BeamInput& input) {
         const auto n_nodes = input.element_order + 1;
         const auto n_geometry_pts =
             std::min({input.ref_axis.coordinate_grid.size(), n_nodes, kMaxGeometryPoints});
@@ -172,7 +186,7 @@ private:
      * @param input Blade input configuration
      * @param model Model to which the beam element will be added
      */
-    void CreateBeamElement(const BladeInput& input, Model& model) {
+    void CreateBeamElement(const BeamInput& input, Model& model) {
         // Add nodes to model
         std::vector<size_t> node_ids;
         for (auto i = 0U; i < this->node_xi.size(); ++i) {
@@ -209,7 +223,7 @@ private:
      * @param input Blade input configuration
      * @param model Model containing the blade
      */
-    void PositionBladeInSpace(const BladeInput& input, Model& model) const {
+    void PositionBladeInSpace(const BeamInput& input, Model& model) const {
         // Extract root location, orientation, and velocity
         const std::array<double, 3> root_location{
             input.root.position[0], input.root.position[1], input.root.position[2]
@@ -242,17 +256,10 @@ private:
      * @param input Blade input configuration
      * @param model Model to which constraints will be added
      */
-    void SetupRootNode(const BladeInput& input, Model& model) {
-        // Add root node
-        this->root_node.id = model.AddNode().SetPosition(input.root.position).Build();
-
-        // Constraint first blade node to root node
-        this->root_blade_constraint_id =
-            model.AddRigidJointConstraint({this->root_node.id, this->nodes[0].id});
-
+    void SetupRootNode(const BeamInput& input, Model& model) {
         // Add prescribed displacement constraint to root node if requested
         if (input.root.prescribe_root_motion) {
-            this->prescribed_root_constraint_id = model.AddPrescribedBC(this->root_node.id);
+            this->prescribed_root_constraint_id = model.AddPrescribedBC(this->nodes[0].id);
         }
     }
 
@@ -293,7 +300,7 @@ private:
      * @param input Blade input configuration
      * @return Vector of beam sections
      */
-    static std::vector<BeamSection> BuildBeamSections(const BladeInput& input) {
+    static std::vector<BeamSection> BuildBeamSections(const BeamInput& input) {
         // Extraction section stiffness and mass matrices from blade definition
         std::vector<BeamSection> sections;
 

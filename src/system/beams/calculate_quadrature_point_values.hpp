@@ -51,6 +51,8 @@ struct CalculateQuadraturePointValues {
         const auto simd_nodes = num_nodes / width + extra_component;
         const auto padded_num_nodes = simd_nodes * width;
 
+        const auto qp_pair = Kokkos::make_pair(0UL, num_qps);
+        const auto node_pair = Kokkos::make_pair(0UL, num_nodes);
         const auto qp_range = Kokkos::TeamVectorRange(member, num_qps);
         const auto node_range = Kokkos::TeamVectorRange(member, num_nodes);
         const auto node_squared_range = Kokkos::TeamVectorRange(member, num_nodes * num_nodes);
@@ -99,25 +101,25 @@ struct CalculateQuadraturePointValues {
         const auto inertia_matrix_terms =
             Kokkos::View<double** [6][6], DeviceType>(member.team_scratch(1), num_nodes, num_nodes);
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_interp_, i_elem, Kokkos::ALL, Kokkos::ALL),
-            Kokkos::subview(shape_interp, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
+            member, Kokkos::subview(shape_interp_, i_elem, node_pair, qp_pair),
+            Kokkos::subview(shape_interp, node_pair, qp_pair)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(shape_deriv_, i_elem, Kokkos::ALL, Kokkos::ALL),
-            Kokkos::subview(shape_deriv, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
+            member, Kokkos::subview(shape_deriv_, i_elem, node_pair, qp_pair),
+            Kokkos::subview(shape_deriv, node_pair, qp_pair)
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(qp_FE_, i_elem, Kokkos::ALL, Kokkos::ALL), qp_Fe
+            member, Kokkos::subview(qp_FE_, i_elem, qp_pair, Kokkos::ALL), qp_Fe
         );
         KokkosBatched::TeamVectorCopy<member_type>::invoke(
-            member, Kokkos::subview(node_FX_, i_elem, Kokkos::ALL, Kokkos::ALL), node_FX
+            member, Kokkos::subview(node_FX_, i_elem, node_pair, Kokkos::ALL), node_FX
         );
 
         KokkosBatched::TeamVectorCopy<member_type, KokkosBatched::Trans::NoTranspose, 1>::invoke(
-            member, Kokkos::subview(qp_weight_, i_elem, Kokkos::ALL), qp_weight
+            member, Kokkos::subview(qp_weight_, i_elem, qp_pair), qp_weight
         );
         KokkosBatched::TeamVectorCopy<member_type, KokkosBatched::Trans::NoTranspose, 1>::invoke(
-            member, Kokkos::subview(qp_jacobian_, i_elem, Kokkos::ALL), qp_jacobian
+            member, Kokkos::subview(qp_jacobian_, i_elem, qp_pair), qp_jacobian
         );
 
         const auto node_state_updater = beams::UpdateNodeStateElement<DeviceType>{

@@ -1,14 +1,17 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
+#include "KokkosSparse_IOUtils.hpp"
 #include "interfaces/blade/blade_interface_builder.hpp"
+#include "interfaces/components/beam_builder.hpp"
 #include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
 TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
-    const YAML::Node windio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
+    const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
+    const auto& wio_blade = wio["components"]["blade"];
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
@@ -29,68 +32,33 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     const auto n_nodes{11};
     builder.Blade().SetElementOrder(n_nodes - 1).PrescribedRootMotion(true);
 
-    // Add reference axis coordinates
-    const auto blade_axis = windio["components"]["blade"]["reference_axis"];
-    const auto ref_axis_n_coord_points = blade_axis["grid"].size();
-    for (auto i = 0U; i < ref_axis_n_coord_points; ++i) {
+    // Add reference axis coordinates (WindIO uses Z-axis as reference axis)
+    const auto ref_axis = wio_blade["outer_shape_bem"]["reference_axis"];
+    const auto axis_grid = ref_axis["x"]["grid"].as<std::vector<double>>();
+    const auto x_values = ref_axis["x"]["values"].as<std::vector<double>>();
+    const auto y_values = ref_axis["y"]["values"].as<std::vector<double>>();
+    const auto z_values = ref_axis["z"]["values"].as<std::vector<double>>();
+    for (auto i = 0U; i < axis_grid.size(); ++i) {
         builder.Blade().AddRefAxisPoint(
-            blade_axis["grid"][i].as<double>(),
-            {
-                blade_axis["x"][i].as<double>(),
-                blade_axis["y"][i].as<double>(),
-                blade_axis["z"][i].as<double>(),
-            },
+            axis_grid[i], {x_values[i], y_values[i], z_values[i]},
             interfaces::components::ReferenceAxisOrientation::Z
         );
     }
 
     // Add reference axis twist
-    const auto twist = windio["components"]["blade"]["outer_shape"]["twist"];
-    const auto ref_axis_n_twist_points = twist["grid"].size();
-    for (auto i = 0U; i < ref_axis_n_twist_points; ++i) {
-        builder.Blade().AddRefAxisTwist(
-            twist["grid"][i].as<double>(), twist["values"][i].as<double>()
-        );
+    const auto twist = wio_blade["outer_shape_bem"]["twist"];
+    const auto twist_grid = twist["grid"].as<std::vector<double>>();
+    const auto twist_values = twist["values"].as<std::vector<double>>();
+    for (auto i = 0U; i < twist_grid.size(); ++i) {
+        builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i]);
     }
 
     // Add blade section properties
-    const auto stiffness_matrix =
-        windio["components"]["blade"]["elastic_properties"]["stiffness_matrix"];
-    const auto k_grid(stiffness_matrix["grid"].as<std::vector<double>>());
-    const auto k11(stiffness_matrix["K11"].as<std::vector<double>>());
-    const auto k12(stiffness_matrix["K12"].as<std::vector<double>>());
-    const auto k13(stiffness_matrix["K13"].as<std::vector<double>>());
-    const auto k14(stiffness_matrix["K14"].as<std::vector<double>>());
-    const auto k15(stiffness_matrix["K15"].as<std::vector<double>>());
-    const auto k16(stiffness_matrix["K16"].as<std::vector<double>>());
-    const auto k22(stiffness_matrix["K22"].as<std::vector<double>>());
-    const auto k23(stiffness_matrix["K23"].as<std::vector<double>>());
-    const auto k24(stiffness_matrix["K24"].as<std::vector<double>>());
-    const auto k25(stiffness_matrix["K25"].as<std::vector<double>>());
-    const auto k26(stiffness_matrix["K26"].as<std::vector<double>>());
-    const auto k33(stiffness_matrix["K33"].as<std::vector<double>>());
-    const auto k34(stiffness_matrix["K34"].as<std::vector<double>>());
-    const auto k35(stiffness_matrix["K35"].as<std::vector<double>>());
-    const auto k36(stiffness_matrix["K36"].as<std::vector<double>>());
-    const auto k44(stiffness_matrix["K44"].as<std::vector<double>>());
-    const auto k45(stiffness_matrix["K45"].as<std::vector<double>>());
-    const auto k46(stiffness_matrix["K46"].as<std::vector<double>>());
-    const auto k55(stiffness_matrix["K55"].as<std::vector<double>>());
-    const auto k56(stiffness_matrix["K56"].as<std::vector<double>>());
-    const auto k66(stiffness_matrix["K66"].as<std::vector<double>>());
-
-    const auto inertia_matrix =
-        windio["components"]["blade"]["elastic_properties"]["inertia_matrix"];
-    const auto m_grid(inertia_matrix["grid"].as<std::vector<double>>());
-    const auto mass(inertia_matrix["mass"].as<std::vector<double>>());
-    const auto cm_x(inertia_matrix["cm_x"].as<std::vector<double>>());
-    const auto cm_y(inertia_matrix["cm_y"].as<std::vector<double>>());
-    const auto i_edge(inertia_matrix["i_edge"].as<std::vector<double>>());
-    const auto i_flap(inertia_matrix["i_flap"].as<std::vector<double>>());
-    const auto i_plr(inertia_matrix["i_plr"].as<std::vector<double>>());
-    const auto i_cp(inertia_matrix["i_cp"].as<std::vector<double>>());
-    const auto n_sections = stiffness_matrix["grid"].size();
-
+    const auto stiff_matrix = wio_blade["elastic_properties_mb"]["six_x_six"]["stiff_matrix"];
+    const auto inertia_matrix = wio_blade["elastic_properties_mb"]["six_x_six"]["inertia_matrix"];
+    const auto k_grid = stiff_matrix["grid"].as<std::vector<double>>();
+    const auto m_grid = inertia_matrix["grid"].as<std::vector<double>>();
+    const auto n_sections = k_grid.size();
     if (m_grid.size() != k_grid.size()) {
         throw std::runtime_error("stiffness and mass matrices not on same grid");
     }
@@ -98,23 +66,25 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         if (abs(m_grid[i] - k_grid[i]) > 1e-8) {
             throw std::runtime_error("stiffness and mass matrices not on same grid");
         }
+        const auto m = inertia_matrix["values"][i].as<std::vector<double>>();
+        const auto k = stiff_matrix["values"][i].as<std::vector<double>>();
         builder.Blade().AddSection(
             m_grid[i],
             {{
-                {mass[i], 0., 0., 0., 0., -mass[i] * cm_y[i]},
-                {0., mass[i], 0., 0., 0., mass[i] * cm_x[i]},
-                {0., 0., mass[i], mass[i] * cm_y[i], -mass[i] * cm_x[i], 0.},
-                {0., 0., mass[i] * cm_y[i], i_edge[i], -i_cp[i], 0.},
-                {0., 0., -mass[i] * cm_x[i], -i_cp[i], i_flap[i], 0.},
-                {-mass[i] * cm_y[i], mass[i] * cm_x[i], 0., 0., 0., i_plr[i]},
+                {m[0], m[1], m[2], m[3], m[4], m[5]},
+                {m[1], m[6], m[7], m[8], m[9], m[10]},
+                {m[2], m[7], m[11], m[12], m[13], m[14]},
+                {m[3], m[8], m[12], m[15], m[16], m[17]},
+                {m[4], m[9], m[13], m[16], m[18], m[19]},
+                {m[5], m[10], m[14], m[17], m[19], m[20]},
             }},
             {{
-                {k11[i], k12[i], k13[i], k14[i], k15[i], k16[i]},
-                {k12[i], k22[i], k23[i], k24[i], k25[i], k26[i]},
-                {k13[i], k23[i], k33[i], k34[i], k35[i], k36[i]},
-                {k14[i], k24[i], k34[i], k44[i], k45[i], k46[i]},
-                {k15[i], k25[i], k35[i], k45[i], k55[i], k56[i]},
-                {k16[i], k26[i], k36[i], k46[i], k56[i], k66[i]},
+                {k[0], k[1], k[2], k[3], k[4], k[5]},
+                {k[1], k[6], k[7], k[8], k[9], k[10]},
+                {k[2], k[7], k[11], k[12], k[13], k[14]},
+                {k[3], k[8], k[12], k[15], k[16], k[17]},
+                {k[4], k[9], k[13], k[16], k[18], k[19]},
+                {k[5], k[10], k[14], k[17], k[19], k[20]},
             }},
             interfaces::components::ReferenceAxisOrientation::Z
         );
@@ -141,13 +111,13 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         ASSERT_EQ(converged, true);
     }
 
-    EXPECT_NEAR(tip_node.position[0], 117.00012960730839, 1e-10);
-    EXPECT_NEAR(tip_node.position[1], 0.1703315069675968, 1e-10);
-    EXPECT_NEAR(tip_node.position[2], 4.0021291879233418, 1e-10);
-    EXPECT_NEAR(tip_node.position[3], 0.9987613005270843, 1e-10);
-    EXPECT_NEAR(tip_node.position[4], -0.001514812181144, 1e-10);
-    EXPECT_NEAR(tip_node.position[5], -0.049439491482141, 1e-10);
-    EXPECT_NEAR(tip_node.position[6], 0.0054135566396299, 1e-10);
+    EXPECT_NEAR(tip_node.position[0], 117.28591620612008, 1e-10);
+    EXPECT_NEAR(tip_node.position[1], 0.1714518799428682, 1e-10);
+    EXPECT_NEAR(tip_node.position[2], 4.0011349824240705, 1e-10);
+    EXPECT_NEAR(tip_node.position[3], 0.99876122551364266, 1e-10);
+    EXPECT_NEAR(tip_node.position[4], -0.003559701950531693, 1e-10);
+    EXPECT_NEAR(tip_node.position[5], -0.049343778710499483, 1e-10);
+    EXPECT_NEAR(tip_node.position[6], 0.0053417632931122526, 1e-10);
 }
 
 TEST(BladeInterfaceTest, RotatingBeam) {
@@ -247,35 +217,35 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     // Root Node
     //--------------------------------------------------------------------------
 
-    EXPECT_NEAR(interface.Blade().root_node.position[0], 1.9919054660239885, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[5], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.position[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[0], 1.9919054660239885, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].position[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.displacement[0], -0.0080945339760114532, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[1], 0.17975709839602211, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[3], 0.99898767084784234, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[5], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.displacement[6], 0.044984814037660227, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[0], -0.0080945339760114532, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[1], 0.17975709839602211, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[3], 0.99898767084784234, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].displacement[6], 0.044984814037660227, 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.velocity[0], -0.17976259212149071, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[1], 1.9919719054875213, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[3], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.velocity[5], 1., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[0], -0.17976259212149071, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[1], 1.9919719054875213, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].velocity[5], 1., 1e-10);
 
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[0], -1.9920882238788629, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[1], -0.17977158309645525, 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[2], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[3], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[4], 0., 1e-10);
-    EXPECT_NEAR(interface.Blade().root_node.acceleration[5], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[0], -1.9920882238788629, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[1], -0.17977158309645525, 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[2], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[3], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[4], 0., 1e-10);
+    EXPECT_NEAR(interface.Blade().nodes[0].acceleration[5], 0., 1e-10);
 
     //--------------------------------------------------------------------------
     // Tip Node
@@ -310,6 +280,99 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[3], -0.000046709402446003812, 1e-10);
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[4], 0.000008256203749646939, 1e-10);
     EXPECT_NEAR(interface.Blade().nodes[5].acceleration[5], 0.00020635762959181575, 1e-10);
+}
+
+template <typename T>
+void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << "\n";
+        return;
+    }
+    for (const auto& innerVector : data) {
+        for (const auto& element : innerVector) {
+            file << element << ",";
+        }
+        file << "\n";
+    }
+    file.close();
+}
+
+TEST(BladeInterfaceTest, TwoBeams) {
+    // Create interface builder
+    auto builder = interfaces::components::BeamBuilder{};
+
+    const auto n_nodes = 4;
+
+    builder.SetElementOrder(n_nodes - 1)
+        .PrescribedRootMotion(false)
+        .SetRootPosition({0., 0., 0., 1., 0., 0., 0.})
+        .AddRefAxisTwist(0., 0.)
+        .AddRefAxisTwist(1., 0.);
+
+    // Add reference axis coordinates and twist
+    const auto n_kps = 12;
+    for (auto i = 0U; i < n_kps; ++i) {
+        const auto s = static_cast<double>(i) / (n_kps - 1);
+        builder.AddRefAxisPoint(
+            s, {10. * s, 0., 0.}, interfaces::components::ReferenceAxisOrientation::X
+        );
+    }
+
+    // Beam section locations
+    const std::vector<double> section_s{0.,   0.05, 0.1,  0.15, 0.2,  0.25, 0.3,
+                                        0.35, 0.4,  0.45, 0.5,  0.55, 0.6,  0.65,
+                                        0.7,  0.75, 0.8,  0.85, 0.9,  0.95, 1.};
+
+    // Add reference axis coordinates and twist
+    for (const auto s : section_s) {
+        builder.AddSection(
+            s,
+            std::array{
+                std::array{8.538e-2, 0., 0., 0., 0., 0.},
+                std::array{0., 8.538e-2, 0., 0., 0., 0.},
+                std::array{0., 0., 8.538e-2, 0., 0., 0.},
+                std::array{0., 0., 0., 1.4433e-2, 0., 0.},
+                std::array{0., 0., 0., 0., 0.40972e-2, 0.},
+                std::array{0., 0., 0., 0., 0., 1.0336e-2},
+            },
+            std::array{
+                std::array{1368.17e3, 0., 0., 0., 0., 0.},
+                std::array{0., 88.56e3, 0., 0., 0., 0.},
+                std::array{0., 0., 38.78e3, 0., 0., 0.},
+                std::array{0., 0., 0., 16.9600e3, 17.6100e3, -0.3510e3},
+                std::array{0., 0., 0., 17.6100e3, 59.1200e3, -0.3700e3},
+                std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
+            },
+            interfaces::components::ReferenceAxisOrientation::X
+        );
+    }
+
+    Model model({0., 0., -9.81});
+
+    auto beam_1 = builder.Build(model);
+    auto beam_2 = builder.Build(model);
+
+    for (auto& node : beam_2.nodes) {
+        model.GetNode(node.id).x[0] += 10.;
+    }
+
+    model.AddPrescribedBC(beam_1.nodes[0].id);
+    model.AddRigidJointConstraint({beam_1.nodes[n_nodes - 1].id, beam_2.nodes[0].id});
+
+    // Create solver parameters
+    auto parameters = StepParameters(true, 6, 0.01, 0.);
+
+    // Create solver, elements, constraints, and state
+    auto [state, elements, constraints] = model.CreateSystem();
+    auto solver = CreateSolver<>(state, elements, constraints);
+
+    Step(parameters, solver, elements, state, constraints);
+
+    for (auto i = 0U; i < solver.b.size(); ++i) {
+        std::cout << "b[" << i << "] = " << solver.b(i, 0) << "\n";
+    }
+    KokkosSparse::Impl::write_kokkos_crst_matrix(solver.A, "A.mtx");
 }
 
 TEST(BladeInterfaceTest, StaticCurledBeam) {

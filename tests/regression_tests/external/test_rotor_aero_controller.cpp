@@ -610,10 +610,10 @@ TEST(Milestone, IEA15RotorAeroController) {
           << "\t" << generator_speed / rpm_to_radps                    //
           << "\t" << controller.io.generator_torque_command / 1000.    //
           << "\t" << controller.io.generator_power_actual / 1000.      //
-          << "\t" << GetNodeData(tip_node_ids[0].ID, host_state_q)[0]  // x displacement of tip nodes
-          << "\t" << GetNodeData(tip_node_ids[1].ID, host_state_q)[0]  // x displacement of tip nodes
+          << "\t" << GetNodeData(tip_node_ids[0].id, host_state_q)[0]  // x displacement of tip nodes
+          << "\t" << GetNodeData(tip_node_ids[1].id, host_state_q)[0]  // x displacement of tip nodes
           << "\t"
-          << GetNodeData(tip_node_ids[2].ID, host_state_q)[0];  // x displacement of tip nodes
+          << GetNodeData(tip_node_ids[2].id, host_state_q)[0];  // x displacement of tip nodes
         for (const auto& value : adi.channel_values) {
             w << "\t" << value;
         }
