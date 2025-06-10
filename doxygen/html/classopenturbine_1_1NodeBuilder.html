@@ -173,6 +173,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Builder class for constructing and configuring <a class="el" href="structopenturbine_1_1Node.html">Node</a> objects.  
+ <a href="classopenturbine_1_1NodeBuilder.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="node_8hpp_source.html">node.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -198,10 +201,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a57b129401b3cc78a41555dd6ab8bca38" id="r_a57b129401b3cc78a41555dd6ab8bca38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a57b129401b3cc78a41555dd6ab8bca38">SetPosition</a> (double x, double y, double z)</td></tr>
 <tr class="separator:a57b129401b3cc78a41555dd6ab8bca38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00180910851f337e103d6f4382164bee" id="r_a00180910851f337e103d6f4382164bee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a00180910851f337e103d6f4382164bee">SetOrientation</a> (const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;p)</td></tr>
-<tr class="memdesc:a00180910851f337e103d6f4382164bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the node orientation from quaternion.  <br /></td></tr>
 <tr class="separator:a00180910851f337e103d6f4382164bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46245d2bc9b470315374d3e992a7639d" id="r_a46245d2bc9b470315374d3e992a7639d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a46245d2bc9b470315374d3e992a7639d">SetOrientation</a> (double w, double i, double j, double k)</td></tr>
-<tr class="memdesc:a46245d2bc9b470315374d3e992a7639d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the node orientation from quaternion components.  <br /></td></tr>
 <tr class="separator:a46245d2bc9b470315374d3e992a7639d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4df39d1cf76f4807f0709075267fcb00" id="r_a4df39d1cf76f4807f0709075267fcb00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a4df39d1cf76f4807f0709075267fcb00">SetDisplacement</a> (const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;p)</td></tr>
 <tr class="separator:a4df39d1cf76f4807f0709075267fcb00"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -227,13 +228,24 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a64cf4eae3653b912a8de44d45847b29d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a272a803d7784accf61fd202a5b8c6f4b" id="r_a272a803d7784accf61fd202a5b8c6f4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a272a803d7784accf61fd202a5b8c6f4b">SetAcceleration</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v)</td></tr>
 <tr class="separator:a272a803d7784accf61fd202a5b8c6f4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61a7271d0629736fbfd5afb47fb515cf" id="r_a61a7271d0629736fbfd5afb47fb515cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a61a7271d0629736fbfd5afb47fb515cf">SetElemLocation</a> (double loc)</td></tr>
-<tr class="separator:a61a7271d0629736fbfd5afb47fb515cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14e87c14a2af9f88e9248ff111033864" id="r_a14e87c14a2af9f88e9248ff111033864"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a14e87c14a2af9f88e9248ff111033864">SetElemLocation</a> (double location)</td></tr>
+<tr class="separator:a14e87c14a2af9f88e9248ff111033864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e7a93f6816bb60f44e2e876b6354955" id="r_a5e7a93f6816bb60f44e2e876b6354955"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html#a5e7a93f6816bb60f44e2e876b6354955">Build</a> () const</td></tr>
 <tr class="memdesc:a5e7a93f6816bb60f44e2e876b6354955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build finalizes construction of node and returns the node's ID.  <br /></td></tr>
 <tr class="separator:a5e7a93f6816bb60f44e2e876b6354955"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Builder class for constructing and configuring <a class="el" href="structopenturbine_1_1Node.html">Node</a> objects. </p>
+<p><a class="el" href="classopenturbine_1_1NodeBuilder.html" title="Builder class for constructing and configuring Node objects.">NodeBuilder</a> implements the builder pattern to provide a fluent interface for setting node properties. It allows for method chaining to configure multiple node properties in a single expression, making node creation more readable and maintainable.</p>
+<p>The builder operates on a reference to an existing <a class="el" href="structopenturbine_1_1Node.html">Node</a> object and provides methods to set:</p><ul>
+<li>Position (initial position and orientation)</li>
+<li>Displacement (from initial position)</li>
+<li>Velocity (translational and rotational)</li>
+<li>Acceleration (translational and rotational)</li>
+<li>Element location (parametric position within an element)</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>The builder holds a reference to the node being constructed and is not copyable or movable to prevent accidental misuse. All setter methods return a reference to the builder to enable method chaining. </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aea5d71170b83a58338224b94103883a7" name="aea5d71170b83a58338224b94103883a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea5d71170b83a58338224b94103883a7">&#9670;&#160;</a></span>NodeBuilder() <span class="overload">[1/3]</span></h2>
 
@@ -731,8 +743,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a61a7271d0629736fbfd5afb47fb515cf" name="a61a7271d0629736fbfd5afb47fb515cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61a7271d0629736fbfd5afb47fb515cf">&#9670;&#160;</a></span>SetElemLocation()</h2>
+<a id="a14e87c14a2af9f88e9248ff111033864" name="a14e87c14a2af9f88e9248ff111033864"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14e87c14a2af9f88e9248ff111033864">&#9670;&#160;</a></span>SetElemLocation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -744,7 +756,7 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a> &amp; openturbine::NodeBuilder::SetElemLocation </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>loc</em></td><td>)</td>
+          <td class="paramname"><em>location</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -780,14 +792,6 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Sets the node orientation from quaternion. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">p</td><td>quaternion (w,i,j,k) </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -836,14 +840,6 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Sets the node orientation from quaternion components. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">p</td><td>quaternion (w,i,j,k) </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
