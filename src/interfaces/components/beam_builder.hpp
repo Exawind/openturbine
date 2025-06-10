@@ -106,7 +106,7 @@ public:
             return *this;
         }
         if (ref_axis == ReferenceAxisOrientation::Z) {
-            const auto q_z_to_x = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+            const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
             input.sections.emplace_back(
                 grid_location, RotateMatrix6(mass_matrix, q_z_to_x),
                 RotateMatrix6(stiffness_matrix, q_z_to_x)
