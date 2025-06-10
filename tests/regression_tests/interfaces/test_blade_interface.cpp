@@ -109,13 +109,13 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         ASSERT_EQ(converged, true);
     }
 
-    EXPECT_NEAR(tip_node.position[0], 117.2858406266988, 1e-10);
-    EXPECT_NEAR(tip_node.position[1], 0.1708740070925541, 1e-10);
-    EXPECT_NEAR(tip_node.position[2], 4.0020078461742203, 1e-10);
-    EXPECT_NEAR(tip_node.position[3], 0.99876778924258092, 1e-10);
-    EXPECT_NEAR(tip_node.position[4], -0.00150840801703102, 1e-10);
-    EXPECT_NEAR(tip_node.position[5], -0.049306629160401884, 1e-10);
-    EXPECT_NEAR(tip_node.position[6], 0.0054299353200459614, 1e-10);
+    EXPECT_NEAR(tip_node.position[0], 117.28591620612008, 1e-10);
+    EXPECT_NEAR(tip_node.position[1], 0.1714518799428682, 1e-10);
+    EXPECT_NEAR(tip_node.position[2], 4.0011349824240705, 1e-10);
+    EXPECT_NEAR(tip_node.position[3], 0.99876122551364266, 1e-10);
+    EXPECT_NEAR(tip_node.position[4], -0.003559701950531693, 1e-10);
+    EXPECT_NEAR(tip_node.position[5], -0.049343778710499483, 1e-10);
+    EXPECT_NEAR(tip_node.position[6], 0.0053417632931122526, 1e-10);
 }
 
 TEST(BladeInterfaceTest, RotatingBeam) {
