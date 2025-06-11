@@ -1,5 +1,4 @@
-#include <stddef.h>
-
+#include <cstddef>
 #include <string>
 
 #include <Kokkos_Core.hpp>

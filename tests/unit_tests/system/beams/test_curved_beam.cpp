@@ -1,9 +1,8 @@
 #include "test_curved_beam.hpp"
 
-#include <stddef.h>
-
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <string>
 
 #include <Kokkos_Core.hpp>

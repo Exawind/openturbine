@@ -1,6 +1,5 @@
-#include <stddef.h>
-
 #include <array>
+#include <cstddef>
 #include <string>
 
 #include <KokkosSparse_SortCrs.hpp>

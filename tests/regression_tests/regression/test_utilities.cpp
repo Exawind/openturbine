@@ -1,8 +1,7 @@
 #include "test_utilities.hpp"
 
-#include <stddef.h>
-
 #include <chrono>
+#include <cstddef>
 #include <iostream>
 #include <stdexcept>
 #include <thread>

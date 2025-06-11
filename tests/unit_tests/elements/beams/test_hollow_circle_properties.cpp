@@ -1,7 +1,6 @@
-#include <stddef.h>
-
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include <stdexcept>
 
 #include <gtest/gtest.h>

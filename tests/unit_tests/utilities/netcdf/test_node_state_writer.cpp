@@ -1,5 +1,4 @@
-#include <stddef.h>
-
+#include <cstddef>
 #include <filesystem>
 #include <stdexcept>
 #include <string>
