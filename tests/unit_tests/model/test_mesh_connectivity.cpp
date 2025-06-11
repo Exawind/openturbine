@@ -1,7 +1,12 @@
+#include <stddef.h>
+
+#include <array>
 #include <filesystem>
-#include <fstream>
+#include <vector>
 
 #include <gtest/gtest.h>
+#include <yaml-cpp/node/node.h>
+#include <yaml-cpp/node/parse.h>
 
 #include "model/mesh_connectivity.hpp"
 

@@ -1,6 +1,14 @@
+#include <stddef.h>
+
+#include <array>
+#include <cmath>
+#include <stdexcept>
+
 #include <gtest/gtest.h>
 
+#include "elements/beams/beam_section.hpp"
 #include "elements/beams/hollow_circle_properties.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

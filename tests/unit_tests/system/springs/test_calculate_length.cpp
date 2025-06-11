@@ -1,7 +1,11 @@
+#include <stddef.h>
+
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 #include <gtest/gtest.h>
 
-#include "system/beams/test_calculate.hpp"
 #include "system/springs/calculate_length.hpp"
 
 namespace {

@@ -1,6 +1,18 @@
+#include <stddef.h>
+
+#include <array>
+#include <string>
+#include <utility>
+
+#include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "dof_management/create_element_freedom_table.hpp"
+#include "elements/beams/beams.hpp"
+#include "elements/elements.hpp"
+#include "elements/masses/masses.hpp"
+#include "elements/springs/springs.hpp"
+#include "state/state.hpp"
 
 namespace openturbine::tests {
 

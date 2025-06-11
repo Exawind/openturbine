@@ -1,10 +1,14 @@
+#include <stddef.h>
+
+#include <array>
+#include <string>
+#include <vector>
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "elements/beams/beams.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
 #include "test_calculate.hpp"
-#include "test_integrate_matrix.hpp"
 
 namespace openturbine::tests {
 

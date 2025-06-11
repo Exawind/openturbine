@@ -1,10 +1,12 @@
-#include <iomanip>
+#include <stddef.h>
+
+#include <array>
+#include <string>
 
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "elements/beams/calculate_jacobian.hpp"
-#include "elements/beams/interpolation.hpp"
 #include "test_calculate.hpp"
 
 namespace openturbine::tests {

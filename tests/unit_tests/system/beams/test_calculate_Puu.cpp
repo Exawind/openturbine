@@ -1,4 +1,10 @@
+#include <stddef.h>
+
+#include <array>
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 #include <gtest/gtest.h>
 
 #include "system/beams/calculate_Puu.hpp"

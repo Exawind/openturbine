@@ -1,6 +1,11 @@
+#include <stddef.h>
+
+#include <array>
+
 #include <gtest/gtest.h>
 
 #include "elements/beams/generate_sectional_properties.hpp"
+#include "types.hpp"
 
 namespace openturbine::tests {
 

@@ -1,4 +1,10 @@
+#include <stddef.h>
+
+#include <array>
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 #include <gtest/gtest.h>
 
 #include "system/masses/rotate_section_matrix.hpp"

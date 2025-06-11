@@ -1,3 +1,9 @@
+#include <stddef.h>
+
+#include <array>
+#include <cmath>
+#include <string>
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 

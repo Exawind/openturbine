@@ -1,7 +1,14 @@
+#include <stddef.h>
+
+#include <array>
+#include <vector>
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "model/copy_nodes_to_state.hpp"
+#include "model/node.hpp"
+#include "state/state.hpp"
 
 namespace openturbine::tests {
 TEST(CopyNodesToState, OneNode_ID) {
