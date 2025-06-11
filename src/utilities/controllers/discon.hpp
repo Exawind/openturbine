@@ -1,10 +1,5 @@
 #pragma once
 
-#include <cmath>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-
 namespace openturbine::util {
 
 extern "C" {

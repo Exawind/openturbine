@@ -1,7 +1,11 @@
+#include <cstddef>
 #include <filesystem>
+#include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
+#include "utilities/netcdf/netcdf_file.hpp"
 #include "utilities/netcdf/time_series_writer.hpp"
 
 namespace openturbine::tests {

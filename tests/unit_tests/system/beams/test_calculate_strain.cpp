@@ -1,4 +1,9 @@
+#include <array>
+#include <cstddef>
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 #include <gtest/gtest.h>
 
 #include "system/beams/calculate_strain.hpp"

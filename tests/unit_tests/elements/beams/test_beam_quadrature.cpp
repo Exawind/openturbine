@@ -1,3 +1,6 @@
+#include <array>
+#include <vector>
+
 #include <gtest/gtest.h>
 
 #include "elements/beams/beam_quadrature.hpp"

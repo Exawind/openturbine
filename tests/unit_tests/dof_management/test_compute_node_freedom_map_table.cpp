@@ -1,6 +1,12 @@
+#include <array>
+#include <string>
+
+#include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "dof_management/compute_node_freedom_map_table.hpp"
+#include "dof_management/freedom_signature.hpp"
+#include "state/state.hpp"
 
 namespace openturbine::tests {
 

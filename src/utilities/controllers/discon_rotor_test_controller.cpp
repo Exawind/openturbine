@@ -1,8 +1,10 @@
 #include "discon_rotor_test_controller.hpp"
 
+#include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstring>
-#include <iostream>
+#include <iterator>
 
 #include "controller_io.hpp"
 

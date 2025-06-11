@@ -1,9 +1,15 @@
 #include "test_curved_beam.hpp"
 
+#include <array>
+#include <cmath>
+#include <cstddef>
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
+#include <Kokkos_SIMD.hpp>
 #include <gtest/gtest.h>
 
-#include "elements/beams/beams.hpp"
 #include "elements/beams/calculate_jacobian.hpp"
 #include "elements/beams/interpolation.hpp"
 #include "system/beams/calculate_Ouu.hpp"
@@ -15,7 +21,6 @@
 #include "system/beams/integrate_stiffness_matrix.hpp"
 #include "system/beams/rotate_section_matrix.hpp"
 #include "test_calculate.hpp"
-#include "test_integrate_matrix.hpp"
 
 /**
  * @file test_curved_beam.cpp

@@ -1,4 +1,3 @@
-#include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "constraints/constraint_type.hpp"

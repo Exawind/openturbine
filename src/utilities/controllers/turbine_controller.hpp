@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <stdexcept>
 #include <string>
 
 #include "utilities/controllers/controller_io.hpp"

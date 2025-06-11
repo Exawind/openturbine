@@ -1,4 +1,8 @@
-#include <Kokkos_Core.hpp>
+#include <array>
+#include <cstddef>
+#include <stdexcept>
+#include <vector>
+
 #include <gtest/gtest.h>
 
 #include "math/least_squares_fit.hpp"
