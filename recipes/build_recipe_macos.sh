@@ -47,10 +47,12 @@ install_if_missing kokkos-kernels
 install_if_missing netcdf-c
 install_if_missing suite-sparse
 install_if_missing lapack
+install_if_missing rosco
+install_if_missing openfast
 #install_if_missing cppcheck # add if CppCheck is needed
 #install_if_missing llvm # add if clang-tidy is needed
 
-spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp #llvm vtk cppcheck
+spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp rosco openfast #llvm cppcheck
 
 # Build OpenTurbine with the specified options
 mkdir -p build-from-script

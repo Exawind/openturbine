@@ -4,6 +4,8 @@
 #include "regression/test_utilities.hpp"
 #include "utilities/aerodynamics/aerodyn_inflow.hpp"
 
+#include "OpenTurbine_config.h"
+
 namespace openturbine::tests {
 
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
@@ -520,10 +522,7 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
 
 /// Helper function to get the shared library path
 std::string GetSharedLibraryPath() {
-    const std::filesystem::path project_root = FindProjectRoot();
-    const std::filesystem::path full_path =
-        project_root / "build/tests/regression_tests/aerodyn_inflow_c_binding.dll";
-    return full_path.string();
+    return std::string(OpenTurbine_ADI_LIBRARY);
 }
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
