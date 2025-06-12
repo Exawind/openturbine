@@ -68,7 +68,7 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # OpenFAST/AerodynInflow (ADI) library
   #----------------------------------------
-  if(OpenTurbine_BUILD_OPENFAST_ADI)
+  if(OpenTurbine_ENABLE_OPENFAST_ADI)
     message(STATUS "Building OpenFAST AerodynInflow (ADI) library")
     include(ExternalProject)
     ExternalProject_Add(OpenFAST_ADI
@@ -95,7 +95,7 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # ROSCO Controller library
   #----------------------------------------
-  if(OpenTurbine_BUILD_ROSCO_CONTROLLER)
+  if(OpenTurbine_ENABLE_ROSCO_CONTROLLER)
     if (NOT ROSCO_BUILD_TAG)
       set(ROSCO_BUILD_TAG "v2.9.4")
     endif()

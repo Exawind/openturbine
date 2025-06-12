@@ -69,8 +69,8 @@ jobs:
           -DOpenTurbine_ENABLE_CLANG_TIDY=ON \
           -DOpenTurbine_WRITE_OUTPUTS=ON \
           -DOpenTurbine_WARNINGS_AS_ERRORS=ON \
-          -DOpenTurbine_BUILD_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
-          -DOpenTurbine_BUILD_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
+          -DOpenTurbine_ENABLE_OPENFAST_ADI=${{ matrix.build_external == 'all' }} \
+          -DOpenTurbine_ENABLE_ROSCO_CONTROLLER=${{ matrix.build_external == 'all' }} \
           -DOpenTurbine_ENABLE_KLU=ON \
           -DOpenTurbine_ENABLE_UMFPACK=ON \
           -DOpenTurbine_ENABLE_SUPERLU=ON \

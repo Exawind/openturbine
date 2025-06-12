@@ -65,8 +65,8 @@ cd build-from-script
 cmake .. \
   -DCMAKE_CXX_COMPILER=nvcc_wrapper \
   -DOpenTurbine_WRITE_OUTPUTS=ON \
-  -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
-  -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
+  -DOpenTurbine_ENABLE_OPENFAST_ADI=ON \
+  -DOpenTurbine_ENABLE_ROSCO_CONTROLLER=ON \
   -DOpenTurbine_ENABLE_CUSOLVERSP=ON \
   -DCMAKE_BUILD_TYPE="Release"
 

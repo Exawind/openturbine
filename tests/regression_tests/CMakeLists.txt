@@ -48,9 +48,9 @@ if(OpenTurbine_WRITE_OUTPUTS)
   target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_WRITE_OUTPUTS)
 endif()
 
-# Add compile definitions for OpenTurbine_BUILD_OPENFAST_ADI if enabled
-if(OpenTurbine_BUILD_OPENFAST_ADI)
-  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_BUILD_OPENFAST_ADI)
+# Add compile definitions for OpenTurbine_ENABLE_OPENFAST_ADI if enabled
+if(OpenTurbine_ENABLE_OPENFAST_ADI)
+  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_ENABLE_OPENFAST_ADI)
 endif()
 
 target_include_directories(openturbine_regression_tests PRIVATE
