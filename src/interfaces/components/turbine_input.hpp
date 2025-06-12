@@ -78,6 +78,12 @@ struct TurbineInput {
     //--------------------------------------------------------------------------
 
     /**
+     * @brief Initial nacelle yaw angle (radians)
+     * @details Rotation of nacelle about the tower/yaw axis.
+     */
+    double nacelle_yaw_angle{0.};
+
+    /**
      * @brief Shaft tilt angle (radians)
      * @details Angle between the rotor shaft and the horizontal plane. Positive angle tilts shaft
      * up.
@@ -91,24 +97,18 @@ struct TurbineInput {
     double cone_angle{0.};
 
     /**
-     * @brief Current rotor azimuth angle (radians)
-     * @details Angular position of rotor about shaft axis. 0 means blade 1 is at 12 o'clock
-     * position.
-     */
-    double azimuth_angle{0.};
-
-    /**
-     * @brief Initial nacelle yaw angle (radians)
-     * @details Rotation of nacelle about the tower/yaw axis.
-     */
-    double nacelle_yaw_angle{0.};
-
-    /**
      * @brief Initial blade pitch angle (radians)
      * @details Rotation of blades about their longitudinal/pitch axis. 0 means blades are
      * parallel to the tower.
      */
     double blade_pitch_angle{0.};
+
+    /**
+     * @brief Current rotor azimuth angle (radians)
+     * @details Angular position of rotor about shaft axis. 0 means blade 1 is at 12 o'clock
+     * position.
+     */
+    double azimuth_angle{0.};
 
     /**
      * @brief Initial rotor rotational speed (rad/s)
