@@ -1,5 +1,5 @@
 # Test ROSCO controller
-if (OpenTurbine_BUILD_ROSCO_CONTROLLER AND
+if (OpenTurbine_ENABLE_ROSCO_CONTROLLER AND
     (NOT OpenTurbine_ENABLE_SANITIZER_LEAK))
     target_sources(
         openturbine_regression_tests
@@ -9,8 +9,8 @@ if (OpenTurbine_BUILD_ROSCO_CONTROLLER AND
 endif()
 
 # Test AeroDyn Inflow
-if (OpenTurbine_BUILD_OPENFAST_ADI AND
-    OpenTurbine_BUILD_ROSCO_CONTROLLER AND
+if (OpenTurbine_ENABLE_OPENFAST_ADI AND
+    OpenTurbine_ENABLE_ROSCO_CONTROLLER AND
     (NOT OpenTurbine_ENABLE_SANITIZER_LEAK))
     target_sources(
         openturbine_regression_tests

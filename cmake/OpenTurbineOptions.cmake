@@ -44,8 +44,8 @@ macro(openturbine_setup_options)
   option(OpenTurbine_ENABLE_UMFPACK "Use UMFPACK for sparse linear solver when running on CPU" OFF)
   option(OpenTurbine_ENABLE_SUPERLU "Use SuperLU for sparse linear solver when running on CPU" OFF)
   option(OpenTurbine_ENABLE_SUPERLU_MT "Use SuperLU-MT for sparse linear solver when running on CPU" OFF)
-  option(OpenTurbine_BUILD_OPENFAST_ADI "Build the OpenFAST ADI external project" OFF)
-  option(OpenTurbine_BUILD_ROSCO_CONTROLLER "Build the ROSCO controller external project" OFF)
+  option(OpenTurbine_ENABLE_OPENFAST_ADI "Build the OpenFAST ADI external project" OFF)
+  option(OpenTurbine_ENABLE_ROSCO_CONTROLLER "Build the ROSCO controller external project" OFF)
 endmacro()
 
 #--------------------------------------------------------------------------
