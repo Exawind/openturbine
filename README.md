@@ -1,8 +1,8 @@
 # OpenTurbine
 
-**OpenTurbine will development began in 2023 and is ongoing**
+**OpenTurbine development began in 2023, is ongoing, and we aim for beta release in 2025**
 
-OpenTurbine is an  open-source flexible-multibody-dynamics simulation
+OpenTurbine is an open-source flexible-multibody-dynamics simulation
 code designed to meet the research needs of Wind Energy Technologies Office (WETO)
 and the broader wind energy community for land-based and offshore wind turbines.
 OpenTurbine provides high-fidelity, highly performant structural dynamics
@@ -30,7 +30,7 @@ and AI.
 - OpenTurbine is written in modern C++ and leverages [Kokkos](https://github.com/kokkos/kokkos)
 as its performance-portability library with inspiration from the ExaWind stack.
 
-## Part of the WETO Stack
+## Development support
 
 OpenTurbine is primarily developed with the support of the U.S. Department of Energy (DOE) and is part of the [WETO Software Stack](https://nrel.github.io/WETOStack). For more information and other integrated modeling software, see:
 - [Portfolio Overview](https://nrel.github.io/WETOStack/portfolio_analysis/overview.html)
@@ -39,4 +39,8 @@ OpenTurbine is primarily developed with the support of the U.S. Department of En
 
 Support was also provided by the DOE Office of Science FLOWMAS Energy Earthshot Research Center.
 
-Send questions to michael.a.sprague@nrel.gov.
+[Software Release](https://www.osti.gov/biblio/1908664)
+
+[Documentation](https://exawind.github.io/openturbine/)
+
+Send questions to michael.a.sprague@nrel.gov, OpenTurbine Principal Investigator.
