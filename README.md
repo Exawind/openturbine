@@ -19,9 +19,8 @@ robust development environment.
 - The core data structures are memory efficient and enable vectorization
 and parallelization at multiple levels.
 - Data structures are data-oriented to exploit methods for accelerated computing including
-high utilization of chip resources (e.g., single instruction multiple data i.e. SIMD),
-parallelization through GP-GPUs or other hardware, and support for memory-efficient
-architectures.
+high utilization of chip resources (e.g., single instruction multiple data (SIMD) instruction sets) and
+parallelization using GP-GPUs.
 - The computational algorithms incorporate robust open-source libraries for
 mathematical operations, resource allocation, and data management.
 - The API design considers multiple stakeholder needs and ensure
