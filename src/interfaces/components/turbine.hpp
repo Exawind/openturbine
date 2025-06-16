@@ -465,26 +465,59 @@ private:
     }
 
     /**
-     * @brief Initial displacements and velocities of the nodes
+     * @brief Set initial displacements and velocities of the nodes
+     * @param input Turbine configuration
+     * @param model Structural model
      */
-    // void SetInitialConditions(const TurbineInput& input, Model& model) {}
+    void SetInitialConditions(const TurbineInput& input, Model& model) {
+        SetInitialRotorVelocity(input, model);
+    }
 
-    /// @brief  Create blades from input configuration
-    /// @param blade_inputs Blade input configurations
-    /// @param model Model to which the blades will be added
-    /// @return Vector of blades
-    [[nodiscard]] static std::vector<Beam> CreateBlades(
-        const std::vector<BeamInput>& blade_inputs, Model& model
-    ) {
-        std::vector<Beam> blades;
-        std::transform(
-            blade_inputs.begin(), blade_inputs.end(), std::back_inserter(blades),
-            [&model](const BeamInput& input) {
-                return Beam(input, model);
+    /**
+     * @brief Set initial rotational velocity about the shaft axis for rotor components
+     *
+     * @details This method applies initial rotational velocity to all rotor components
+     * including the hub, azimuth node, blade nodes, and apex nodes. The velocity is
+     * calculated based on the specified rotor speed and shaft tilt angle.
+     *
+     * @param input Turbine configuration containing rotor speed
+     * @param model Structural model
+     */
+    void SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
+        // Calculate shaft axis in global coordinates (after shaft tilt)
+        const Array_3 shaft_axis{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
+
+        // Get hub position as rotation center
+        const auto& hub = model.GetNode(this->hub_node.id);
+        const Array_3 rotation_center{hub.x0[0], hub.x0[1], hub.x0[2]};
+
+        // Collect all rotor node IDs (hub, azimuth, blade nodes, and apex nodes)
+        std::vector<size_t> rotor_node_ids{this->hub_node.id, this->azimuth_node.id};
+
+        // Add all blade nodes and apex nodes
+        for (size_t i = 0; i < this->blades.size(); ++i) {
+            // Add blade nodes
+            for (const auto& blade_node : this->blades[i].nodes) {
+                rotor_node_ids.push_back(blade_node.id);
             }
-        );
+            // Add apex node
+            rotor_node_ids.push_back(this->apex_nodes[i].id);
+        }
 
-        return blades;
+        // Create rigid body velocity: translational velocity = 0, angular velocity about shaft axis
+        const Array_6 rigid_body_velocity{
+            0.,
+            0.,
+            0.,
+            input.rotor_speed * shaft_axis[0],
+            input.rotor_speed * shaft_axis[1],
+            input.rotor_speed * shaft_axis[2]
+        };
+
+        // Apply rotational velocity to all rotor nodes
+        for (const auto& node_id : rotor_node_ids) {
+            model.GetNode(node_id).SetVelocityAboutPoint(rigid_body_velocity, rotation_center);
+        }
     }
 };
 
