@@ -18,7 +18,7 @@ inline double CalculateConvergenceError(
     const State<DeviceType>& state, const Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
-    double sum_error_squared = 0.;
+    auto sum_error_squared_system = 0.;
     Kokkos::parallel_reduce(
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
         CalculateSystemErrorSumSquares<DeviceType>{
@@ -30,8 +30,9 @@ inline double CalculateConvergenceError(
             state.q_delta,
             solver.x,
         },
-        sum_error_squared
+        sum_error_squared_system
     );
+    auto sum_error_squared_constraints = 0.;
     Kokkos::parallel_reduce(
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints),
         CalculateConstraintsErrorSumSquares<DeviceType>{
@@ -42,9 +43,10 @@ inline double CalculateConvergenceError(
             constraints.lambda,
             solver.x,
         },
-        sum_error_squared
+        sum_error_squared_constraints
     );
 
+    const auto sum_error_squared = sum_error_squared_system + sum_error_squared_constraints;
     return std::sqrt(sum_error_squared / static_cast<double>(solver.num_dofs));
 }
 

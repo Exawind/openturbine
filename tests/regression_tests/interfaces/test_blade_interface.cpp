@@ -461,25 +461,25 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     EXPECT_NEAR(tip_positions[0][1], 0., 1e-8);
     EXPECT_NEAR(tip_positions[0][2], 0., 1e-8);
 
-    EXPECT_NEAR(tip_positions[1][0], 7.535457547469286, 1e-8);
+    EXPECT_NEAR(tip_positions[1][0], 7.5396813678794645, 1e-8);
     EXPECT_NEAR(tip_positions[1][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[1][2], 5.5405833775092788, 1e-8);
+    EXPECT_NEAR(tip_positions[1][2], 5.5363879677563252, 1e-8);
 
-    EXPECT_NEAR(tip_positions[2][0], 2.275140291113245, 1e-8);
+    EXPECT_NEAR(tip_positions[2][0], 2.275087482106132, 1e-8);
     EXPECT_NEAR(tip_positions[2][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[2][2], 7.2175190489085246, 1e-8);
+    EXPECT_NEAR(tip_positions[2][2], 7.2166560706481686, 1e-8);
 
-    EXPECT_NEAR(tip_positions[3][0], -1.6157938054255538, 1e-8);
+    EXPECT_NEAR(tip_positions[3][0], -1.6222827675944771, 1e-8);
     EXPECT_NEAR(tip_positions[3][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[3][2], 4.7783647698451075, 1e-8);
+    EXPECT_NEAR(tip_positions[3][2], 4.7694966546892239, 1e-8);
 
-    EXPECT_NEAR(tip_positions[4][0], -1.9061447828587319, 1e-8);
+    EXPECT_NEAR(tip_positions[4][0], -1.9054629771623546, 1e-8);
     EXPECT_NEAR(tip_positions[4][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[4][2], 1.332200967141842, 1e-8);
+    EXPECT_NEAR(tip_positions[4][2], 1.3243726828814482, 1e-8);
 
-    EXPECT_NEAR(tip_positions[5][0], 0.022656037313893762, 1e-8);
+    EXPECT_NEAR(tip_positions[5][0], 0.021386893541979646, 1e-8);
     EXPECT_NEAR(tip_positions[5][1], 0., 1e-8);
-    EXPECT_NEAR(tip_positions[5][2], 0.0022466646330885354, 1e-8);
+    EXPECT_NEAR(tip_positions[5][2], 0.0006097054603659835, 1e-8);
 }
 
 }  // namespace openturbine::tests
