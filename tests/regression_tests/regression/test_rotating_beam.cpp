@@ -198,9 +198,9 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
             constexpr auto q_root = std::array{1., 0., 0., 0.};
 
             // Declare list of element nodes
-            std::vector<size_t> beam_node_ids;
+            std::vector<size_t> beam_node_ids(node_s.size());
             std::transform(
-                std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+                std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
                 [&](auto s) {
                     const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
                     const auto v = CrossProduct(omega, pos);
@@ -293,9 +293,9 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
             const auto q_root = RotationVectorToQuaternion({0., 0., 2. * M_PI * i / num_blades});
 
             // Declare list of element nodes
-            std::vector<size_t> beam_node_ids;
+            std::vector<size_t> beam_node_ids(node_s.size());
             std::transform(
-                std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+                std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
                 [&](auto s) {
                     const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
                     auto v = CrossProduct(omega, pos);

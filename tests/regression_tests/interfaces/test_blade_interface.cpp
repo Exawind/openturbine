@@ -367,12 +367,10 @@ TEST(BladeInterfaceTest, TwoBeams) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    Step(parameters, solver, elements, state, constraints);
-
-    for (auto i = 0U; i < solver.b.size(); ++i) {
-        std::cout << "b[" << i << "] = " << solver.b(i, 0) << "\n";
+    for (auto step = 0; step < 1000; ++step) {
+        const auto converged = Step(parameters, solver, elements, state, constraints);
+        ASSERT_TRUE(converged);
     }
-    KokkosSparse::Impl::write_kokkos_crst_matrix(solver.A, "A.mtx");
 }
 
 TEST(BladeInterfaceTest, StaticCurledBeam) {
