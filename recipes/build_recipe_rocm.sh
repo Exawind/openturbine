@@ -68,8 +68,8 @@ cd build-from-script
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
   -DOpenTurbine_WRITE_OUTPUTS=ON \
-  -DOpenTurbine_BUILD_OPENFAST_ADI=ON \
-  -DOpenTurbine_BUILD_ROSCO_CONTROLLER=ON \
+  -DOpenTurbine_ENABLE_OPENFAST_ADI=ON \
+  -DOpenTurbine_ENABLE_ROSCO_CONTROLLER=ON \
   -DOpenTUrbine_ENABLE_KLU=ON \
   -DCMAKE_BUILD_TYPE="Release"
 

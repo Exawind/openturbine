@@ -68,7 +68,7 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # OpenFAST/AerodynInflow (ADI) library
   #----------------------------------------
-  if(OpenTurbine_BUILD_OPENFAST_ADI)
+  if(OpenTurbine_ENABLE_OPENFAST_ADI)
     find_library(OpenFast_ADI_LIBRARY NAMES aerodyn_inflow_c_binding)
     set(OpenTurbine_ADI_LIBRARY ${OpenFast_ADI_LIBRARY} CACHE PATH "ADI library")
   endif()
@@ -76,7 +76,7 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # ROSCO Controller library
   #----------------------------------------
-  if(OpenTurbine_BUILD_ROSCO_CONTROLLER)
+  if(OpenTurbine_ENABLE_ROSCO_CONTROLLER)
     find_library(Rosco_LIBRARY NAMES discon)
     set(OpenTurbine_ROSCO_LIBRARY ${Rosco_LIBRARY} CACHE PATH "Rosco discon library")
   endif()
