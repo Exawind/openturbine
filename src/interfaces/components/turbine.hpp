@@ -50,22 +50,20 @@ namespace openturbine::interfaces::components {
  *    Yaw bearing     Shaft base      Azimuth          Hub
  *        ●  ----------   ●  ----------  ●  ----------  ●
  *   (yaw control      (rigid         (torque        (rigid
- *    rotation        connection)      control       connection
- *   about Z-axis)                      about        to blades)
+ *    rotation        connection)      control)      connection
+ *   about Z-axis)                                   to blades)
  *
  * Blade Assembly Nodes
  *  - Blade apex nodes: Connection points between hub and blade roots (one per blade)
  *  - Blade structural nodes: Beam nodes along each blade span
  *
- *                              Blade nodes
- *                    ●  ------  ●  ------  ●  ------  ●
- *                 (root)                            (tip)
- *                    │
- *                    │ (pitch control)
- *                    │
- *  Hub ●  ---------- ● Blade apex node
- *                 (connection
- *                   point)
+ *                   pitch axis    |<----- Blade nodes --->|
+ *     ● Blade apex -------------  ●  ------  ●  --------  ●
+ *       node                   (root)                   (tip)
+ *        │
+ *        │ (rigid connection)
+ *        │
+ *        ● Hub node
  * --------------------------------------------------------------------------
  * Kinematic chain
  * --------------------------------------------------------------------------
@@ -76,14 +74,6 @@ namespace openturbine::interfaces::components {
  * rigid constraint) -> Shaft base node (torque control, rigid constraint) ->
  * Azimuth node (rigid constraint) -> Hub node (rigid constraint) -> Blade Apex
  * nodes (pitch control) -> Blade nodes
- *
- * --------------------------------------------------------------------------
- * Construction sequence
- * --------------------------------------------------------------------------
- *  1. Validation: Input parameters checked for physical consistency
- *  2. Node Creation & Positioning: All nodes positioned in global coordinate system
- *  3. Constraint Creation: Kinematic relationships established between nodes
- *  4. Initial Conditions: Velocities set based on initial rotor speed
  */
 class Turbine {
 public:
@@ -140,6 +130,13 @@ public:
      * and all associated nodes, constraints, and control systems. The turbine is positioned
      * and oriented according to the input parameters, with proper kinematic relationships
      * established between all components.
+     * --------------------------------------------------------------------------
+     * Construction sequence
+     * --------------------------------------------------------------------------
+     *  1. Validation: Input parameters are checked for physical consistency
+     *  2. Node creation + positioning: All nodes are created and assembled in proper position
+     *  3. Constraint creation: Kinematic relationships are established between nodes
+     *  4. Initial conditions: Displacements/velocities are applied as necessary
      *
      * @param input Turbine configuration parameters
      * @param model Structural model to add turbine components to
@@ -252,7 +249,9 @@ private:
      * all turbine components (tower, blades, hub, drivetrain) in their final locations
      * to achieve the correct turbine geometry.
      *
-     * Transformation/assembly steps sequence:
+     * --------------------------------------------------------------------------
+     * Transformation/assembly sequence
+     * --------------------------------------------------------------------------
      *   - Tower: Rotated to align with global Z-axis (vertical)
      *   - Blades: Aligned with Z-axis -> pitched -> translated to hub radius -> coned ->
      *     azimuthally positioned
@@ -293,7 +292,7 @@ private:
         model.RotateBeamAboutPoint(this->tower.beam_element_id, q_x_to_z, origin);
 
         // Calculate hub position based on tower top and rotor apex offset
-        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);  // last node
+        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
         const Array_3 apex_position{
             tower_top_node.x0[0] - input.tower_axis_to_rotor_apex,  // horizontal offset
             tower_top_node.x0[1],
@@ -362,7 +361,7 @@ private:
             // Blade apex node creation
             //----------------------------------------------------
 
-            // Add blade apex node at the origin and add node ID to blade node IDs
+            // Add blade apex node at the origin and add it to blade node IDs vector
             const auto apex_node_id =
                 model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
             blade_node_ids.push_back(apex_node_id);
@@ -409,7 +408,18 @@ private:
     }
 
     /**
-     * @brief Add constraints
+     * @brief Creates all kinematic constraints and control connections for the turbine
+     *
+     * This method establishes the complete constraint system that defines the turbine's
+     * degrees of freedom and control interfaces. Constraints are added in a specific
+     * order to build the kinematic chain from the fixed tower base to the controllable
+     * rotor and blade systems.
+     *
+     * @param input Turbine configuration containing constraint parameters
+     * @param model Structural model to add constraints to
+     *
+     * @note Constraints must be added after all nodes are positioned since they
+     *       depend on the initial node positions and orientations for proper setup
      */
     void AddConstraints(const TurbineInput& input, Model& model) {
         // Loop through blades
@@ -418,7 +428,8 @@ private:
             const auto& apex_node = model.GetNode(this->apex_nodes[i].id);
 
             // Get the blade root node
-            const auto& root_node = model.GetNode(this->blades[i].nodes[0].id);
+            const auto& root_node =
+                model.GetNode(this->blades[i].nodes[0].id);  // first node of blade
 
             // Calculate the pitch axis for the blade (from apex to root)
             const Array_3 pitch_axis{
@@ -504,7 +515,7 @@ private:
             rotor_node_ids.push_back(this->apex_nodes[i].id);
         }
 
-        // Create rigid body velocity: translational velocity = 0, angular velocity about shaft axis
+        // Create rigid body velocity -> transl. vel = 0, angular vel. about shaft axis
         const Array_6 rigid_body_velocity{
             0.,
             0.,
