@@ -1,4 +1,8 @@
-#include <KokkosSparse.hpp>
+#include <array>
+#include <cstddef>
+#include <string>
+
+#include <KokkosSparse_SortCrs.hpp>
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 

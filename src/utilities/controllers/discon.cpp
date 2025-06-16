@@ -1,9 +1,11 @@
 #include "discon.hpp"
 
 #include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstring>
 #include <fstream>
-#include <memory>
-#include <string_view>
+#include <iterator>
 
 #include "controller_io.hpp"
 

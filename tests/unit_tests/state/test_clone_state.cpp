@@ -1,6 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "dof_management/freedom_signature.hpp"
 #include "state/clone_state.hpp"
 #include "state/state.hpp"
 

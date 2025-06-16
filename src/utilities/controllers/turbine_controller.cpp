@@ -1,9 +1,11 @@
 #include "turbine_controller.hpp"
 
+#include <array>
 #include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace openturbine::util {
 

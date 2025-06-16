@@ -1,4 +1,7 @@
+#include <cstddef>
 #include <filesystem>
+#include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 

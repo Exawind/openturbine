@@ -1,4 +1,9 @@
+#include <array>
+#include <stdexcept>
+#include <string>
+
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Macros.hpp>
 #include <gtest/gtest.h>
 
 #include "math/vector_operations.hpp"

@@ -1,8 +1,12 @@
+#include <array>
+#include <cstddef>
+#include <string>
 
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
 #include "create_view.hpp"
+#include "dof_management/freedom_signature.hpp"
 #include "state/update_static_prediction.hpp"
 
 namespace openturbine::tests {

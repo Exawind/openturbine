@@ -1,7 +1,12 @@
+#include <cstddef>
 #include <filesystem>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
+#include "utilities/netcdf/netcdf_file.hpp"
 #include "utilities/netcdf/node_state_writer.hpp"
 
 namespace openturbine::tests {
