@@ -39,7 +39,7 @@ OpenTurbine is primarily developed with the support of the U.S. Department of En
 
 Support was also provided by the DOE Office of Science FLOWMAS Energy Earthshot Research Center.
 
-[Software Release](https://www.osti.gov/biblio/1908664)
+[OpenTurbine Software Release Record SWR-23-07](https://www.osti.gov/biblio/1908664)
 
 [Documentation](https://exawind.github.io/openturbine/)
 
