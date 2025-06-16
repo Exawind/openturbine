@@ -126,7 +126,7 @@ public:
     std::vector<ConstraintData> apex_to_hub;   //< Apex to hub constraints
 
     //--------------------------------------------------------------------------
-    // Controls
+    // Control inputs
     //--------------------------------------------------------------------------
 
     std::vector<double> blade_pitch_control;  //< Blade pitch angles
@@ -134,10 +134,16 @@ public:
     double yaw_control{0.};                   //< Yaw control value
 
     /**
-     * @brief
-     * @param input Configuration for the turbine
-     * @param model Model to which the turbine elements and nodes will be added
-     * @throws std::invalid_argument If the input configuration is invalid
+     * @brief Constructs a turbine with the specified configuration
+     *
+     * Creates a complete turbine structure including blades, tower, hub, nacelle components,
+     * and all associated nodes, constraints, and control systems. The turbine is positioned
+     * and oriented according to the input parameters, with proper kinematic relationships
+     * established between all components.
+     *
+     * @param input Turbine configuration parameters
+     * @param model Structural model to add turbine components to
+     * @throws std::invalid_argument If input configuration is invalid
      */
     Turbine(const TurbineInput& input, Model& model)
         : blades(CreateBlades(input.blades, model)),
@@ -152,21 +158,24 @@ public:
           shaft_base_to_azimuth(kInvalidID),
           azimuth_to_hub(kInvalidID),
           blade_pitch_control(input.blades.size(), input.blade_pitch_angle) {
-        // Validate turbine input
+        // Validate turbine inputs
         ValidateInput(input);
 
         // Add intermediate nodes and position them to reference locations
         PositionNodes(input, model);
 
         // Constraints must be added after all nodes are positioned because
-        // they depend on the initial positions of the nodes.
+        // they depend on the initial positions of the nodes
         AddConstraints(input, model);
 
-        // SetInitialConditions(input, model);
+        // Set initial conditions (displacements and velocities) after positioning and constraints
+        SetInitialConditions(input, model);
     }
 
-    /// @brief Populate node motion from host state
-    /// @param host_state Host state containing position, displacement, velocity, and acceleration
+    /**
+     * @brief Populate node motion from host state
+     * @param host_state Host state containing position, displacement, velocity, and acceleration
+     */
     template <typename DeviceType>
     void GetMotion(const HostState<DeviceType>& host_state) {
         for (auto& blade : this->blades) {
@@ -175,8 +184,10 @@ public:
         this->tower.GetMotion(host_state);
     }
 
-    /// @brief Update the host state with current node forces and moments
-    /// @param host_state Host state to update
+    /**
+     * @brief Update the host state with current node forces and moments
+     * @param host_state Host state to update
+     */
     template <typename DeviceType>
     void SetLoads(HostState<DeviceType>& host_state) const {
         for (const auto& blade : this->blades) {
@@ -190,7 +201,33 @@ private:
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
     /**
-     * @brief ValidateInput
+     * @brief Create blades from input configuration
+     * @param blade_inputs Blade input configurations
+     * @param model Model to which the blades will be added
+     * @return Vector of blades
+     */
+    [[nodiscard]] static std::vector<Beam> CreateBlades(
+        const std::vector<BeamInput>& blade_inputs, Model& model
+    ) {
+        std::vector<Beam> blades;
+        std::transform(
+            blade_inputs.begin(), blade_inputs.end(), std::back_inserter(blades),
+            [&model](const BeamInput& input) {
+                return Beam(input, model);
+            }
+        );
+
+        return blades;
+    }
+
+    /**
+     * @brief Validate turbine input parameters for physical consistency
+     *
+     * Checks that all input parameters are within physically reasonable ranges
+     * and that required parameters are properly specified. Throws exceptions
+     * for invalid configurations that would lead to simulation errors.
+     *
+     * @param input Turbine configuration to validate
      */
     static void ValidateInput(const TurbineInput& input) {
         if (input.hub_diameter <= kMinHubDiameter) {
