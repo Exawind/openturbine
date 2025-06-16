@@ -9,18 +9,91 @@
 
 namespace openturbine::interfaces::components {
 
-//< Minimum valid hub diameter
-static constexpr double kMinHubDiameter{1e-8};
-
 /**
  * @brief Represents a turbine with nodes, elements, and constraints
  *
- * This class is responsible for creating and managing a turbine on input
- * specifications. It handles the creation of nodes, mass elements, and constraints
- * within the provided model.
+ * This class is responsible for creating and managing a turbine based on input
+ * specifications. It handles the creation of the beam elements, mass elements,
+ * nodes, and constraints within the provided model.
+ *
+ * --------------------------------------------------------------------------
+ * Node structure
+ * --------------------------------------------------------------------------
+ * The turbine assembly consists of multiple interconnected nodes that
+ * represent different physical components and their kinematic relationships.
+ *
+ * Tower Nodes
+ *  - Tower nodes: Beam nodes distributed along tower height (1, 2, ..., n)
+ *  - Tower base: Fixed constraint point at tower foundation (first tower node)
+ *  - Tower top: Connection point to nacelle assembly (last tower node)
+ *
+ *     ┌─── Tower top node (connection to nacelle)
+ *     │
+ *     ○ <- Tower node n
+ *     │
+ *     ○ <- Tower node n-1
+ *     .
+ *     .
+ *     │
+ *     ○ <- Tower node 2
+ *     │
+ *     ○ <- Tower node 1 (Tower base - fixed constraint)
+ * -------------
+ *  / / / /  <-  Ground / Foundation
+ *
+ * Nacelle/Drivetrain Nodes
+ *  - Yaw bearing node: Located at tower top, allows nacelle yaw rotation
+ *  - Shaft base node: Base of the main shaft within nacelle
+ *  - Azimuth node: Intermediate node for rotor azimuth positioning
+ *  - Hub node: Center of mass of the rotating hub assembly
+ *
+ *    Yaw bearing     Shaft base      Azimuth          Hub
+ *        ●  ----------   ●  ----------  ●  ----------  ●
+ *   (yaw control      (rigid         (torque        (rigid
+ *    rotation        connection)      control       connection
+ *   about Z-axis)                      about        to blades)
+ *
+ * Blade Assembly Nodes
+ *  - Blade apex nodes: Connection points between hub and blade roots (one per blade)
+ *  - Blade structural nodes: Beam nodes along each blade span
+ *
+ *                              Blade nodes
+ *                    ●  ------  ●  ------  ●  ------  ●
+ *                 (root)                            (tip)
+ *                    │
+ *                    │ (pitch control)
+ *                    │
+ *  Hub ●  ---------- ● Blade apex node
+ *                 (connection
+ *                   point)
+ * --------------------------------------------------------------------------
+ * Kinematic chain
+ * --------------------------------------------------------------------------
+ * The nodes are connected in a kinematic chain that represents the turbine's
+ * degrees of freedom.
+ *
+ * Tower base node (fixed BC) -> Tower nodes -> Yaw Bearing node (yaw control,
+ * rigid constraint) -> Shaft base node (torque control, rigid constraint) ->
+ * Azimuth node (rigid constraint) -> Hub node (rigid constraint) -> Blade Apex
+ * nodes (pitch control) -> Blade nodes
+ *
+ * --------------------------------------------------------------------------
+ * Construction sequence
+ * --------------------------------------------------------------------------
+ *  1. Validation: Input parameters checked for physical consistency
+ *  2. Node Creation & Positioning: All nodes positioned in global coordinate system
+ *  3. Constraint Creation: Kinematic relationships established between nodes
+ *  4. Initial Conditions: Velocities set based on initial rotor speed
  */
 class Turbine {
 public:
+    //--------------------------------------------------------------------------
+    // Constants
+    //--------------------------------------------------------------------------
+
+    /// Minimum valid hub diameter
+    static constexpr double kMinHubDiameter{1e-8};
+
     //--------------------------------------------------------------------------
     // Elements
     //--------------------------------------------------------------------------
