@@ -6,9 +6,7 @@
 
 namespace openturbine::interfaces::components {
 
-/**
- * @brief Builder class for creating Turbine objects with a fluent interface pattern
- */
+/// @brief Builder class for creating Turbine objects with a fluent interface pattern
 class TurbineBuilder {
 public:
     TurbineBuilder() = default;
@@ -35,7 +33,10 @@ public:
      * @param model The model to associate with this turbine
      * @return A new Turbine object
      */
-    [[nodiscard]] Turbine Build(Model& model) { return {this->Input(), model}; }
+    [[nodiscard]] Turbine Build(Model& model) {
+        // build turbine and return
+        return {this->Input(), model};
+    }
 
     //--------------------------------------------------------------------------
     // Build components
@@ -58,20 +59,22 @@ public:
      * @brief Get reference to builder for the tower
      * @return Reference to the tower builder
      */
-    [[nodiscard]] components::BeamBuilder& Tower() { return this->tower_builder; }
+    [[nodiscard]] components::BeamBuilder& Tower() {
+        // return tower builder
+        return this->tower_builder;
+    }
 
     //--------------------------------------------------------------------------
     // Build geometric configuration of the turbine
     //--------------------------------------------------------------------------
 
     /**
-     * @brief Set the hub height above the tower top i.e. distrance from tower top -> rotor apex
-     * (meters)
-     * @param height The hub height to set
+     * @brief Set the position of the tower base node
+     * @param position Array containing position/orientation [x,y,z,qw,qx,qy,qz]
      * @return Reference to the builder for method chaining
      */
-    TurbineBuilder& SetTowerTopToRotorApex(double height) {
-        this->input.tower_top_to_rotor_apex = height;
+    TurbineBuilder& SetTowerBasePosition(const std::array<double, 7>& position) {
+        this->input.tower_base_position = position;
         return *this;
     }
 
@@ -83,6 +86,17 @@ public:
      */
     TurbineBuilder& SetTowerAxisToRotorApex(double distance) {
         this->input.tower_axis_to_rotor_apex = distance;
+        return *this;
+    }
+
+    /**
+     * @brief Set the hub height above the tower top i.e. distrance from tower top -> rotor apex
+     * (meters)
+     * @param height The hub height to set
+     * @return Reference to the builder for method chaining
+     */
+    TurbineBuilder& SetTowerTopToRotorApex(double height) {
+        this->input.tower_top_to_rotor_apex = height;
         return *this;
     }
 
@@ -130,7 +144,8 @@ public:
         return *this;
     }
 
-    /** @brief Set the initial cone angle (radians)
+    /**
+     * @brief Set the initial cone angle (radians)
      * @param angle The cone angle to set
      * @return Reference to the builder for method chaining
      */
