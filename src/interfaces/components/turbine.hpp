@@ -245,31 +245,67 @@ private:
     }
 
     /**
-     * @brief Position nodes based on the turbine input configuration
+     * @brief Position all turbine nodes in the global coordinate system based on the
+     * turbine input configuration
+     *
+     * This method performs a complex sequence of geometric transformations to position
+     * all turbine components (tower, blades, hub, drivetrain) in their final locations
+     * to achieve the correct turbine geometry.
+     *
+     * Transformation/assembly steps sequence:
+     *   - Tower: Rotated to align with global Z-axis (vertical)
+     *   - Blades: Aligned with Z-axis -> pitched -> translated to hub radius -> coned ->
+     *     azimuthally positioned
+     *   - Drivetrain nodes: Created at intermediate shaft positions
+     *   - All rotor components: Tilted by shaft angle and translated to final hub position
+     *
+     * @param input Turbine configuration containing geometric parameters
+     * @param model Structural model to add positioned nodes to
      */
     void PositionNodes(const TurbineInput& input, Model& model) {
+        //--------------------------------------------------------------------------
+        // Preliminary calculations
+        //--------------------------------------------------------------------------
+
         // Define origin point for rotations
         const Array_3 origin{0., 0., 0.};
 
-        // Calculate shaft length from tower top to hub and overhang
+        // Calculate shaft length from tower top to hub and overhang (adjusted for shaft tilt)
         const auto shaft_length = input.tower_axis_to_rotor_apex / cos(input.shaft_tilt_angle);
 
-        // Rotate tower to align with global Z-axis
-        const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
-        model.RotateBeamAboutPoint(this->tower.beam_element_id, q_x_to_z, origin);
-
-        // Calculate hub position based on tower top and apex offset
-        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
-        const Array_3 apex_position{
-            tower_top_node.x0[0] - input.tower_axis_to_rotor_apex,
-            tower_top_node.x0[1],
-            tower_top_node.x0[2] + input.tower_top_to_rotor_apex,
-        };
-
-        // Calculate angle between blades
+        // Calculate angle between the blades
         const double blade_angle_delta = 2. * M_PI / static_cast<double>(this->blades.size());
 
-        // Create hub node at origin
+        // Calculate rotation quaternion to align a component from x-axis to z-axis
+        const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+
+        // Calculate pitch rotation quaternion (around x-axis)
+        const auto q_pitch = RotationVectorToQuaternion({0., 0., input.blade_pitch_angle});
+
+        // Calculate cone angle rotation quaternion (around y-axis)
+        const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
+
+        //--------------------------------------------------------------------------
+        // Position tower
+        //--------------------------------------------------------------------------
+
+        // Rotate tower to align with global Z-axis
+        model.RotateBeamAboutPoint(this->tower.beam_element_id, q_x_to_z, origin);
+
+        // Calculate hub position based on tower top and rotor apex offset
+        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);  // last node
+        const Array_3 apex_position{
+            tower_top_node.x0[0] - input.tower_axis_to_rotor_apex,  // horizontal offset
+            tower_top_node.x0[1],
+            tower_top_node.x0[2] + input.tower_top_to_rotor_apex,  // vertical offset
+        };
+
+        //--------------------------------------------------------------------------
+        // Position drivetrain
+        //--------------------------------------------------------------------------
+
+        // Create hub node at origin and translate to hub position based on rotor apex and hub CM
+        // offset
         this->hub_node = NodeData(
             model.AddNode().SetPosition({-input.rotor_apex_to_hub, 0., 0., 1., 0., 0., 0.}).Build()
         );
@@ -282,68 +318,93 @@ private:
         this->shaft_base_node =
             NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
 
-        // Create yaw bearing node at tower top position
-        this->yaw_bearing_node = NodeData(
-            model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
-        );
-
         // Create vector of rotor node IDs (hub, azimuth, shaft base)
         std::vector<size_t> rotor_node_ids{
             this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id
         };
 
+        // Create yaw bearing node at tower top position
+        this->yaw_bearing_node = NodeData(
+            model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
+        );
+
+        //--------------------------------------------------------------------------
+        // Position blades
+        //--------------------------------------------------------------------------
+
         // Loop over blades
         for (auto i = 0U; i < this->blades.size(); ++i) {
             // Get node IDs for this blade
-            std::vector<size_t> node_ids;
+            std::vector<size_t> blade_node_ids;
             std::transform(
                 this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
-                std::back_inserter(node_ids),
+                std::back_inserter(blade_node_ids),
                 [](const NodeData& node) {
                     return node.id;
                 }
             );
 
-            // Loop through node IDs and rotate them to align with global Z-axis
-            // then translate to hub radius so blade root is at the hub radius
-            for (const auto& node_id : node_ids) {
+            //----------------------------------------------------
+            // Blade alignment and pitch transformation
+            //----------------------------------------------------
+
+            // Loop through node IDs and rotate them to align with global Z-axis,
+            // apply pitch rotation, then translate to hub radius so blade root
+            // is at the hub radius
+            for (const auto& node_id : blade_node_ids) {
                 model.GetNode(node_id)
-                    .RotateAboutPoint(q_x_to_z, origin)
-                    .Translate({0., 0., input.hub_diameter / 2.});
+                    .RotateAboutPoint(q_x_to_z, origin)  // Rotate to align with global Z-axis
+                    .RotateAboutPoint(q_pitch, origin)   // Apply initial blade pitch rotation
+                    .Translate({0., 0., input.hub_diameter / 2.});  // Translate to hub radius
             }
 
-            // Add blade apex node at the origin and add node ID to node_ids
+            //----------------------------------------------------
+            // Blade apex node creation
+            //----------------------------------------------------
+
+            // Add blade apex node at the origin and add node ID to blade node IDs
             const auto apex_node_id =
                 model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
-            node_ids.push_back(apex_node_id);
+            blade_node_ids.push_back(apex_node_id);
 
-            // Add apex node to the model and rotor node IDs
+            // Add apex node to apex nodes vector
             this->apex_nodes.emplace_back(apex_node_id);
 
-            // Calculate cone angle rotation quaternion
-            const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
+            //----------------------------------------------------
+            // Blade cone and azimuth transformations
+            //----------------------------------------------------
 
             // Calculate azimuth angle rotation quaternion
             const auto q_azimuth =
                 RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
 
-            // Rotate blade nodes and apex node to cone angle and then to azimuth angle
-            for (const auto& node_id : node_ids) {
+            // Rotate blade nodes (including apex node) to cone angle and then to azimuth angle
+            for (const auto& node_id : blade_node_ids) {
                 model.GetNode(node_id)
-                    .RotateAboutPoint(q_cone, origin)
-                    .RotateAboutPoint(q_azimuth, origin);
+                    .RotateAboutPoint(q_cone, origin)      // Rotate to cone angle
+                    .RotateAboutPoint(q_azimuth, origin);  // Rotate to azimuth angle
             }
 
-            // Add blade and apex node IDs to rotor node IDs
-            rotor_node_ids.insert(rotor_node_ids.end(), node_ids.begin(), node_ids.end());
+            // Add blade (including apex node) IDs to rotor node IDs
+            rotor_node_ids.insert(
+                rotor_node_ids.end(), blade_node_ids.begin(), blade_node_ids.end()
+            );
         }
+
+        //--------------------------------------------------------------------------
+        // Position rotor i.e. final rotor assembly
+        //--------------------------------------------------------------------------
 
         // Create shaft rotation quaternion
         const auto q_shaft_tilt = RotationVectorToQuaternion({0., input.shaft_tilt_angle, 0.});
 
         // Rotate rotor nodes by shaft tilt angle and translate to apex position
+        // At this point, rotor nodes contain:
+        // hub node + azimuth node + shaft base node + blade nodes + apex nodes
         for (const auto& node_id : rotor_node_ids) {
-            model.GetNode(node_id).RotateAboutPoint(q_shaft_tilt, origin).Translate(apex_position);
+            model.GetNode(node_id)
+                .RotateAboutPoint(q_shaft_tilt, origin)  // Rotate about shaft tilt
+                .Translate(apex_position);               // Translate to apex position
         }
     }
 
@@ -359,7 +420,7 @@ private:
             // Get the blade root node
             const auto& root_node = model.GetNode(this->blades[i].nodes[0].id);
 
-            // Calculate the pitch axis for the blade
+            // Calculate the pitch axis for the blade (from apex to root)
             const Array_3 pitch_axis{
                 root_node.x0[0] - apex_node.x0[0],
                 root_node.x0[1] - apex_node.x0[1],
