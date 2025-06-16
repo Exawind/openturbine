@@ -59,8 +59,8 @@ namespace openturbine::interfaces::components {
  *
  *                   pitch axis    |<----- Blade nodes --->|
  *     ● Blade apex -------------  ●  ------  ●  --------  ●
- *       node                   (root)                   (tip)
- *        │
+ *       node                    root                     tip
+ *        │                      node                     node
  *        │ (rigid connection)
  *        │
  *        ● Hub node
@@ -327,6 +327,12 @@ private:
             model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
         );
 
+        // Create vector of nacelle node IDs (yaw bearing, shaft base, azimuth, hub)
+        std::vector<size_t> nacelle_node_ids{
+            this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id,
+            this->hub_node.id
+        };
+
         //--------------------------------------------------------------------------
         // Position blades
         //--------------------------------------------------------------------------
@@ -384,9 +390,12 @@ private:
                     .RotateAboutPoint(q_azimuth, origin);  // Rotate to azimuth angle
             }
 
-            // Add blade (including apex node) IDs to rotor node IDs
+            // Add blade (including apex node) IDs to rotor node IDs and nacelle node IDs
             rotor_node_ids.insert(
                 rotor_node_ids.end(), blade_node_ids.begin(), blade_node_ids.end()
+            );
+            nacelle_node_ids.insert(
+                nacelle_node_ids.end(), blade_node_ids.begin(), blade_node_ids.end()
             );
         }
 
@@ -404,6 +413,23 @@ private:
             model.GetNode(node_id)
                 .RotateAboutPoint(q_shaft_tilt, origin)  // Rotate about shaft tilt
                 .Translate(apex_position);               // Translate to apex position
+        }
+
+        //--------------------------------------------------------------------------
+        // Apply initial nacelle yaw rotation
+        //--------------------------------------------------------------------------
+
+        // Apply initial yaw rotation if non-zero
+        if (std::abs(input.nacelle_yaw_angle) > 1e-12) {
+            // Create yaw rotation quaternion (rotation about tower Z-axis)
+            const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
+
+            // Rotate all nacelle components about tower top position
+            for (const auto& node_id : nacelle_node_ids) {
+                model.GetNode(node_id).RotateAboutPoint(
+                    q_yaw, {tower_top_node.x0[0], tower_top_node.x0[1], tower_top_node.x0[2]}
+                );
+            }
         }
     }
 
@@ -466,6 +492,7 @@ private:
         );
 
         // Add constraint from tower top to yaw bearing
+        this->yaw_control = input.nacelle_yaw_angle;
         this->tower_top_to_yaw_bearing = ConstraintData(model.AddRotationControl(
             {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.},
             &this->yaw_control
