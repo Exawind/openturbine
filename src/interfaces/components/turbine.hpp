@@ -47,18 +47,19 @@ namespace openturbine::interfaces::components {
  *  - Azimuth node: Intermediate node for rotor azimuth positioning
  *  - Hub node: Center of mass of the rotating hub assembly
  *
- *    Yaw bearing     Shaft base      Azimuth          Hub
- *        ●  ----------   ●  ----------  ●  ----------  ●
- *   (yaw control      (rigid         (torque        (rigid
- *    rotation        connection)      control)      connection
- *   about Z-axis)                                   to blades)
+ *             Yaw bearing      Shaft base      Azimuth          Hub
+ *                node            node           node            node
+ *                 ● ---------------● ------------ ● ------------ ● -------------
+ *   (yaw control  |     (rigid         (torque         (rigid        (rigid
+ *    rotation     |   connection)      control)       connection)   connection
+ *   about Z-axis) |                                                 to blades)
  *
  * Blade Assembly Nodes
  *  - Blade apex nodes: Connection points between hub and blade roots (one per blade)
  *  - Blade structural nodes: Beam nodes along each blade span
  *
- *                   pitch axis    |<----- Blade nodes --->|
- *     ● Blade apex -------------  ●  ------  ●  --------  ●
+ *                   pitch axis    |<------ Blade nodes ---->|
+ *     ● Blade apex -------------  ●  --------  ●  --------  ●
  *       node                    root                     tip
  *        │                      node                     node
  *        │ (rigid connection)
@@ -429,6 +430,62 @@ private:
                 model.GetNode(node_id).RotateAboutPoint(
                     q_yaw, {tower_top_node.x0[0], tower_top_node.x0[1], tower_top_node.x0[2]}
                 );
+            }
+        }
+
+        //--------------------------------------------------------------------------
+        // Apply tower base displacement
+        //--------------------------------------------------------------------------
+
+        const auto& tower_base_node = model.GetNode(this->tower.nodes.front().id);
+        const Array_3 original_tower_base_position{
+            tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]
+        };
+
+        // Calculate translation from original tower base to input position
+        const Array_3 tower_base_displacement{
+            input.tower_base_position[0] - original_tower_base_position[0],
+            input.tower_base_position[1] - original_tower_base_position[1],
+            input.tower_base_position[2] - original_tower_base_position[2]
+        };
+        // Get tower base orientation
+        const Array_4 tower_base_orientation{
+            input.tower_base_position[3], input.tower_base_position[4], input.tower_base_position[5],
+            input.tower_base_position[6]
+        };
+
+        // Check if displacement is non-zero
+        const auto has_displacement = std::sqrt(
+                                          tower_base_displacement[0] * tower_base_displacement[0] +
+                                          tower_base_displacement[1] * tower_base_displacement[1] +
+                                          tower_base_displacement[2] * tower_base_displacement[2]
+                                      ) > 1e-12;
+        // Check if rotation is non-identity (not [1, 0, 0, 0])
+        const auto has_rotation = std::abs(tower_base_orientation[0] - 1.) > 1e-12 ||
+                                  std::abs(tower_base_orientation[1]) > 1e-12 ||
+                                  std::abs(tower_base_orientation[2]) > 1e-12 ||
+                                  std::abs(tower_base_orientation[3]) > 1e-12;
+        // Apply tower base displacement if non-zero
+        if (has_displacement || has_rotation) {
+            // Collect all turbine node IDs (tower + nacelle + rotor + blades)
+            std::vector<size_t> all_turbine_node_ids;
+            // Add tower nodes
+            for (const auto& tower_node : this->tower.nodes) {
+                all_turbine_node_ids.push_back(tower_node.id);
+            }
+            // Add nacelle nodes (already includes rotor and blade nodes)
+            all_turbine_node_ids.insert(
+                all_turbine_node_ids.end(), nacelle_node_ids.begin(), nacelle_node_ids.end()
+            );
+
+            // Apply displacement to all turbine nodes
+            for (const auto& node_id : all_turbine_node_ids) {
+                // first rotate about original tower base position
+                model.GetNode(node_id).RotateAboutPoint(
+                    tower_base_orientation, original_tower_base_position
+                );
+                // then translate to new tower base position
+                model.GetNode(node_id).Translate(tower_base_displacement);
             }
         }
     }
