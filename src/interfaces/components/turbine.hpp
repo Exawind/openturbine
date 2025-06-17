@@ -506,16 +506,10 @@ private:
     /**
      * @brief Adds mass elements to the turbine model at the yaw bearing and hub nodes
      *
-     * @param input Turbine configuration containing inertia matrices
-     * @param model Structural model to add mass elements to
-     */
-    /**
-     * @brief Adds mass elements to the turbine model at the yaw bearing and hub nodes
-     *
-     * @details Creates lumped mass elements that represent:
-     *  - Yaw bearing node: Combined nacelle system mass and yaw bearing mass with
-     *    inertia tensor about tower-top
-     *  - Hub node: Hub assembly mass and inertia properties
+     * @details Creates lumped mass elements that represent
+     *  - Yaw bearing mass element: Combined nacelle system mass and yaw bearing mass
+     *    with inertia tensor about tower-top
+     *  - Hub mass element: Hub assembly mass and inertia properties
      *
      * @param input Turbine configuration containing inertia matrices
      * @param model Structural model to add mass elements to
