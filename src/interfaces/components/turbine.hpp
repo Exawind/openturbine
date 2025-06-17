@@ -19,7 +19,7 @@ namespace openturbine::interfaces::components {
  * --------------------------------------------------------------------------
  * Node structure
  * --------------------------------------------------------------------------
- * The turbine assembly consists of multiple interconnected nodes that
+ * The turbine assembly consists of multiple inter-connected nodes that
  * represent different physical components and their kinematic relationships.
  *
  * Tower Nodes
@@ -37,7 +37,7 @@ namespace openturbine::interfaces::components {
  *     │
  *     ○ <- Tower node 2
  *     │
- *     ○ <- Tower node 1 (Tower base - fixed constraint)
+ *     ○ <- Tower node 1 (Tower base node - fixed constraint)
  * -------------
  *  / / / /  <-  Ground / Foundation
  *
@@ -49,20 +49,21 @@ namespace openturbine::interfaces::components {
  *
  *             Yaw bearing      Shaft base      Azimuth          Hub
  *                node            node           node            node
- *                 ● ---------------● ------------ ● ------------ ● -------------
- *   (yaw control  |     (rigid         (torque         (rigid        (rigid
- *    rotation     |   connection)      control)       connection)   connection
- *   about Z-axis) |                                                 to blades)
- *
+ *                 ● -------------- ● ------------ ● ------------ ● -------------
+ *    yaw control  |     rigid          torque          rigid          rigid
+ *     rotation    |   connection       control       connection     connection
+ *   about Z-axis  |                  via revolute                    to blades
+ *                                      joint
  * Blade Assembly Nodes
  *  - Blade apex nodes: Connection points between hub and blade roots (one per blade)
  *  - Blade structural nodes: Beam nodes along each blade span
  *
- *                   pitch axis    |<------ Blade nodes ---->|
+ *                   pitch axis,
+ *                rotation control |<----- Blade nodes ----->|
  *     ● Blade apex -------------  ●  --------  ●  --------  ●
  *       node                    root                     tip
  *        │                      node                     node
- *        │ (rigid connection)
+ *        │ rigid connection
  *        │
  *        ● Hub node
  * --------------------------------------------------------------------------
@@ -71,10 +72,12 @@ namespace openturbine::interfaces::components {
  * The nodes are connected in a kinematic chain that represents the turbine's
  * degrees of freedom.
  *
- * Tower base node (fixed BC) -> Tower nodes -> Yaw Bearing node (yaw control,
- * rigid constraint) -> Shaft base node (torque control, rigid constraint) ->
- * Azimuth node (rigid constraint) -> Hub node (rigid constraint) -> Blade Apex
- * nodes (pitch control) -> Blade nodes
+ * - tower base node: fixed boundary condition
+ * - tower top node <-> yaw bearing node: Yaw rotation control
+ * - yaw bearing node <-> shaft base node: rigid joint
+ * - shaft base node <-> azimuth node: revolute joint with torque control
+ * - hub <-> blade apex nodes: rigid joint
+ * - blade apex nodes <-> blade root nodes: Pitch rotation control
  */
 class Turbine {
 public:
@@ -166,7 +169,8 @@ public:
         // they depend on the initial positions of the nodes
         AddConstraints(input, model);
 
-        // Set initial conditions (displacements and velocities) after positioning and constraints
+        // Set initial conditions (velocities, accelerations etc.) after positioning
+        // and adding constraints
         SetInitialConditions(input, model);
     }
 
@@ -498,13 +502,80 @@ private:
      * order to build the kinematic chain from the fixed tower base to the controllable
      * rotor and blade systems.
      *
+     * --------------------------------------------------------------------------
+     * Constraint schematic
+     * --------------------------------------------------------------------------
+     *
+     *           Blade 1                 Blade 2                 Blade 3
+     *     ●────────●────────●     ●────────●────────●     ●────────●────────●
+     *   root      mid      tip   root      mid      tip   root      mid      tip
+     *    │                       │                       │
+     *    │ pitch control         │ pitch control         │ pitch control
+     *    │ (rotation about       │ (rotation about       │ (rotation about
+     *    │  pitch axis)          │  pitch axis)          │  pitch axis)
+     *    │                       │                       │
+     *    ● Apex 1                ● Apex 2                ● Apex 3
+     *    │                       │                       │
+     *    │ rigid connection      │ rigid connection      │ rigid connection
+     *    └───────────────────────┼───────────────────────┘
+     *                            │
+     *                            ● Hub node
+     *                            │
+     *                            │ rigid connection
+     *                            │
+     *                            ● Azimuth node
+     *                            │
+     *                            │ revolute joint with
+     *                            │ torque control
+     *                            │ (shaft rotation)
+     *                            │
+     *                            ● Shaft base node
+     *                            │
+     *                            │ rigid connection
+     *                            │
+     *                            ● Yaw bearing node
+     *                            │
+     *                            │  yaw rotation control
+     *                            │ (rotation about Z-axis)
+     *                            │
+     *                            ● Tower top node
+     *                            │
+     *                            │
+     *                            ● Tower node n-1
+     *                            │
+     *                            ● Tower node n-2
+     *                            .
+     *                            .
+     *                            │
+     *                            ● Tower node 2
+     *                            │
+     *                            ● Tower node 1 (base)
+     *                            │
+     *                            │ fixed boundary condition
+     *                            │  (all DOFs constrained)
+     *                        ────┴────
+     *                       / / / / / /  <- Foundation
+     *
+     *
+     * Constraint Types:
+     * - Fixed bc: Constrains all 6 DOFs (tower base to foundation)
+     * - Rigid joint: Constrains relative motion between two nodes (6 DOFs)
+     * - Revolute joint: Allows rotation about one axis, constrains other 5 DOFs
+     * - Rotation control: Controlled rotation about specified axis
+     *
+     * Control Interfaces:
+     * - Yaw control: Controls nacelle orientation (yaw bearing rotation)
+     * - Torque control: Controls rotor speed (shaft base to azimuth rotation)
+     * - Pitch control: Controls blade pitch angles (apex to root rotation)
+     *
      * @param input Turbine configuration containing constraint parameters
      * @param model Structural model to add constraints to
-     *
-     * @note Constraints must be added after all nodes are positioned since they
-     *       depend on the initial node positions and orientations for proper setup
      */
     void AddConstraints(const TurbineInput& input, Model& model) {
+        //--------------------------------------------------------------------------
+        // Blade control constraints
+        //--------------------------------------------------------------------------
+
         // Loop through blades
         for (auto i = 0U; i < this->blades.size(); ++i) {
             // Get the blade apex node
@@ -532,21 +603,29 @@ private:
             );
         }
 
+        //--------------------------------------------------------------------------
+        // Drivetrain constraints
+        //--------------------------------------------------------------------------
+
         // Add rigid constraint between hub and azimuth node
         this->azimuth_to_hub =
             ConstraintData(model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id})
             );
 
-        // Shaft axis constraint
+        // Shaft axis constraint - add revolute joint between shaft base and azimuth node
         const Array_3 shaft_axis{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
         this->shaft_base_to_azimuth = ConstraintData(model.AddRevoluteJointConstraint(
             {this->shaft_base_node.id, this->azimuth_node.id}, shaft_axis, &torque_control
         ));
 
-        // Add constraint from yaw bearing to shaft base
+        // Add rigid constraint from yaw bearing to shaft base
         this->yaw_bearing_to_shaft_base = ConstraintData(
             model.AddRigidJointConstraint({this->yaw_bearing_node.id, this->shaft_base_node.id})
         );
+
+        //--------------------------------------------------------------------------
+        // Nacelle control constraints
+        //--------------------------------------------------------------------------
 
         // Add constraint from tower top to yaw bearing
         this->yaw_control = input.nacelle_yaw_angle;
@@ -555,17 +634,26 @@ private:
             &this->yaw_control
         ));
 
+        //--------------------------------------------------------------------------
+        // Tower base constraint
+        //--------------------------------------------------------------------------
+
         // Add fixed constraint at the tower base
         this->tower_base = ConstraintData(model.AddFixedBC(this->tower.nodes.front().id));
     }
 
     /**
-     * @brief Set initial displacements and velocities of the nodes
-     * @param input Turbine configuration
+     * @brief Set initial velocities, accelerations, and other dynamic initial
+     * conditions of the nodes
+     * @param input Turbine configuration parameters
      * @param model Structural model
      */
     void SetInitialConditions(const TurbineInput& input, Model& model) {
+        // Apply initial rotor velocity
         SetInitialRotorVelocity(input, model);
+
+        // Apply initial accelerations
+        // SetInitialAccelerations(input, model);
     }
 
     /**
