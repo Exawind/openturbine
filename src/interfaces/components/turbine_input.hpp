@@ -40,6 +40,12 @@ struct TurbineInput {
      */
     std::array<std::array<double, 6>, 6> yaw_bearing_inertia_matrix{{{}, {}, {}, {}, {}, {}}};
 
+    /**
+     * @brief Hub inertia matrix (6x6)
+     * @details Includes hub assembly mass and inertia properties
+     */
+    std::array<std::array<double, 6>, 6> hub_inertia_matrix{{{}, {}, {}, {}, {}, {}}};
+
     //--------------------------------------------------------------------------
     // Geometric configuration inputs
     //--------------------------------------------------------------------------

@@ -165,6 +165,9 @@ public:
         // Add intermediate nodes and position them to reference locations
         PositionNodes(input, model);
 
+        // Add mass elements
+        AddMassElements(input, model);
+
         // Constraints must be added after all nodes are positioned because
         // they depend on the initial positions of the nodes
         AddConstraints(input, model);
@@ -280,13 +283,14 @@ private:
         // Calculate angle between the blades
         const double blade_angle_delta = 2. * M_PI / static_cast<double>(this->blades.size());
 
-        // Calculate rotation quaternion to align a component from x-axis to z-axis
+        // Calculate rotation quaternion to align a component from x-axis to z-axis (i.e.
+        // rotate about y-axis by -90 degrees)
         const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
 
-        // Calculate pitch rotation quaternion (around x-axis)
+        // Calculate pitch rotation quaternion (rotate about z-axis by pitch angle)
         const auto q_pitch = RotationVectorToQuaternion({0., 0., input.blade_pitch_angle});
 
-        // Calculate cone angle rotation quaternion (around y-axis)
+        // Calculate cone angle rotation quaternion (rotate about y-axis by -cone angle)
         const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
 
         //--------------------------------------------------------------------------
@@ -363,8 +367,8 @@ private:
             // is at the hub radius
             for (const auto& node_id : blade_node_ids) {
                 model.GetNode(node_id)
-                    .RotateAboutPoint(q_x_to_z, origin)  // Rotate to align with global Z-axis
-                    .RotateAboutPoint(q_pitch, origin)   // Apply initial blade pitch rotation
+                    .RotateAboutPoint(q_x_to_z, origin)  // Rotate to align with Z-axis
+                    .RotateAboutPoint(q_pitch, origin)   // Apply initial blade pitch (around Z-axis)
                     .Translate({0., 0., input.hub_diameter / 2.});  // Translate to hub radius
             }
 
@@ -384,15 +388,15 @@ private:
             // Blade cone and azimuth transformations
             //----------------------------------------------------
 
-            // Calculate azimuth angle rotation quaternion
+            // Calculate azimuth angle rotation quaternion (rotate about x-axis)
             const auto q_azimuth =
                 RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
 
             // Rotate blade nodes (including apex node) to cone angle and then to azimuth angle
             for (const auto& node_id : blade_node_ids) {
                 model.GetNode(node_id)
-                    .RotateAboutPoint(q_cone, origin)      // Rotate to cone angle
-                    .RotateAboutPoint(q_azimuth, origin);  // Rotate to azimuth angle
+                    .RotateAboutPoint(q_cone, origin)      // Rotate to cone angle (about y-axis)
+                    .RotateAboutPoint(q_azimuth, origin);  // Rotate to azimuth angle (about x-axis)
             }
 
             // Add blade (including apex node) IDs to rotor node IDs and nacelle node IDs
@@ -497,6 +501,33 @@ private:
                 model.GetNode(node_id).Translate(tower_base_displacement);
             }
         }
+    }
+
+    /**
+     * @brief Adds mass elements to the turbine model at the yaw bearing and hub nodes
+     *
+     * @param input Turbine configuration containing inertia matrices
+     * @param model Structural model to add mass elements to
+     */
+    /**
+     * @brief Adds mass elements to the turbine model at the yaw bearing and hub nodes
+     *
+     * @details Creates lumped mass elements that represent:
+     *  - Yaw bearing node: Combined nacelle system mass and yaw bearing mass with
+     *    inertia tensor about tower-top
+     *  - Hub node: Hub assembly mass and inertia properties
+     *
+     * @param input Turbine configuration containing inertia matrices
+     * @param model Structural model to add mass elements to
+     */
+    void AddMassElements(const TurbineInput& input, Model& model) {
+        // Add mass element at yaw bearing node
+        this->yaw_bearing_mass_element_id =
+            model.AddMassElement(this->yaw_bearing_node.id, input.yaw_bearing_inertia_matrix);
+
+        // Add mass element at hub node
+        this->hub_mass_element_id =
+            model.AddMassElement(this->hub_node.id, input.hub_inertia_matrix);
     }
 
     /**
@@ -654,7 +685,7 @@ private:
      * @param model Structural model
      */
     void SetInitialConditions(const TurbineInput& input, Model& model) {
-        // Apply initial rotor velocity
+        // Apply initial rotor velocity about shaft axis
         SetInitialRotorVelocity(input, model);
 
         // Apply initial accelerations

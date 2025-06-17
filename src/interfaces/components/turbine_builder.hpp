@@ -64,6 +64,27 @@ public:
         return this->tower_builder;
     }
 
+    /**
+     * @brief Set the yaw bearing inertia matrix (6x6)
+     * @param matrix The inertia matrix to set, includes yaw bearing and nacelle mass with inertia
+     * about yaw bearing i.e. system_inertia_tt in WindIO
+     * @return Reference to the builder for method chaining
+     */
+    TurbineBuilder& SetYawBearingInertiaMatrix(const std::array<std::array<double, 6>, 6>& matrix) {
+        this->input.yaw_bearing_inertia_matrix = matrix;
+        return *this;
+    }
+
+    /**
+     * @brief Set the hub inertia matrix (6x6)
+     * @param matrix The inertia matrix to set, includes hub assembly mass and inertia
+     * @return Reference to the builder for method chaining
+     */
+    TurbineBuilder& SetHubInertiaMatrix(const std::array<std::array<double, 6>, 6>& matrix) {
+        this->input.hub_inertia_matrix = matrix;
+        return *this;
+    }
+
     //--------------------------------------------------------------------------
     // Build geometric configuration of the turbine
     //--------------------------------------------------------------------------
