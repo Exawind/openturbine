@@ -473,10 +473,15 @@ private:
         if (has_displacement || has_rotation) {
             // Collect all turbine node IDs (tower + nacelle + rotor + blades)
             std::vector<size_t> all_turbine_node_ids;
+            all_turbine_node_ids.reserve(this->tower.nodes.size() + nacelle_node_ids.size());
             // Add tower nodes
-            for (const auto& tower_node : this->tower.nodes) {
-                all_turbine_node_ids.push_back(tower_node.id);
-            }
+            std::transform(
+                this->tower.nodes.begin(), this->tower.nodes.end(),
+                std::back_inserter(all_turbine_node_ids),
+                [](const auto& tower_node) {
+                    return tower_node.id;
+                }
+            );
             // Add nacelle nodes (already includes rotor and blade nodes)
             all_turbine_node_ids.insert(
                 all_turbine_node_ids.end(), nacelle_node_ids.begin(), nacelle_node_ids.end()
@@ -680,9 +685,13 @@ private:
         // Add all blade nodes and apex nodes
         for (size_t i = 0; i < this->blades.size(); ++i) {
             // Add blade nodes
-            for (const auto& blade_node : this->blades[i].nodes) {
-                rotor_node_ids.push_back(blade_node.id);
-            }
+            std::transform(
+                this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+                std::back_inserter(rotor_node_ids),
+                [](const auto& blade_node) {
+                    return blade_node.id;
+                }
+            );
             // Add apex node
             rotor_node_ids.push_back(this->apex_nodes[i].id);
         }
