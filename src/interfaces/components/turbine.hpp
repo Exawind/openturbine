@@ -5,6 +5,8 @@
 #include "interfaces/constraint_data.hpp"
 #include "interfaces/host_state.hpp"
 #include "interfaces/node_data.hpp"
+#include "math/quaternion_operations.hpp"
+#include "math/vector_operations.hpp"
 #include "model/model.hpp"
 
 namespace openturbine::interfaces::components {
@@ -12,9 +14,9 @@ namespace openturbine::interfaces::components {
 /**
  * @brief Represents a turbine with nodes, elements, and constraints
  *
- * This class is responsible for creating and managing a turbine based on input
- * specifications. It handles the creation of the beam elements, mass elements,
- * nodes, and constraints within the provided model.
+ * This class is responsible for creating and managing a turbine based on the
+ * turbine input specifications. It handles the creation of the beam elements,
+ * mass elements, nodes, and constraints within the provided model.
  *
  * --------------------------------------------------------------------------
  * Node structure
@@ -67,7 +69,7 @@ namespace openturbine::interfaces::components {
  *        │
  *        ● Hub node
  * --------------------------------------------------------------------------
- * Kinematic chain
+ * Kinematic chain/constraints
  * --------------------------------------------------------------------------
  * The nodes are connected in a kinematic chain that represents the turbine's
  * degrees of freedom.
@@ -87,6 +89,9 @@ public:
 
     /// Minimum valid hub diameter
     static constexpr double kMinHubDiameter{1e-8};
+
+    /// Tolerance for near zero comparisons
+    static constexpr double kZeroTolerance{1e-12};
 
     //--------------------------------------------------------------------------
     // Elements
@@ -128,19 +133,23 @@ public:
     double yaw_control{0.};                   //< Yaw control value
 
     /**
-     * @brief Constructs a turbine with the specified configuration
+     * @brief Constructs a turbine with the specified input configuration
      *
      * Creates a complete turbine structure including blades, tower, hub, nacelle components,
-     * and all associated nodes, constraints, and control systems. The turbine is positioned
-     * and oriented according to the input parameters, with proper kinematic relationships
-     * established between all components.
+     * and all associated nodes, elements, constraints, and control systems. The turbine is
+     * positioned and oriented according to the input parameters, with proper kinematic
+     * relationships established between all components.
      * --------------------------------------------------------------------------
      * Construction sequence
      * --------------------------------------------------------------------------
      *  1. Validation: Input parameters are checked for physical consistency
-     *  2. Node creation + positioning: All nodes are created and assembled in proper position
-     *  3. Constraint creation: Kinematic relationships are established between nodes
-     *  4. Initial conditions: Displacements/velocities are applied as necessary
+     *  2. Node creation + positioning: All nodes are created at the origin and
+     *     assembled at their correct spatial locations/orientations
+     *  3. Mass element addition: Mass and inertia properties are assigned to relevant
+     *     nodes/components, e.g. lumped mass elements at hub and nacelle
+     *  4. Constraint creation: Kinematic relationships are established between nodes
+     *  5. Initial conditions: Initial conditions such as displacements, velocities,
+     *     and accelerations are applied as required
      *
      * @param input Turbine configuration parameters
      * @param model Structural model to add turbine components to
@@ -429,7 +438,7 @@ private:
         //--------------------------------------------------------------------------
 
         // Apply initial yaw rotation if non-zero
-        if (std::abs(input.nacelle_yaw_angle) > 1e-12) {
+        if (std::abs(input.nacelle_yaw_angle) > kZeroTolerance) {
             // Create yaw rotation quaternion (rotation about tower Z-axis)
             const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
 
@@ -462,19 +471,9 @@ private:
             input.tower_base_position[6]
         };
 
-        // Check if displacement is non-zero
-        const auto has_displacement = std::sqrt(
-                                          tower_base_displacement[0] * tower_base_displacement[0] +
-                                          tower_base_displacement[1] * tower_base_displacement[1] +
-                                          tower_base_displacement[2] * tower_base_displacement[2]
-                                      ) > 1e-12;
-        // Check if rotation is non-identity (not [1, 0, 0, 0])
-        const auto has_rotation = std::abs(tower_base_orientation[0] - 1.) > 1e-12 ||
-                                  std::abs(tower_base_orientation[1]) > 1e-12 ||
-                                  std::abs(tower_base_orientation[2]) > 1e-12 ||
-                                  std::abs(tower_base_orientation[3]) > 1e-12;
-        // Apply tower base displacement if non-zero
-        if (has_displacement || has_rotation) {
+        // Apply tower base displacement if displacement is non-zero or rotation is non-identity
+        if (Norm(tower_base_displacement) > kZeroTolerance ||
+            !IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
             // Collect all turbine node IDs (tower + nacelle + rotor + blades)
             std::vector<size_t> all_turbine_node_ids;
             all_turbine_node_ids.reserve(this->tower.nodes.size() + nacelle_node_ids.size());
@@ -515,11 +514,11 @@ private:
      * @param model Structural model to add mass elements to
      */
     void AddMassElements(const TurbineInput& input, Model& model) {
-        // Add mass element at yaw bearing node
+        // Add mass element at yaw bearing node (nacelle mass + yaw bearing mass)
         this->yaw_bearing_mass_element_id =
             model.AddMassElement(this->yaw_bearing_node.id, input.yaw_bearing_inertia_matrix);
 
-        // Add mass element at hub node
+        // Add mass element at hub node (hub assembly mass)
         this->hub_mass_element_id =
             model.AddMassElement(this->hub_node.id, input.hub_inertia_matrix);
     }
