@@ -310,9 +310,6 @@ private:
         // rotate about y-axis by -90 degrees)
         const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
 
-        // Calculate pitch rotation quaternion (rotate about z-axis by pitch angle)
-        const auto q_pitch = RotationVectorToQuaternion({0., 0., input.blade_pitch_angle});
-
         // Calculate cone angle rotation quaternion (rotate about y-axis by -cone angle)
         const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
 
@@ -400,8 +397,7 @@ private:
             // is at the hub radius
             for (const auto& node_id : current_blade_node_ids) {
                 model.GetNode(node_id)
-                    .RotateAboutPoint(q_x_to_z, origin)  // Rotate to align with Z-axis
-                    .RotateAboutPoint(q_pitch, origin)   // Apply initial blade pitch (around Z-axis)
+                    .RotateAboutPoint(q_x_to_z, origin)             // Rotate to align with Z-axis
                     .Translate({0., 0., input.hub_diameter / 2.});  // Translate to hub radius
             }
 
@@ -492,58 +488,6 @@ private:
             model.GetNode(node_id)
                 .RotateAboutPoint(q_shaft_tilt, origin)  // Rotate about shaft tilt
                 .Translate(apex_position);               // Translate to apex position
-        }
-
-        //--------------------------------------------------------------------------
-        // Apply initial nacelle yaw rotation
-        //--------------------------------------------------------------------------
-
-        // Apply initial yaw rotation if non-zero
-        if (std::abs(input.nacelle_yaw_angle) > kZeroTolerance) {
-            // Create yaw rotation quaternion (rotation about tower Z-axis)
-            const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
-
-            // Rotate all nacelle components about tower top position
-            for (const auto& node_id : this->nacelle_node_ids) {
-                model.GetNode(node_id).RotateAboutPoint(
-                    q_yaw, {tower_top_node.x0[0], tower_top_node.x0[1], tower_top_node.x0[2]}
-                );
-            }
-        }
-
-        //--------------------------------------------------------------------------
-        // Apply tower base displacement
-        //--------------------------------------------------------------------------
-
-        const auto& tower_base_node = model.GetNode(this->tower.nodes.front().id);
-        const Array_3 original_tower_base_position{
-            tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]
-        };
-
-        // Calculate translation from original tower base to input position
-        const Array_3 tower_base_displacement{
-            input.tower_base_position[0] - original_tower_base_position[0],
-            input.tower_base_position[1] - original_tower_base_position[1],
-            input.tower_base_position[2] - original_tower_base_position[2]
-        };
-        // Get tower base orientation
-        const Array_4 tower_base_orientation{
-            input.tower_base_position[3], input.tower_base_position[4], input.tower_base_position[5],
-            input.tower_base_position[6]
-        };
-
-        // Apply tower base displacement if displacement is non-zero or rotation is non-identity
-        if (Norm(tower_base_displacement) > kZeroTolerance ||
-            !IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
-            // Apply displacement to all turbine nodes
-            for (const auto& node_id : this->all_turbine_node_ids) {
-                // first rotate about original tower base position
-                model.GetNode(node_id).RotateAboutPoint(
-                    tower_base_orientation, original_tower_base_position
-                );
-                // then translate to new tower base position
-                model.GetNode(node_id).Translate(tower_base_displacement);
-            }
         }
     }
 
@@ -723,11 +667,106 @@ private:
      * @param model Structural model
      */
     void SetInitialConditions(const TurbineInput& input, Model& model) {
+        // Apply initial displacements
+        SetInitialDisplacements(input, model);
+
         // Apply initial rotor velocity about shaft axis
         SetInitialRotorVelocity(input, model);
 
         // Apply initial accelerations
         // SetInitialAccelerations(input, model);
+    }
+
+    void SetInitialDisplacements(const TurbineInput& input, Model& model) {
+        //--------------------------------------------------------------------------
+        // Apply initial blade pitch
+        //--------------------------------------------------------------------------
+        for (auto i = 0U; i < this->blades.size(); ++i) {
+            // Get the blade root and apex nodes
+            const auto& root_node = model.GetNode(this->blades[i].nodes.front().id);
+            const auto& apex_node = model.GetNode(this->apex_nodes[i].id);
+
+            // Calculate the pitch axis
+            const Array_3 pitch_axis{
+                root_node.x0[0] - apex_node.x0[0],
+                root_node.x0[1] - apex_node.x0[1],
+                root_node.x0[2] - apex_node.x0[2],
+            };
+
+            // Create rotation vector about the pitch axis
+            const auto pitch_axis_unit = UnitVector(pitch_axis);
+            const Array_3 rotation_vector{
+                input.blade_pitch_angle * pitch_axis_unit[0],
+                input.blade_pitch_angle * pitch_axis_unit[1],
+                input.blade_pitch_angle * pitch_axis_unit[2]
+            };
+
+            // Calculate pitch rotation quaternion
+            const auto q_pitch = RotationVectorToQuaternion(rotation_vector);
+
+            // Use apex node position as rotation center
+            const Array_3 pitch_center{apex_node.x0[0], apex_node.x0[1], apex_node.x0[2]};
+
+            // Apply pitch rotation as displacement to all blade nodes and apex node
+            for (const auto& blade_node : this->blades[i].nodes) {
+                model.GetNode(blade_node.id).RotateDisplacementAboutPoint(q_pitch, pitch_center);
+            }
+        }
+
+        //--------------------------------------------------------------------------
+        // Apply initial nacelle yaw rotation
+        //--------------------------------------------------------------------------
+
+        // Apply initial yaw rotation if non-zero
+        if (std::abs(input.nacelle_yaw_angle) > kZeroTolerance) {
+            // Get tower top node for rotation center
+            const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
+
+            // Create yaw rotation quaternion (rotation about tower Z-axis)
+            const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
+
+            // Rotate all nacelle components about tower top position
+            for (const auto& node_id : this->nacelle_node_ids) {
+                model.GetNode(node_id).RotateDisplacementAboutPoint(
+                    q_yaw, {tower_top_node.x0[0], tower_top_node.x0[1], tower_top_node.x0[2]}
+                );
+            }
+        }
+
+        //--------------------------------------------------------------------------
+        // Apply tower base displacement
+        //--------------------------------------------------------------------------
+
+        const auto& tower_base_node = model.GetNode(this->tower.nodes.front().id);
+        const Array_3 original_tower_base_position{
+            tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]
+        };
+
+        // Calculate translation from original tower base to input position
+        const Array_3 tower_base_displacement{
+            input.tower_base_position[0] - original_tower_base_position[0],
+            input.tower_base_position[1] - original_tower_base_position[1],
+            input.tower_base_position[2] - original_tower_base_position[2]
+        };
+        // Get tower base orientation
+        const Array_4 tower_base_orientation{
+            input.tower_base_position[3], input.tower_base_position[4], input.tower_base_position[5],
+            input.tower_base_position[6]
+        };
+
+        // Apply tower base displacement if displacement is non-zero or rotation is non-identity
+        if (Norm(tower_base_displacement) > kZeroTolerance ||
+            !IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
+            // Apply displacement to all turbine nodes
+            for (const auto& node_id : this->all_turbine_node_ids) {
+                // first rotate about original tower base position
+                model.GetNode(node_id).RotateDisplacementAboutPoint(
+                    tower_base_orientation, original_tower_base_position
+                );
+                // then translate to new tower base position
+                model.GetNode(node_id).Translate(tower_base_displacement);
+            }
+        }
     }
 
     /**
