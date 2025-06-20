@@ -214,6 +214,20 @@ private:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
+    //--------------------------------------------------------------------------
+    // Node ID collections for efficient access
+    //--------------------------------------------------------------------------
+
+    std::vector<size_t> tower_node_ids;       ///< All nodes on tower beam
+    std::vector<size_t> drivetrain_node_ids;  ///< All nodes on drivetrain i.e. yaw bearing, shaft
+                                              ///< base, azimuth, and hub nodes
+    std::vector<size_t> blade_node_ids;       ///< All nodes on blade beams + blade apex nodes
+    std::vector<size_t> rotor_node_ids;       ///< All blade + blade apex nodes, hub, azimuth, and
+                                              ///< shaft base nodes
+    std::vector<size_t> nacelle_node_ids;     ///< drivetrain_node_ids + blade_node_ids
+    std::vector<size_t>
+        all_turbine_node_ids;  ///< tower_node_ids + drivetrain_node_ids + blade_node_ids
+
     /**
      * @brief Create blades from input configuration
      * @param blade_inputs Blade input configurations
@@ -317,6 +331,16 @@ private:
             tower_top_node.x0[2] + input.tower_top_to_rotor_apex,  // vertical offset
         };
 
+        // Add tower nodes to tower_node_ids vector
+        this->tower_node_ids.reserve(this->tower.nodes.size());
+        std::transform(
+            this->tower.nodes.begin(), this->tower.nodes.end(),
+            std::back_inserter(this->tower_node_ids),
+            [](const auto& node) {
+                return node.id;
+            }
+        );
+
         //--------------------------------------------------------------------------
         // Position drivetrain
         //--------------------------------------------------------------------------
@@ -335,18 +359,14 @@ private:
         this->shaft_base_node =
             NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
 
-        // Create vector of rotor node IDs (hub, azimuth, shaft base)
-        std::vector<size_t> rotor_node_ids{
-            this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id
-        };
-
         // Create yaw bearing node at tower top position
         this->yaw_bearing_node = NodeData(
             model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
         );
 
-        // Create vector of nacelle node IDs (yaw bearing, shaft base, azimuth, hub)
-        std::vector<size_t> nacelle_node_ids{
+        // Add drivetrain nodes (yaw bearing, shaft base, azimuth, hub) to drivetrain_node_ids vector
+        this->drivetrain_node_ids.reserve(4);
+        this->drivetrain_node_ids = {
             this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id,
             this->hub_node.id
         };
@@ -355,13 +375,17 @@ private:
         // Position blades
         //--------------------------------------------------------------------------
 
+        this->blade_node_ids.reserve(
+            this->blades.size() * (this->blades[0].nodes.size() + 1)  // +1 for apex node
+        );
+
         // Loop over blades
         for (auto i = 0U; i < this->blades.size(); ++i) {
-            // Get node IDs for this blade
-            std::vector<size_t> blade_node_ids;
+            // Get node IDs for this blade only
+            std::vector<size_t> current_blade_node_ids;
             std::transform(
                 this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
-                std::back_inserter(blade_node_ids),
+                std::back_inserter(current_blade_node_ids),
                 [](const NodeData& node) {
                     return node.id;
                 }
@@ -374,7 +398,7 @@ private:
             // Loop through node IDs and rotate them to align with global Z-axis,
             // apply pitch rotation, then translate to hub radius so blade root
             // is at the hub radius
-            for (const auto& node_id : blade_node_ids) {
+            for (const auto& node_id : current_blade_node_ids) {
                 model.GetNode(node_id)
                     .RotateAboutPoint(q_x_to_z, origin)  // Rotate to align with Z-axis
                     .RotateAboutPoint(q_pitch, origin)   // Apply initial blade pitch (around Z-axis)
@@ -385,10 +409,10 @@ private:
             // Blade apex node creation
             //----------------------------------------------------
 
-            // Add blade apex node at the origin and add it to blade node IDs vector
+            // Add blade apex node at the origin and add it to current_blade_node_ids vector
             const auto apex_node_id =
                 model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
-            blade_node_ids.push_back(apex_node_id);
+            current_blade_node_ids.push_back(apex_node_id);
 
             // Add apex node to apex nodes vector
             this->apex_nodes.emplace_back(apex_node_id);
@@ -402,20 +426,57 @@ private:
                 RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
 
             // Rotate blade nodes (including apex node) to cone angle and then to azimuth angle
-            for (const auto& node_id : blade_node_ids) {
+            for (const auto& node_id : current_blade_node_ids) {
                 model.GetNode(node_id)
                     .RotateAboutPoint(q_cone, origin)      // Rotate to cone angle (about y-axis)
                     .RotateAboutPoint(q_azimuth, origin);  // Rotate to azimuth angle (about x-axis)
             }
 
-            // Add blade (including apex node) IDs to rotor node IDs and nacelle node IDs
-            rotor_node_ids.insert(
-                rotor_node_ids.end(), blade_node_ids.begin(), blade_node_ids.end()
-            );
-            nacelle_node_ids.insert(
-                nacelle_node_ids.end(), blade_node_ids.begin(), blade_node_ids.end()
+            // Add current blade node IDs to blade_node_ids vector
+            this->blade_node_ids.insert(
+                this->blade_node_ids.end(), current_blade_node_ids.begin(),
+                current_blade_node_ids.end()
             );
         }
+
+        //--------------------------------------------------------------------------
+        // Add nodes to node ID vectors for rotor, nacelle, and turbine
+        //--------------------------------------------------------------------------
+
+        // Add rotor nodes (hub, azimuth, shaft base, and blade nodes) to rotor_node_ids vector
+        this->rotor_node_ids.reserve(this->blade_node_ids.size() + 3);
+        this->rotor_node_ids.insert(
+            this->rotor_node_ids.end(),
+            {this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id}
+        );
+        this->rotor_node_ids.insert(
+            this->rotor_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
+        );
+
+        // Add nacelle nodes (drivetrain nodes + blade nodes) to nacelle_node_ids vector
+        this->nacelle_node_ids.reserve(
+            this->drivetrain_node_ids.size() + this->blade_node_ids.size()
+        );
+        this->nacelle_node_ids.insert(
+            this->nacelle_node_ids.end(), this->drivetrain_node_ids.begin(),
+            this->drivetrain_node_ids.end()
+        );
+        this->nacelle_node_ids.insert(
+            this->nacelle_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
+        );
+
+        // Collect all turbine node IDs (tower + drivetrain + blades)
+        this->all_turbine_node_ids.reserve(
+            this->tower_node_ids.size() + this->nacelle_node_ids.size()
+        );
+        this->all_turbine_node_ids.insert(
+            this->all_turbine_node_ids.end(), this->tower_node_ids.begin(),
+            this->tower_node_ids.end()
+        );
+        this->all_turbine_node_ids.insert(
+            this->all_turbine_node_ids.end(), this->nacelle_node_ids.begin(),
+            this->nacelle_node_ids.end()
+        );
 
         //--------------------------------------------------------------------------
         // Position rotor i.e. final rotor assembly
@@ -427,7 +488,7 @@ private:
         // Rotate rotor nodes by shaft tilt angle and translate to apex position
         // At this point, rotor nodes contain:
         // hub node + azimuth node + shaft base node + blade nodes + apex nodes
-        for (const auto& node_id : rotor_node_ids) {
+        for (const auto& node_id : this->rotor_node_ids) {
             model.GetNode(node_id)
                 .RotateAboutPoint(q_shaft_tilt, origin)  // Rotate about shaft tilt
                 .Translate(apex_position);               // Translate to apex position
@@ -443,7 +504,7 @@ private:
             const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
 
             // Rotate all nacelle components about tower top position
-            for (const auto& node_id : nacelle_node_ids) {
+            for (const auto& node_id : this->nacelle_node_ids) {
                 model.GetNode(node_id).RotateAboutPoint(
                     q_yaw, {tower_top_node.x0[0], tower_top_node.x0[1], tower_top_node.x0[2]}
                 );
@@ -474,24 +535,8 @@ private:
         // Apply tower base displacement if displacement is non-zero or rotation is non-identity
         if (Norm(tower_base_displacement) > kZeroTolerance ||
             !IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
-            // Collect all turbine node IDs (tower + nacelle + rotor + blades)
-            std::vector<size_t> all_turbine_node_ids;
-            all_turbine_node_ids.reserve(this->tower.nodes.size() + nacelle_node_ids.size());
-            // Add tower nodes
-            std::transform(
-                this->tower.nodes.begin(), this->tower.nodes.end(),
-                std::back_inserter(all_turbine_node_ids),
-                [](const auto& tower_node) {
-                    return tower_node.id;
-                }
-            );
-            // Add nacelle nodes (already includes rotor and blade nodes)
-            all_turbine_node_ids.insert(
-                all_turbine_node_ids.end(), nacelle_node_ids.begin(), nacelle_node_ids.end()
-            );
-
             // Apply displacement to all turbine nodes
-            for (const auto& node_id : all_turbine_node_ids) {
+            for (const auto& node_id : this->all_turbine_node_ids) {
                 // first rotate about original tower base position
                 model.GetNode(node_id).RotateAboutPoint(
                     tower_base_orientation, original_tower_base_position
@@ -704,20 +749,20 @@ private:
         const Array_3 rotation_center{hub.x0[0], hub.x0[1], hub.x0[2]};
 
         // Collect all rotor node IDs (hub, azimuth, blade nodes, and apex nodes)
-        std::vector<size_t> rotor_node_ids{this->hub_node.id, this->azimuth_node.id};
+        std::vector<size_t> rotor_velocity_node_ids{this->hub_node.id, this->azimuth_node.id};
 
         // Add all blade nodes and apex nodes
         for (size_t i = 0; i < this->blades.size(); ++i) {
             // Add blade nodes
             std::transform(
                 this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
-                std::back_inserter(rotor_node_ids),
+                std::back_inserter(rotor_velocity_node_ids),
                 [](const auto& blade_node) {
                     return blade_node.id;
                 }
             );
             // Add apex node
-            rotor_node_ids.push_back(this->apex_nodes[i].id);
+            rotor_velocity_node_ids.push_back(this->apex_nodes[i].id);
         }
 
         // Create rigid body velocity -> transl. vel = 0, angular vel. about shaft axis
@@ -731,7 +776,7 @@ private:
         };
 
         // Apply rotational velocity to all rotor nodes
-        for (const auto& node_id : rotor_node_ids) {
+        for (const auto& node_id : rotor_velocity_node_ids) {
             model.GetNode(node_id).SetVelocityAboutPoint(rigid_body_velocity, rotation_center);
         }
     }
