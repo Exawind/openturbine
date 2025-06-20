@@ -417,4 +417,45 @@ TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
     }
 }
 
+TEST(QuaternionTest, IsIdentityQuaternion_ExactIdentity) {
+    const Array_4 identity_q{1., 0., 0., 0.};
+    EXPECT_TRUE(IsIdentityQuaternion(identity_q));
+}
+
+TEST(QuaternionTest, IsIdentityQuaternion_WithinDefaultTolerance) {
+    // 1e-13 is within default tolerance
+    const Array_4 near_identity_q{1. + 1e-13, 1e-13, -1e-13, 1e-13};
+    EXPECT_TRUE(IsIdentityQuaternion(near_identity_q));
+}
+
+TEST(QuaternionTest, IsIdentityQuaternion_OutsideDefaultTolerance) {
+    // 1e-11 is outside default tolerance
+    const Array_4 not_identity_q{1. + 1e-11, 0., 0., 0.};
+    EXPECT_FALSE(IsIdentityQuaternion(not_identity_q));
+}
+
+TEST(QuaternionTest, IsIdentityQuaternion_WithCustomTolerance) {
+    // 1e-10 is within custom tolerance
+    const Array_4 near_identity_q{1. + 1e-10, 1e-10, 0., 0.};
+    EXPECT_TRUE(IsIdentityQuaternion(near_identity_q, 1e-9));
+}
+
+TEST(QuaternionTest, IsIdentityQuaternion_NonIdentityQuaternions) {
+    // 90 degree rotation about X axis
+    const Array_4 rotation_x = RotationVectorToQuaternion({M_PI / 2., 0., 0.});
+    EXPECT_FALSE(IsIdentityQuaternion(rotation_x));
+
+    // 90 degree rotation about Y axis
+    const Array_4 rotation_y = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+    EXPECT_FALSE(IsIdentityQuaternion(rotation_y));
+
+    // 90 degree rotation about Z axis
+    const Array_4 rotation_z = RotationVectorToQuaternion({0., 0., M_PI / 2.});
+    EXPECT_FALSE(IsIdentityQuaternion(rotation_z));
+
+    // Arbitrary quaternion
+    const Array_4 arbitrary{0.5, 0.5, 0.5, 0.5};
+    EXPECT_FALSE(IsIdentityQuaternion(arbitrary));
+}
+
 }  // namespace openturbine::tests

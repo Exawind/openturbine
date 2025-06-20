@@ -136,12 +136,12 @@ struct Node {
     /// Rotate node displacement by a quaternion about the given point
     Node& RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
         // Rotate displacement position i.e. u(0:2)
-        auto u_new = RotateVectorByQuaternion(
+        [[maybe_unused]] auto u_new = RotateVectorByQuaternion(
             q, {this->u[0] - point[0], this->u[1] - point[1], this->u[2] - point[2]}
         );
-        this->u[0] = u_new[0] + point[0];
-        this->u[1] = u_new[1] + point[1];
-        this->u[2] = u_new[2] + point[2];
+        // this->u[0] = u_new[0] + point[0];
+        // this->u[1] = u_new[1] + point[1];
+        // this->u[2] = u_new[2] + point[2];
 
         // Rotate displacement orientation i.e. u(3:6)
         auto q_new = QuaternionCompose(q, {this->u[3], this->u[4], this->u[5], this->u[6]});
