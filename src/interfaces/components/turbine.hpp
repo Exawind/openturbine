@@ -41,7 +41,7 @@ namespace openturbine::interfaces::components {
  *     │
  *     ○ <- Tower node 1 (Tower base node - fixed constraint)
  * -------------
- *  / / / /  <-  Ground / Foundation
+ * / / / / / / /  <--  Ground / Foundation
  *
  * Nacelle/Drivetrain Nodes
  *  - Yaw bearing node: Located at tower top, allows nacelle yaw rotation
@@ -74,18 +74,21 @@ namespace openturbine::interfaces::components {
  * The nodes are connected in a kinematic chain that represents the turbine's
  * degrees of freedom.
  *
- * - tower base node: fixed boundary condition
+ * - tower base node: Fixed boundary condition
  * - tower top node <-> yaw bearing node: Yaw rotation control
- * - yaw bearing node <-> shaft base node: rigid joint
- * - shaft base node <-> azimuth node: revolute joint with torque control
- * - hub <-> blade apex nodes: rigid joint
+ * - yaw bearing node <-> shaft base node: Rigid joint
+ * - shaft base node <-> azimuth node: Revolute joint with torque control
+ * - hub <-> blade apex nodes: Rigid joint
  * - blade apex nodes <-> blade root nodes: Pitch rotation control
  */
 class Turbine {
 public:
     //--------------------------------------------------------------------------
-    // Constants
+    // Types and Constants
     //--------------------------------------------------------------------------
+
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
     /// Minimum valid hub diameter
     static constexpr double kMinHubDiameter{1e-8};
@@ -211,11 +214,8 @@ public:
     }
 
 private:
-    using DeviceType =
-        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-
     //--------------------------------------------------------------------------
-    // Node ID collections for efficient access
+    // Node ID collections of turbine components
     //--------------------------------------------------------------------------
 
     std::vector<size_t> tower_node_ids;       ///< All nodes on tower beam
@@ -249,13 +249,16 @@ private:
     }
 
     /**
-     * @brief Validate turbine input parameters for physical consistency
+     * @brief Validates turbine input parameters before construction
      *
-     * Checks that all input parameters are within physically reasonable ranges
+     * @details Checks that all input parameters are within physically reasonable ranges
      * and that required parameters are properly specified. Throws exceptions
      * for invalid configurations that would lead to simulation errors.
      *
-     * @param input Turbine configuration to validate
+     * @param input Turbine configuration parameters to validate
+     *
+     * @throws std::invalid_argument If any parameter is outside valid range or physically
+     * inconsistent
      */
     static void ValidateInput(const TurbineInput& input) {
         if (input.hub_diameter <= kMinHubDiameter) {
@@ -277,14 +280,14 @@ private:
      * turbine input configuration
      *
      * This method performs a complex sequence of geometric transformations to position
-     * all turbine components (tower, blades, hub, drivetrain) in their final locations
-     * to achieve the correct turbine geometry.
+     * all turbine components (tower, blades, hub, drivetrain) in their final reference
+     * locations to achieve the correct turbine geometry.
      *
      * --------------------------------------------------------------------------
      * Transformation/assembly sequence
      * --------------------------------------------------------------------------
      *   - Tower: Rotated to align with global Z-axis (vertical)
-     *   - Blades: Aligned with Z-axis -> pitched -> translated to hub radius -> coned ->
+     *   - Blades: Aligned with Z-axis -> translated to hub radius -> coned ->
      *     azimuthally positioned
      *   - Drivetrain nodes: Created at intermediate shaft positions
      *   - All rotor components: Tilted by shaft angle and translated to final hub position
@@ -389,12 +392,11 @@ private:
             );
 
             //----------------------------------------------------
-            // Blade alignment and pitch transformation
+            // Blade alignment and transformation
             //----------------------------------------------------
 
             // Loop through node IDs and rotate them to align with global Z-axis,
-            // apply pitch rotation, then translate to hub radius so blade root
-            // is at the hub radius
+            // then translate to hub radius so blade root is at the hub radius
             for (const auto& node_id : current_blade_node_ids) {
                 model.GetNode(node_id)
                     .RotateAboutPoint(q_x_to_z, origin)             // Rotate to align with Z-axis
@@ -421,7 +423,7 @@ private:
             const auto q_azimuth =
                 RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
 
-            // Rotate blade nodes (including apex node) to cone angle and then to azimuth angle
+            // Rotate blade nodes (including apex node) -> cone angle -> azimuth angle
             for (const auto& node_id : current_blade_node_ids) {
                 model.GetNode(node_id)
                     .RotateAboutPoint(q_cone, origin)      // Rotate to cone angle (about y-axis)
@@ -677,6 +679,26 @@ private:
         // SetInitialAccelerations(input, model);
     }
 
+    /**
+     * @brief Sets initial displacements for blade pitch, nacelle yaw, and tower base positioning
+     *
+     * @details This method applies initial displacements to the turbine components after
+     * the assembly to reference configuration is complete. These displacements represent the
+     * initial state of the turbine at simulation start.
+     *
+     * --------------------------------------------------------------------------
+     * Initial displacement sequence
+     * --------------------------------------------------------------------------
+     *   - Blade pitch: Rotated about pitch axes from reference (zero pitch) -> initial angle
+     *   - Nacelle yaw: Rotated about tower top from reference orientation -> initial yaw
+     *   - Tower base: Translated and rotated from default position -> final location
+     *
+     * All rotations are applied as displacements rather than reference position changes,
+     * ensuring proper initial conditions for the simulation.
+     *
+     * @param input Turbine configuration containing initial displacement parameters
+     * @param model Structural model containing the turbine nodes to be displaced
+     */
     void SetInitialDisplacements(const TurbineInput& input, Model& model) {
         //--------------------------------------------------------------------------
         // Apply initial blade pitch
