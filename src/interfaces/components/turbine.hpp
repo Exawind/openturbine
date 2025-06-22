@@ -276,152 +276,6 @@ private:
     }
 
     /**
-     * @brief Creates all intermediate nodes (drivetrain and blade apex nodes) at their initial
-     * positions and populates node ID collections
-     *
-     * @details Creates nodes at their reference positions before any transformations are applied:
-     *  - Hub node: At origin with hub CM offset
-     *  - Azimuth node: At shaft length from origin
-     *  - Shaft base node: At shaft length from origin
-     *  - Yaw bearing node: At tower top position
-     *  - Blade apex nodes: At origin (one per blade)
-     *
-     * @param input Turbine configuration containing geometric parameters
-     * @param model Structural model to add nodes to
-     */
-    void CreateIntermediateNodes(const TurbineInput& input, Model& model) {
-        // Calculate shaft length from tower top to hub and overhang (adjusted for shaft tilt)
-        const auto shaft_length = input.tower_axis_to_rotor_apex / cos(input.shaft_tilt_angle);
-
-        // Get tower top node for yaw bearing positioning
-        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
-
-        //--------------------------------------------------------------------------
-        // Create drivetrain nodes
-        //--------------------------------------------------------------------------
-
-        // Create hub node at origin with hub CM offset
-        this->hub_node = NodeData(
-            model.AddNode().SetPosition({-input.rotor_apex_to_hub, 0., 0., 1., 0., 0., 0.}).Build()
-        );
-
-        // Create azimuth node at shaft length from origin
-        this->azimuth_node =
-            NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
-
-        // Create shaft base node at shaft length from origin
-        this->shaft_base_node =
-            NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
-
-        // Create yaw bearing node at tower top position
-        this->yaw_bearing_node = NodeData(
-            model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
-        );
-
-        //--------------------------------------------------------------------------
-        // Create blade apex nodes
-        //--------------------------------------------------------------------------
-
-        this->apex_nodes.reserve(this->blades.size());
-
-        // Create one apex node per blade at origin
-        for (auto i = 0U; i < this->blades.size(); ++i) {
-            const auto apex_node_id =
-                model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
-            this->apex_nodes.emplace_back(apex_node_id);
-        }
-
-        //--------------------------------------------------------------------------
-        // Populate node ID collections
-        //--------------------------------------------------------------------------
-
-        //----------------------------------------------------
-        // Tower nodes
-        //----------------------------------------------------
-
-        // Add tower nodes to tower_node_ids vector
-        this->tower_node_ids.reserve(this->tower.nodes.size());
-        std::transform(
-            this->tower.nodes.begin(), this->tower.nodes.end(),
-            std::back_inserter(this->tower_node_ids),
-            [](const auto& node) {
-                return node.id;
-            }
-        );
-
-        //----------------------------------------------------
-        // Drivetrain nodes
-        //----------------------------------------------------
-
-        // Add drivetrain nodes (yaw bearing, shaft base, azimuth, hub) to drivetrain_node_ids vector
-        this->drivetrain_node_ids.reserve(4);
-        this->drivetrain_node_ids = {
-            this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id,
-            this->hub_node.id
-        };
-
-        //----------------------------------------------------
-        // Blade nodes
-        //----------------------------------------------------
-
-        // Populate blade_node_ids with all blade nodes and apex nodes
-        this->blade_node_ids.reserve(
-            this->blades.size() * (this->blades[0].nodes.size() + 1)  // +1 for apex node
-        );
-        for (auto i = 0U; i < this->blades.size(); ++i) {
-            // Add blade structural nodes
-            std::transform(
-                this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
-                std::back_inserter(this->blade_node_ids),
-                [](const NodeData& node) {
-                    return node.id;
-                }
-            );
-            // Add apex node for this blade
-            this->blade_node_ids.push_back(this->apex_nodes[i].id);
-        }
-
-        //--------------------------------------------------------------------------
-        // Composite node sets -- rotor, nacelle, and turbine
-        //--------------------------------------------------------------------------
-
-        // Add rotor nodes (hub, azimuth, shaft base, and all blade nodes) to rotor_node_ids vector
-        this->rotor_node_ids.reserve(this->blade_node_ids.size() + 3);
-        this->rotor_node_ids.insert(
-            this->rotor_node_ids.end(),
-            {this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id}
-        );
-        this->rotor_node_ids.insert(
-            this->rotor_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
-        );
-
-        // Add nacelle nodes (drivetrain nodes + blade nodes) to nacelle_node_ids vector
-        this->nacelle_node_ids.reserve(
-            this->drivetrain_node_ids.size() + this->blade_node_ids.size()
-        );
-        this->nacelle_node_ids.insert(
-            this->nacelle_node_ids.end(), this->drivetrain_node_ids.begin(),
-            this->drivetrain_node_ids.end()
-        );
-        this->nacelle_node_ids.insert(
-            this->nacelle_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
-        );
-
-        // Collect all turbine node IDs (tower + nacelle nodes)
-        this->all_turbine_node_ids.reserve(
-            this->tower_node_ids.size() + this->nacelle_node_ids.size()
-        );
-        this->all_turbine_node_ids.insert(
-            this->all_turbine_node_ids.end(), this->tower_node_ids.begin(),
-            this->tower_node_ids.end()
-        );
-        this->all_turbine_node_ids.insert(
-            this->all_turbine_node_ids.end(), this->nacelle_node_ids.begin(),
-            this->nacelle_node_ids.end()
-        );
-    }
-
-    /**
      * @brief Position all turbine nodes in the global coordinate system based on the
      * turbine input configuration
      *
@@ -540,6 +394,160 @@ private:
                 .RotateAboutPoint(q_shaft_tilt, origin)  // Rotate about shaft tilt
                 .Translate(apex_position);               // Translate to apex position
         }
+    }
+
+    /**
+     * @brief Creates all intermediate nodes (drivetrain and blade apex nodes) at their initial
+     * positions and populates node ID collections
+     *
+     * @details Creates nodes at their reference positions before any transformations are applied:
+     *  - Hub node: At origin with hub CM offset
+     *  - Azimuth node: At shaft length from origin
+     *  - Shaft base node: At shaft length from origin
+     *  - Yaw bearing node: At tower top position
+     *  - Blade apex nodes: At origin (one per blade)
+     *
+     * @param input Turbine configuration containing geometric parameters
+     * @param model Structural model to add nodes to
+     */
+    void CreateIntermediateNodes(const TurbineInput& input, Model& model) {
+        // Calculate shaft length from tower top to hub and overhang (adjusted for shaft tilt)
+        const auto shaft_length = input.tower_axis_to_rotor_apex / cos(input.shaft_tilt_angle);
+
+        // Get tower top node for yaw bearing positioning
+        const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
+
+        //--------------------------------------------------------------------------
+        // Create drivetrain nodes
+        //--------------------------------------------------------------------------
+
+        // Create hub node at origin with hub CM offset
+        this->hub_node = NodeData(
+            model.AddNode().SetPosition({-input.rotor_apex_to_hub, 0., 0., 1., 0., 0., 0.}).Build()
+        );
+
+        // Create azimuth node at shaft length from origin
+        this->azimuth_node =
+            NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
+
+        // Create shaft base node at shaft length from origin
+        this->shaft_base_node =
+            NodeData(model.AddNode().SetPosition({shaft_length, 0., 0., 1., 0., 0., 0.}).Build());
+
+        // Create yaw bearing node at tower top position
+        this->yaw_bearing_node = NodeData(
+            model.AddNode().SetPosition(tower_top_node.x0).SetOrientation({1., 0., 0., 0.}).Build()
+        );
+
+        //--------------------------------------------------------------------------
+        // Create blade apex nodes
+        //--------------------------------------------------------------------------
+
+        this->apex_nodes.reserve(this->blades.size());
+
+        // Create one apex node per blade at origin
+        for (auto i = 0U; i < this->blades.size(); ++i) {
+            const auto apex_node_id =
+                model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
+            this->apex_nodes.emplace_back(apex_node_id);
+        }
+
+        //--------------------------------------------------------------------------
+        // Populate node ID collections
+        //--------------------------------------------------------------------------
+
+        //----------------------------------------------------
+        // Tower nodes
+        //----------------------------------------------------
+
+        // Add tower nodes to tower_node_ids vector
+        this->tower_node_ids.reserve(this->tower.nodes.size());
+        std::transform(
+            this->tower.nodes.begin(), this->tower.nodes.end(),
+            std::back_inserter(this->tower_node_ids),
+            [](const auto& node) {
+                return node.id;
+            }
+        );
+
+        //----------------------------------------------------
+        // Drivetrain nodes
+        //----------------------------------------------------
+
+        // Add drivetrain nodes (yaw bearing, shaft base, azimuth, hub) to drivetrain_node_ids vector
+        this->drivetrain_node_ids.reserve(4);
+        this->drivetrain_node_ids = {
+            this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id,
+            this->hub_node.id
+        };
+
+        //----------------------------------------------------
+        // Blade nodes
+        //----------------------------------------------------
+
+        // Populate blade_node_ids with all blade nodes and apex nodes
+        this->blade_node_ids.reserve(
+            this->blades.size() * (this->blades[0].nodes.size() + 1)  // +1 for apex node
+        );
+        for (auto i = 0U; i < this->blades.size(); ++i) {
+            // Add blade structural nodes
+            std::transform(
+                this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+                std::back_inserter(this->blade_node_ids),
+                [](const NodeData& node) {
+                    return node.id;
+                }
+            );
+            // Add apex node for this blade
+            this->blade_node_ids.push_back(this->apex_nodes[i].id);
+        }
+
+        //----------------------------------------------------
+        // Rotor nodes
+        //----------------------------------------------------
+
+        // Add rotor nodes (hub, azimuth, shaft base, and all blade nodes) to rotor_node_ids vector
+        this->rotor_node_ids.reserve(this->blade_node_ids.size() + 3);
+        this->rotor_node_ids.insert(
+            this->rotor_node_ids.end(),
+            {this->hub_node.id, this->azimuth_node.id, this->shaft_base_node.id}
+        );
+        this->rotor_node_ids.insert(
+            this->rotor_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
+        );
+
+        //----------------------------------------------------
+        // Nacelle nodes
+        //----------------------------------------------------
+
+        // Add nacelle nodes (drivetrain nodes + blade nodes) to nacelle_node_ids vector
+        this->nacelle_node_ids.reserve(
+            this->drivetrain_node_ids.size() + this->blade_node_ids.size()
+        );
+        this->nacelle_node_ids.insert(
+            this->nacelle_node_ids.end(), this->drivetrain_node_ids.begin(),
+            this->drivetrain_node_ids.end()
+        );
+        this->nacelle_node_ids.insert(
+            this->nacelle_node_ids.end(), this->blade_node_ids.begin(), this->blade_node_ids.end()
+        );
+
+        //----------------------------------------------------
+        // All turbine nodes
+        //----------------------------------------------------
+
+        // Collect all turbine node IDs (tower + nacelle nodes)
+        this->all_turbine_node_ids.reserve(
+            this->tower_node_ids.size() + this->nacelle_node_ids.size()
+        );
+        this->all_turbine_node_ids.insert(
+            this->all_turbine_node_ids.end(), this->tower_node_ids.begin(),
+            this->tower_node_ids.end()
+        );
+        this->all_turbine_node_ids.insert(
+            this->all_turbine_node_ids.end(), this->nacelle_node_ids.begin(),
+            this->nacelle_node_ids.end()
+        );
     }
 
     /**
