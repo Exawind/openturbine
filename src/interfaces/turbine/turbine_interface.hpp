@@ -63,14 +63,18 @@ public:
                 solution_input.output_file_path + "/mesh_connectivity.yaml"
             );
 
-            // Initialize outputs
+            // Initialize outputs with both node state and time-series files
             this->outputs = std::make_unique<Outputs>(
                 solution_input.output_file_path + "/turbine_interface.nc",
+                solution_input.output_file_path + "/turbine_time_series.nc",
                 this->state.num_system_nodes
             );
 
             // Write initial state
             this->outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
+
+            // Write initial time-series data (test values)
+            this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, 0., 1.);
         }
     }
 
@@ -107,7 +111,8 @@ public:
 
         // Write outputs and increment timestep counter
         if (this->outputs) {
-            outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
+            this->outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
+            this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, 0., 1.);
         }
 
         return true;

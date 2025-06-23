@@ -6,6 +6,7 @@
 
 #include "interfaces/host_state.hpp"
 #include "utilities/netcdf/node_state_writer.hpp"
+#include "utilities/netcdf/time_series_writer.hpp"
 
 namespace openturbine::interfaces {
 
@@ -34,8 +35,30 @@ public:
         this->w_data_.resize(num_nodes_);
     }
 
+    /// @brief Constructor taking an output file, time-series file, and location
+    Outputs(
+        const std::string& output_file, const std::string& time_series_file, size_t num_nodes,
+        OutputLocation location = OutputLocation::kNodes
+    )
+        : output_writer_(std::make_unique<util::NodeStateWriter>(output_file, true, num_nodes)),
+          time_series_writer_(std::make_unique<util::TimeSeriesWriter>(time_series_file, true)),
+          num_nodes_(num_nodes),
+          location_(location) {
+        this->x_data_.resize(num_nodes_);
+        this->y_data_.resize(num_nodes_);
+        this->z_data_.resize(num_nodes_);
+        this->i_data_.resize(num_nodes_);
+        this->j_data_.resize(num_nodes_);
+        this->k_data_.resize(num_nodes_);
+        this->w_data_.resize(num_nodes_);
+    }
+
     [[nodiscard]] std::unique_ptr<util::NodeStateWriter>& GetOutputWriter() {
         return this->output_writer_;
+    }
+
+    [[nodiscard]] std::unique_ptr<util::TimeSeriesWriter>& GetTimeSeriesWriter() {
+        return this->time_series_writer_;
     }
 
     [[nodiscard]] OutputLocation GetLocation() const { return this->location_; }
@@ -106,8 +129,21 @@ public:
         );
     }
 
+    /// @brief Write rotor time-series data at specified timestep
+    void WriteRotorTimeSeriesAtTimestep(size_t timestep, double azimuth_angle, double rotor_speed) {
+        if (!this->time_series_writer_) {
+            return;
+        }
+
+        this->time_series_writer_->WriteValueAtTimestep(
+            "rotor_azimuth_angle", timestep, azimuth_angle
+        );
+        this->time_series_writer_->WriteValueAtTimestep("rotor_speed", timestep, rotor_speed);
+    }
+
 private:
-    std::unique_ptr<util::NodeStateWriter> output_writer_;  ///< Output writer
+    std::unique_ptr<util::NodeStateWriter> output_writer_;        ///< Output writer
+    std::unique_ptr<util::TimeSeriesWriter> time_series_writer_;  ///< Time series writer
     size_t num_nodes_;         ///< Number of nodes to be written in the output file
     OutputLocation location_;  ///< Output writing location in element
 
