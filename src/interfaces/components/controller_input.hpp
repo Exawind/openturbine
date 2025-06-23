@@ -21,19 +21,19 @@ struct ControllerInput {
 
     /**
      * @brief Constructor with all parameters
-     * @param shared_lib_path Path to the shared library containing the controller implementation
-     * @param function_name Name of the controller function to call (defaults to "DISCON")
-     * @param input_file_path Optional path to controller-specific configuration file
-     * @param simulation_name Optional identifier for the simulation run
+     * @param lib_path Path to the shared library containing the controller implementation
+     * @param func_name Name of the controller function to call (defaults to "DISCON")
+     * @param inp_file_path Optional path to controller-specific configuration file
+     * @param sim_name Optional identifier for the simulation run
      */
-    ControllerInput(
-        const std::string& shared_lib_path, const std::string& function_name = "DISCON",
-        const std::string& input_file_path = "", const std::string& simulation_name = ""
+    explicit ControllerInput(
+        std::string lib_path, std::string func_name = "DISCON", std::string inp_file_path = "",
+        std::string sim_name = ""
     )
-        : shared_lib_path(shared_lib_path),
-          function_name(function_name),
-          input_file_path(input_file_path),
-          simulation_name(simulation_name) {}
+        : shared_lib_path(std::move(lib_path)),
+          function_name(std::move(func_name)),
+          input_file_path(std::move(inp_file_path)),
+          simulation_name(std::move(sim_name)) {}
 
     /// @brief Check if controller is enabled (i.e. has library path)
     [[nodiscard]] bool IsEnabled() const { return !shared_lib_path.empty(); }

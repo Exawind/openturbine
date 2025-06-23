@@ -18,7 +18,8 @@ public:
      * @param file_path Path to the output NetCDF file
      * @param create Whether to create a new file or open an existing one
      */
-    TimeSeriesWriter(const std::string& file_path, bool create = true) : file_(file_path, create) {
+    explicit TimeSeriesWriter(const std::string& file_path, bool create = true)
+        : file_(file_path, create) {
         // Check if the "time" dimension already exists in the file
         try {
             this->time_dim_ = file_.GetDimensionId("time");

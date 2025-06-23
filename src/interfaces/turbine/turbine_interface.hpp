@@ -62,8 +62,8 @@ public:
                 InitializeController(turbine_input, solution_input);
             } catch (const std::runtime_error& e) {
                 std::cerr << "Warning: Failed to load controller library '"
-                          << controller_input.shared_lib_path << "': " << e.what() << std::endl;
-                std::cerr << "Continuing without controller." << std::endl;
+                          << controller_input.shared_lib_path << "': " << e.what() << "\n";
+                std::cerr << "Continuing without controller." << "\n";
             }
         }
 
@@ -287,7 +287,7 @@ private:
     void UpdateControllerInputs() {
         // Update time and azimuth
         // TODO How to get simulation time here?
-        controller->io.time = this->state.time_step;
+        controller->io.time = static_cast<double>(this->state.time_step);
         controller->io.azimuth_angle = CalculateAzimuthAngle();
 
         // Update rotor and generator speeds
