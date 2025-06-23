@@ -855,7 +855,7 @@ private:
                     tower_base_orientation, original_tower_base_position
                 );
                 // then translate to new tower base position
-                model.GetNode(node_id).Translate(tower_base_displacement);
+                model.GetNode(node_id).TranslateDisplacement(tower_base_displacement);
             }
         }
     }

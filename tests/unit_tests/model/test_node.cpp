@@ -192,7 +192,7 @@ TEST(NodeTest, TranslateDisplacement) {
     ASSERT_EQ(node_0.u[2], u_pos[2] + displacement_1[2] + displacement_2[2]);  // 3.
 }
 
-/* TEST(NodeTest, RotateDisplacementAboutPoint) {
+TEST(NodeTest, RotateDisplacementAboutPoint) {
     Model model;
 
     // Create node with initial displacement and unit orientation
@@ -235,7 +235,7 @@ TEST(NodeTest, TranslateDisplacement) {
     ASSERT_NEAR(node_0.u[4], 0., 1e-12);
     ASSERT_NEAR(node_0.u[5], 0., 1e-12);
     ASSERT_NEAR(node_0.u[6], 0.382683, 1e-6);
-} */
+}
 
 TEST(NodeTest, SetVelocityAboutPoint) {
     Model model;
