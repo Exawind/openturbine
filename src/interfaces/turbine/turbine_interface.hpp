@@ -111,6 +111,11 @@ public:
      *       If the solver does not converge, the motion is not updated.
      */
     [[nodiscard]] bool Step() {
+        // Apply controller if available
+        if (controller) {
+            ApplyController();
+        }
+
         // Update the host state with current node loads
         this->turbine.SetLoads(this->host_state);
         Kokkos::deep_copy(this->state.f, this->host_state.f);
@@ -260,6 +265,47 @@ private:
 
         // Make first call to controller to initialize
         controller->CallController();
+    }
+
+    void ApplyController() {
+        if (!controller) {
+            return;
+        }
+
+        // Update controller inputs from current system state
+        UpdateControllerInputs();
+
+        // Call the controller
+        controller->CallController();
+
+        // Apply controller outputs to the turbine?
+    }
+
+    /**
+     * @brief Update controller inputs from current system state
+     */
+    void UpdateControllerInputs() {
+        // Update time and azimuth
+        // TODO How to get simulation time here?
+        controller->io.time = this->state.time_step;
+        controller->io.azimuth_angle = CalculateAzimuthAngle();
+
+        // Update rotor and generator speeds
+        const double rotor_speed = CalculateRotorSpeed();
+        controller->io.rotor_speed_actual = rotor_speed;
+        controller->io.generator_speed_actual =
+            rotor_speed * this->turbine.GetTurbineInput().gear_box_ratio;
+
+        // Update generator power and torque
+        const double generator_speed = controller->io.generator_speed_actual;
+        const double generator_torque = controller->io.generator_torque_actual;
+        controller->io.generator_power_actual = generator_speed * generator_torque;
+
+        // Update wind speed (assuming it's constant for now)
+        controller->io.horizontal_wind_speed = this->turbine.GetTurbineInput().hub_wind_speed;
+
+        // Set status for subsequent calls
+        controller->io.status = 1;
     }
 };
 

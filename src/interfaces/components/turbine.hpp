@@ -213,6 +213,12 @@ public:
         this->tower.SetLoads(host_state);
     }
 
+    /**
+     * @brief Get the turbine input configuration
+     * @return Turbine input configuration
+     */
+    [[nodiscard]] const TurbineInput& GetTurbineInput() const { return this->turbine_input; }
+
 private:
     //--------------------------------------------------------------------------
     // Node ID collections of turbine components
@@ -227,6 +233,12 @@ private:
     std::vector<size_t> nacelle_node_ids;     ///< drivetrain_node_ids + blade_node_ids
     std::vector<size_t>
         all_turbine_node_ids;  ///< tower_node_ids + drivetrain_node_ids + blade_node_ids
+
+    //--------------------------------------------------------------------------
+    // Turbine inputs
+    //--------------------------------------------------------------------------
+
+    TurbineInput turbine_input;  ///< Turbine input configuration
 
     /**
      * @brief Create blades from input configuration
