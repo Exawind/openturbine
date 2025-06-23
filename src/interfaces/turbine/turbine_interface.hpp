@@ -58,8 +58,8 @@ public:
                     controller_input.input_file_path, controller_input.simulation_name
                 );
 
-                // Initialize controller with turbine parameters
-                // InitializeController();
+                // Initialize controller with turbine and solution parameters
+                InitializeController(turbine_input, solution_input);
             } catch (const std::runtime_error& e) {
                 std::cerr << "Warning: Failed to load controller library '"
                           << controller_input.shared_lib_path << "': " << e.what() << std::endl;
@@ -219,6 +219,47 @@ private:
     [[nodiscard]] double CalculateRotorSpeed() const {
         const auto azimuth_constraint_id = this->turbine.shaft_base_to_azimuth.id;
         return this->constraints.host_output(azimuth_constraint_id, 1);
+    }
+
+    /**
+     * @brief Initialize controller with turbine parameters and connect to constraints
+     * @param turbine_input Configuration parameters for turbine geometry and initial conditions
+     */
+    void InitializeController(
+        const components::TurbineInput& turbine_input,
+        const components::SolutionInput& solution_input
+    ) {
+        if (!controller) {
+            return;
+        }
+
+        // Set controller constant parameters
+        controller->io.dt = solution_input.time_step;           // Time step size (seconds)
+        controller->io.pitch_actuator_type_req = 0;             // Pitch position actuator
+        controller->io.pitch_control_type = 0;                  // Collective pitch control
+        controller->io.n_blades = turbine_input.blades.size();  // Number of blades
+
+        // Set controller initial values
+        controller->io.time = 0.;                                    // Current time (seconds)
+        controller->io.azimuth_angle = turbine_input.azimuth_angle;  // Initial azimuth
+        controller->io.pitch_blade1_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
+        controller->io.pitch_blade2_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
+        controller->io.pitch_blade3_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
+        controller->io.generator_speed_actual =
+            turbine_input.rotor_speed * turbine_input.gear_box_ratio;  // Generator speed (rad/s)
+        controller->io.generator_torque_actual =
+            turbine_input.generator_power /
+            (turbine_input.rotor_speed * turbine_input.gear_box_ratio);  // Generator torque
+        controller->io.generator_power_actual =
+            turbine_input.generator_power;                                    // Generator power (W)
+        controller->io.rotor_speed_actual = turbine_input.rotor_speed;        // Rotor speed (rad/s)
+        controller->io.horizontal_wind_speed = turbine_input.hub_wind_speed;  // Hub wind speed (m/s)
+
+        // Signal first call to controller
+        controller->io.status = 0;
+
+        // Make first call to controller to initialize
+        controller->CallController();
     }
 };
 

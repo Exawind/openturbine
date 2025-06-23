@@ -121,6 +121,28 @@ struct TurbineInput {
      * @details Rotational velocity about the shaft axis
      */
     double rotor_speed{0.};
+
+    //--------------------------------------------------------------------------
+    // Controller inputs
+    //--------------------------------------------------------------------------
+
+    /**
+     * @brief Gearbox ratio of the turbine (-)
+     * @details Ratio between generator speed and rotor speed
+     */
+    double gear_box_ratio{1.};
+
+    /**
+     * @brief Initial generator power (W)
+     * @details Power output of the generator
+     */
+    double generator_power{0.};
+
+    /**
+     * @brief Hub height wind speed (m/s)
+     * @details Wind speed at the hub height
+     */
+    double hub_wind_speed{0.};
 };
 
 }  // namespace openturbine::interfaces::components
