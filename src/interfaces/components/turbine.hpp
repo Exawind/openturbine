@@ -21,7 +21,7 @@ namespace openturbine::interfaces::components {
  * --------------------------------------------------------------------------
  * Node structure
  * --------------------------------------------------------------------------
- * The turbine assembly consists of multiple inter-connected nodes that
+ * The turbine assembly consists of multiple interconnected nodes that
  * represent different physical components and their kinematic relationships.
  *
  * Tower Nodes

@@ -74,7 +74,9 @@ public:
             this->outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
 
             // Write initial time-series data (test values)
-            this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, 0., 1.);
+            this->outputs->WriteRotorTimeSeriesAtTimestep(
+                this->state.time_step, turbine_input.azimuth_angle, turbine_input.rotor_speed
+            );
         }
     }
 
@@ -111,8 +113,11 @@ public:
 
         // Write outputs and increment timestep counter
         if (this->outputs) {
+            // Write node state outputs
             this->outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
-            this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, 0., 1.);
+
+            // Calculate rotor azimuth and speed -> write rotor time-series data
+            this->WriteRotorTimeSeriesData();
         }
 
         return true;
@@ -146,6 +151,35 @@ private:
     State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
     HostState<DeviceType> host_state;  ///< Host local copy of node state data
     std::unique_ptr<Outputs> outputs;  ///< handle to Output for writing to NetCDF
+
+    /**
+     * @brief Write rotor time-series data based on constraint outputs
+     *
+     * This method extracts rotor azimuth angle and speed from the constraint system
+     * and writes them to the time-series output file. Data is read from the shaft
+     * base to azimuth constraint, which contains:
+     * - Index 0: Azimuth angle (radians)
+     * - Index 1: Rotor speed (rad/s)
+     */
+    void WriteRotorTimeSeriesData() {
+        if (!this->outputs) {
+            return;
+        }
+
+        // Calculate azimuth angle from constraint output (radians)
+        const auto azimuth_constraint_id = this->turbine.shaft_base_to_azimuth.id;
+        double azimuth{this->constraints.host_output(azimuth_constraint_id, 0)};
+        // Normalize azimuth angle to range [0, 360] degrees
+        if (azimuth < 0) {
+            azimuth += 2. * M_PI;
+        }
+
+        // Get rotor speed from constraint output (rad/s)
+        const double rotor_speed{this->constraints.host_output(azimuth_constraint_id, 1)};
+
+        // Write the calculated values to time-series output
+        this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, azimuth, rotor_speed);
+    }
 };
 
 }  // namespace openturbine::interfaces
