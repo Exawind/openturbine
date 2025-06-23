@@ -2,6 +2,7 @@
 
 #include <filesystem>
 
+#include "interfaces/components/controller_input.hpp"
 #include "interfaces/components/solution_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/components/turbine_input.hpp"
@@ -11,6 +12,7 @@
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
+#include "utilities/controllers/turbine_controller.hpp"
 
 namespace openturbine::interfaces {
 
@@ -32,7 +34,8 @@ public:
      */
     explicit TurbineInterface(
         const components::SolutionInput& solution_input,
-        const components::TurbineInput& turbine_input
+        const components::TurbineInput& turbine_input,
+        const components::ControllerInput& controller_input = {}
     )
         : model(Model(solution_input.gravity)),
           turbine(turbine_input, model),
@@ -47,6 +50,23 @@ public:
           solver(CreateSolver(state, elements, constraints)),
           state_save(CloneState(state)),
           host_state(state) {
+        // Initialize controller if library path is provided
+        if (controller_input.IsEnabled()) {
+            try {
+                controller = std::make_unique<util::TurbineController>(
+                    controller_input.shared_lib_path, controller_input.function_name,
+                    controller_input.input_file_path, controller_input.simulation_name
+                );
+
+                // Initialize controller with turbine parameters
+                // InitializeController();
+            } catch (const std::runtime_error& e) {
+                std::cerr << "Warning: Failed to load controller library '"
+                          << controller_input.shared_lib_path << "': " << e.what() << std::endl;
+                std::cerr << "Continuing without controller." << std::endl;
+            }
+        }
+
         // Update the host state with current node motion
         this->host_state.CopyFromState(this->state);
 
@@ -149,8 +169,9 @@ private:
     StepParameters parameters;     ///< OpenTurbine class containing solution parameters
     Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
     State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;  ///< Host local copy of node state data
-    std::unique_ptr<Outputs> outputs;  ///< handle to Output for writing to NetCDF
+    HostState<DeviceType> host_state;                     ///< Host local copy of node state data
+    std::unique_ptr<Outputs> outputs;                     ///< handle to Output for writing to NetCDF
+    std::unique_ptr<util::TurbineController> controller;  ///< DISCON-style controller
 
     /**
      * @brief Write rotor time-series data based on constraint outputs
