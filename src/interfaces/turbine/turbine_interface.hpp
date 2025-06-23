@@ -166,19 +166,38 @@ private:
             return;
         }
 
-        // Calculate azimuth angle from constraint output (radians)
+        // Write the calculated values to time-series output
+        this->outputs->WriteRotorTimeSeriesAtTimestep(
+            this->state.time_step,
+            this->CalculateAzimuthAngle(),  // azimuth angle (radians)
+            this->CalculateRotorSpeed()     // rotor speed (rad/s)
+        );
+    }
+
+    /**
+     * @brief Calculates and normalizes azimuth angle from constraint output
+     * @return Azimuth angle in radians, normalized to [0, 2π)
+     */
+    [[nodiscard]] double CalculateAzimuthAngle() const {
         const auto azimuth_constraint_id = this->turbine.shaft_base_to_azimuth.id;
-        double azimuth{this->constraints.host_output(azimuth_constraint_id, 0)};
-        // Normalize azimuth angle to range [0, 360] degrees
+        double azimuth = this->constraints.host_output(azimuth_constraint_id, 0);
+
+        // Normalize azimuth angle to range [0, 2π) radians
+        azimuth = std::fmod(azimuth, 2. * M_PI);
         if (azimuth < 0) {
             azimuth += 2. * M_PI;
         }
 
-        // Get rotor speed from constraint output (rad/s)
-        const double rotor_speed{this->constraints.host_output(azimuth_constraint_id, 1)};
+        return azimuth;
+    }
 
-        // Write the calculated values to time-series output
-        this->outputs->WriteRotorTimeSeriesAtTimestep(this->state.time_step, azimuth, rotor_speed);
+    /**
+     * @brief Calculates rotor speed from constraint output
+     * @return Rotor speed in rad/s
+     */
+    [[nodiscard]] double CalculateRotorSpeed() const {
+        const auto azimuth_constraint_id = this->turbine.shaft_base_to_azimuth.id;
+        return this->constraints.host_output(azimuth_constraint_id, 1);
     }
 };
 
