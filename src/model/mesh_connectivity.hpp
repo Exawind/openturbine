@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <unordered_map>
 #include <vector>
 
@@ -93,8 +93,8 @@ public:
     /**
      * @brief Export mesh connectivity inforation to a YAML file
      * @param file Stream to output YAML file
-     */ 
-     void ExportToYAML(std::ostream& file) const {
+     */
+    void ExportToYAML(std::ostream& file) const {
         YAML::Node root;
 
         ExportElementTypeToYAML(root, "beams", beams_);
@@ -103,14 +103,14 @@ public:
         ExportElementTypeToYAML(root, "constraints", constraints_);
 
         file << root;
-     }
+    }
 
     /**
      * @brief Export mesh connectivity information to a YAML file
      * @param filename Path to the output YAML file
      */
     void ExportToYAML(const std::string& filename) const {
-std::cout << "Exporting " << std::endl;
+        std::cout << "Exporting " << std::endl;
         std::ofstream file(filename);
         ExportToYAML(file);
     }
