@@ -86,6 +86,7 @@ public:
      */
     [[nodiscard]] bool Step() {
         // Update the host state with current node loads
+        Kokkos::deep_copy(this->host_state.f, 0.);
         this->turbine.SetLoads(this->host_state);
         Kokkos::deep_copy(this->state.f, this->host_state.f);
 
