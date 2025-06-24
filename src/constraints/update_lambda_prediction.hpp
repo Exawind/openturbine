@@ -21,7 +21,9 @@ struct UpdateLambdaPrediction {
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto row = first_index; row < max_index; ++row) {
             if constexpr (force_atomic) {
-                Kokkos::atomic_add(&lambda(i_constraint, row - first_index), x(num_system_dofs + row, 0));
+                Kokkos::atomic_add(
+                    &lambda(i_constraint, row - first_index), x(num_system_dofs + row, 0)
+                );
             } else {
                 lambda(i_constraint, row - first_index) += x(num_system_dofs + row, 0);
             }

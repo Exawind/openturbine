@@ -48,7 +48,9 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
                     if constexpr (force_atomic) {
-                        Kokkos::atomic_add(&row.value(offset), base_dense(i_constraint, row_number, entry));
+                        Kokkos::atomic_add(
+                            &row.value(offset), base_dense(i_constraint, row_number, entry)
+                        );
                     } else {
                         row.value(offset) = base_dense(i_constraint, row_number, entry);
                     }
@@ -72,7 +74,9 @@ struct CopyConstraintsTransposeToSparseMatrix {
                 );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
                     if constexpr (force_atomic) {
-                        Kokkos::atomic_add(&row.value(offset), target_dense(i_constraint, row_number, entry));
+                        Kokkos::atomic_add(
+                            &row.value(offset), target_dense(i_constraint, row_number, entry)
+                        );
                     } else {
                         row.value(offset) = target_dense(i_constraint, row_number, entry);
                     }

@@ -19,7 +19,9 @@ struct CopyConstraintsResidualToVector {
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto i = 0U; i < num_rows; ++i) {
             if constexpr (force_atomic) {
-                Kokkos::atomic_add(&residual(first_row + i, 0), constraint_residual_terms(i_constraint, i));
+                Kokkos::atomic_add(
+                    &residual(first_row + i, 0), constraint_residual_terms(i_constraint, i)
+                );
             } else {
                 residual(first_row + i, 0) = constraint_residual_terms(i_constraint, i);
             }
