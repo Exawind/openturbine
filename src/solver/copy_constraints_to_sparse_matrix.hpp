@@ -29,6 +29,8 @@ struct CopyConstraintsToSparseMatrix {
         const auto end_row = row_range(i_constraint).second;
         const auto num_base_dofs = count_active_dofs(base_node_freedom_signature(i_constraint));
         const auto num_target_dofs = count_active_dofs(target_node_freedom_signature(i_constraint));
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
 
         Kokkos::parallel_for(Kokkos::TeamVectorRange(member, start_row, end_row), [&](size_t i) {
             const auto row_number = i - start_row;
@@ -42,7 +44,11 @@ struct CopyConstraintsToSparseMatrix {
                 &(row.colidx(0)), row.length, first_col, hint, is_sorted
             );
             for (auto entry = 0U; entry < num_base_dofs; ++entry, ++offset) {
-                row.value(offset) = base_dense(i_constraint, row_number, entry);
+                if constexpr (force_atomic) {
+                    Kokkos::atomic_add(&row.value(offset), base_dense(i_constraint, row_number, entry));
+                } else {
+                    row.value(offset) = base_dense(i_constraint, row_number, entry);
+                }
             }
 
             first_col = static_cast<typename CrsMatrixType::ordinal_type>(
@@ -52,7 +58,11 @@ struct CopyConstraintsToSparseMatrix {
                 &(row.colidx(0)), row.length, first_col, hint, is_sorted
             );
             for (auto entry = 0U; entry < num_target_dofs; ++entry, ++offset) {
-                row.value(offset) = target_dense(i_constraint, row_number, entry);
+                if constexpr (force_atomic) {
+                    Kokkos::atomic_add(&row.value(offset), target_dense(i_constraint, row_number, entry));
+                } else {
+                    row.value(offset) = target_dense(i_constraint, row_number, entry);
+                }
             }
         });
     }

@@ -12,8 +12,14 @@ struct ContributeMassesToVector {
 
     KOKKOS_FUNCTION
     void operator()(size_t i_elem) const {
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto j = 0U; j < element_freedom_table.extent(1); ++j) {
-            vector(element_freedom_table(i_elem, j), 0) += elements(i_elem, j);
+            if constexpr (force_atomic) {
+                Kokkos::atomic_add(&vector(element_freedom_table(i_elem, j), 0), elements(i_elem, j));
+            } else {
+                vector(element_freedom_table(i_elem, j), 0) += elements(i_elem, j);
+            }
         }
     }
 };

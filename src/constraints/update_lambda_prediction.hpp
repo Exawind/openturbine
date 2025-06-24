@@ -17,8 +17,14 @@ struct UpdateLambdaPrediction {
     void operator()(size_t i_constraint) const {
         const auto first_index = row_range(i_constraint).first;
         const auto max_index = row_range(i_constraint).second;
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto row = first_index; row < max_index; ++row) {
-            lambda(i_constraint, row - first_index) += x(num_system_dofs + row, 0);
+            if constexpr (force_atomic) {
+                Kokkos::atomic_add(&lambda(i_constraint, row - first_index), x(num_system_dofs + row, 0));
+            } else {
+                lambda(i_constraint, row - first_index) += x(num_system_dofs + row, 0);
+            }
         }
     }
 };
