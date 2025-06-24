@@ -149,8 +149,7 @@ TEST_F(MeshConnectivityTest, ImportFromYAML) {
     mesh_connectivity.ExportToYAML(yaml_stream);
 
     MeshConnectivity imported_mesh;
-    auto root = YAML::Load(yaml_stream.str());
-    imported_mesh.ImportFromYAML(root);
+    imported_mesh.ImportFromYAML(YAML::Load(yaml_stream.str()));
 
     // Beam elements
     ASSERT_EQ(imported_mesh.GetBeamElementConnectivity(1).size(), 5);

@@ -118,7 +118,7 @@ public:
      * @brief Import mesh connectivity information from a YAML file
      * @param root YAML node with the input YAML file loaded
      */
-    void ImportFromYAML(YAML::Node& root) {
+    void ImportFromYAML(const YAML::Node& root) {
         masses_.clear();
         springs_.clear();
         beams_.clear();
@@ -162,8 +162,7 @@ public:
      * @param filename Path to the input YAML file
      */
     void ImportFromYAML(const std::string& filename) {
-        YAML::Node root = YAML::LoadFile(filename);
-        ImportFromYAML(root);
+        ImportFromYAML(YAML::LoadFile(filename));
     }
 
 private:
