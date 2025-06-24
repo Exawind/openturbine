@@ -1,6 +1,6 @@
 #pragma once
+
 #include <fstream>
-#include <iostream>
 #include <unordered_map>
 #include <vector>
 
@@ -110,7 +110,6 @@ public:
      * @param filename Path to the output YAML file
      */
     void ExportToYAML(const std::string& filename) const {
-        std::cout << "Exporting " << std::endl;
         std::ofstream file(filename);
         ExportToYAML(file);
     }
