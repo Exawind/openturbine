@@ -161,9 +161,7 @@ public:
      * @brief Import mesh connectivity information from a YAML file
      * @param filename Path to the input YAML file
      */
-    void ImportFromYAML(const std::string& filename) {
-        ImportFromYAML(YAML::LoadFile(filename));
-    }
+    void ImportFromYAML(const std::string& filename) { ImportFromYAML(YAML::LoadFile(filename)); }
 
 private:
     std::unordered_map<size_t, std::vector<size_t>> beams_;
