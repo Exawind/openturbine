@@ -206,9 +206,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abd37332604a2a19f1c897e0a915de003" id="r_abd37332604a2a19f1c897e0a915de003"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html#abd37332604a2a19f1c897e0a915de003">GetConstraintConnectivity</a> (size_t constraint_id) const</td></tr>
 <tr class="memdesc:abd37332604a2a19f1c897e0a915de003"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes connected to a specific constraint.  <br /></td></tr>
 <tr class="separator:abd37332604a2a19f1c897e0a915de003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a7c04e466244f32274752ee75eab292" id="r_a3a7c04e466244f32274752ee75eab292"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html#a3a7c04e466244f32274752ee75eab292">ExportToYAML</a> (std::ostream &amp;file) const</td></tr>
+<tr class="memdesc:a3a7c04e466244f32274752ee75eab292"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity inforation to a YAML file.  <br /></td></tr>
+<tr class="separator:a3a7c04e466244f32274752ee75eab292"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48601f9bb760310e0d74ab0cadad7fbe" id="r_a48601f9bb760310e0d74ab0cadad7fbe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html#a48601f9bb760310e0d74ab0cadad7fbe">ExportToYAML</a> (const std::string &amp;filename) const</td></tr>
 <tr class="memdesc:a48601f9bb760310e0d74ab0cadad7fbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity information to a YAML file.  <br /></td></tr>
 <tr class="separator:a48601f9bb760310e0d74ab0cadad7fbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2b5db19e4206d010dbc08958a9c6604" id="r_ac2b5db19e4206d010dbc08958a9c6604"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html#ac2b5db19e4206d010dbc08958a9c6604">ImportFromYAML</a> (const YAML::Node &amp;root)</td></tr>
+<tr class="memdesc:ac2b5db19e4206d010dbc08958a9c6604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import mesh connectivity information from a YAML file.  <br /></td></tr>
+<tr class="separator:ac2b5db19e4206d010dbc08958a9c6604"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95290d8d5d594e2b6f38deaa86d24af7" id="r_a95290d8d5d594e2b6f38deaa86d24af7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1MeshConnectivity.html#a95290d8d5d594e2b6f38deaa86d24af7">ImportFromYAML</a> (const std::string &amp;filename)</td></tr>
 <tr class="memdesc:a95290d8d5d594e2b6f38deaa86d24af7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import mesh connectivity information from a YAML file.  <br /></td></tr>
 <tr class="separator:a95290d8d5d594e2b6f38deaa86d24af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -424,7 +430,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a48601f9bb760310e0d74ab0cadad7fbe" name="a48601f9bb760310e0d74ab0cadad7fbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48601f9bb760310e0d74ab0cadad7fbe">&#9670;&#160;</a></span>ExportToYAML()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a48601f9bb760310e0d74ab0cadad7fbe">&#9670;&#160;</a></span>ExportToYAML() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -451,6 +457,40 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>Path to the output YAML file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3a7c04e466244f32274752ee75eab292" name="a3a7c04e466244f32274752ee75eab292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a7c04e466244f32274752ee75eab292">&#9670;&#160;</a></span>ExportToYAML() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::MeshConnectivity::ExportToYAML </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Export mesh connectivity inforation to a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Stream to output YAML file </td></tr>
   </table>
   </dd>
 </dl>
@@ -598,7 +638,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a95290d8d5d594e2b6f38deaa86d24af7" name="a95290d8d5d594e2b6f38deaa86d24af7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95290d8d5d594e2b6f38deaa86d24af7">&#9670;&#160;</a></span>ImportFromYAML()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a95290d8d5d594e2b6f38deaa86d24af7">&#9670;&#160;</a></span>ImportFromYAML() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -625,6 +665,40 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>Path to the input YAML file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac2b5db19e4206d010dbc08958a9c6604" name="ac2b5db19e4206d010dbc08958a9c6604"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2b5db19e4206d010dbc08958a9c6604">&#9670;&#160;</a></span>ImportFromYAML() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::MeshConnectivity::ImportFromYAML </td>
+          <td>(</td>
+          <td class="paramtype">const YAML::Node &amp;&#160;</td>
+          <td class="paramname"><em>root</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Import mesh connectivity information from a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">root</td><td>YAML node with the input YAML file loaded </td></tr>
   </table>
   </dd>
 </dl>
