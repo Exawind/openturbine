@@ -28,19 +28,19 @@ struct Constraint {
      * @brief Constructs a constraint with specified parameters
      *
      * @param id Unique identifier for the constraint
-     * @param type Type of constraint
+     * @param c_type Type of constraint
      * @param ids Array containing {base_node_id, target_node_id}
      * @param v Geometric configuration/axis vector (default: {0, 0, 0})
      * @param init_disp Initial displacement for prescribed BCs (default: {0, 0, 0, 1, 0, 0, 0})
      * @param ctrl Pointer to control signal (default: nullptr for static constraints)
      */
     Constraint(
-        size_t id, ConstraintType type, const std::array<size_t, 2>& ids,
+        size_t id, ConstraintType c_type, const std::array<size_t, 2>& ids,
         const Array_3& v = {0., 0., 0.}, const Array_7& init_disp = {0., 0., 0., 1., 0., 0., 0.},
         double* ctrl = nullptr
     )
         : ID(id),
-          type(type),
+          type(c_type),
           node_ids(ids),
           axis_vector(v),
           initial_displacement(init_disp),
