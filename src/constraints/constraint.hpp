@@ -17,17 +17,34 @@ namespace openturbine {
  * signals.
  */
 struct Constraint {
-    size_t ID;                       //< Unique identifier for constraint
-    ConstraintType type;             //< Type of constraint
-    std::array<size_t, 2> node_ids;  //< Node IDs for: {base_node, target_node}
-    Array_3 vec = {0.};              //< Vector for initialization data
-    double* control = nullptr;       //< Pointer to control signal (if any)
+    size_t ID;                       ///< Unique identifier for constraint
+    ConstraintType type;             ///< Type of constraint
+    std::array<size_t, 2> node_ids;  ///< Node IDs for: {base_node, target_node}
+    Array_3 axis_vector;             ///< Vector for rotation/control axis
+    Array_7 initial_displacement;    ///< Initial displacement for prescribed BC
+    double* control;                 ///< Pointer to control signal (if any)
 
+    /**
+     * @brief Constructs a constraint with specified parameters
+     *
+     * @param id Unique identifier for the constraint
+     * @param type Type of constraint
+     * @param ids Array containing {base_node_id, target_node_id}
+     * @param v Geometric configuration/axis vector (default: {0, 0, 0})
+     * @param init_disp Initial displacement for prescribed BCs (default: {0, 0, 0, 1, 0, 0, 0})
+     * @param ctrl Pointer to control signal (default: nullptr for static constraints)
+     */
     Constraint(
-        size_t id, ConstraintType constraint_type, const std::array<size_t, 2>& ids,
-        const Array_3& v = {0., 0., 0.}, double* ctrl = nullptr
+        size_t id, ConstraintType type, const std::array<size_t, 2>& ids,
+        const Array_3& v = {0., 0., 0.}, const Array_7& init_disp = {0., 0., 0., 1., 0., 0., 0.},
+        double* ctrl = nullptr
     )
-        : ID(id), type(constraint_type), node_ids(ids), vec(v), control(ctrl) {}
+        : ID(id),
+          type(type),
+          node_ids(ids),
+          axis_vector(v),
+          initial_displacement(init_disp),
+          control(ctrl) {}
 };
 
 }  // namespace openturbine

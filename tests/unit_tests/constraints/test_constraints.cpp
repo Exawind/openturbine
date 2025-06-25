@@ -75,7 +75,8 @@ TEST(ConstraintsTest, UpdateViewsWithControlSignal) {
     auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
     double control_signal = 1.5;
     auto constraint = Constraint(
-        0, ConstraintType::kRotationControl, {0, 0}, Array_3{1., 0., 0.}, &control_signal
+        0, ConstraintType::kRotationControl, {0, 0}, Array_3{1., 0., 0.},
+        Array_7{0., 0., 0., 1., 0., 0., 0.}, &control_signal
     );
 
     using DeviceType =
