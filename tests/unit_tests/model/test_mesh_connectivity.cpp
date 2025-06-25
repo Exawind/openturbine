@@ -108,9 +108,9 @@ TEST_F(MeshConnectivityTest, ConstraintConnectivity) {
 }
 
 TEST_F(MeshConnectivityTest, ExportToYAML) {
-    mesh_connectivity.ExportToYAML("test_connectivity.yaml");
-
-    YAML::Node root = YAML::LoadFile("test_connectivity.yaml");
+    auto yaml_stream = std::ostringstream();
+    mesh_connectivity.ExportToYAML(yaml_stream);
+    YAML::Node root = YAML::Load(yaml_stream.str());
 
     // Mass elements
     ASSERT_TRUE(root["masses"]);
@@ -145,11 +145,11 @@ TEST_F(MeshConnectivityTest, ExportToYAML) {
 }
 
 TEST_F(MeshConnectivityTest, ImportFromYAML) {
-    mesh_connectivity.ExportToYAML("test_import.yaml");
-    ASSERT_TRUE(std::filesystem::exists("test_import.yaml"));
+    auto yaml_stream = std::ostringstream();
+    mesh_connectivity.ExportToYAML(yaml_stream);
 
     MeshConnectivity imported_mesh;
-    imported_mesh.ImportFromYAML("test_import.yaml");
+    imported_mesh.ImportFromYAML(YAML::Load(yaml_stream.str()));
 
     // Beam elements
     ASSERT_EQ(imported_mesh.GetBeamElementConnectivity(1).size(), 5);
@@ -187,10 +187,6 @@ TEST_F(MeshConnectivityTest, ImportFromYAML) {
     ASSERT_EQ(imported_mesh.GetConstraintConnectivity(3).size(), 2);
     EXPECT_EQ(imported_mesh.GetConstraintConnectivity(3)[0], 8);
     EXPECT_EQ(imported_mesh.GetConstraintConnectivity(3)[1], 9);
-
-    if (std::filesystem::exists("test_import.yaml")) {
-        std::filesystem::remove("test_import.yaml");
-    }
 }
 
 }  // namespace openturbine::tests

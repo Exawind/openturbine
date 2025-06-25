@@ -91,10 +91,10 @@ public:
     }
 
     /**
-     * @brief Export mesh connectivity information to a YAML file
-     * @param filename Path to the output YAML file
+     * @brief Export mesh connectivity inforation to a YAML file
+     * @param file Stream to output YAML file
      */
-    void ExportToYAML(const std::string& filename) const {
+    void ExportToYAML(std::ostream& file) const {
         YAML::Node root;
 
         ExportElementTypeToYAML(root, "beams", beams_);
@@ -102,17 +102,23 @@ public:
         ExportElementTypeToYAML(root, "springs", springs_);
         ExportElementTypeToYAML(root, "constraints", constraints_);
 
-        std::ofstream file(filename);
         file << root;
     }
 
     /**
-     * @brief Import mesh connectivity information from a YAML file
-     * @param filename Path to the input YAML file
+     * @brief Export mesh connectivity information to a YAML file
+     * @param filename Path to the output YAML file
      */
-    void ImportFromYAML(const std::string& filename) {
-        YAML::Node root = YAML::LoadFile(filename);
+    void ExportToYAML(const std::string& filename) const {
+        std::ofstream file(filename);
+        ExportToYAML(file);
+    }
 
+    /**
+     * @brief Import mesh connectivity information from a YAML file
+     * @param root YAML node with the input YAML file loaded
+     */
+    void ImportFromYAML(const YAML::Node& root) {
         masses_.clear();
         springs_.clear();
         beams_.clear();
@@ -150,6 +156,12 @@ public:
             }
         }
     }
+
+    /**
+     * @brief Import mesh connectivity information from a YAML file
+     * @param filename Path to the input YAML file
+     */
+    void ImportFromYAML(const std::string& filename) { ImportFromYAML(YAML::LoadFile(filename)); }
 
 private:
     std::unordered_map<size_t, std::vector<size_t>> beams_;
