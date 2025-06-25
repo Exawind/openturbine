@@ -727,8 +727,8 @@ private:
         // Tower base constraint
         //--------------------------------------------------------------------------
 
-        // Add fixed constraint at the tower base
-        this->tower_base = ConstraintData(model.AddFixedBC(this->tower.nodes.front().id));
+        // NOTE: We need to add this after we are done with setting up any initial displacements
+        // to the tower base
     }
 
     /**
@@ -829,17 +829,17 @@ private:
         //--------------------------------------------------------------------------
 
         const auto& tower_base_node = model.GetNode(this->tower.nodes.front().id);
-        const Array_3 original_tower_base_position{
+        const Array_3 ref_tower_base_position{
             tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]
         };
 
-        // Calculate translation from original tower base to input position
+        // Calculate translation displacement from reference tower base -> input position
         const Array_3 tower_base_displacement{
-            input.tower_base_position[0] - original_tower_base_position[0],
-            input.tower_base_position[1] - original_tower_base_position[1],
-            input.tower_base_position[2] - original_tower_base_position[2]
+            input.tower_base_position[0] - ref_tower_base_position[0],
+            input.tower_base_position[1] - ref_tower_base_position[1],
+            input.tower_base_position[2] - ref_tower_base_position[2]
         };
-        // Get tower base orientation
+        // Get tower base orientation at input position
         const Array_4 tower_base_orientation{
             input.tower_base_position[3], input.tower_base_position[4], input.tower_base_position[5],
             input.tower_base_position[6]
@@ -852,12 +852,20 @@ private:
             for (const auto& node_id : this->all_turbine_node_ids) {
                 // first rotate about original tower base position
                 model.GetNode(node_id).RotateDisplacementAboutPoint(
-                    tower_base_orientation, original_tower_base_position
+                    tower_base_orientation, ref_tower_base_position
                 );
                 // then translate to new tower base position
                 model.GetNode(node_id).TranslateDisplacement(tower_base_displacement);
             }
         }
+
+        //--------------------------------------------------------------------------
+        // Tower base constraint
+        //--------------------------------------------------------------------------
+
+        // Add prescribed BC constraint at the tower base with initial displacements
+        this->tower_base =
+            ConstraintData(model.AddPrescribedBC(tower_base_node.id, tower_base_node.u));
     }
 
     /**
@@ -871,12 +879,13 @@ private:
      * @param model Structural model
      */
     void SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
-        // Calculate shaft axis in global coordinates (after shaft tilt)
-        const Array_3 shaft_axis{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
-
-        // Get hub position as rotation center
-        const auto& hub = model.GetNode(this->hub_node.id);
-        const Array_3 rotation_center{hub.x0[0], hub.x0[1], hub.x0[2]};
+        // Calculate shaft axis in current configuration
+        const auto hub_position = model.GetNode(this->hub_node.id).DisplacedPosition();
+        const auto shaft_base_position = model.GetNode(this->shaft_base_node.id).DisplacedPosition();
+        const Array_3 shaft_axis = UnitVector(
+            {hub_position[0] - shaft_base_position[0], hub_position[1] - shaft_base_position[1],
+             hub_position[2] - shaft_base_position[2]}
+        );
 
         // Collect all rotor node IDs (hub, azimuth, blade nodes, and apex nodes)
         std::vector<size_t> rotor_velocity_node_ids{this->hub_node.id, this->azimuth_node.id};
@@ -905,9 +914,11 @@ private:
             input.rotor_speed * shaft_axis[2]
         };
 
-        // Apply rotational velocity to all rotor nodes
+        // Apply rotational velocity to all rotor nodes about hub node
         for (const auto& node_id : rotor_velocity_node_ids) {
-            model.GetNode(node_id).SetVelocityAboutPoint(rigid_body_velocity, rotation_center);
+            model.GetNode(node_id).SetVelocityAboutPoint(
+                rigid_body_velocity, {hub_position[0], hub_position[1], hub_position[2]}
+            );
         }
     }
 };
