@@ -25,6 +25,8 @@ struct CopyConstraintsTransposeToSparseMatrix {
     void operator()(member_type member) const {
         const auto i_constraint = member.league_rank();
         constexpr bool is_sorted = true;
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         const auto num_cols =
             static_cast<int>(row_range(i_constraint).second - row_range(i_constraint).first);
         const auto first_col = static_cast<typename CrsMatrixType::ordinal_type>(
@@ -45,7 +47,13 @@ struct CopyConstraintsTransposeToSparseMatrix {
                     &(row.colidx(0)), row.length, first_col, hint, is_sorted
                 );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
-                    row.value(offset) = base_dense(i_constraint, row_number, entry);
+                    if constexpr (force_atomic) {
+                        Kokkos::atomic_add(
+                            &row.value(offset), base_dense(i_constraint, row_number, entry)
+                        );
+                    } else {
+                        row.value(offset) = base_dense(i_constraint, row_number, entry);
+                    }
                 }
             }
         );
@@ -65,7 +73,13 @@ struct CopyConstraintsTransposeToSparseMatrix {
                     &(row.colidx(0)), row.length, first_col, hint, is_sorted
                 );
                 for (auto entry = 0; entry < num_cols; ++entry, ++offset) {
-                    row.value(offset) = target_dense(i_constraint, row_number, entry);
+                    if constexpr (force_atomic) {
+                        Kokkos::atomic_add(
+                            &row.value(offset), target_dense(i_constraint, row_number, entry)
+                        );
+                    } else {
+                        row.value(offset) = target_dense(i_constraint, row_number, entry);
+                    }
                 }
             }
         );

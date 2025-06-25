@@ -14,9 +14,18 @@ struct ContributeConstraintsSystemResidualToVector {
     KOKKOS_FUNCTION
     void operator()(size_t i_constraint) const {
         const auto num_dofs = target_active_dofs(i_constraint);
+        constexpr auto force_atomic =
+            !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
         for (auto i = 0U; i < num_dofs; ++i) {
-            residual(target_node_freedom_table(i_constraint, i), 0) +=
-                system_residual_terms(i_constraint, i);
+            if constexpr (force_atomic) {
+                Kokkos::atomic_add(
+                    &residual(target_node_freedom_table(i_constraint, i), 0),
+                    system_residual_terms(i_constraint, i)
+                );
+            } else {
+                residual(target_node_freedom_table(i_constraint, i), 0) +=
+                    system_residual_terms(i_constraint, i);
+            }
         }
     }
 };
