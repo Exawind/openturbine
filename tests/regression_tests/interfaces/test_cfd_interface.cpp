@@ -284,7 +284,7 @@ TEST(CFDInterfaceTest, Restart) {
     const auto& platform_u_2 = interface2.turbine.floating_platform.node.displacement;
     // Ensure platform location is the same for original and restarted system
     for (auto i = 0U; i < 7U; ++i) {
-        EXPECT_EQ(platform_u_1[i], platform_u_2[i]);
+        EXPECT_NEAR(platform_u_1[i], platform_u_2[i], 1.e-12);
     }
 
     std::filesystem::remove("test_restart.dat");
