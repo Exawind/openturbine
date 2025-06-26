@@ -334,4 +334,16 @@ inline Array_4 TangentTwistToQuaternion(const Array_3& tangent, const double twi
     return QuaternionCompose(q_twist, q_tan);
 }
 
+/**
+ * @brief Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0]
+ *
+ * @param q The quaternion to check
+ * @param tolerance The tolerance for the comparison (default: 1e-12)
+ * @return true if the quaternion is approximately the identity quaternion, false otherwise
+ */
+inline bool IsIdentityQuaternion(const Array_4& q, double tolerance = 1e-12) {
+    return std::abs(q[0] - 1.) <= tolerance && std::abs(q[1]) <= tolerance &&
+           std::abs(q[2]) <= tolerance && std::abs(q[3]) <= tolerance;
+}
+
 }  // namespace openturbine

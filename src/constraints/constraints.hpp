@@ -230,16 +230,12 @@ struct Constraints {
                 }
             }
 
-            // Initialize displacement to zero if prescribed BC
+            // Initialize displacement to provided displacement if prescribed BC
             if (c.type == ConstraintType::kPrescribedBC ||
                 c.type == ConstraintType::kPrescribedBC3DOFs) {
-                host_input(i, 0) = 0.;
-                host_input(i, 1) = 0.;
-                host_input(i, 2) = 0.;
-                host_input(i, 3) = 1.;
-                host_input(i, 4) = 0.;
-                host_input(i, 5) = 0.;
-                host_input(i, 6) = 0.;
+                for (size_t j = 0; j < 7; ++j) {
+                    host_input(i, j) = c.initial_displacement[j];
+                }
             }
         }
 
@@ -265,9 +261,9 @@ struct Constraints {
         // Set X0 to the prescribed displacement for fixed and prescribed BCs i.e. constraints
         // with 1 node
         if (GetNumberOfNodes(constraint.type) == 1) {
-            x0[0] = target_node.x0[0] - constraint.vec[0];
-            x0[1] = target_node.x0[1] - constraint.vec[1];
-            x0[2] = target_node.x0[2] - constraint.vec[2];
+            x0[0] = target_node.x0[0] - constraint.axis_vector[0];
+            x0[1] = target_node.x0[1] - constraint.axis_vector[1];
+            x0[2] = target_node.x0[2] - constraint.axis_vector[2];
             return x0;
         }
 
@@ -283,8 +279,9 @@ struct Constraints {
         Array_3x3 rotation_matrix{};
         if (constraint.type == ConstraintType::kRevoluteJoint) {
             constexpr Array_3 x = {1., 0., 0.};
-            const Array_3 x_hat =
-                Norm(constraint.vec) != 0. ? UnitVector(constraint.vec) : UnitVector(x0);
+            const Array_3 x_hat = Norm(constraint.axis_vector) != 0.
+                                      ? UnitVector(constraint.axis_vector)
+                                      : UnitVector(x0);
 
             // Create rotation matrix to rotate x to match vector
             const auto cross_product = CrossProduct(x, x_hat);
@@ -309,7 +306,7 @@ struct Constraints {
 
         // Set rotation_matrix to the unit vector of the constraint axis for rotation control
         if (constraint.type == ConstraintType::kRotationControl) {
-            const auto unit_vector = UnitVector(constraint.vec);
+            const auto unit_vector = UnitVector(constraint.axis_vector);
             rotation_matrix[0][0] = unit_vector[0];
             rotation_matrix[0][1] = unit_vector[1];
             rotation_matrix[0][2] = unit_vector[2];
@@ -317,9 +314,9 @@ struct Constraints {
         }
 
         // If not a revolute/hinge joint, set rotation_matrix to the input vector
-        rotation_matrix[0][0] = constraint.vec[0];
-        rotation_matrix[0][1] = constraint.vec[1];
-        rotation_matrix[0][2] = constraint.vec[2];
+        rotation_matrix[0][0] = constraint.axis_vector[0];
+        rotation_matrix[0][1] = constraint.axis_vector[1];
+        rotation_matrix[0][2] = constraint.axis_vector[2];
         return rotation_matrix;
     }
 
