@@ -317,10 +317,13 @@ public:
     }
 
     /// Adds a prescribed boundary condition constraint to the model and returns the ID
-    size_t AddPrescribedBC(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
+    size_t AddPrescribedBC(
+        const size_t node_id, const Array_7& initial_displacement = {0., 0., 0., 1., 0., 0., 0.}
+    ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id}, ref_position
+            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id},
+            std::array{0., 0., 0.}, initial_displacement
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -341,7 +344,10 @@ public:
         const std::array<size_t, 2>& node_ids, const Array_3& axis, double* torque
     ) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::kRevoluteJoint, node_ids, axis, torque);
+        this->constraints_.emplace_back(
+            id, ConstraintType::kRevoluteJoint, node_ids, axis,
+            std::array{0., 0., 0., 1., 0., 0., 0.}, torque
+        );
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -354,7 +360,8 @@ public:
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kRotationControl, node_ids, axis, control
+            id, ConstraintType::kRotationControl, node_ids, axis,
+            std::array{0., 0., 0., 1., 0., 0., 0.}, control
         );
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
@@ -372,12 +379,12 @@ public:
         return id;
     }
 
-    /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the
-    /// ID
-    size_t AddPrescribedBC3DOFs(const size_t node_id, const Array_3& ref_position = {0., 0., 0.}) {
+    /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns
+    /// the ID
+    size_t AddPrescribedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}, ref_position
+            id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;

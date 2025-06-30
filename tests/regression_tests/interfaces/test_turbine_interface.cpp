@@ -50,7 +50,9 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         .SetRotorApexToHub(0.)
         .SetHubDiameter(wio_hub["diameter"].as<double>())
         .SetConeAngle(wio_hub["cone_angle"].as<double>())
+        //.SetBladePitchAngle(M_PI / 2.)
         .SetShaftTiltAngle(wio_nacelle["drivetrain"]["uptilt"].as<double>())
+        //.SetNacelleYawAngle(M_PI)
         .SetTowerAxisToRotorApex(wio_nacelle["drivetrain"]["overhang"].as<double>())
         .SetTowerTopToRotorApex(wio_nacelle["drivetrain"]["distance_tt_hub"].as<double>());
 
@@ -151,6 +153,11 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         );
     }
 
+    // Set tower base position from first reference axis point
+    const auto tower_base_position =
+        std::array<double, 7>{x_values[0], y_values[0], z_values[0], 1., 0., 0., 0.};
+    turbine_builder.SetTowerBasePosition(tower_base_position);
+
     // Add reference axis twist (zero for tower)
     tower_builder.AddRefAxisTwist(0.0, 0.0).AddRefAxisTwist(1.0, 0.0);
 
@@ -189,6 +196,48 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
             interfaces::components::ReferenceAxisOrientation::Z
         );
     }
+
+    //--------------------------------------------------------------------------
+    // Add mass elements
+    //--------------------------------------------------------------------------
+
+    // Get nacelle mass properties from WindIO
+    const auto& nacelle_props = wio_nacelle["elastic_properties_mb"];
+    const auto system_mass = nacelle_props["system_mass"].as<double>();
+    const auto yaw_mass = nacelle_props["yaw_mass"].as<double>();
+    const auto system_inertia_tt = nacelle_props["system_inertia_tt"].as<std::vector<double>>();
+
+    // Construct 6x6 inertia matrix for yaw bearing node
+    const auto total_mass = system_mass + yaw_mass;
+    const auto nacelle_inertia_matrix = std::array<std::array<double, 6>, 6>{
+        {{total_mass, 0., 0., 0., 0., 0.},
+         {0., total_mass, 0., 0., 0., 0.},
+         {0., 0., total_mass, 0., 0., 0.},
+         {0., 0., 0., system_inertia_tt[0], system_inertia_tt[3], system_inertia_tt[4]},
+         {0., 0., 0., system_inertia_tt[3], system_inertia_tt[1], system_inertia_tt[5]},
+         {0., 0., 0., system_inertia_tt[4], system_inertia_tt[5], system_inertia_tt[2]}}
+    };
+
+    // Set the nacelle inertia matrix in the turbine builder
+    turbine_builder.SetYawBearingInertiaMatrix(nacelle_inertia_matrix);
+
+    // Get hub mass properties from WindIO
+    const auto& hub_props = wio_hub["elastic_properties_mb"];
+    const auto hub_mass = hub_props["system_mass"].as<double>();
+    const auto hub_inertia = hub_props["system_inertia"].as<std::vector<double>>();
+
+    // Construct 6x6 inertia matrix for hub node
+    const auto hub_inertia_matrix = std::array<std::array<double, 6>, 6>{
+        {{hub_mass, 0., 0., 0., 0., 0.},
+         {0., hub_mass, 0., 0., 0., 0.},
+         {0., 0., hub_mass, 0., 0., 0.},
+         {0., 0., 0., hub_inertia[0], hub_inertia[3], hub_inertia[4]},
+         {0., 0., 0., hub_inertia[3], hub_inertia[1], hub_inertia[5]},
+         {0., 0., 0., hub_inertia[4], hub_inertia[5], hub_inertia[2]}}
+    };
+
+    // Set the hub inertia matrix in the turbine builder
+    turbine_builder.SetHubInertiaMatrix(hub_inertia_matrix);
 
     //--------------------------------------------------------------------------
     // Interface
@@ -235,13 +284,13 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
 
     // Check tower top position and orientation
     const auto& tower_top_node = interface.Turbine().tower.nodes.back();
-    EXPECT_NEAR(tower_top_node.position[0], -0.00013297093554177921, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[1], 0.079678680774119062, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[2], 144.3794999717642, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[3], 0.70671615596672743, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[4], -0.0073063262326534895, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[5], -0.70744214100440284, 1e-10);
-    EXPECT_NEAR(tower_top_node.position[6], -0.0049507195134699481, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[0], 0.0002126927854378018, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[1], 0.011379102779460769, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[2], 144.36523368059588, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[3], 0.70691575889173808, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[4], -0.0089854700529016247, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[5], -0.70720684377750109, 1e-10);
+    EXPECT_NEAR(tower_top_node.position[6], -0.0069174614355188109, 1e-10);
 }
 
 }  // namespace openturbine::tests

@@ -86,25 +86,40 @@ struct Node {
 
     /// Translate node by a displacement vector
     Node& Translate(const Array_3& displacement) {
+        //----------------------------------------------------
+        // Position, x(0:2)
+        //----------------------------------------------------
         this->x0[0] += displacement[0];
         this->x0[1] += displacement[1];
         this->x0[2] += displacement[2];
 
+        // No change to orientation
         return *this;
     }
 
     /// Rotate node by a quaternion about the given point
     Node& RotateAboutPoint(const Array_4& q, const Array_3& point) {
-        // Rotate position i.e. x(0:2)
-        auto x_new = RotateVectorByQuaternion(
-            q, {this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]}
-        );
-        this->x0[0] = x_new[0] + point[0];
-        this->x0[1] = x_new[1] + point[1];
-        this->x0[2] = x_new[2] + point[2];
+        //----------------------------------------------------
+        // Position, x(0:2)
+        //----------------------------------------------------
+        // Get vector from reference point to initial node position
+        const Array_3 r{this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]};
 
-        // Rotate orientation i.e. x(3:6)
+        // Rotate the vector r using the provided quaternion q
+        const auto rotated_r = RotateVectorByQuaternion(q, r);
+
+        // Update the position by adding the rotated vector to the reference point
+        this->x0[0] = rotated_r[0] + point[0];
+        this->x0[1] = rotated_r[1] + point[1];
+        this->x0[2] = rotated_r[2] + point[2];
+
+        //----------------------------------------------------
+        // Orientation, x(3:6)
+        //----------------------------------------------------
+        // Compose q with initial orientation to get rotated orientation
         auto q_new = QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
+
+        // Update the orientation
         this->x0[3] = q_new[0];
         this->x0[4] = q_new[1];
         this->x0[5] = q_new[2];
@@ -117,7 +132,6 @@ struct Node {
     Node& RotateAboutPoint(const Array_3& rv, const Array_3& point) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateAboutPoint(q, point);
-
         return *this;
     }
 
@@ -135,16 +149,32 @@ struct Node {
 
     /// Rotate node displacement by a quaternion about the given point
     Node& RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
-        // Rotate displacement position i.e. u(0:2)
-        auto u_new = RotateVectorByQuaternion(
-            q, {this->u[0] - point[0], this->u[1] - point[1], this->u[2] - point[2]}
-        );
-        this->u[0] = u_new[0] + point[0];
-        this->u[1] = u_new[1] + point[1];
-        this->u[2] = u_new[2] + point[2];
+        //----------------------------------------------------
+        // Displacement position, u(0:2)
+        //----------------------------------------------------
+        // Get vector from reference point to displaced node position
+        const auto displaced_position = this->DisplacedPosition();
+        const Array_3 r{
+            displaced_position[0] - point[0], displaced_position[1] - point[1],
+            displaced_position[2] - point[2]
+        };
 
-        // Rotate displacement orientation i.e. u(3:6)
+        // Rotate the vector r using the provided quaternion q
+        const auto rotated_r = RotateVectorByQuaternion(q, r);
+
+        // Update the displacement position by adding the rotated vector to the reference point
+        // and subtracting the initial position
+        this->u[0] = rotated_r[0] + point[0] - this->x0[0];
+        this->u[1] = rotated_r[1] + point[1] - this->x0[1];
+        this->u[2] = rotated_r[2] + point[2] - this->x0[2];
+
+        //----------------------------------------------------
+        // Displacement orientation, u(3:6)
+        //----------------------------------------------------
+        // Compose q with initial displacement orientation to get rotated displacement orientation
         auto q_new = QuaternionCompose(q, {this->u[3], this->u[4], this->u[5], this->u[6]});
+
+        // Update the displacement orientation
         this->u[3] = q_new[0];
         this->u[4] = q_new[1];
         this->u[5] = q_new[2];
@@ -166,7 +196,7 @@ struct Node {
 
     /// Set node velocity based on rigid body motion about a reference point
     void SetVelocityAboutPoint(const Array_6& velocity, const Array_3& point) {
-        // Get distance from reference point to displaced node position
+        // Get vector from reference point to displaced node position
         const auto displaced_position = this->DisplacedPosition();
         const Array_3 r{
             displaced_position[0] - point[0], displaced_position[1] - point[1],
@@ -196,7 +226,7 @@ struct Node {
     void SetAccelerationAboutPoint(
         const Array_6& acceleration, const Array_3& omega, const Array_3& point
     ) {
-        // Get distance from reference point to displaced node position
+        // Get vector from reference point to displaced node position
         const auto displaced_position = this->DisplacedPosition();
         const Array_3 r{
             displaced_position[0] - point[0], displaced_position[1] - point[1],
