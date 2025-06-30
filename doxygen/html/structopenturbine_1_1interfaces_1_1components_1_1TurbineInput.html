@@ -181,51 +181,63 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a1082d625d7b1587906c5054e3bb2d4d8" id="r_a1082d625d7b1587906c5054e3bb2d4d8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a1082d625d7b1587906c5054e3bb2d4d8">blades</a></td></tr>
-<tr class="memdesc:a1082d625d7b1587906c5054e3bb2d4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the blades.  <br /></td></tr>
+<tr class="memdesc:a1082d625d7b1587906c5054e3bb2d4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the turbine blades.  <br /></td></tr>
 <tr class="separator:a1082d625d7b1587906c5054e3bb2d4d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe53c02daba9af14841ea0acdc9be932" id="r_afe53c02daba9af14841ea0acdc9be932"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#afe53c02daba9af14841ea0acdc9be932">tower</a></td></tr>
-<tr class="memdesc:afe53c02daba9af14841ea0acdc9be932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the tower.  <br /></td></tr>
+<tr class="memdesc:afe53c02daba9af14841ea0acdc9be932"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the tower structure.  <br /></td></tr>
 <tr class="separator:afe53c02daba9af14841ea0acdc9be932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bf64dbd206b358301b45da5f351e4c1" id="r_a2bf64dbd206b358301b45da5f351e4c1"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a2bf64dbd206b358301b45da5f351e4c1">yaw_bearing_inertia_matrix</a> {{{}, {}, {}, {}, {}, {}}}</td></tr>
+<tr class="memdesc:a2bf64dbd206b358301b45da5f351e4c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yaw bearing inertia matrix (6x6)  <br /></td></tr>
+<tr class="separator:a2bf64dbd206b358301b45da5f351e4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4edee7d4e5424a0f48af159f85e63427" id="r_a4edee7d4e5424a0f48af159f85e63427"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a4edee7d4e5424a0f48af159f85e63427">hub_inertia_matrix</a> {{{}, {}, {}, {}, {}, {}}}</td></tr>
+<tr class="memdesc:a4edee7d4e5424a0f48af159f85e63427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hub inertia matrix (6x6)  <br /></td></tr>
+<tr class="separator:a4edee7d4e5424a0f48af159f85e63427"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72b70aeb4d858d605fc6883116470e79" id="r_a72b70aeb4d858d605fc6883116470e79"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 7 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a72b70aeb4d858d605fc6883116470e79">tower_base_position</a> {0., 0., 0., 1., 0., 0., 0.}</td></tr>
 <tr class="memdesc:a72b70aeb4d858d605fc6883116470e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Position of the tower base node in the global coordinate system.  <br /></td></tr>
 <tr class="separator:a72b70aeb4d858d605fc6883116470e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bf64dbd206b358301b45da5f351e4c1" id="r_a2bf64dbd206b358301b45da5f351e4c1"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a2bf64dbd206b358301b45da5f351e4c1">yaw_bearing_inertia_matrix</a> {{{}, {}, {}, {}, {}, {}}}</td></tr>
-<tr class="memdesc:a2bf64dbd206b358301b45da5f351e4c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yaw bearing inertia matrix (6x6) includes yaw bearing and nacelle mass with inertia about yaw bearing.  <br /></td></tr>
-<tr class="separator:a2bf64dbd206b358301b45da5f351e4c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5694a58e7e98f294a5a7f9235da49da8" id="r_a5694a58e7e98f294a5a7f9235da49da8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a5694a58e7e98f294a5a7f9235da49da8">tower_top_to_rotor_apex</a> {0.}</td></tr>
-<tr class="memdesc:a5694a58e7e98f294a5a7f9235da49da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from tower top to rotor apex (meters)  <br /></td></tr>
-<tr class="separator:a5694a58e7e98f294a5a7f9235da49da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a619a0299598512c8d91c1a47a1a20ec9" id="r_a619a0299598512c8d91c1a47a1a20ec9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a619a0299598512c8d91c1a47a1a20ec9">tower_axis_to_rotor_apex</a> {0.}</td></tr>
-<tr class="memdesc:a619a0299598512c8d91c1a47a1a20ec9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from tower centerline to rotor apex (meters)  <br /></td></tr>
+<tr class="memdesc:a619a0299598512c8d91c1a47a1a20ec9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Horizontal distance between the tower axis -&gt; rotor apex (meters)  <br /></td></tr>
 <tr class="separator:a619a0299598512c8d91c1a47a1a20ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5694a58e7e98f294a5a7f9235da49da8" id="r_a5694a58e7e98f294a5a7f9235da49da8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a5694a58e7e98f294a5a7f9235da49da8">tower_top_to_rotor_apex</a> {0.}</td></tr>
+<tr class="memdesc:a5694a58e7e98f294a5a7f9235da49da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertical distance between the tower top -&gt; rotor apex (meters)  <br /></td></tr>
+<tr class="separator:a5694a58e7e98f294a5a7f9235da49da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a213cd25b50656022c6afa401240233ae" id="r_a213cd25b50656022c6afa401240233ae"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a213cd25b50656022c6afa401240233ae">rotor_apex_to_hub</a> {0.}</td></tr>
-<tr class="memdesc:a213cd25b50656022c6afa401240233ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from rotor apex to hub center of mass (meters)  <br /></td></tr>
+<tr class="memdesc:a213cd25b50656022c6afa401240233ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Distance from rotor apex -&gt; hub center of mass (meters)  <br /></td></tr>
 <tr class="separator:a213cd25b50656022c6afa401240233ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac270c1d4a4d92034c147e153d7dfabc1" id="r_ac270c1d4a4d92034c147e153d7dfabc1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac270c1d4a4d92034c147e153d7dfabc1">shaft_tilt_angle</a> {0.}</td></tr>
-<tr class="memdesc:ac270c1d4a4d92034c147e153d7dfabc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shaft tilt angle (radians)  <br /></td></tr>
-<tr class="separator:ac270c1d4a4d92034c147e153d7dfabc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66c7782e0370d4883747c15080ff6673" id="r_a66c7782e0370d4883747c15080ff6673"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a66c7782e0370d4883747c15080ff6673">azimuth_angle</a> {0.}</td></tr>
-<tr class="memdesc:a66c7782e0370d4883747c15080ff6673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Azimuth angle (radians)  <br /></td></tr>
-<tr class="separator:a66c7782e0370d4883747c15080ff6673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36d4bb1652a7bc870f690a9923eaa8f5" id="r_a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a36d4bb1652a7bc870f690a9923eaa8f5">nacelle_yaw_angle</a> {0.}</td></tr>
-<tr class="memdesc:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial nacelle yaw angle (radians)  <br /></td></tr>
-<tr class="separator:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afcd174cee1be9a5ce27a992c7c8dd250" id="r_afcd174cee1be9a5ce27a992c7c8dd250"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#afcd174cee1be9a5ce27a992c7c8dd250">blade_pitch_angle</a> {0.}</td></tr>
-<tr class="memdesc:afcd174cee1be9a5ce27a992c7c8dd250"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial blade pitch angle (radians)  <br /></td></tr>
-<tr class="separator:afcd174cee1be9a5ce27a992c7c8dd250"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4399f01fc5d0138163f6db273e4d7591" id="r_a4399f01fc5d0138163f6db273e4d7591"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a4399f01fc5d0138163f6db273e4d7591">rotor_speed</a> {0.}</td></tr>
-<tr class="memdesc:a4399f01fc5d0138163f6db273e4d7591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial rotor speed (RPM)  <br /></td></tr>
-<tr class="separator:a4399f01fc5d0138163f6db273e4d7591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c1034802f27a9126375343f4ff99d07" id="r_a9c1034802f27a9126375343f4ff99d07"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a9c1034802f27a9126375343f4ff99d07">hub_diameter</a> {1e-7}</td></tr>
 <tr class="memdesc:a9c1034802f27a9126375343f4ff99d07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hub diameter (meters)  <br /></td></tr>
 <tr class="separator:a9c1034802f27a9126375343f4ff99d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36d4bb1652a7bc870f690a9923eaa8f5" id="r_a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a36d4bb1652a7bc870f690a9923eaa8f5">nacelle_yaw_angle</a> {0.}</td></tr>
+<tr class="memdesc:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial nacelle yaw angle (radians)  <br /></td></tr>
+<tr class="separator:a36d4bb1652a7bc870f690a9923eaa8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac270c1d4a4d92034c147e153d7dfabc1" id="r_ac270c1d4a4d92034c147e153d7dfabc1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac270c1d4a4d92034c147e153d7dfabc1">shaft_tilt_angle</a> {0.}</td></tr>
+<tr class="memdesc:ac270c1d4a4d92034c147e153d7dfabc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shaft tilt angle (radians)  <br /></td></tr>
+<tr class="separator:ac270c1d4a4d92034c147e153d7dfabc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4f2b7f08a71e685a8cc3ea0073c9d38" id="r_ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac4f2b7f08a71e685a8cc3ea0073c9d38">cone_angle</a> {0.}</td></tr>
-<tr class="memdesc:ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define blade cone angle (radians)  <br /></td></tr>
+<tr class="memdesc:ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blade cone angle (radians)  <br /></td></tr>
 <tr class="separator:ac4f2b7f08a71e685a8cc3ea0073c9d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcd174cee1be9a5ce27a992c7c8dd250" id="r_afcd174cee1be9a5ce27a992c7c8dd250"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#afcd174cee1be9a5ce27a992c7c8dd250">blade_pitch_angle</a> {0.}</td></tr>
+<tr class="memdesc:afcd174cee1be9a5ce27a992c7c8dd250"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial blade pitch angle (radians)  <br /></td></tr>
+<tr class="separator:afcd174cee1be9a5ce27a992c7c8dd250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66c7782e0370d4883747c15080ff6673" id="r_a66c7782e0370d4883747c15080ff6673"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a66c7782e0370d4883747c15080ff6673">azimuth_angle</a> {0.}</td></tr>
+<tr class="memdesc:a66c7782e0370d4883747c15080ff6673"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current rotor azimuth angle (radians)  <br /></td></tr>
+<tr class="separator:a66c7782e0370d4883747c15080ff6673"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4399f01fc5d0138163f6db273e4d7591" id="r_a4399f01fc5d0138163f6db273e4d7591"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a4399f01fc5d0138163f6db273e4d7591">rotor_speed</a> {0.}</td></tr>
+<tr class="memdesc:a4399f01fc5d0138163f6db273e4d7591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial rotor rotational speed (rad/s)  <br /></td></tr>
+<tr class="separator:a4399f01fc5d0138163f6db273e4d7591"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a906049ab7e26bbb44628d240d71dc901" id="r_a906049ab7e26bbb44628d240d71dc901"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a906049ab7e26bbb44628d240d71dc901">gear_box_ratio</a> {1.}</td></tr>
+<tr class="memdesc:a906049ab7e26bbb44628d240d71dc901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gearbox ratio of the turbine (-)  <br /></td></tr>
+<tr class="separator:a906049ab7e26bbb44628d240d71dc901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac74341d9c98d8297d465ec097bcc5c6b" id="r_ac74341d9c98d8297d465ec097bcc5c6b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac74341d9c98d8297d465ec097bcc5c6b">generator_power</a> {0.}</td></tr>
+<tr class="memdesc:ac74341d9c98d8297d465ec097bcc5c6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial generator power (W)  <br /></td></tr>
+<tr class="separator:ac74341d9c98d8297d465ec097bcc5c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac61771486a39e6b97c15fc9b43a645d7" id="r_ac61771486a39e6b97c15fc9b43a645d7"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac61771486a39e6b97c15fc9b43a645d7">hub_wind_speed</a> {0.}</td></tr>
+<tr class="memdesc:ac61771486a39e6b97c15fc9b43a645d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hub height wind speed (m/s)  <br /></td></tr>
+<tr class="separator:ac61771486a39e6b97c15fc9b43a645d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Complete input specification for a turbine. </p>
-<p>Defines the input configuration for a turbine including blades, tower, hub, and nacelle. </p>
+<p>This structure defines all necessary parameters to configure a complete wind turbine model including the structural components (blades, tower, hub, nacelle), geometric relationships, inertial properties, and initial operating conditions. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a66c7782e0370d4883747c15080ff6673" name="a66c7782e0370d4883747c15080ff6673"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66c7782e0370d4883747c15080ff6673">&#9670;&#160;</a></span>azimuth_angle</h2>
@@ -239,7 +251,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Azimuth angle (radians) </p>
+<p>Current rotor azimuth angle (radians) </p>
+<p>Angular position of rotor about shaft axis. 0 means blade 1 is at 12 o'clock position. </p>
 
 </div>
 </div>
@@ -256,6 +269,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initial blade pitch angle (radians) </p>
+<p>Rotation of blades about their longitudinal/pitch axis. 0 means blades are parallel to the tower. </p>
 
 </div>
 </div>
@@ -271,7 +285,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configuration for the blades. </p>
+<p>Configuration for the turbine blades. </p>
+<p>Each blade is represented as a flexible beam. Vector contains <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html" title="Complete input specification for a beam.">BeamInput</a> for each blade of the turbine. </p>
 
 </div>
 </div>
@@ -287,7 +302,42 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Define blade cone angle (radians) </p>
+<p>Blade cone angle (radians) </p>
+<p>Angle between the blade and the plane perpendicular to shaft </p>
+
+</div>
+</div>
+<a id="a906049ab7e26bbb44628d240d71dc901" name="a906049ab7e26bbb44628d240d71dc901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a906049ab7e26bbb44628d240d71dc901">&#9670;&#160;</a></span>gear_box_ratio</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::gear_box_ratio {1.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gearbox ratio of the turbine (-) </p>
+<p>Ratio between generator speed and rotor speed </p>
+
+</div>
+</div>
+<a id="ac74341d9c98d8297d465ec097bcc5c6b" name="ac74341d9c98d8297d465ec097bcc5c6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac74341d9c98d8297d465ec097bcc5c6b">&#9670;&#160;</a></span>generator_power</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::generator_power {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial generator power (W) </p>
+<p>Power output of the generator </p>
 
 </div>
 </div>
@@ -304,6 +354,41 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Hub diameter (meters) </p>
+<p>Distance from rotor apex to blade root node. </p><dl class="section note"><dt>Note</dt><dd>Default value is near-zero to avoid singularities </dd></dl>
+
+</div>
+</div>
+<a id="a4edee7d4e5424a0f48af159f85e63427" name="a4edee7d4e5424a0f48af159f85e63427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4edee7d4e5424a0f48af159f85e63427">&#9670;&#160;</a></span>hub_inertia_matrix</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt;std::array&lt;double, 6&gt;, 6&gt; openturbine::interfaces::components::TurbineInput::hub_inertia_matrix {{{}, {}, {}, {}, {}, {}}}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hub inertia matrix (6x6) </p>
+<p>Includes hub assembly mass and inertia properties </p>
+
+</div>
+</div>
+<a id="ac61771486a39e6b97c15fc9b43a645d7" name="ac61771486a39e6b97c15fc9b43a645d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac61771486a39e6b97c15fc9b43a645d7">&#9670;&#160;</a></span>hub_wind_speed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::TurbineInput::hub_wind_speed {0.}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hub height wind speed (m/s) </p>
+<p>Wind speed at the hub height </p>
 
 </div>
 </div>
@@ -320,6 +405,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initial nacelle yaw angle (radians) </p>
+<p>Rotation of nacelle about the tower/yaw axis. </p>
 
 </div>
 </div>
@@ -335,7 +421,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Distance from rotor apex to hub center of mass (meters) </p>
+<p>Distance from rotor apex -&gt; hub center of mass (meters) </p>
+<p>Along the rotor shaft axis, accounts for hub geometry. Also known as HubCM. </p>
 
 </div>
 </div>
@@ -351,7 +438,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initial rotor speed (RPM) </p>
+<p>Initial rotor rotational speed (rad/s) </p>
+<p>Rotational velocity about the shaft axis </p>
 
 </div>
 </div>
@@ -368,6 +456,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Shaft tilt angle (radians) </p>
+<p>Angle between the rotor shaft and the horizontal plane. Positive angle tilts shaft up. </p>
 
 </div>
 </div>
@@ -383,7 +472,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configuration for the tower. </p>
+<p>Configuration for the tower structure. </p>
+<p>Defines the tower as a beam element from base to top </p>
 
 </div>
 </div>
@@ -399,7 +489,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Distance from tower centerline to rotor apex (meters) </p>
+<p>Horizontal distance between the tower axis -&gt; rotor apex (meters) </p>
 
 </div>
 </div>
@@ -416,6 +506,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Position of the tower base node in the global coordinate system. </p>
+<p>Defines the initial location/orientation of the entire turbine. </p>
 
 </div>
 </div>
@@ -431,7 +522,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Distance from tower top to rotor apex (meters) </p>
+<p>Vertical distance between the tower top -&gt; rotor apex (meters) </p>
 
 </div>
 </div>
@@ -447,7 +538,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Yaw bearing inertia matrix (6x6) includes yaw bearing and nacelle mass with inertia about yaw bearing. </p>
+<p>Yaw bearing inertia matrix (6x6) </p>
+<p>Includes yaw bearing and nacelle mass with inertia about yaw bearing </p>
 
 </div>
 </div>

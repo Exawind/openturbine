@@ -181,28 +181,37 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a240d6995b66bb239f460bb1706557a20" id="r_a240d6995b66bb239f460bb1706557a20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a240d6995b66bb239f460bb1706557a20">Constraint</a> (size_t id, <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> constraint_type, const std::array&lt; size_t, 2 &gt; &amp;ids, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v={0., 0., 0.}, double *ctrl=nullptr)</td></tr>
-<tr class="separator:a240d6995b66bb239f460bb1706557a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a761690828da4bde21d68e4f94b6805fd" id="r_a761690828da4bde21d68e4f94b6805fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a761690828da4bde21d68e4f94b6805fd">Constraint</a> (size_t id, <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> c_type, const std::array&lt; size_t, 2 &gt; &amp;ids, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v={0., 0., 0.}, const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;init_disp={0., 0., 0., 1., 0., 0., 0.}, double *ctrl=nullptr)</td></tr>
+<tr class="memdesc:a761690828da4bde21d68e4f94b6805fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a constraint with specified parameters.  <br /></td></tr>
+<tr class="separator:a761690828da4bde21d68e4f94b6805fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aa56ed5ba0a0a86b1b887d089a2b3ac07" id="r_aa56ed5ba0a0a86b1b887d089a2b3ac07"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#aa56ed5ba0a0a86b1b887d089a2b3ac07">ID</a></td></tr>
+<tr class="memdesc:aa56ed5ba0a0a86b1b887d089a2b3ac07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique identifier for constraint.  <br /></td></tr>
 <tr class="separator:aa56ed5ba0a0a86b1b887d089a2b3ac07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a704ba9ad3a17705d9c5ec660c7f69c88" id="r_a704ba9ad3a17705d9c5ec660c7f69c88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a704ba9ad3a17705d9c5ec660c7f69c88">type</a></td></tr>
+<tr class="memdesc:a704ba9ad3a17705d9c5ec660c7f69c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of constraint.  <br /></td></tr>
 <tr class="separator:a704ba9ad3a17705d9c5ec660c7f69c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa945f21837e1ebd08fc14cfb8a467124" id="r_aa945f21837e1ebd08fc14cfb8a467124"><td class="memItemLeft" align="right" valign="top">std::array&lt; size_t, 2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#aa945f21837e1ebd08fc14cfb8a467124">node_ids</a></td></tr>
+<tr class="memdesc:aa945f21837e1ebd08fc14cfb8a467124"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Node.html">Node</a> IDs for: {base_node, target_node}.  <br /></td></tr>
 <tr class="separator:aa945f21837e1ebd08fc14cfb8a467124"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbc147144c6a052294b16be85a2e3858" id="r_adbc147144c6a052294b16be85a2e3858"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#adbc147144c6a052294b16be85a2e3858">vec</a> = {0.}</td></tr>
-<tr class="separator:adbc147144c6a052294b16be85a2e3858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10ab17c47cb4f4234d39607c1c19f724" id="r_a10ab17c47cb4f4234d39607c1c19f724"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a10ab17c47cb4f4234d39607c1c19f724">control</a> = nullptr</td></tr>
+<tr class="memitem:a770287a4fb874f2068099f7429ce78ae" id="r_a770287a4fb874f2068099f7429ce78ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a770287a4fb874f2068099f7429ce78ae">axis_vector</a></td></tr>
+<tr class="memdesc:a770287a4fb874f2068099f7429ce78ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vector for rotation/control axis.  <br /></td></tr>
+<tr class="separator:a770287a4fb874f2068099f7429ce78ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf309c7551cdfde85ef7148ff130e8ff" id="r_adf309c7551cdfde85ef7148ff130e8ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#adf309c7551cdfde85ef7148ff130e8ff">initial_displacement</a></td></tr>
+<tr class="memdesc:adf309c7551cdfde85ef7148ff130e8ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial displacement for prescribed BC.  <br /></td></tr>
+<tr class="separator:adf309c7551cdfde85ef7148ff130e8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10ab17c47cb4f4234d39607c1c19f724" id="r_a10ab17c47cb4f4234d39607c1c19f724"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html#a10ab17c47cb4f4234d39607c1c19f724">control</a></td></tr>
+<tr class="memdesc:a10ab17c47cb4f4234d39607c1c19f724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to control signal (if any)  <br /></td></tr>
 <tr class="separator:a10ab17c47cb4f4234d39607c1c19f724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines a constraint between two nodes or enforces a boundary condition at a single node. </p>
 <p>A constraint establishes a relationship between two nodes, restricting their relative motion in specific ways. This can be utilized to model various scenarios such as fixed boundary conditions, prescribed displacements, rigid body motions, lower-pair kinematic joints, and control signals. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a240d6995b66bb239f460bb1706557a20" name="a240d6995b66bb239f460bb1706557a20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a240d6995b66bb239f460bb1706557a20">&#9670;&#160;</a></span>Constraint()</h2>
+<a id="a761690828da4bde21d68e4f94b6805fd" name="a761690828da4bde21d68e4f94b6805fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a761690828da4bde21d68e4f94b6805fd">&#9670;&#160;</a></span>Constraint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -220,7 +229,7 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>&#160;</td>
-          <td class="paramname"><em>constraint_type</em>, </td>
+          <td class="paramname"><em>c_type</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -233,6 +242,12 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em> = <code>{0.,&#160;0.,&#160;0.}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;&#160;</td>
+          <td class="paramname"><em>init_disp</em> = <code>{0.,&#160;0.,&#160;0.,&#160;1.,&#160;0.,&#160;0.,&#160;0.}</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -253,9 +268,38 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Constructs a constraint with specified parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Unique identifier for the constraint </td></tr>
+    <tr><td class="paramname">c_type</td><td>Type of constraint </td></tr>
+    <tr><td class="paramname">ids</td><td>Array containing {base_node_id, target_node_id} </td></tr>
+    <tr><td class="paramname">v</td><td>Geometric configuration/axis vector (default: {0, 0, 0}) </td></tr>
+    <tr><td class="paramname">init_disp</td><td>Initial displacement for prescribed BCs (default: {0, 0, 0, 1, 0, 0, 0}) </td></tr>
+    <tr><td class="paramname">ctrl</td><td>Pointer to control signal (default: nullptr for static constraints) </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a770287a4fb874f2068099f7429ce78ae" name="a770287a4fb874f2068099f7429ce78ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a770287a4fb874f2068099f7429ce78ae">&#9670;&#160;</a></span>axis_vector</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> openturbine::Constraint::axis_vector</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vector for rotation/control axis. </p>
+
+</div>
+</div>
 <a id="a10ab17c47cb4f4234d39607c1c19f724" name="a10ab17c47cb4f4234d39607c1c19f724"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a10ab17c47cb4f4234d39607c1c19f724">&#9670;&#160;</a></span>control</h2>
 
@@ -263,10 +307,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double* openturbine::Constraint::control = nullptr</td>
+          <td class="memname">double* openturbine::Constraint::control</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Pointer to control signal (if any) </p>
 
 </div>
 </div>
@@ -282,6 +328,24 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Unique identifier for constraint. </p>
+
+</div>
+</div>
+<a id="adf309c7551cdfde85ef7148ff130e8ff" name="adf309c7551cdfde85ef7148ff130e8ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf309c7551cdfde85ef7148ff130e8ff">&#9670;&#160;</a></span>initial_displacement</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> openturbine::Constraint::initial_displacement</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initial displacement for prescribed BC. </p>
+
 </div>
 </div>
 <a id="aa945f21837e1ebd08fc14cfb8a467124" name="aa945f21837e1ebd08fc14cfb8a467124"></a>
@@ -295,6 +359,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="structopenturbine_1_1Node.html">Node</a> IDs for: {base_node, target_node}. </p>
 
 </div>
 </div>
@@ -310,19 +376,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="adbc147144c6a052294b16be85a2e3858" name="adbc147144c6a052294b16be85a2e3858"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbc147144c6a052294b16be85a2e3858">&#9670;&#160;</a></span>vec</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> openturbine::Constraint::vec = {0.}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Type of constraint. </p>
 
 </div>
 </div>

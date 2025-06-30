@@ -15,7 +15,9 @@ var searchData=
   ['hoststate_12',['hoststate',['../structopenturbine_1_1interfaces_1_1HostState.html',1,'openturbine::interfaces::HostState&lt; DeviceType &gt;'],['../structopenturbine_1_1interfaces_1_1HostState.html#a64b6ec8ab9e7755641e486f10321bbae',1,'openturbine::interfaces::HostState::HostState()']]],
   ['hub_13',['hub',['../structopenturbine_1_1util_1_1TurbineData.html#a7b561da2d208abbfb520fb55b0334ec6',1,'openturbine::util::TurbineData']]],
   ['hub_5fdiameter_14',['hub_diameter',['../structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a9c1034802f27a9126375343f4ff99d07',1,'openturbine::interfaces::components::TurbineInput']]],
-  ['hub_5finitial_5fposition_15',['hub_initial_position',['../structopenturbine_1_1util_1_1TurbineConfig.html#a7b553dc41a7e5af7ed4f466755cb0c18',1,'openturbine::util::TurbineConfig']]],
-  ['hub_5fmass_5felement_5fid_16',['hub_mass_element_id',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a531c7ee4532d2477f4ca98d468014568',1,'openturbine::interfaces::components::Turbine']]],
-  ['hub_5fnode_17',['hub_node',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ac3d051eb446c6ed56f9763617d4e4a1c',1,'openturbine::interfaces::components::Turbine']]]
+  ['hub_5finertia_5fmatrix_15',['hub_inertia_matrix',['../structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a4edee7d4e5424a0f48af159f85e63427',1,'openturbine::interfaces::components::TurbineInput']]],
+  ['hub_5finitial_5fposition_16',['hub_initial_position',['../structopenturbine_1_1util_1_1TurbineConfig.html#a7b553dc41a7e5af7ed4f466755cb0c18',1,'openturbine::util::TurbineConfig']]],
+  ['hub_5fmass_5felement_5fid_17',['hub_mass_element_id',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a531c7ee4532d2477f4ca98d468014568',1,'openturbine::interfaces::components::Turbine']]],
+  ['hub_5fnode_18',['hub_node',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ac3d051eb446c6ed56f9763617d4e4a1c',1,'openturbine::interfaces::components::Turbine']]],
+  ['hub_5fwind_5fspeed_19',['hub_wind_speed',['../structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#ac61771486a39e6b97c15fc9b43a645d7',1,'openturbine::interfaces::components::TurbineInput']]]
 ];

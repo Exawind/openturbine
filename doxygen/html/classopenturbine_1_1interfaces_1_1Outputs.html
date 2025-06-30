@@ -189,14 +189,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad079d6b7c946a4178943c131dd1890fb" id="r_ad079d6b7c946a4178943c131dd1890fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad079d6b7c946a4178943c131dd1890fb">Outputs</a> (const std::string &amp;output_file, size_t num_nodes, <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a> location=<a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a>)</td></tr>
 <tr class="memdesc:ad079d6b7c946a4178943c131dd1890fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor taking an output file and location.  <br /></td></tr>
 <tr class="separator:ad079d6b7c946a4178943c131dd1890fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cfa464d84026a8109d1e3e1e549b1fa" id="r_a8cfa464d84026a8109d1e3e1e549b1fa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a8cfa464d84026a8109d1e3e1e549b1fa">Outputs</a> (const std::string &amp;output_file, const std::string &amp;time_series_file, size_t num_nodes, <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a> location=<a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a>)</td></tr>
+<tr class="memdesc:a8cfa464d84026a8109d1e3e1e549b1fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor taking an output file, time-series file, and location.  <br /></td></tr>
+<tr class="separator:a8cfa464d84026a8109d1e3e1e549b1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6670fc1d971605ef991c5733ac9151fb" id="r_a6670fc1d971605ef991c5733ac9151fb"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6670fc1d971605ef991c5733ac9151fb">GetOutputWriter</a> ()</td></tr>
 <tr class="separator:a6670fc1d971605ef991c5733ac9151fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac19df2efb5487b9522bc360d096c9372" id="r_ac19df2efb5487b9522bc360d096c9372"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac19df2efb5487b9522bc360d096c9372">GetTimeSeriesWriter</a> ()</td></tr>
+<tr class="separator:ac19df2efb5487b9522bc360d096c9372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3e319693f5d4308938010daf44716fc" id="r_ac3e319693f5d4308938010daf44716fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac3e319693f5d4308938010daf44716fc">GetLocation</a> () const</td></tr>
 <tr class="separator:ac3e319693f5d4308938010daf44716fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6deec9769211de75fd34c1ad05c0ca3b" id="r_a6deec9769211de75fd34c1ad05c0ca3b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:a6deec9769211de75fd34c1ad05c0ca3b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6deec9769211de75fd34c1ad05c0ca3b">WriteNodeOutputsAtTimestep</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state, size_t timestep)</td></tr>
 <tr class="memdesc:a6deec9769211de75fd34c1ad05c0ca3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write node state outputs to NetCDF file at specified timestep.  <br /></td></tr>
 <tr class="separator:a6deec9769211de75fd34c1ad05c0ca3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0170b92107fce11f812558ebb2c55a6" id="r_aa0170b92107fce11f812558ebb2c55a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#aa0170b92107fce11f812558ebb2c55a6">WriteRotorTimeSeriesAtTimestep</a> (size_t timestep, double azimuth_angle, double rotor_speed)</td></tr>
+<tr class="memdesc:aa0170b92107fce11f812558ebb2c55a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write rotor time-series data at specified timestep.  <br /></td></tr>
+<tr class="separator:aa0170b92107fce11f812558ebb2c55a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="ad5b708c1ba7632d144080c7234a54375" name="ad5b708c1ba7632d144080c7234a54375"></a>
@@ -231,7 +239,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad079d6b7c946a4178943c131dd1890fb" name="ad079d6b7c946a4178943c131dd1890fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad079d6b7c946a4178943c131dd1890fb">&#9670;&#160;</a></span>Outputs()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad079d6b7c946a4178943c131dd1890fb">&#9670;&#160;</a></span>Outputs() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,6 +279,56 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructor taking an output file and location. </p>
+
+</div>
+</div>
+<a id="a8cfa464d84026a8109d1e3e1e549b1fa" name="a8cfa464d84026a8109d1e3e1e549b1fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cfa464d84026a8109d1e3e1e549b1fa">&#9670;&#160;</a></span>Outputs() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::interfaces::Outputs::Outputs </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>output_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>time_series_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a>&#160;</td>
+          <td class="paramname"><em>location</em> = <code><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor taking an output file, time-series file, and location. </p>
 
 </div>
 </div>
@@ -325,6 +383,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ac19df2efb5487b9522bc360d096c9372" name="ac19df2efb5487b9522bc360d096c9372"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac19df2efb5487b9522bc360d096c9372">&#9670;&#160;</a></span>GetTimeSeriesWriter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp; openturbine::interfaces::Outputs::GetTimeSeriesWriter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a6deec9769211de75fd34c1ad05c0ca3b" name="a6deec9769211de75fd34c1ad05c0ca3b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6deec9769211de75fd34c1ad05c0ca3b">&#9670;&#160;</a></span>WriteNodeOutputsAtTimestep()</h2>
 
@@ -362,6 +445,50 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Write node state outputs to NetCDF file at specified timestep. </p>
+
+</div>
+</div>
+<a id="aa0170b92107fce11f812558ebb2c55a6" name="aa0170b92107fce11f812558ebb2c55a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0170b92107fce11f812558ebb2c55a6">&#9670;&#160;</a></span>WriteRotorTimeSeriesAtTimestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::Outputs::WriteRotorTimeSeriesAtTimestep </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>azimuth_angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rotor_speed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Write rotor time-series data at specified timestep. </p>
 
 </div>
 </div>

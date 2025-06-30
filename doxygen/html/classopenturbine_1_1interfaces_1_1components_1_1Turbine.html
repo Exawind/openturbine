@@ -167,8 +167,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classopenturbine_1_1interfaces_1_1components_1_1Turbine-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces::components::Turbine Class Reference</div></div>
 </div><!--header-->
@@ -179,18 +181,27 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="components_2turbine_8hpp_source.html">turbine.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aee821c2c576768cf69dbdbaf73c8c49a" id="r_aee821c2c576768cf69dbdbaf73c8c49a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:aee821c2c576768cf69dbdbaf73c8c49a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c841b009db0a3b1b3f0297e4e963a24" id="r_a2c841b009db0a3b1b3f0297e4e963a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a2c841b009db0a3b1b3f0297e4e963a24">Turbine</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a> &amp;input, <a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;model)</td></tr>
+<tr class="memdesc:a2c841b009db0a3b1b3f0297e4e963a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a turbine with the specified input configuration.  <br /></td></tr>
 <tr class="separator:a2c841b009db0a3b1b3f0297e4e963a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2" id="r_ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ab83bfaa2586b322e86ba82b4b303bbe2">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state)</td></tr>
+<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2" id="r_ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; </td></tr>
+<tr class="memitem:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ab83bfaa2586b322e86ba82b4b303bbe2">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; &amp;host_state)</td></tr>
 <tr class="memdesc:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populate node motion from host state.  <br /></td></tr>
 <tr class="separator:ab83bfaa2586b322e86ba82b4b303bbe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a495c21ba774c902d4e098e34a27f37af" id="r_a495c21ba774c902d4e098e34a27f37af"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a495c21ba774c902d4e098e34a27f37af"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a495c21ba774c902d4e098e34a27f37af">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state) const</td></tr>
+<tr class="memitem:a495c21ba774c902d4e098e34a27f37af" id="r_a495c21ba774c902d4e098e34a27f37af"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; </td></tr>
+<tr class="memitem:a495c21ba774c902d4e098e34a27f37af"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a495c21ba774c902d4e098e34a27f37af">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; &amp;host_state) const</td></tr>
 <tr class="memdesc:a495c21ba774c902d4e098e34a27f37af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the host state with current node forces and moments.  <br /></td></tr>
 <tr class="separator:a495c21ba774c902d4e098e34a27f37af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81ec4cd9932e232ff0387afaa6e89f76" id="r_a81ec4cd9932e232ff0387afaa6e89f76"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a81ec4cd9932e232ff0387afaa6e89f76">GetTurbineInput</a> () const</td></tr>
+<tr class="memdesc:a81ec4cd9932e232ff0387afaa6e89f76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the turbine input configuration.  <br /></td></tr>
+<tr class="separator:a81ec4cd9932e232ff0387afaa6e89f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -232,11 +243,70 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad8756a74c48a72fa73ebc7f5b0cf7a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a3e2fd190870407f3663e44f1507009" id="r_a2a3e2fd190870407f3663e44f1507009"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a2a3e2fd190870407f3663e44f1507009">yaw_control</a> {0.}</td></tr>
 <tr class="separator:a2a3e2fd190870407f3663e44f1507009"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:af22c70a475e04541bd6699d918d69939" id="r_af22c70a475e04541bd6699d918d69939"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#af22c70a475e04541bd6699d918d69939">kMinHubDiameter</a> {1e-8}</td></tr>
+<tr class="memdesc:af22c70a475e04541bd6699d918d69939"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum valid hub diameter.  <br /></td></tr>
+<tr class="separator:af22c70a475e04541bd6699d918d69939"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb7e12e1c29c2af458532f74fab77da" id="r_a8eb7e12e1c29c2af458532f74fab77da"><td class="memItemLeft" align="right" valign="top">static constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a8eb7e12e1c29c2af458532f74fab77da">kZeroTolerance</a> {1e-12}</td></tr>
+<tr class="memdesc:a8eb7e12e1c29c2af458532f74fab77da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tolerance for near zero comparisons.  <br /></td></tr>
+<tr class="separator:a8eb7e12e1c29c2af458532f74fab77da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a turbine with nodes, elements, and constraints. </p>
-<p>This class is responsible for creating and managing a turbine on input specifications. It handles the creation of nodes, mass elements, and constraints within the provided model. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<p>This class is responsible for creating and managing a turbine based on the turbine input specifications. It handles the creation of the beam elements, mass elements, nodes, and constraints within the provided model.</p>
+<hr  />
+ <h2><a class="el" href="structopenturbine_1_1Node.html">Node</a> structure </h2>
+<p>The turbine assembly consists of multiple interconnected nodes that represent different physical components and their kinematic relationships.</p>
+<p>Tower Nodes</p><ul>
+<li>Tower nodes: <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> nodes distributed along tower height (1, 2, ..., n)</li>
+<li>Tower base: Fixed constraint point at tower foundation (first tower node)</li>
+<li><p class="startli">Tower top: Connection point to nacelle assembly (last tower node)</p>
+<p class="startli">┌─── Tower top node (connection to nacelle) │ ○ &lt;- Tower node n │ ○ &lt;- Tower node n-1 │ ○ &lt;- Tower node 2 │ </p><h2>○ &lt;- Tower node 1 (Tower base node - fixed constraint) </h2>
+<p class="startli">/ / / / / / / &lt;&ndash; Ground / Foundation</p>
+</li>
+</ul>
+<p>Nacelle/Drivetrain Nodes</p><ul>
+<li>Yaw bearing node: Located at tower top, allows nacelle yaw rotation</li>
+<li>Shaft base node: Base of the main shaft within nacelle</li>
+<li>Azimuth node: Intermediate node for rotor azimuth positioning</li>
+<li>Hub node: Center of mass of the rotating hub assembly <pre class="fragment">     Yaw bearing      Shaft base      Azimuth          Hub
+        node            node           node            node
+         ● -------------- ● ------------ ● ------------ ● -------------
+</pre> yaw control | rigid torque rigid rigid rotation | connection control connection connection about Z-axis | via revolute to blades joint Blade Assembly Nodes</li>
+<li>Blade apex nodes: Connection points between hub and blade roots (one per blade)</li>
+<li>Blade structural nodes: <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> nodes along each blade span <pre class="fragment">           pitch axis,
+        rotation control |&lt;----- Blade nodes -----&gt;|
+</pre> ● Blade apex ----------&mdash; ● -----&mdash; ● -----&mdash; ● node root tip │ node node │ rigid connection │ <h2>● Hub node </h2>
+</li>
+</ul>
+<h2>Kinematic chain/constraints </h2>
+<p>The nodes are connected in a kinematic chain that represents the turbine's degrees of freedom.</p>
+<ul>
+<li>tower base node: Fixed boundary condition</li>
+<li>tower top node &lt;-&gt; yaw bearing node: Yaw rotation control</li>
+<li>yaw bearing node &lt;-&gt; shaft base node: Rigid joint</li>
+<li>shaft base node &lt;-&gt; azimuth node: Revolute joint with torque control</li>
+<li>hub &lt;-&gt; blade apex nodes: Rigid joint</li>
+<li>blade apex nodes &lt;-&gt; blade root nodes: Pitch rotation control </li>
+</ul>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="aee821c2c576768cf69dbdbaf73c8c49a" name="aee821c2c576768cf69dbdbaf73c8c49a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee821c2c576768cf69dbdbaf73c8c49a">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">openturbine::interfaces::components::Turbine::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2c841b009db0a3b1b3f0297e4e963a24" name="a2c841b009db0a3b1b3f0297e4e963a24"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c841b009db0a3b1b3f0297e4e963a24">&#9670;&#160;</a></span>Turbine()</h2>
 
@@ -270,16 +340,27 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructs a turbine with the specified input configuration. </p>
+<p>Creates a complete turbine structure including blades, tower, hub, nacelle components, and all associated nodes, elements, constraints, and control systems. The turbine is positioned and oriented according to the input parameters, with proper kinematic </p><h2>relationships established between all components. </h2>
+<h2>Construction sequence </h2>
+<ol type="1">
+<li>Validation: Input parameters are checked for physical consistency</li>
+<li><a class="el" href="structopenturbine_1_1Node.html">Node</a> creation + positioning: All nodes are created at the origin and assembled at their correct spatial locations/orientations</li>
+<li>Mass element addition: Mass and inertia properties are assigned to relevant nodes/components, e.g. lumped mass elements at hub and nacelle</li>
+<li><a class="el" href="structopenturbine_1_1Constraint.html" title="Defines a constraint between two nodes or enforces a boundary condition at a single node.">Constraint</a> creation: Kinematic relationships are established between nodes</li>
+<li>Initial conditions: Initial conditions such as displacements, velocities, and accelerations are applied as required</li>
+</ol>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input</td><td>Configuration for the turbine </td></tr>
-    <tr><td class="paramname">model</td><td><a class="el" href="classopenturbine_1_1Model.html" title="Struct to define a turbine model with nodes, elements, and constraints.">Model</a> to which the turbine elements and nodes will be added </td></tr>
+    <tr><td class="paramname">input</td><td><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html" title="Represents a turbine with nodes, elements, and constraints.">Turbine</a> configuration parameters </td></tr>
+    <tr><td class="paramname">model</td><td>Structural model to add turbine components to </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>If the input configuration is invalid </td></tr>
+    <tr><td class="paramname">std::invalid_argument</td><td>If input configuration is invalid </td></tr>
   </table>
   </dd>
 </dl>
@@ -293,7 +374,7 @@ Public Attributes</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;typename <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -301,7 +382,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname">void openturbine::interfaces::components::Turbine::GetMotion </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em></td><td>)</td>
           <td></td>
         </tr>
@@ -323,13 +404,41 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
+<a id="a81ec4cd9932e232ff0387afaa6e89f76" name="a81ec4cd9932e232ff0387afaa6e89f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81ec4cd9932e232ff0387afaa6e89f76">&#9670;&#160;</a></span>GetTurbineInput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">TurbineInput</a> &amp; openturbine::interfaces::components::Turbine::GetTurbineInput </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the turbine input configuration. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html" title="Represents a turbine with nodes, elements, and constraints.">Turbine</a> input configuration </dd></dl>
+
+</div>
+</div>
 <a id="a495c21ba774c902d4e098e34a27f37af" name="a495c21ba774c902d4e098e34a27f37af"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a495c21ba774c902d4e098e34a27f37af">&#9670;&#160;</a></span>SetLoads()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;typename <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -337,7 +446,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname">void openturbine::interfaces::components::Turbine::SetLoads </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#aee821c2c576768cf69dbdbaf73c8c49a">DeviceType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -483,6 +592,54 @@ template&lt;typename DeviceType &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="af22c70a475e04541bd6699d918d69939" name="af22c70a475e04541bd6699d918d69939"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af22c70a475e04541bd6699d918d69939">&#9670;&#160;</a></span>kMinHubDiameter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double openturbine::interfaces::components::Turbine::kMinHubDiameter {1e-8}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Minimum valid hub diameter. </p>
+
+</div>
+</div>
+<a id="a8eb7e12e1c29c2af458532f74fab77da" name="a8eb7e12e1c29c2af458532f74fab77da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb7e12e1c29c2af458532f74fab77da">&#9670;&#160;</a></span>kZeroTolerance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double openturbine::interfaces::components::Turbine::kZeroTolerance {1e-12}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tolerance for near zero comparisons. </p>
 
 </div>
 </div>

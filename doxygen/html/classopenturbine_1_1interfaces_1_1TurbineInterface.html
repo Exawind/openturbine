@@ -186,9 +186,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab3ca84f1fb7c3eaffe591cb796af69f9" id="r_ab3ca84f1fb7c3eaffe591cb796af69f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#ab3ca84f1fb7c3eaffe591cb796af69f9">TurbineInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;turbine_input)</td></tr>
-<tr class="memdesc:ab3ca84f1fb7c3eaffe591cb796af69f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html" title="Interface for blade simulation that manages state, solver, and components.">TurbineInterface</a> from solution and blade inputs.  <br /></td></tr>
-<tr class="separator:ab3ca84f1fb7c3eaffe591cb796af69f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ab1d770773005a7a7fb528c19af165f" id="r_a2ab1d770773005a7a7fb528c19af165f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a2ab1d770773005a7a7fb528c19af165f">TurbineInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;turbine_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a> &amp;controller_input={})</td></tr>
+<tr class="memdesc:a2ab1d770773005a7a7fb528c19af165f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html" title="Interface for blade simulation that manages state, solver, and components.">TurbineInterface</a> from solution and blade inputs.  <br /></td></tr>
+<tr class="separator:a2ab1d770773005a7a7fb528c19af165f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff1631f1e3db4dc0be921d71ae1a37b3" id="r_aff1631f1e3db4dc0be921d71ae1a37b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#aff1631f1e3db4dc0be921d71ae1a37b3">Turbine</a> ()</td></tr>
 <tr class="memdesc:aff1631f1e3db4dc0be921d71ae1a37b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the turbine model.  <br /></td></tr>
 <tr class="separator:aff1631f1e3db4dc0be921d71ae1a37b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,8 +221,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab3ca84f1fb7c3eaffe591cb796af69f9" name="ab3ca84f1fb7c3eaffe591cb796af69f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3ca84f1fb7c3eaffe591cb796af69f9">&#9670;&#160;</a></span>TurbineInterface()</h2>
+<a id="a2ab1d770773005a7a7fb528c19af165f" name="a2ab1d770773005a7a7fb528c19af165f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ab1d770773005a7a7fb528c19af165f">&#9670;&#160;</a></span>TurbineInterface()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -240,7 +240,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;&#160;</td>
-          <td class="paramname"><em>turbine_input</em>&#160;</td>
+          <td class="paramname"><em>turbine_input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>controller_input</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

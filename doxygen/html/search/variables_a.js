@@ -12,7 +12,7 @@ var searchData=
   ['kliegroupcomponents_9',['kLieGroupComponents',['../namespaceopenturbine.html#a34d13d73291b906538e612db63f393e9',1,'openturbine']]],
   ['kmaxgeometrypoints_10',['kMaxGeometryPoints',['../classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416',1,'openturbine::interfaces::components::Beam']]],
   ['kmaxiterations_11',['kMaxIterations',['../namespaceopenturbine.html#a48906c8285184b9678d6334ad3458ef3',1,'openturbine']]],
-  ['kminhubdiameter_12',['kMinHubDiameter',['../namespaceopenturbine_1_1interfaces_1_1components.html#acc04477d9bacc4ceb5cad46456125e7c',1,'openturbine::interfaces::components']]],
+  ['kminhubdiameter_12',['kMinHubDiameter',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#af22c70a475e04541bd6699d918d69939',1,'openturbine::interfaces::components::Turbine']]],
   ['konepluseps_13',['kOnePlusEps',['../namespaceopenturbine_1_1util.html#ae6aa61efd471ebe2b6d69e8705d40106',1,'openturbine::util']]],
   ['kpc_5fdt_14',['kPC_DT',['../namespaceopenturbine_1_1util.html#a155332eeca8a40a8727e4f3b8c5703a4',1,'openturbine::util']]],
   ['kpc_5fki_15',['kPC_KI',['../namespaceopenturbine_1_1util.html#a1a846a0afc9f5d7f20142fbed7aa35fe',1,'openturbine::util']]],
@@ -37,5 +37,6 @@ var searchData=
   ['kvs_5frtpwr_34',['kVS_RtPwr',['../namespaceopenturbine_1_1util.html#a468206066c990b719ec1ea61ac9fd5a7',1,'openturbine::util']]],
   ['kvs_5fslpc_35',['kVS_SlPc',['../namespaceopenturbine_1_1util.html#a246e7dd9b5fcc1491bd5488604007d2a',1,'openturbine::util']]],
   ['kx_36',['kx',['../structopenturbine_1_1HollowCircleProperties.html#a9a5b0a5ee73c6e9f4d13d2c874a99cdf',1,'openturbine::HollowCircleProperties']]],
-  ['ky_37',['ky',['../structopenturbine_1_1HollowCircleProperties.html#acc44064c77d97b88132c94492b50f924',1,'openturbine::HollowCircleProperties']]]
+  ['ky_37',['ky',['../structopenturbine_1_1HollowCircleProperties.html#acc44064c77d97b88132c94492b50f924',1,'openturbine::HollowCircleProperties']]],
+  ['kzerotolerance_38',['kZeroTolerance',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a8eb7e12e1c29c2af458532f74fab77da',1,'openturbine::interfaces::components::Turbine']]]
 ];

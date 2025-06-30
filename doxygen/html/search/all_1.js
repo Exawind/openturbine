@@ -19,8 +19,8 @@ var searchData=
   ['addmasselementconnectivity_16',['AddMassElementConnectivity',['../classopenturbine_1_1MeshConnectivity.html#a0d22d90658412cc57c14c1e0b60d90a4',1,'openturbine::MeshConnectivity']]],
   ['addnode_17',['AddNode',['../classopenturbine_1_1Model.html#a4dbaebd0cb617a2538c5a66100e1f692',1,'openturbine::Model']]],
   ['addpointload_18',['AddPointLoad',['../classopenturbine_1_1interfaces_1_1components_1_1Beam.html#adf141e78f89e5090134a68ec28c4c1ae',1,'openturbine::interfaces::components::Beam']]],
-  ['addprescribedbc_19',['AddPrescribedBC',['../classopenturbine_1_1Model.html#a68eac1e963a3908f7f19ced0a9c81399',1,'openturbine::Model']]],
-  ['addprescribedbc3dofs_20',['AddPrescribedBC3DOFs',['../classopenturbine_1_1Model.html#a2f4edec28c2877c81096912e2005eff0',1,'openturbine::Model']]],
+  ['addprescribedbc_19',['AddPrescribedBC',['../classopenturbine_1_1Model.html#a00e572d4fbeac03e95e9e3f30fdf6e6b',1,'openturbine::Model']]],
+  ['addprescribedbc3dofs_20',['AddPrescribedBC3DOFs',['../classopenturbine_1_1Model.html#a3e165ed4f56036e9f8c4154310ec997e',1,'openturbine::Model']]],
   ['addrefaxispoint_21',['AddRefAxisPoint',['../classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#aadf43eeb795408ea0c6a6d48613d5fdb',1,'openturbine::interfaces::components::BeamBuilder']]],
   ['addrefaxistwist_22',['AddRefAxisTwist',['../classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#aade68543b8dc6d982b73b633215db1f8',1,'openturbine::interfaces::components::BeamBuilder']]],
   ['addrevolutejointconstraint_23',['AddRevoluteJointConstraint',['../classopenturbine_1_1Model.html#a59872bc0022789f9a3fe4ce957bb171b',1,'openturbine::Model']]],
@@ -70,12 +70,13 @@ var searchData=
   ['assemblesystemmatrix_67',['AssembleSystemMatrix',['../namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4',1,'openturbine']]],
   ['assemblesystemresidual_68',['AssembleSystemResidual',['../namespaceopenturbine.html#a36566437e3b617bfdc718e6d33f273c6',1,'openturbine']]],
   ['atm_5fpressure_69',['atm_pressure',['../structopenturbine_1_1util_1_1EnvironmentalConditions.html#a9a2a73b53f4d8946fa17042422bbf8df',1,'openturbine::util::EnvironmentalConditions']]],
-  ['atol_70',['atol',['../structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a44ec759edc4bf0de9de9748e31ea049f',1,'openturbine::CalculateConstraintsErrorSumSquares::atol'],['../structopenturbine_1_1CalculateSystemErrorSumSquares.html#a5b17eb8d951ed153b3dabe4242db36f0',1,'openturbine::CalculateSystemErrorSumSquares::atol']]],
+  ['atol_70',['atol',['../structopenturbine_1_1CalculateSystemErrorSumSquares.html#a5b17eb8d951ed153b3dabe4242db36f0',1,'openturbine::CalculateSystemErrorSumSquares::atol'],['../structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#a44ec759edc4bf0de9de9748e31ea049f',1,'openturbine::CalculateConstraintsErrorSumSquares::atol']]],
   ['ax_5fmatrix_71',['AX_Matrix',['../namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52',1,'openturbine']]],
   ['axes_72',['axes',['../structopenturbine_1_1CalculateConstraintOutput.html#ab2f34a4f85782787c865e5ddb39cf725',1,'openturbine::CalculateConstraintOutput::axes'],['../structopenturbine_1_1CalculateRevoluteJointOutput.html#af57035d1909bf0fe0c79dbea63cdeba8',1,'openturbine::CalculateRevoluteJointOutput::axes'],['../structopenturbine_1_1Constraints.html#a66db11741128e31d9c3093c499425201',1,'openturbine::Constraints::axes']]],
   ['axes_5f_73',['axes_',['../structopenturbine_1_1CalculateConstraintResidualGradient.html#a829924cf7d7b08d9d2c347fbaeb6806c',1,'openturbine::CalculateConstraintResidualGradient']]],
   ['axialvectorofmatrix_74',['AxialVectorOfMatrix',['../namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b',1,'openturbine']]],
-  ['azimuth_5fangle_75',['azimuth_angle',['../structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a66c7782e0370d4883747c15080ff6673',1,'openturbine::interfaces::components::TurbineInput::azimuth_angle'],['../structopenturbine_1_1util_1_1ControllerIO.html#a830eb88fda09d963242f03bdae587f7d',1,'openturbine::util::ControllerIO::azimuth_angle']]],
-  ['azimuth_5fnode_76',['azimuth_node',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ae83cde3ff0dbe004e0b2538b89524346',1,'openturbine::interfaces::components::Turbine']]],
-  ['azimuth_5fto_5fhub_77',['azimuth_to_hub',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#abf47fc390ad2340a702b680adf84b938',1,'openturbine::interfaces::components::Turbine']]]
+  ['axis_5fvector_75',['axis_vector',['../structopenturbine_1_1Constraint.html#a770287a4fb874f2068099f7429ce78ae',1,'openturbine::Constraint']]],
+  ['azimuth_5fangle_76',['azimuth_angle',['../structopenturbine_1_1util_1_1ControllerIO.html#a830eb88fda09d963242f03bdae587f7d',1,'openturbine::util::ControllerIO::azimuth_angle'],['../structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html#a66c7782e0370d4883747c15080ff6673',1,'openturbine::interfaces::components::TurbineInput::azimuth_angle']]],
+  ['azimuth_5fnode_77',['azimuth_node',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#ae83cde3ff0dbe004e0b2538b89524346',1,'openturbine::interfaces::components::Turbine']]],
+  ['azimuth_5fto_5fhub_78',['azimuth_to_hub',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#abf47fc390ad2340a702b680adf84b938',1,'openturbine::interfaces::components::Turbine']]]
 ];

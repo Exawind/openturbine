@@ -1,0 +1,14 @@
+.. meta::e9c259de4fdd53f969506fd40c30194d7d8baf26dd43e370e3c04caed0ab7654eb9b04c3e1bfb7951c87dd7c9d07aae4431ad3d29a754fd1b2a95f7644060587
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/controller_input.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/controller\_input.hpp File Reference
+====================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: controller__input_8hpp.html

@@ -732,6 +732,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af976511aa26b2d3708f71ecaa49627e5" id="r_af976511aa26b2d3708f71ecaa49627e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af976511aa26b2d3708f71ecaa49627e5">TangentTwistToQuaternion</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;tangent, const double twist)</td></tr>
 <tr class="memdesc:af976511aa26b2d3708f71ecaa49627e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent.  <br /></td></tr>
 <tr class="separator:af976511aa26b2d3708f71ecaa49627e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab467420c3912fdd08f1b3bd816388e5c" id="r_ab467420c3912fdd08f1b3bd816388e5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab467420c3912fdd08f1b3bd816388e5c">IsIdentityQuaternion</a> (const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;q, double tolerance=1e-12)</td></tr>
+<tr class="memdesc:ab467420c3912fdd08f1b3bd816388e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0].  <br /></td></tr>
+<tr class="separator:ab467420c3912fdd08f1b3bd816388e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27b4aa8d797ea86827404834f2a0173d" id="r_a27b4aa8d797ea86827404834f2a0173d"><td class="memTemplParams" colspan="2">template&lt;typename VectorType , typename MatrixType &gt; </td></tr>
 <tr class="memitem:a27b4aa8d797ea86827404834f2a0173d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">VecTilde</a> (const VectorType &amp;vector, const MatrixType &amp;matrix)</td></tr>
 <tr class="memdesc:a27b4aa8d797ea86827404834f2a0173d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result.  <br /></td></tr>
@@ -3908,6 +3911,52 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
 </div><div class="memdoc">
 
 <p>Represents an invalid node in constraints that only uses the target node. </p>
+
+</div>
+</div>
+<a id="ab467420c3912fdd08f1b3bd816388e5c" name="ab467420c3912fdd08f1b3bd816388e5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab467420c3912fdd08f1b3bd816388e5c">&#9670;&#160;</a></span>IsIdentityQuaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool openturbine::IsIdentityQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a> &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tolerance</em> = <code>1e-12</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0]. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>The quaternion to check </td></tr>
+    <tr><td class="paramname">tolerance</td><td>The tolerance for the comparison (default: 1e-12) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the quaternion is approximately the identity quaternion, false otherwise </dd></dl>
 
 </div>
 </div>
