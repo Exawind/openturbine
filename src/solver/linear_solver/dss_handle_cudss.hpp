@@ -13,6 +13,8 @@ class DSSHandle<DSSAlgorithm::CUDSS> {
         cudssDssHandleType() {
             cudssCreate(&handle);
             cudssConfigCreate(&solverConfig);
+            auto flag = CUDSS_ALG_1;
+            cudssConfigSet(solverConfig, CUDSS_CONFIG_REORDERING_ALG, &flag, sizeof(flag));
             cudssDataCreate(handle, &solverData);
         }
 
