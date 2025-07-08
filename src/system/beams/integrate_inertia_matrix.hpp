@@ -45,17 +45,18 @@ struct IntegrateInertiaMatrixElement {
             auto phi_j = simd_type{};
             phi_j.copy_from(&shape_interp_(simd_node, qp), tag_type());
             const auto coeff = phi_i * phi_j * w * jacobian;
+	    const auto Muu_local = Kokkos::subview(qp_Muu, qp, Kokkos::ALL);
+	    const auto Guu_local = Kokkos::subview(qp_Guu, qp, Kokkos::ALL);
             for (auto component = 0; component < 36; ++component) {
-                local_M[component] =
-                    local_M[component] + coeff * simd_type(
-                                                     beta_prime_ * qp_Muu(qp, component) +
-                                                     gamma_prime_ * qp_Guu(qp, component)
-                                                 );
+		const auto contribution = simd_type(beta_prime_ * Muu_local(component) + gamma_prime_ * Guu_local(component));
+		local_M[component] = local_M[component] + coeff * contribution;
             }
         }
+	const auto M_slice = Kokkos::subview(gbl_M, node, Kokkos::make_pair(simd_node, Kokkos::min(simd_node + width, num_nodes)), Kokkos::ALL);
+
         for (auto lane = 0U; lane < width && simd_node + lane < num_nodes; ++lane) {
             for (auto component = 0; component < 36; ++component) {
-                gbl_M(node, simd_node + lane, component) = local_M[component][lane];
+                M_slice(lane, component) = local_M[component][lane];
             }
         }
     }

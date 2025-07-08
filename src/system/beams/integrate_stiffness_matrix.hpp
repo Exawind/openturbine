@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_SIMD.hpp>
 
 namespace openturbine::beams {
@@ -59,19 +60,28 @@ struct IntegrateStiffnessMatrixElement {
             const auto P = (phi_i * phi_prime_j) * w;
             const auto C = (phi_prime_i * phi_prime_j) * (w / jacobian);
             const auto O = (phi_prime_i * phi_j) * w;
+	    const auto Kuu_local = Kokkos::subview(qp_Kuu, qp, Kokkos::ALL);
+	    const auto Quu_local = Kokkos::subview(qp_Quu, qp, Kokkos::ALL);
+	    const auto Puu_local = Kokkos::subview(qp_Puu, qp, Kokkos::ALL);
+	    const auto Cuu_local = Kokkos::subview(qp_Cuu, qp, Kokkos::ALL);
+	    const auto Ouu_local = Kokkos::subview(qp_Ouu, qp, Kokkos::ALL);
             for (auto component = 0; component < 36; ++component) {
-                local_M[component] = local_M[component] +
-                                     K * simd_type(qp_Kuu(qp, component) + qp_Quu(qp, component)) +
-                                     P * simd_type(qp_Puu(qp, component)) +
-                                     C * simd_type(qp_Cuu(qp, component)) +
-                                     O * simd_type(qp_Ouu(qp, component));
+		const auto Kuu = simd_type(Kuu_local(component));
+		const auto Quu = simd_type(Quu_local(component));
+		const auto Puu = simd_type(Puu_local(component));
+		const auto Cuu = simd_type(Cuu_local(component));
+		const auto Ouu = simd_type(Ouu_local(component));
+		local_M[component] = local_M[component] + K * (Kuu + Quu) + P * Puu + C * Cuu + O * Ouu;
             }
         }
+	const auto M_slice = Kokkos::subview(gbl_M, node, Kokkos::make_pair(simd_node, Kokkos::min(simd_node + width, num_nodes)), Kokkos::ALL);
+
         for (auto lane = 0U; lane < width && simd_node + lane < num_nodes; ++lane) {
             for (auto component = 0; component < 36; ++component) {
-                gbl_M(node, simd_node + lane, component) = local_M[component][lane];
+                M_slice(lane, component) = local_M[component][lane];
             }
         }
+	
     }
 };
 
