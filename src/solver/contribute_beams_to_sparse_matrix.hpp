@@ -49,14 +49,13 @@ struct ContributeBeamsToSparseMatrix {
                     auto offset = KokkosSparse::findRelOffset(
                         &(row.colidx(0)), row.length, first_column, hint, is_sorted
                     );
-                    auto* matrix_ptr = &(row.value(offset));
-                    for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++matrix_ptr) {
+                    for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
                         const auto contribution =
                             local_dense(component_1, component_2) * conditioner;
                         if constexpr (force_atomic) {
-                            Kokkos::atomic_add(matrix_ptr, contribution);
+                            Kokkos::atomic_add(&(row.value(offset)), contribution);
                         } else {
-                            *matrix_ptr += contribution;
+                            row.value(offset) += contribution;
                         }
                     }
                 }
