@@ -316,7 +316,7 @@ class WindIOPreprocessor:
                     print(f"Warning: Could not interpolate relative thickness at {node_name}")
 
         print(f"Successfully interpolated airfoil sections at all aerodynamic nodes")
-        return interpolated_sections
+        return normalized_airfoils, interpolated_sections
 
     def _normalize_airfoil_coordinates(self, airfoil_name: str, num_points: int = 300) -> Dict[str, np.ndarray]:
         """
@@ -618,7 +618,7 @@ class WindIOPreprocessor:
         """
         # Interpolate airfoil cross-sections
         print("\nInterpolating airfoil cross-sections at aerodynamic nodes...")
-        interpolated_sections = self._interpolate_airfoil_cross_sections(aero_nodes)
+        normalized_sections, interpolated_sections = self._interpolate_airfoil_cross_sections(aero_nodes)
 
         # Create target angle of attack array in radians (from -π to +π radians)
         # TODO: change the target grid to following
@@ -651,7 +651,9 @@ class WindIOPreprocessor:
 
         processed_data = {
             'aerodynamic_nodes': aero_nodes.tolist(),
+            'normalized_cross_sections': normalized_sections,
             'interpolated_cross_sections': interpolated_sections,
+            'normalized_polars': normalized_polars,
             'interpolated_polars': interpolated_polars,
             'metadata': {
                 'source_file': self.windIO_file,
@@ -664,7 +666,189 @@ class WindIOPreprocessor:
             }
         }
 
-        return processed_data, normalized_polars
+        return processed_data
+
+    def save_processed_data(
+        self,
+        processed_data: Dict[str, Any],
+        output_file: str
+    ) -> None:
+        """Saves processed data as a new windIO file with additional airfoil information.
+
+        This method creates a new windIO file that includes:
+        - All original windIO data
+        - Processed airfoil cross-sections at aerodynamic nodes
+        - Processed polar data at aerodynamic nodes
+        - Metadata about the processing
+
+        Args:
+            processed_data: Processed airfoil and polar data
+            output_file: Output windIO file path
+        """
+        new_windio_data = windIO.load_yaml(self.windIO_file) # load original windIO data
+
+        # Replace original airfoils' section and polar data with normalized data
+        normalized_sections = processed_data['normalized_cross_sections'] # normalized cross-sections of source data
+        normalized_polars = processed_data['normalized_polars'] # normalized polars of source data
+        for airfoil in new_windio_data['airfoils']:
+            airfoil_name = airfoil.get('name')
+            if airfoil_name in normalized_polars:
+                # Convert normalized cross-sections to windIO format
+                normalized_section_data = normalized_sections[airfoil_name]
+                windIO_section = {
+                    'name': airfoil_name,
+                    'coordinates': {
+                        'x': normalized_section_data['x'],
+                        'y': normalized_section_data['y']
+                    }
+                }
+                airfoil['coordinates'] = windIO_section['coordinates']
+
+                # Convert normalized polar data to windIO format
+                normalized_polar_data = normalized_polars[airfoil_name]
+                windIO_polars = []
+                for _, polar_set in normalized_polar_data.items():
+                    if isinstance(polar_set, dict) and 'alpha' in polar_set:
+                        windio_polar = {
+                            'configuration': f"Normalized_{airfoil_name}",
+                            're': polar_set.get('reynolds', 1000000.0),
+                            'c_l': {
+                                'grid': polar_set['alpha'],
+                                'values': polar_set['cl']
+                            },
+                            'c_d': {
+                                'grid': polar_set['alpha'],
+                                'values': polar_set['cd']
+                            },
+                            'c_m': {
+                                'grid': polar_set['alpha'],
+                                'values': polar_set['cm']
+                            }
+                        }
+                        windIO_polars.append(windio_polar)
+
+                airfoil['polars'] = windIO_polars
+                print(f"Replaced section and polar data for original airfoil: {airfoil_name}")
+
+        # Create processed airfoil entries in the same format as original airfoils
+        # Sort by spanwise position first
+        sorted_nodes = sorted(
+            processed_data['interpolated_cross_sections'].items(),
+            key=lambda x: x[1]['position']
+        )
+        processed_airfoil_names = []
+        for node_name, section_data in sorted_nodes:
+            # Create airfoil name based on node number
+            node_number = node_name.split('_')[1]  # extract "000" from "node_000"
+            airfoil_name = f"processed_node_{node_number}"
+            processed_airfoil_names.append(airfoil_name)
+
+            # Create airfoil data structure similar to original windIO format
+            processed_airfoil = {
+                'name': airfoil_name,
+                'coordinates': {
+                    'x': section_data['airfoil_coordinates']['x'],
+                    'y': section_data['airfoil_coordinates']['y']
+                },
+                'relative_thickness': section_data.get('relative_thickness', 0.0),
+                'description': (
+                    f"Interpolated airfoil at {section_data['position']:.3f} "
+                    f"span position using {section_data['interpolation_method']} method. "
+                    f"Source airfoils: {', '.join(section_data['source_airfoils'])}"
+                ),
+                'polars': []
+            }
+
+            # Add polar data if available for this node
+            if node_name in processed_data['interpolated_polars']:
+                polar_data = processed_data['interpolated_polars'][node_name]
+                if 'polar_data' in polar_data:
+                    # Convert polar data to the expected windIO format
+                    for polar_name, polar_set in polar_data['polar_data'].items():
+                        if isinstance(polar_set, dict) and 'alpha' in polar_set:
+                            processed_polar = {
+                                'configuration': f"Processed_{node_name} using all source airfoil polars",
+                                're': polar_set.get('reynolds', 1000000.0),
+                                'c_l': {
+                                    'grid': polar_set['alpha'],
+                                    'values': polar_set['cl']
+                                },
+                                'c_d': {
+                                    'grid': polar_set['alpha'],
+                                    'values': polar_set['cd']
+                                },
+                                'c_m': {
+                                    'grid': polar_set['alpha'],
+                                    'values': polar_set['cm']
+                                }
+                            }
+                            processed_airfoil['polars'].append(processed_polar)
+
+            new_windio_data['airfoils'].append(processed_airfoil)
+
+        # Update the outer_shape_bem section to include processed airfoils
+        if 'components' in new_windio_data and 'blade' in new_windio_data['components']:
+            blade_data = new_windio_data['components']['blade']
+            if 'outer_shape_bem' in blade_data:
+                outer_shape = blade_data['outer_shape_bem']
+                if 'airfoil_position' in outer_shape:
+                    existing_grid = outer_shape['airfoil_position']['grid']
+                    existing_labels = outer_shape['airfoil_position']['labels']
+
+                    new_grid = []
+                    new_labels = []
+                    new_grid.extend(existing_grid)
+                    new_labels.extend(existing_labels)
+
+                    # Add processed airfoil positions (already sorted by position)
+                    for node_name, section_data in sorted_nodes:
+                        node_position = section_data['position']
+                        node_number = node_name.split('_')[1]  # Extract "000" from "node_000"
+                        airfoil_name = f"processed_node_{node_number}"
+
+                        new_grid.append(node_position)
+                        new_labels.append(airfoil_name)
+
+                    # Sort by position
+                    sorted_indices = np.argsort(new_grid)
+                    new_grid = [new_grid[i] for i in sorted_indices]
+                    new_labels = [new_labels[i] for i in sorted_indices]
+
+                    # Update the outer_shape_bem data
+                    outer_shape['airfoil_position']['grid'] = new_grid
+                    outer_shape['airfoil_position']['labels'] = new_labels
+
+        # Sort the airfoils section by spanwise position
+        # Create a mapping of airfoil names to their positions
+        airfoil_positions = {}
+
+        # Get positions for original airfoils from outer_shape_bem
+        if 'components' in new_windio_data and 'blade' in new_windio_data['components']:
+            blade_data = new_windio_data['components']['blade']
+            if 'outer_shape_bem' in blade_data and 'airfoil_position' in blade_data['outer_shape_bem']:
+                grid = blade_data['outer_shape_bem']['airfoil_position']['grid']
+                labels = blade_data['outer_shape_bem']['airfoil_position']['labels']
+                for pos, label in zip(grid, labels):
+                    airfoil_positions[label] = pos
+
+        # Sort airfoils by their spanwise position
+        sorted_airfoils = sorted(
+            new_windio_data['airfoils'],
+            key=lambda x: airfoil_positions.get(x.get('name', ''), float('inf'))
+        )
+
+        # Replace the airfoils section with sorted version
+        new_windio_data['airfoils'] = sorted_airfoils
+
+        # Convert numpy arrays to lists for YAML serialization
+        serializable_data = convert_numpy_array_to_serializable_list(new_windio_data)
+
+        try:
+            windIO.write_yaml(serializable_data, output_file)
+            print(f"Original windIO data with processed airfoils saved to: {output_file}")
+            print(f"Added {len(processed_data['interpolated_cross_sections'])} processed airfoils")
+        except Exception as e:
+            print(f"Error saving windIO file: {e}")
 
 #-------------------------------------------------------------------------------
 # Main function
@@ -733,8 +917,8 @@ def main():
 
         # Process all airfoil cross-sections and polars
         aero_nodes = np.linspace(0., 1., args.nodes)
-        processed_data, normalized_polars = preprocessor.process_all_data(aero_nodes)
-        preprocessor.save_processed_data(processed_data, normalized_polars, args.output)
+        processed_data = preprocessor.process_all_data(aero_nodes)
+        preprocessor.save_processed_data(processed_data, args.output)
 
         print(f"Successfully processed windIO data and saved to: {args.output}")
 
