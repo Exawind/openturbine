@@ -14,15 +14,21 @@ TEST(CFDInterfaceTest, PrecessionTest) {
         std::array{std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., .5}};
-    auto interface = InterfaceBuilder{}
+    const auto write_output{true};
+
+    auto builder = InterfaceBuilder{}
                          .SetTimeStep(0.01)
                          .SetDampingFactor(1.)
                          .SetMaximumNonlinearIterations(5U)
                          .EnableFloatingPlatform(true)
                          .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
-                         .SetFloatingPlatformMassMatrix(mass_matrix)
-                         .SetOutputFile("CFDInterfaceTest.PrecessionTest")
-                         .Build();
+                         .SetFloatingPlatformMassMatrix(mass_matrix);
+			 
+    if (write_output) {
+        builder.SetOutputFile("CFDInterfaceTest.PrecessionTest");
+    }
+
+    auto interface = builder.Build();
 
     // Create reference to platform node in interface
     auto& platform_node = interface.turbine.floating_platform.node;
@@ -41,34 +47,36 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[5], -0.30157681970585326, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
-    // Read and verify data from NetCDF file
-    const util::NetCDFFile file("CFDInterfaceTest.PrecessionTest/cfd_interface.nc", false);
-    std::vector<double> displacements(1);
+    if (write_output) {
+        // Read and verify data from NetCDF file
+        const util::NetCDFFile file("CFDInterfaceTest.PrecessionTest/cfd_interface.nc", false);
+        std::vector<double> displacements(1);
 
-    // Check displacement at step 500, platform node
-    const std::vector<size_t> start = {499, platform_node.id};
-    const std::vector<size_t> count = {1, 1};
+        // Check displacement at step 500, platform node
+        const std::vector<size_t> start = {499, platform_node.id};
+        const std::vector<size_t> count = {1, 1};
 
-    file.ReadVariableAt("u_x", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_x", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_y", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_y", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_z", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_z", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_w", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.63053045128590757, 1.e-12);
+        file.ReadVariableAt("u_w", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.63053045128590757, 1.e-12);
 
-    file.ReadVariableAt("u_i", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0.60556039120583116, 1.e-12);
+        file.ReadVariableAt("u_i", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0.60556039120583116, 1.e-12);
 
-    file.ReadVariableAt("u_j", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.30157681970585326, 1.e-12);
+        file.ReadVariableAt("u_j", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.30157681970585326, 1.e-12);
 
-    file.ReadVariableAt("u_k", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.38049886257377241, 1.e-12);
+        file.ReadVariableAt("u_k", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.38049886257377241, 1.e-12);
+    }
 
     // Save the current state
     interface.SaveState();
@@ -121,6 +129,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto rho_inf = 0.0;
     constexpr auto max_iter = 5;
     const auto n_steps{static_cast<size_t>(ceil(t_end / time_step)) + 1};
+    const auto write_output{false};
 
     // Construct platform mass matrix
     constexpr auto platform_mass{1.419625E+7};                           // kg
@@ -140,7 +149,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto mooring_line_initial_length{55.432};  // m
 
     // Create cfd interface
-    auto interface = InterfaceBuilder{}
+    auto builder = InterfaceBuilder{}
                          .SetGravity(gravity)
                          .SetTimeStep(time_step)
                          .SetDampingFactor(rho_inf)
@@ -160,9 +169,12 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
                          .SetMooringLineStiffness(2, mooring_line_stiffness)
                          .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
                          .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
-                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
-                         .SetOutputFile("CFDInterfaceTest.FloatingPlatform")
-                         .Build();
+                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
+    if (write_output) {
+        builder.SetOutputFile("CFDInterfaceTest.FloatingPlatform");
+    }
+
+    auto interface = builder.Build();
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
     const auto initial_spring_force = 1907514.4912628897;
