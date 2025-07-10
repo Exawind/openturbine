@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+
 #include <umfpack.h>
 
 namespace openturbine {
@@ -10,7 +11,7 @@ class DSSHandle<DSSAlgorithm::UMFPACK> {
     struct umfpackDssHandleType {
         void* Symbolic = nullptr;
         void* Numeric = nullptr;
-	std::array<double, UMFPACK_CONTROL> Control{};
+        std::array<double, UMFPACK_CONTROL> Control{};
 
         umfpackDssHandleType() {
             umfpack_di_defaults(Control.data());
