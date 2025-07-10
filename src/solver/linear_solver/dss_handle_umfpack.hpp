@@ -8,8 +8,12 @@ class DSSHandle<DSSAlgorithm::UMFPACK> {
     struct umfpackDssHandleType {
         void* Symbolic = nullptr;
         void* Numeric = nullptr;
+	double Control[UMFPACK_CONTROL];
 
-        umfpackDssHandleType() = default;
+        umfpackDssHandleType() {
+	    umfpack_di_defaults(Control);
+	    Control[UMFPACK_ORDERING] = UMFPACK_ORDERING_BEST;
+	}
 
         umfpackDssHandleType(umfpackDssHandleType&) = delete;
         void operator=(umfpackDssHandleType&) = delete;
@@ -29,6 +33,8 @@ public:
     void*& get_symbolic() { return umfpack_dss_handle->Symbolic; }
 
     void*& get_numeric() { return umfpack_dss_handle->Numeric; }
+
+    double* get_control() { return umfpack_dss_handle->Control; }
 };
 
 }  // namespace openturbine
