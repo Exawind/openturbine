@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <memory>
 #include <umfpack.h>
 
 namespace openturbine {
@@ -8,10 +10,10 @@ class DSSHandle<DSSAlgorithm::UMFPACK> {
     struct umfpackDssHandleType {
         void* Symbolic = nullptr;
         void* Numeric = nullptr;
-        double Control[UMFPACK_CONTROL];
+	std::array<double, UMFPACK_CONTROL> Control{};
 
         umfpackDssHandleType() {
-            umfpack_di_defaults(Control);
+            umfpack_di_defaults(Control.data());
             Control[UMFPACK_ORDERING] = UMFPACK_ORDERING_BEST;
         }
 
@@ -34,7 +36,7 @@ public:
 
     void*& get_numeric() { return umfpack_dss_handle->Numeric; }
 
-    double* get_control() { return umfpack_dss_handle->Control; }
+    double* get_control() { return umfpack_dss_handle->Control.data(); }
 };
 
 }  // namespace openturbine
