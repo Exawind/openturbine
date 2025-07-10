@@ -17,13 +17,13 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     const auto write_output{true};
 
     auto builder = InterfaceBuilder{}
-                         .SetTimeStep(0.01)
-                         .SetDampingFactor(1.)
-                         .SetMaximumNonlinearIterations(5U)
-                         .EnableFloatingPlatform(true)
-                         .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
-                         .SetFloatingPlatformMassMatrix(mass_matrix);
-			 
+                       .SetTimeStep(0.01)
+                       .SetDampingFactor(1.)
+                       .SetMaximumNonlinearIterations(5U)
+                       .EnableFloatingPlatform(true)
+                       .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
+                       .SetFloatingPlatformMassMatrix(mass_matrix);
+
     if (write_output) {
         builder.SetOutputFile("CFDInterfaceTest.PrecessionTest");
     }
@@ -150,26 +150,26 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
 
     // Create cfd interface
     auto builder = InterfaceBuilder{}
-                         .SetGravity(gravity)
-                         .SetTimeStep(time_step)
-                         .SetDampingFactor(rho_inf)
-                         .SetMaximumNonlinearIterations(max_iter)
-                         .EnableFloatingPlatform(true)
-                         .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
-                         .SetFloatingPlatformMassMatrix(platform_mass_matrix)
-                         .SetNumberOfMooringLines(3)
-                         .SetMooringLineStiffness(0, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
-                         .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
-                         .SetMooringLineStiffness(1, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
-                         .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
-                         .SetMooringLineStiffness(2, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
-                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
+                       .SetGravity(gravity)
+                       .SetTimeStep(time_step)
+                       .SetDampingFactor(rho_inf)
+                       .SetMaximumNonlinearIterations(max_iter)
+                       .EnableFloatingPlatform(true)
+                       .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                       .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                       .SetNumberOfMooringLines(3)
+                       .SetMooringLineStiffness(0, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                       .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                       .SetMooringLineStiffness(1, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                       .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                       .SetMooringLineStiffness(2, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                       .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
     if (write_output) {
         builder.SetOutputFile("CFDInterfaceTest.FloatingPlatform");
     }

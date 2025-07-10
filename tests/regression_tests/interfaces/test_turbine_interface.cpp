@@ -12,11 +12,11 @@ namespace openturbine::tests {
 // structure's response.
 TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto duration{0.1};      // Simulation duration in seconds
-    const auto time_step{0.01};     // Time step for the simulation
-    const auto n_blades{3};         // Number of blades in turbine
-    const auto n_blade_nodes{11};   // Number of nodes per blade
-    const auto n_tower_nodes{11};   // Number of nodes in tower
-    const auto write_output{false}; // Write output file
+    const auto time_step{0.01};    // Time step for the simulation
+    const auto n_blades{3};        // Number of blades in turbine
+    const auto n_blade_nodes{11};  // Number of nodes per blade
+    const auto n_tower_nodes{11};  // Number of nodes in tower
+    const auto write_output{false};  // Write output file
 
     // Create interface builder
     auto builder = interfaces::TurbineInterfaceBuilder{};
