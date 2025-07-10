@@ -35,8 +35,6 @@ struct IntegrateInertiaMatrixElement {
             typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Muu_.data(), num_qps);
         const auto qp_Guu =
             typename Kokkos::View<double* [36], DeviceType>::const_type(qp_Guu_.data(), num_qps);
-        const auto gbl_M =
-            Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
 
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
@@ -52,9 +50,13 @@ struct IntegrateInertiaMatrixElement {
 		local_M[component] = local_M[component] + coeff * contribution;
             }
         }
-	const auto M_slice = Kokkos::subview(gbl_M, node, Kokkos::make_pair(simd_node, Kokkos::min(simd_node + width, num_nodes)), Kokkos::ALL);
 
-        for (auto lane = 0U; lane < width && simd_node + lane < num_nodes; ++lane) {
+	const auto num_lanes = Kokkos::min(width, num_nodes-simd_node);
+        const auto global_M =
+            Kokkos::View<double** [36], DeviceType>(gbl_M_.data(), num_nodes, num_nodes);
+	const auto M_slice = Kokkos::subview(global_M, node, Kokkos::make_pair(simd_node, simd_node + num_lanes), Kokkos::ALL);
+
+        for (auto lane = 0U; lane < num_lanes; ++lane) {
             for (auto component = 0; component < 36; ++component) {
                 M_slice(lane, component) = local_M[component][lane];
             }
