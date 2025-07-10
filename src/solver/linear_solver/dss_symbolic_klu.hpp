@@ -19,9 +19,9 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType> {
         if (symbolic != nullptr) {
             klu_free_symbolic(&symbolic, &common);
         }
-	if (numeric != nullptr) {
-	    klu_free_numeric(&numeric, &common);
-	}
+        if (numeric != nullptr) {
+            klu_free_numeric(&numeric, &common);
+        }
         symbolic =
             klu_analyze(num_rows, const_cast<int*>(row_ptrs.data()), col_inds.data(), &common);
     }

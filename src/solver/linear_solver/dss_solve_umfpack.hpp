@@ -19,7 +19,7 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType, MultiVe
         auto b_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), b);
 
         auto*& numeric = dss_handle.get_numeric();
-	auto* control = dss_handle.get_control();
+        auto* control = dss_handle.get_control();
 
         umfpack_di_solve(
             UMFPACK_At, row_ptrs.data(), col_inds.data(), values.data(), x_host.data(),

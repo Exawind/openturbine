@@ -11,9 +11,9 @@ class DSSHandle<DSSAlgorithm::KLU> {
         klu_common Common{};
 
         kluDssHandleType() {
-	    klu_defaults(&Common);
-	    Common.ordering = 1;
-	}
+            klu_defaults(&Common);
+            Common.ordering = 1;
+        }
 
         kluDssHandleType(kluDssHandleType&) = delete;
         void operator=(kluDssHandleType&) = delete;

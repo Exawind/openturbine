@@ -40,7 +40,8 @@ struct ContributeBeamsToSparseMatrix {
                 const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
                     element_freedom_table(i, node_2, 0)
                 );
-		const auto local_dense = Kokkos::subview(dense, i, node_1, node_2, Kokkos::ALL, Kokkos::ALL);
+                const auto local_dense =
+                    Kokkos::subview(dense, i, node_1, node_2, Kokkos::ALL, Kokkos::ALL);
                 for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
                     const auto row_num =
                         static_cast<int>(element_freedom_table(i, node_1, component_1));
@@ -48,14 +49,14 @@ struct ContributeBeamsToSparseMatrix {
                     auto offset = KokkosSparse::findRelOffset(
                         &(row.colidx(0)), row.length, first_column, hint, is_sorted
                     );
-		    auto* matrix_ptr = &(row.value(offset));
+                    auto* matrix_ptr = &(row.value(offset));
                     for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++matrix_ptr) {
                         const auto contribution =
                             local_dense(component_1, component_2) * conditioner;
                         if constexpr (force_atomic) {
-			    Kokkos::atomic_add(matrix_ptr, contribution);
+                            Kokkos::atomic_add(matrix_ptr, contribution);
                         } else {
-			    *matrix_ptr += contribution;
+                            *matrix_ptr += contribution;
                         }
                     }
                 }

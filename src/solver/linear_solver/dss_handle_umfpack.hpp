@@ -8,12 +8,12 @@ class DSSHandle<DSSAlgorithm::UMFPACK> {
     struct umfpackDssHandleType {
         void* Symbolic = nullptr;
         void* Numeric = nullptr;
-	double Control[UMFPACK_CONTROL];
+        double Control[UMFPACK_CONTROL];
 
         umfpackDssHandleType() {
-	    umfpack_di_defaults(Control);
-	    Control[UMFPACK_ORDERING] = UMFPACK_ORDERING_BEST;
-	}
+            umfpack_di_defaults(Control);
+            Control[UMFPACK_ORDERING] = UMFPACK_ORDERING_BEST;
+        }
 
         umfpackDssHandleType(umfpackDssHandleType&) = delete;
         void operator=(umfpackDssHandleType&) = delete;

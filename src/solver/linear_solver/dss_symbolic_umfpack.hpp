@@ -15,7 +15,7 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
         auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);
 
         auto*& symbolic = dss_handle.get_symbolic();
-	auto* control = dss_handle.get_control();
+        auto* control = dss_handle.get_control();
 
         umfpack_di_symbolic(
             num_rows, num_cols, row_ptrs.data(), col_inds.data(), nullptr, &symbolic, control,

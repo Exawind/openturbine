@@ -12,7 +12,7 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
 
         auto*& symbolic = dss_handle.get_symbolic();
         auto*& numeric = dss_handle.get_numeric();
-	auto* control = dss_handle.get_control();
+        auto* control = dss_handle.get_control();
 
         umfpack_di_numeric(
             row_ptrs.data(), col_inds.data(), values.data(), symbolic, &numeric, control, nullptr
