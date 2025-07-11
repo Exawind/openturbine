@@ -1,7 +1,6 @@
 #pragma once
 
 #include "step/step_parameters.hpp"
-#include "types.hpp"
 
 namespace openturbine::interfaces::components {
 
