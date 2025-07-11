@@ -4,6 +4,7 @@
 #include <array>
 
 #include "interfaces/node_data.hpp"
+#include "types.hpp"
 
 namespace openturbine {
 class Model;
@@ -23,6 +24,9 @@ class BeamInput;
  */
 class Beam {
 public:
+    using DeviceType =
+        Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
+
     /// @brief Maximum number of points allowed in blade geometry definition
     static constexpr size_t kMaxGeometryPoints{10};
 
@@ -69,21 +73,11 @@ public:
 
     /// @brief Populate node motion based on host state
     /// @param host_state Host state containing position, displacement, velocity, and acceleration
-    template <typename DeviceType>
-    void GetMotion(const HostState<DeviceType>& host_state) {
-        for (auto& node : this->nodes) {
-            node.GetMotion(host_state);
-        }
-    }
+    void GetMotion(const HostState<DeviceType>& host_state);
 
     /// @brief Update the host state with current node forces and moments
     /// @param host_state Host state to update
-    template <typename DeviceType>
-    void SetLoads(HostState<DeviceType>& host_state) const {
-        for (const auto& node : this->nodes) {
-            node.SetLoads(host_state);
-        }
-    }
+    void SetLoads(HostState<DeviceType>& host_state) const;
 
 private:
     std::vector<std::array<double, 3>> node_coordinates;  ///< Node coordinates

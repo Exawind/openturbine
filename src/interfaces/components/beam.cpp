@@ -44,6 +44,18 @@ void Beam::ClearLoads() {
     }
 }
 
+void Beam::GetMotion(const HostState<DeviceType>& host_state) {
+    for (auto& node : this->nodes) {
+        node.GetMotion(host_state);
+    }
+}
+
+void Beam::SetLoads(HostState<DeviceType>& host_state) const {
+    for (const auto& node : this->nodes) {
+        node.SetLoads(host_state);
+    }
+}
+
 void Beam::ValidateInput(const BeamInput& input) {
     if (input.ref_axis.coordinate_grid.size() < 2 || input.ref_axis.coordinates.size() < 2) {
         throw std::invalid_argument("At least two reference axis points are required");

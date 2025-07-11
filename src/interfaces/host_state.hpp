@@ -1,7 +1,6 @@
 #pragma once
 
 #include "state/state.hpp"
-#include "types.hpp"
 
 namespace openturbine::interfaces {
 
