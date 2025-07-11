@@ -1,10 +1,11 @@
 #pragma once
 
-#include "blade_interface.hpp"
 #include "interfaces/components/beam_builder.hpp"
 #include "interfaces/components/solution_builder.hpp"
 
 namespace openturbine::interfaces {
+
+class BladeInterface;
 
 /**
  * @brief Builder class to construct a BladeInterface by composing Blade and Solution components
@@ -19,17 +20,15 @@ namespace openturbine::interfaces {
  */
 class BladeInterfaceBuilder {
 public:
-    [[nodiscard]] components::SolutionBuilder& Solution() { return this->solution_builder; }
+    [[nodiscard]] components::SolutionBuilder& Solution();
 
-    [[nodiscard]] components::BeamBuilder& Blade() { return this->beam_builder; }
+    [[nodiscard]] components::BeamBuilder& Blade();
 
     /**
      * @brief Builds the BladeInterface by composing the Blade and Solution components
      * @return A BladeInterface object
      */
-    [[nodiscard]] BladeInterface Build() const {
-        return BladeInterface(this->solution_builder.Input(), this->beam_builder.Input());
-    }
+    [[nodiscard]] BladeInterface Build() const;
 
 private:
     components::SolutionBuilder solution_builder;  ///< Builder for the Solution component
