@@ -9,11 +9,8 @@
 #include "step/step_parameters.hpp"
 
 namespace openturbine::interfaces::components {
-    class SolutionInput;
-}
-
-namespace openturbine::cfd {
-    class TurbineInput;
+struct SolutionInput;
+struct TurbineInput;
 }
 
 namespace openturbine::interfaces {
