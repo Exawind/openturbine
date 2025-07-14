@@ -6,6 +6,7 @@
 #include "utilities/controllers/turbine_controller.hpp"
 #include "model/model.hpp"
 #include "interfaces/outputs.hpp"
+#include "step/step_parameters.hpp"
 
 namespace openturbine::interfaces::components {
     class SolutionInput;

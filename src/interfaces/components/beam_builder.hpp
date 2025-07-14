@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "beam_input.hpp"
 
 namespace openturbine {

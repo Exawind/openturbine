@@ -7,6 +7,7 @@
 #include "interfaces/host_state.hpp"
 #include "interfaces/outputs.hpp"
 #include "model/model.hpp"
+#include "step/step_parameters.hpp"
 
 namespace openturbine::cfd {
 

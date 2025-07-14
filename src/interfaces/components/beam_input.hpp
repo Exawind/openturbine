@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <array>
+#include <stdexcept>
 
 namespace openturbine::interfaces::components {
 

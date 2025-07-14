@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include <tuple>
 
 #include "constraints/constraint.hpp"
@@ -12,9 +11,7 @@
 #include "dof_management/create_element_freedom_table.hpp"
 #include "elements/beams/beams.hpp"
 #include "elements/beams/beams_input.hpp"
-#include "elements/beams/calculate_QP_deformation.hpp"
 #include "elements/beams/create_beams.hpp"
-#include "elements/beams/interpolate_to_quadrature_points.hpp"
 #include "elements/elements.hpp"
 #include "elements/masses/create_masses.hpp"
 #include "elements/masses/masses_input.hpp"
@@ -24,8 +21,6 @@
 #include "node.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
-#include "step/step_parameters.hpp"
-#include "system/beams/update_node_state.hpp"
 #include "types.hpp"
 
 namespace openturbine {
