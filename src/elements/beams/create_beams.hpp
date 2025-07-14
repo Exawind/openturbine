@@ -43,53 +43,53 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     host_gravity(1) = beams_input.gravity[1];
     host_gravity(2) = beams_input.gravity[2];
 
-    for (size_t i = 0; i < beams_input.NumElements(); i++) {
+    for (auto element = 0; element < beams_input.NumElements(); element++) {
         // Get number of nodes and quadrature points in element
-        const auto num_nodes = beams_input.elements[i].node_ids.size();
-        const auto num_qps = beams_input.elements[i].quadrature.size();
+        const auto num_nodes = beams_input.elements[element].node_ids.size();
+        const auto num_qps = beams_input.elements[element].quadrature.size();
 
         // Create element indices and set in host mirror
-        host_num_nodes_per_element(i) = num_nodes;
-        host_num_qps_per_element(i) = num_qps;
+        host_num_nodes_per_element(element) = num_nodes;
+        host_num_qps_per_element(element) = num_qps;
 
         // Populate beam node->state indices
-        for (size_t j = 0; j < num_nodes; ++j) {
-            host_node_state_indices(i, j) = beams_input.elements[i].node_ids[j];
+        for (auto node = 0; node < num_nodes; ++node) {
+            host_node_state_indices(element, node) = beams_input.elements[element].node_ids[node];
         }
 
         // Populate views for this element
         PopulateNodeX0(
-            beams_input.elements[i], nodes,
-            Kokkos::subview(host_node_x0, i, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
+            beams_input.elements[element], nodes,
+            Kokkos::subview(host_node_x0, element, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
         );
         PopulateQPWeight(
-            beams_input.elements[i],
-            Kokkos::subview(host_qp_weight, i, Kokkos::make_pair(0UL, num_qps))
+            beams_input.elements[element],
+            Kokkos::subview(host_qp_weight, element, Kokkos::make_pair(0UL, num_qps))
         );
         PopulateShapeFunctionValues(
-            beams_input.elements[i], nodes,
+            beams_input.elements[element], nodes,
             Kokkos::subview(
-                host_shape_interp, i, Kokkos::make_pair(0UL, num_nodes),
+                host_shape_interp, element, Kokkos::make_pair(0UL, num_nodes),
                 Kokkos::make_pair(0UL, num_qps)
             )
         );
         PopulateShapeFunctionDerivatives(
-            beams_input.elements[i], nodes,
+            beams_input.elements[element], nodes,
             Kokkos::subview(
-                host_shape_deriv, i, Kokkos::make_pair(0UL, num_nodes),
+                host_shape_deriv, element, Kokkos::make_pair(0UL, num_nodes),
                 Kokkos::make_pair(0UL, num_qps)
             )
         );
         PopulateQPMstar(
-            beams_input.elements[i],
+            beams_input.elements[element],
             Kokkos::subview(
-                host_qp_Mstar, i, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
+                host_qp_Mstar, element, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
             )
         );
         PopulateQPCstar(
-            beams_input.elements[i],
+            beams_input.elements[element],
             Kokkos::subview(
-                host_qp_Cstar, i, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
+                host_qp_Cstar, element, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
             )
         );
     }

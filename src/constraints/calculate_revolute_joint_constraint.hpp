@@ -2,7 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
 
@@ -59,8 +58,8 @@ KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointConstraint(
     // Phi(0:3) = u2 + X0 - u1 - R1*X0
     QuaternionInverse(R1, R1t);
     RotateVectorByQuaternion(R1, X0, R1_X0);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+    for (auto component = 0; component < 3; ++component) {
+        residual_terms(component) = u2(component) + X0(component) - u1(component) - R1_X0(component);
     }
 
     // Angular residual
@@ -79,31 +78,31 @@ KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointConstraint(
     //---------------------------------
     // Target Node
     //---------------------------------
-    for (int i = 0; i < 3; ++i) {
-        target_gradient_terms(i, i) = 1.;
+    for (auto component = 0; component < 3; ++component) {
+        target_gradient_terms(component, component) = 1.;
     }
 
     // B(3, 3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
     CrossProduct(x, z, xcz);
     // B(4, 3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
     CrossProduct(x, y, xcy);
-    for (int j = 0; j < 3; ++j) {
-        target_gradient_terms(3, j + 3) = -xcz(j);
-        target_gradient_terms(4, j + 3) = -xcy(j);
+    for (auto component = 0; component < 3; ++component) {
+        target_gradient_terms(3, component + 3) = -xcz(component);
+        target_gradient_terms(4, component + 3) = -xcy(component);
     }
     //---------------------------------
     // Base Node
     //---------------------------------
     // B(0:3,0:3) = -I
-    for (int i = 0; i < 3; ++i) {
-        base_gradient_terms(i, i) = -1.;
+    for (auto component = 0; component < 3; ++component) {
+        base_gradient_terms(component, component) = -1.;
     }
 
     // B(3,3:6) = cross(R1 * x0_hat, transpose(R2 * z0_hat))
     // B(4,3:6) = cross(R1 * x0_hat, transpose(R2 * y0_hat))
-    for (int j = 0; j < 3; ++j) {
-        base_gradient_terms(3, j + 3) = xcz(j);
-        base_gradient_terms(4, j + 3) = xcy(j);
+    for (auto component = 0; component < 3; ++component) {
+        base_gradient_terms(3, component + 3) = xcz(component);
+        base_gradient_terms(4, component + 3) = xcy(component);
     }
 }
 }  // namespace openturbine

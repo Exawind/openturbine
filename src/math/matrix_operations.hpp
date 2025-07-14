@@ -1,9 +1,10 @@
 #pragma once
 
+#include <array>
+
 #include <Kokkos_Core.hpp>
 
 #include "math/quaternion_operations.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 
@@ -16,14 +17,14 @@ namespace openturbine {
 template <typename Matrix>
 KOKKOS_INLINE_FUNCTION void AX_Matrix(const Matrix& A, const Matrix& AX_A) {
     double trace{0.};
-    for (int i = 0; i < A.extent_int(0); ++i) {
+    for (auto i = 0; i < A.extent_int(0); ++i) {
         trace += A(i, i);
     }
 
     trace /= 2.;
 
-    for (int i = 0; i < A.extent_int(0); ++i) {
-        for (int j = 0; j < A.extent_int(1); ++j) {
+    for (auto i = 0; i < A.extent_int(0); ++i) {
+        for (auto j = 0; j < A.extent_int(1); ++j) {
             AX_A(i, j) = -A(i, j) / 2.;
         }
         AX_A(i, i) += trace;
@@ -48,9 +49,11 @@ KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(const Matrix& m, const Vector& v
     v(2) = (m(1, 0) - m(0, 1)) / 2.;
 }
 
-inline Array_6x6 RotateMatrix6(const Array_6x6& m, const Array_4& q) {
+inline std::array<std::array<double, 6>, 6> RotateMatrix6(
+    const std::array<std::array<double, 6>, 6>& m, const std::array<double, 4>& q
+) {
     const auto rm = QuaternionToRotationMatrix(q);
-    Array_6x6 r{{
+    std::array<std::array<double, 6>, 6> r{{
         {rm[0][0], rm[0][1], rm[0][2], 0., 0., 0.},
         {rm[1][0], rm[1][1], rm[1][2], 0., 0., 0.},
         {rm[2][0], rm[2][1], rm[2][2], 0., 0., 0.},
@@ -60,7 +63,7 @@ inline Array_6x6 RotateMatrix6(const Array_6x6& m, const Array_4& q) {
     }};
 
     // matmul(r,m)
-    Array_6x6 mt;
+    std::array<std::array<double, 6>, 6> mt;
     for (auto i = 0U; i < 6; ++i) {
         for (auto j = 0U; j < 6; ++j) {
             mt[i][j] = 0.;
@@ -71,7 +74,7 @@ inline Array_6x6 RotateMatrix6(const Array_6x6& m, const Array_4& q) {
     }
 
     // matmul(matmul(r,m),r^T)
-    Array_6x6 mo;
+    std::array<std::array<double, 6>, 6> mo;
     for (auto i = 0U; i < 6; ++i) {
         for (auto j = 0U; j < 6; ++j) {
             mo[i][j] = 0.;

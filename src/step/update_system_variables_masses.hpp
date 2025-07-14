@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
+#include <Kokkos_Profiling_ScopedRegion.hpp>
 
+#include "elements/masses/masses.hpp"
 #include "state/state.hpp"
 #include "step_parameters.hpp"
 #include "system/masses/calculate_quadrature_point_values.hpp"

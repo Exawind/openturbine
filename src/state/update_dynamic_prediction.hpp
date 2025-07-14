@@ -19,14 +19,14 @@ struct UpdateDynamicPrediction {
     Kokkos::View<double* [6], DeviceType> vd;
 
     KOKKOS_FUNCTION
-    void operator()(const size_t i_node) const {
-        const auto num_dof = count_active_dofs(node_freedom_allocation_table(i_node));
-        const auto first_dof = node_freedom_map_table(i_node);
-        for (auto j = 0U; j < num_dof; ++j) {
-            const auto delta = x_delta(first_dof + j, 0);
-            q_delta(i_node, j) += delta / h;
-            v(i_node, j) += gamma_prime * delta;
-            vd(i_node, j) += beta_prime * delta;
+    void operator()(const size_t node) const {
+        const auto num_dof = count_active_dofs(node_freedom_allocation_table(node));
+        const auto first_dof = node_freedom_map_table(node);
+        for (auto component = 0U; component < num_dof; ++component) {
+            const auto delta = x_delta(first_dof + component, 0);
+            q_delta(node, component) += delta / h;
+            v(node, component) += gamma_prime * delta;
+            vd(node, component) += beta_prime * delta;
         }
     }
 };

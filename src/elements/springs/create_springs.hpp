@@ -1,5 +1,6 @@
 #pragma once
 
+#include "model/node.hpp"
 #include "springs.hpp"
 #include "springs_input.hpp"
 
@@ -17,18 +18,19 @@ inline Springs<DeviceType> CreateSprings(
     auto host_l_ref = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.l_ref);
     auto host_k = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.k);
 
-    for (size_t i_elem = 0; i_elem < springs_input.NumElements(); i_elem++) {
-        const auto& element = springs_input.elements[i_elem];
+    for (auto elementIdx = 0U; elementIdx < springs_input.NumElements(); elementIdx++) {
+        const auto& element = springs_input.elements[elementIdx];
 
-        host_node_state_indices(i_elem, 0U) = static_cast<size_t>(element.node_ids[0]);
-        host_node_state_indices(i_elem, 1U) = static_cast<size_t>(element.node_ids[1]);
+        host_node_state_indices(elementIdx, 0U) = static_cast<size_t>(element.node_ids[0]);
+        host_node_state_indices(elementIdx, 1U) = static_cast<size_t>(element.node_ids[1]);
 
-        for (size_t i = 0; i < 3; i++) {
-            host_x0(i_elem, i) = nodes[element.node_ids[1]].x0[i] - nodes[element.node_ids[0]].x0[i];
+        for (auto component = 0U; component < 3U; component++) {
+            host_x0(elementIdx, component) =
+                nodes[element.node_ids[1]].x0[component] - nodes[element.node_ids[0]].x0[component];
         }
 
-        host_l_ref(i_elem) = element.undeformed_length;
-        host_k(i_elem) = element.stiffness;
+        host_l_ref(elementIdx) = element.undeformed_length;
+        host_k(elementIdx) = element.stiffness;
     }
 
     Kokkos::deep_copy(springs.node_state_indices, host_node_state_indices);

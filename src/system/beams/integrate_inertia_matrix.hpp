@@ -39,10 +39,10 @@ struct IntegrateInertiaMatrixElement {
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
             const auto jacobian = simd_type(qp_jacobian_(qp));
-            const auto phi_i = simd_type(shape_interp_(node, qp));
-            auto phi_j = simd_type{};
-            phi_j.copy_from(&shape_interp_(simd_node, qp), tag_type());
-            const auto coeff = phi_i * phi_j * w * jacobian;
+            const auto phi_1 = simd_type(shape_interp_(node, qp));
+            auto phi_2 = simd_type{};
+            phi_2.copy_from(&shape_interp_(simd_node, qp), tag_type());
+            const auto coeff = phi_1 * phi_2 * w * jacobian;
             const auto Muu_local = Kokkos::subview(qp_Muu, qp, Kokkos::ALL);
             const auto Guu_local = Kokkos::subview(qp_Guu, qp, Kokkos::ALL);
             for (auto component = 0; component < 36; ++component) {

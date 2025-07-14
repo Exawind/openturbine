@@ -1,13 +1,11 @@
 #pragma once
 
-#include <array>
 #include <vector>
 
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 
 #include "compute_num_system_dofs.hpp"
-#include "constraints/constraint_type.hpp"
 #include "create_full_matrix.hpp"
 #include "linear_solver/dss_handle.hpp"
 #include "linear_solver/dss_symbolic.hpp"

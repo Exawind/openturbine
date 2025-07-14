@@ -1,5 +1,6 @@
 #pragma once
 
+#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::beams {
@@ -14,21 +15,21 @@ KOKKOS_INLINE_FUNCTION void InterpolateToQuadraturePointForStiffness(
     const Kokkos::View<double[3], DeviceType>& u_prime,
     const Kokkos::View<double[4], DeviceType>& r_prime
 ) {
-    for (auto i_node = 0U; i_node < node_u.extent(0); ++i_node) {
-        const auto phi = shape_interp(i_node);
-        const auto dphiJ = shape_deriv(i_node) / jacobian;
-        for (auto k = 0U; k < 3U; ++k) {
-            u(k) += node_u(i_node, k) * phi;
-            u_prime(k) += node_u(i_node, k) * dphiJ;
+    for (auto node = 0U; node < node_u.extent(0); ++node) {
+        const auto phi = shape_interp(node);
+        const auto dphiJ = shape_deriv(node) / jacobian;
+        for (auto component = 0U; component < 3U; ++component) {
+            u(component) += node_u(node, component) * phi;
+            u_prime(component) += node_u(node, component) * dphiJ;
         }
-        for (auto k = 0U; k < 4U; ++k) {
-            r(k) += node_u(i_node, k + 3) * phi;
-            r_prime(k) += node_u(i_node, k + 3) * dphiJ;
+        for (auto component = 0U; component < 4U; ++component) {
+            r(component) += node_u(node, component + 3) * phi;
+            r_prime(component) += node_u(node, component + 3) * dphiJ;
         }
     }
     const auto r_length = KokkosBlas::serial_nrm2(r);
-    for (auto k = 0U; k < 4U; ++k) {
-        r(k) /= r_length;
+    for (auto component = 0U; component < 4U; ++component) {
+        r(component) /= r_length;
     }
 }
 

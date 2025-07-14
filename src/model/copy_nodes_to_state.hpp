@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
 #include "node.hpp"
@@ -17,17 +16,17 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
     auto host_v = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.v);
     auto host_vd = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.vd);
 
-    for (auto i = 0U; i < nodes.size(); ++i) {
-        const auto& node = nodes[i];
-        for (auto j = 0U; j < kLieGroupComponents; ++j) {
-            host_x0(i, j) = node.x0[j];
-            host_q(i, j) = node.u[j];
+    for (auto node_index = 0U; node_index < nodes.size(); ++node_index) {
+        const auto& node = nodes[node_index];
+        for (auto component = 0U; component < 7U; ++component) {
+            host_x0(node_index, component) = node.x0[component];
+            host_q(node_index, component) = node.u[component];
         }
-        for (auto j = 0U; j < kLieAlgebraComponents; ++j) {
-            host_v(i, j) = node.v[j];
-            host_vd(i, j) = node.vd[j];
+        for (auto component = 0U; component < 6U; ++component) {
+            host_v(node_index, component) = node.v[component];
+            host_vd(node_index, component) = node.vd[component];
         }
-        host_id(i) = node.id;
+        host_id(node_index) = node.id;
     }
 
     // Copy data to host

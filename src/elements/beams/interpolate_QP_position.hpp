@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
-#include <types.hpp>
 
 namespace openturbine {
 
@@ -26,19 +25,20 @@ struct InterpolateQPPosition {
         qp_position;  //< quadrature point position - x, y, z (computed)
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        const auto num_nodes = num_nodes_per_element(i_elem);
-        const auto num_qps = num_qps_per_element(i_elem);
-        for (auto j = 0U; j < num_qps; ++j) {
+    void operator()(const int element) const {
+        const auto num_nodes = num_nodes_per_element(element);
+        const auto num_qps = num_qps_per_element(element);
+        for (auto qp = 0U; qp < num_qps; ++qp) {
             auto local_result = Kokkos::Array<double, 3>{};
-            for (auto i = 0U; i < num_nodes; ++i) {
-                const auto phi = shape_interpolation(i_elem, i, j);
-                for (auto k = 0U; k < kVectorComponents; ++k) {
-                    local_result[k] += node_position_rotation(i_elem, i, k) * phi;
+            for (auto node = 0U; node < num_nodes; ++node) {
+                const auto phi = shape_interpolation(element, node, qp);
+                for (auto component = 0U; component < 3U; ++component) {
+                    local_result[component] +=
+                        node_position_rotation(element, node, component) * phi;
                 }
             }
-            for (auto k = 0U; k < 3U; ++k) {
-                qp_position(i_elem, j, k) = local_result[k];
+            for (auto component = 0U; component < 3U; ++component) {
+                qp_position(element, qp, component) = local_result[component];
             }
         }
     }

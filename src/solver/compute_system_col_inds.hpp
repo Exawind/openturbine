@@ -29,8 +29,8 @@ struct ComputeSystemColInds {
     KOKKOS_FUNCTION
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
-        for (auto n = 0U; n < num_nodes; ++n) {
-            if (node_state_indices(element, n) == node) {
+        for (auto node_idx = 0U; node_idx < num_nodes; ++node_idx) {
+            if (node_state_indices(element, node_idx) == node) {
                 return true;
             }
         }
@@ -57,13 +57,13 @@ struct ComputeSystemColInds {
     KOKKOS_FUNCTION
     RowPtrValueType ComputeColIndsInElement(size_t element, size_t node, RowPtrValueType index)
         const {
-        for (auto n = 0U; n < num_nodes_per_element(element); ++n) {
-            const auto node_state_index = node_state_indices(element, n);
+        for (auto node_index = 0U; node_index < num_nodes_per_element(element); ++node_index) {
+            const auto node_state_index = node_state_indices(element, node_index);
             if (node_state_index != node) {
                 const auto num_dof = active_dofs(node_state_index);
                 const auto dof_index = node_freedom_map_table(node_state_index);
-                for (auto k = 0U; k < num_dof; ++k, ++index) {
-                    const auto col_index = dof_index + k;
+                for (auto component = 0U; component < num_dof; ++component, ++index) {
+                    const auto col_index = dof_index + component;
                     col_inds(index) = static_cast<IndicesValueType>(col_index);
                 }
             }
@@ -92,24 +92,24 @@ struct ComputeSystemColInds {
 
         auto current_col = Kokkos::Array<RowPtrValueType, 6>{};
 
-        for (auto j = 0U; j < num_dof; ++j) {
-            auto index = row_ptrs(dof_index + j);
+        for (auto component_1 = 0U; component_1 < num_dof; ++component_1) {
+            auto index = row_ptrs(dof_index + component_1);
 
-            for (auto k = 0U; k < num_dof; ++k, ++index) {
-                col_inds(index) =
-                    static_cast<IndicesValueType>(dof_index) + static_cast<IndicesValueType>(k);
+            for (auto component_2 = 0U; component_2 < num_dof; ++component_2, ++index) {
+                col_inds(index) = static_cast<IndicesValueType>(dof_index) +
+                                  static_cast<IndicesValueType>(component_2);
             }
-            current_col[j] = static_cast<RowPtrValueType>(num_dof);
+            current_col[component_1] = static_cast<RowPtrValueType>(num_dof);
         }
 
         for (auto element = 0U; element < num_elements; ++element) {
             if (!ElementContainsNode(element, node)) {
                 continue;
             }
-            for (auto j = 0U; j < num_dof; ++j) {
-                const auto index = row_ptrs(dof_index + j) + current_col[j];
+            for (auto component = 0U; component < num_dof; ++component) {
+                const auto index = row_ptrs(dof_index + component) + current_col[component];
                 const auto new_index = ComputeColIndsInElement(element, node, index);
-                current_col[j] += new_index - index;
+                current_col[component] += new_index - index;
             }
         }
 
@@ -117,10 +117,10 @@ struct ComputeSystemColInds {
             if (!ConstraintContainsNode(constraint, dof_index)) {
                 continue;
             }
-            for (auto j = 0U; j < num_dof; ++j) {
-                const auto index = row_ptrs(dof_index + j) + current_col[j];
+            for (auto component = 0U; component < num_dof; ++component) {
+                const auto index = row_ptrs(dof_index + component) + current_col[component];
                 const auto new_index = ComputeColIndsInConstraint(constraint, index);
-                current_col[j] += new_index - index;
+                current_col[component] += new_index - index;
             }
         }
     }

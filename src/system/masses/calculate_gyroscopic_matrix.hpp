@@ -1,5 +1,6 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
 #include <KokkosBlas1_set.hpp>
@@ -36,11 +37,7 @@ KOKKOS_INLINE_FUNCTION void CalculateGyroscopicMatrix(
     KokkosBlas::serial_axpy(mass, eta, V1);
     Gemv::invoke(1., omega_tilde, V1, 0., V2);
     VecTilde(V2, M1);
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            Guu_12(i, j) = M1(j, i);
-        }
-    }
+    KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(M1, Guu_12);
 
     VecTilde(V1, M1);
     GemmNT::invoke(1., omega_tilde, M1, 1., Guu_12);
@@ -48,11 +45,7 @@ KOKKOS_INLINE_FUNCTION void CalculateGyroscopicMatrix(
     Gemv::invoke(1., rho, omega, 0., V1);
     VecTilde(V1, M1);
     auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            Guu_22(i, j) = M1(i, j);
-        }
-    }
+    KokkosBatched::SerialCopy<>::invoke(M1, Guu_22);
     GemmNN::invoke(1., omega_tilde, rho, -1., Guu_22);
 }
 

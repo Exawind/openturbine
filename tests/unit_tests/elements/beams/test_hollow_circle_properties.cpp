@@ -1,13 +1,11 @@
 #include <array>
 #include <cmath>
-#include <cstddef>
 #include <stdexcept>
 
 #include <gtest/gtest.h>
 
 #include "elements/beams/beam_section.hpp"
 #include "elements/beams/hollow_circle_properties.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -43,9 +41,12 @@ protected:
 
     TestParameters tp_;
 
-    static void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
-        for (size_t i = 0; i < 6; ++i) {
-            for (size_t j = 0; j < 6; ++j) {
+    static void ExpectMatrixEqual(
+        const std::array<std::array<double, 6>, 6>& actual,
+        const std::array<std::array<double, 6>, 6>& expected
+    ) {
+        for (auto i = 0U; i < 6U; ++i) {
+            for (auto j = 0U; j < 6U; ++j) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)
                     << "Matrix element [" << i << "][" << j << "] differs";
             }
@@ -105,7 +106,7 @@ TEST_F(HollowCirclePropertiesTest, SectionalMatrices_Uncoupled) {
     const double GKt = tp_.G * properties.J;
     const double GA = tp_.G * properties.area;
 
-    Array_6x6 expected_stiffness = {};
+    auto expected_stiffness = std::array<std::array<double, 6>, 6>{};
     expected_stiffness[0][0] = GA * properties.kx;  // Shear stiffness in x
     expected_stiffness[1][1] = GA * properties.ky;  // Shear stiffness in y
     expected_stiffness[2][2] = EA;                  // Axial stiffness
@@ -121,7 +122,7 @@ TEST_F(HollowCirclePropertiesTest, SectionalMatrices_Uncoupled) {
     const double I_y = tp_.rho * properties.Iyy;
     const double I_p = I_x + I_y;
 
-    Array_6x6 expected_mass = {};
+    auto expected_mass = std::array<std::array<double, 6>, 6>{};
     expected_mass[0][0] = m;    // Translational mass in x
     expected_mass[1][1] = m;    // Translational mass in y
     expected_mass[2][2] = m;    // Translational mass in z

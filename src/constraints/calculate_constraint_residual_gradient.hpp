@@ -1,6 +1,7 @@
 #pragma once
 
 #include <KokkosBatched_Copy_Decl.hpp>
+#include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
@@ -13,9 +14,7 @@
 #include "calculate_rigid_joint_3DOF_constraint.hpp"
 #include "calculate_rigid_joint_constraint.hpp"
 #include "calculate_rotation_control_constraint.hpp"
-#include "constraints.hpp"
-#include "math/quaternion_operations.hpp"
-#include "math/vector_operations.hpp"
+#include "constraint_type.hpp"
 
 namespace openturbine {
 
@@ -47,7 +46,7 @@ struct CalculateConstraintResidualGradient {
     Kokkos::View<double* [6][6], DeviceType> t_grad_trans_;
 
     KOKKOS_FUNCTION
-    void FixedBC(size_t i) const {
+    void FixedBC(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -73,11 +72,11 @@ struct CalculateConstraintResidualGradient {
             Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto target_node_index = target_node_index_(i);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
         CalculateFixedBCConstraint(X0, t_node_u, res, t_grad);
@@ -86,14 +85,14 @@ struct CalculateConstraintResidualGradient {
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void FixedBC3DOF(size_t i) const {
+    void FixedBC3DOF(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -119,11 +118,11 @@ struct CalculateConstraintResidualGradient {
             Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto target_node_index = target_node_index_(i);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
         CalculateFixedBC3DOFConstraint(X0, t_node_u, res, t_grad);
@@ -132,14 +131,14 @@ struct CalculateConstraintResidualGradient {
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void PrescribedBC(size_t i) const {
+    void PrescribedBC(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -167,12 +166,12 @@ struct CalculateConstraintResidualGradient {
             Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto target_node_index = target_node_index_(i);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, i, ALL), inputs);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
+        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
         CalculatePrescribedBCConstraint(X0, inputs, t_node_u, res, t_grad);
@@ -181,14 +180,14 @@ struct CalculateConstraintResidualGradient {
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void PrescribedBC3DOF(size_t i) const {
+    void PrescribedBC3DOF(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -216,12 +215,12 @@ struct CalculateConstraintResidualGradient {
             Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto target_node_index = target_node_index_(i);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, i, ALL), inputs);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
+        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
         CalculatePrescribedBC3DOFConstraint(X0, inputs, t_node_u, res, t_grad);
@@ -230,14 +229,14 @@ struct CalculateConstraintResidualGradient {
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void RigidJoint(size_t i) const {
+    void RigidJoint(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -275,13 +274,13 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto base_node_index = base_node_index_(i);
-        const auto target_node_index = target_node_index_(i);
+        const auto base_node_index = base_node_index_(constraint);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
         VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
@@ -294,17 +293,17 @@ struct CalculateConstraintResidualGradient {
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void RigidJoint3DOF(size_t i) const {
+    void RigidJoint3DOF(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -342,13 +341,13 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto base_node_index = base_node_index_(i);
-        const auto target_node_index = target_node_index_(i);
+        const auto base_node_index = base_node_index_(constraint);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
         VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
         MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
@@ -361,17 +360,17 @@ struct CalculateConstraintResidualGradient {
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void RevoluteJoint(size_t i) const {
+    void RevoluteJoint(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -415,15 +414,15 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto base_node_index = base_node_index_(i);
-        const auto target_node_index = target_node_index_(i);
+        const auto base_node_index = base_node_index_(constraint);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, i, ALL), inputs);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
+        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
         VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
-        MatrixCopy::invoke(subview(axes_, i, ALL, ALL), axes);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
+        MatrixCopy::invoke(subview(axes_, constraint, ALL, ALL), axes);
         MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
@@ -437,18 +436,18 @@ struct CalculateConstraintResidualGradient {
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        VectorCopy::invoke(system_res, subview(system_res_, i, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        VectorCopy::invoke(system_res, subview(system_res_, constraint, ALL));
+        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void RotationControl(size_t i) const {
+    void RotationControl(size_t constraint) const {
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
@@ -490,15 +489,15 @@ struct CalculateConstraintResidualGradient {
         const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
         const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
 
-        const auto base_node_index = base_node_index_(i);
-        const auto target_node_index = target_node_index_(i);
+        const auto base_node_index = base_node_index_(constraint);
+        const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, i, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, i, ALL), inputs);
+        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
+        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
         VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
         VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, i, ALL), lambda);
-        MatrixCopy::invoke(subview(axes_, i, ALL, ALL), axes);
+        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
+        MatrixCopy::invoke(subview(axes_, constraint, ALL, ALL), axes);
         MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
@@ -513,35 +512,35 @@ struct CalculateConstraintResidualGradient {
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, i, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, i, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, i, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, i, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, i, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, i, ALL, ALL));
+        VectorCopy::invoke(res, subview(res_, constraint, ALL));
+        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const {
-        const auto constraint_type = type_(i);
+    void operator()(size_t constraint) const {
+        const auto constraint_type = type_(constraint);
 
-        if (constraint_type == ConstraintType::kFixedBC) {
-            FixedBC(i);
-        } else if (constraint_type == ConstraintType::kFixedBC3DOFs) {
-            FixedBC3DOF(i);
-        } else if (constraint_type == ConstraintType::kPrescribedBC) {
-            PrescribedBC(i);
-        } else if (constraint_type == ConstraintType::kPrescribedBC3DOFs) {
-            PrescribedBC3DOF(i);
-        } else if (constraint_type == ConstraintType::kRigidJoint) {
-            RigidJoint(i);
-        } else if (constraint_type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
-            RigidJoint3DOF(i);
-        } else if (constraint_type == ConstraintType::kRevoluteJoint) {
-            RevoluteJoint(i);
-        } else if (constraint_type == ConstraintType::kRotationControl) {
-            RotationControl(i);
+        if (constraint_type == ConstraintType::FixedBC) {
+            FixedBC(constraint);
+        } else if (constraint_type == ConstraintType::FixedBC3DOFs) {
+            FixedBC3DOF(constraint);
+        } else if (constraint_type == ConstraintType::PrescribedBC) {
+            PrescribedBC(constraint);
+        } else if (constraint_type == ConstraintType::PrescribedBC3DOFs) {
+            PrescribedBC3DOF(constraint);
+        } else if (constraint_type == ConstraintType::RigidJoint) {
+            RigidJoint(constraint);
+        } else if (constraint_type == ConstraintType::RigidJoint6DOFsTo3DOFs) {
+            RigidJoint3DOF(constraint);
+        } else if (constraint_type == ConstraintType::RevoluteJoint) {
+            RevoluteJoint(constraint);
+        } else if (constraint_type == ConstraintType::RotationControl) {
+            RotationControl(constraint);
         }
     };
 };

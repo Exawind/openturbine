@@ -1,19 +1,14 @@
+#include <array>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
+#include <vector>
 
 #include <gtest/gtest.h>
 
-#include "dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "dof_management/compute_node_freedom_map_table.hpp"
-#include "dof_management/create_constraint_freedom_table.hpp"
-#include "dof_management/create_element_freedom_table.hpp"
 #include "model/model.hpp"
-#include "solver/solver.hpp"
-#include "state/state.hpp"
 #include "step/step.hpp"
 #include "test_utilities.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -79,14 +74,14 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        BeamQuadrature{
-            {-0.9491079123427585, 0.1294849661688697},
-            {-0.7415311855993943, 0.27970539148927664},
-            {-0.40584515137739696, 0.3818300505051189},
-            {6.123233995736766e-17, 0.4179591836734694},
-            {0.4058451513773971, 0.3818300505051189},
-            {0.7415311855993945, 0.27970539148927664},
-            {0.9491079123427585, 0.1294849661688697},
+        std::vector{
+            std::array{-0.9491079123427585, 0.1294849661688697},
+            std::array{-0.7415311855993943, 0.27970539148927664},
+            std::array{-0.40584515137739696, 0.3818300505051189},
+            std::array{6.123233995736766e-17, 0.4179591836734694},
+            std::array{0.4058451513773971, 0.3818300505051189},
+            std::array{0.7415311855993945, 0.27970539148927664},
+            std::array{0.9491079123427585, 0.1294849661688697},
         }
     );
 

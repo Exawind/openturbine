@@ -1,5 +1,16 @@
 #include "netcdf_file.hpp"
 
+#include <algorithm>
+#include <stdexcept>
+
+namespace {
+inline void check_netCDF_error(int status, const std::string& message = "") {
+    if (status != NC_NOERR) {
+        throw std::runtime_error(message + ": " + nc_strerror(status));
+    }
+}
+}  // namespace
+
 namespace openturbine::util {
 NetCDFFile::NetCDFFile(const std::string& file_path, bool create) {
     if (create) {
@@ -211,6 +222,10 @@ void NetCDFFile::WriteVariableAt(
     );
 }
 
+void NetCDFFile::Sync() const {
+    check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file");
+}
+
 int NetCDFFile::GetNetCDFId() const {
     return netcdf_id_;
 }
@@ -262,7 +277,7 @@ std::vector<size_t> NetCDFFile::GetShape(const std::string& var_name) const {
     );
 
     std::vector<size_t> shape(num_dims);
-    for (size_t i = 0; i < num_dims; ++i) {
+    for (auto i = 0U; i < num_dims; ++i) {
         shape[i] = GetDimensionLength(dim_ids[i]);
     }
     return shape;

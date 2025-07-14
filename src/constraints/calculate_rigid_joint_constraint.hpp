@@ -1,8 +1,8 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
@@ -51,16 +51,16 @@ KOKKOS_INLINE_FUNCTION void CalculateRigidJointConstraint(
     // Phi(0:3) = u2 + X0 - u1 - R1*X0
     QuaternionInverse(R1, R1t);
     RotateVectorByQuaternion(R1, X0, R1_X0);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+    for (auto component = 0; component < 3; ++component) {
+        residual_terms(component) = u2(component) + X0(component) - u1(component) - R1_X0(component);
     }
 
     // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
     QuaternionCompose(R2, R1t, R2_R1t);
     QuaternionToRotationMatrix(R2_R1t, C);
     AxialVectorOfMatrix(C, V3);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i + 3) = V3(i);
+    for (auto component = 0; component < 3; ++component) {
+        residual_terms(component + 3) = V3(component);
     }
 
     //----------------------------------------------------------------------
@@ -69,37 +69,33 @@ KOKKOS_INLINE_FUNCTION void CalculateRigidJointConstraint(
 
     // Target Node gradients
     // B(0:3,0:3) = I
-    for (int i = 0; i < 3; ++i) {
-        target_gradient_terms(i, i) = 1.;
+    for (auto component = 0; component < 3; ++component) {
+        target_gradient_terms(component, component) = 1.;
     }
 
     // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
     AX_Matrix(C, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            target_gradient_terms(i + 3, j + 3) = A(j, i);
-        }
-    }
+    KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(
+        A, Kokkos::subview(target_gradient_terms, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
+    );
 
     // Base Node gradients
     // B(0:3,0:3) = -I
-    for (int i = 0; i < 3; ++i) {
-        base_gradient_terms(i, i) = -1.;
+    for (auto component = 0; component < 3; ++component) {
+        base_gradient_terms(component, component) = -1.;
     }
 
     // B(0:3,3:6) = tilde(R1*X0)
     VecTilde(R1_X0, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            base_gradient_terms(i, j + 3) = A(i, j);
-        }
-    }
+    KokkosBatched::SerialCopy<>::invoke(
+        A, Kokkos::subview(base_gradient_terms, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6))
+    );
 
     // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
     AX_Matrix(C, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            base_gradient_terms(i + 3, j + 3) = -A(i, j);
+    for (auto component_1 = 0; component_1 < 3; ++component_1) {
+        for (auto component_2 = 0; component_2 < 3; ++component_2) {
+            base_gradient_terms(component_1 + 3, component_2 + 3) = -A(component_1, component_2);
         }
     }
 }

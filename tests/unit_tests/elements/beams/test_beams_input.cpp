@@ -31,7 +31,7 @@ protected:
         auto model = Model();
         std::vector<double> s{0., 0.5, 1.0, 0., 1., 0., 0.33, 0.67, 1.0};
         std::vector<size_t> node_ids;
-        for (size_t i = 0; i < 9; ++i) {
+        for (auto i = 0U; i < 9U; ++i) {
             node_ids.emplace_back(
                 model.AddNode()
                     .SetElemLocation(s[i])
@@ -48,7 +48,7 @@ protected:
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            BeamQuadrature{{-0.5, 0.5}, {0.5, 0.5}}
+            std::vector{std::array{-0.5, 0.5}, std::array{0.5, 0.5}}
         );
         // Element 2 - 2 nodes, 2 quadrature points
         model.AddBeamElement(
@@ -57,7 +57,7 @@ protected:
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            BeamQuadrature{{-0.5773502691896257, 1.0}, {0.5773502691896257, 1.0}}
+            std::vector{std::array{-0.5773502691896257, 1.0}, std::array{0.5773502691896257, 1.0}}
         );
         // Element 3 - 4 nodes, 4 quadrature points
         model.AddBeamElement(
@@ -66,11 +66,11 @@ protected:
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            BeamQuadrature{
-                {-0.861136311594053, 0.347854845137454},
-                {-0.339981043584856, 0.652145154862546},
-                {0.339981043584856, 0.652145154862546},
-                {0.861136311594053, 0.347854845137454}
+            std::vector{
+                std::array{-0.861136311594053, 0.347854845137454},
+                std::array{-0.339981043584856, 0.652145154862546},
+                std::array{0.339981043584856, 0.652145154862546},
+                std::array{0.861136311594053, 0.347854845137454}
             }
         );
 

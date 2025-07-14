@@ -1,6 +1,10 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
 #include <mkl_dss.h>
+
+#include "dss_algorithm.hpp"
+#include "dss_handle_mkl.hpp"
 
 namespace openturbine {
 

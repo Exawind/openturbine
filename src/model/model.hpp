@@ -21,12 +21,8 @@
 #include "node.hpp"
 #include "solver/solver.hpp"
 #include "state/state.hpp"
-#include "types.hpp"
 
 namespace openturbine {
-
-/// Represents an invalid node in constraints that only uses the target node
-static const size_t InvalidNodeID(0U);
 
 /// @brief Compute freedom tables for state, elements, and constraints, then construct and return
 /// solver.
@@ -69,6 +65,9 @@ template <
  */
 class Model {
 public:
+    /// Represents an invalid node in constraints that only uses the target node
+    static constexpr size_t InvalidNodeID{0U};
+
     /// Default constructor
     Model() = default;
 
@@ -126,7 +125,7 @@ public:
     /// Adds a beam element to the model and returns the index of the element
     size_t AddBeamElement(
         const std::vector<size_t>& node_ids, const std::vector<BeamSection>& sections,
-        const BeamQuadrature& quadrature
+        const std::vector<std::array<double, 2>>& quadrature
     ) {
         const auto elem_id = this->beam_elements_.size();
         this->beam_elements_.emplace_back(elem_id, node_ids, sections, quadrature);
@@ -162,7 +161,7 @@ public:
     }
 
     /// Translate all beam nodes by given displacement
-    void TranslateBeam(size_t beam_elem_id, const Array_3& displacement) {
+    void TranslateBeam(size_t beam_elem_id, const std::array<double, 3>& displacement) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
             this->GetNode(node_id).Translate(displacement);
@@ -171,7 +170,8 @@ public:
 
     /// Rotate all beam nodes by given displacement quaternion about origin point
     void RotateBeamAboutPoint(
-        size_t beam_elem_id, const Array_4& displacement_quaternion, const Array_3& point
+        size_t beam_elem_id, const std::array<double, 4>& displacement_quaternion,
+        const std::array<double, 3>& point
     ) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
@@ -180,7 +180,8 @@ public:
     }
 
     void SetBeamVelocityAboutPoint(
-        size_t beam_elem_id, const Array_6& velocity, const Array_3& point
+        size_t beam_elem_id, const std::array<double, 6>& velocity,
+        const std::array<double, 3>& point
     ) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
@@ -189,7 +190,8 @@ public:
     }
 
     void SetBeamAccelerationAboutPoint(
-        size_t beam_elem_id, const Array_6& acceleration, const Array_3& omega, const Array_3& point
+        size_t beam_elem_id, const std::array<double, 6>& acceleration,
+        const std::array<double, 3>& omega, const std::array<double, 3>& point
     ) {
         const auto& beam_elem = this->beam_elements_[beam_elem_id];
         for (const auto& node_id : beam_elem.node_ids) {
@@ -305,7 +307,7 @@ public:
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kFixedBC, std::array{InvalidNodeID, node_id}
+            id, ConstraintType::FixedBC, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -313,11 +315,12 @@ public:
 
     /// Adds a prescribed boundary condition constraint to the model and returns the ID
     size_t AddPrescribedBC(
-        const size_t node_id, const Array_7& initial_displacement = {0., 0., 0., 1., 0., 0., 0.}
+        const size_t node_id,
+        const std::array<double, 7>& initial_displacement = {0., 0., 0., 1., 0., 0., 0.}
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC, std::array{InvalidNodeID, node_id},
+            id, ConstraintType::PrescribedBC, std::array{InvalidNodeID, node_id},
             std::array{0., 0., 0.}, initial_displacement
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
@@ -327,7 +330,7 @@ public:
     /// Adds a rigid constraint to the model and returns the ID
     size_t AddRigidJointConstraint(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint, node_ids);
+        this->constraints_.emplace_back(id, ConstraintType::RigidJoint, node_ids);
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -336,11 +339,11 @@ public:
 
     /// Adds a revolute/hinge constraint to the model and returns the ID
     size_t AddRevoluteJointConstraint(
-        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* torque
+        const std::array<size_t, 2>& node_ids, const std::array<double, 3>& axis, double* torque
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kRevoluteJoint, node_ids, axis,
+            id, ConstraintType::RevoluteJoint, node_ids, axis,
             std::array{0., 0., 0., 1., 0., 0., 0.}, torque
         );
         this->mesh_connectivity_.AddConstraintConnectivity(
@@ -351,11 +354,11 @@ public:
 
     /// Adds a rotation control constraint to the model and returns the ID
     size_t AddRotationControl(
-        const std::array<size_t, 2>& node_ids, const Array_3& axis, double* control
+        const std::array<size_t, 2>& node_ids, const std::array<double, 3>& axis, double* control
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kRotationControl, node_ids, axis,
+            id, ConstraintType::RotationControl, node_ids, axis,
             std::array{0., 0., 0., 1., 0., 0., 0.}, control
         );
         this->mesh_connectivity_.AddConstraintConnectivity(
@@ -368,7 +371,7 @@ public:
     size_t AddFixedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kFixedBC3DOFs, std::array{InvalidNodeID, node_id}
+            id, ConstraintType::FixedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -379,7 +382,7 @@ public:
     size_t AddPrescribedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::kPrescribedBC3DOFs, std::array{InvalidNodeID, node_id}
+            id, ConstraintType::PrescribedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -388,7 +391,7 @@ public:
     /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
     size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::kRigidJoint6DOFsTo3DOFs, node_ids);
+        this->constraints_.emplace_back(id, ConstraintType::RigidJoint6DOFsTo3DOFs, node_ids);
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -446,7 +449,7 @@ public:
     }
 
 private:
-    Array_3 gravity_ = {0., 0., 0.};              //< Gravity components
+    std::array<double, 3> gravity_ = {0., 0., 0.};  //< Gravity components
     std::vector<Node> nodes_;                     //< Nodes in the model
     std::vector<BeamElement> beam_elements_;      //< Beam elements in the model
     std::vector<MassElement> mass_elements_;      //< Mass elements in the model

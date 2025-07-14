@@ -23,12 +23,12 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double* [2][2][3][3], DeviceType> stiffness_matrix_terms;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_elem) const {
-        const auto index_0 = node_state_indices(i_elem, 0);
-        const auto index_1 = node_state_indices(i_elem, 1);
+    void operator()(size_t element) const {
+        const auto index_0 = node_state_indices(element, 0);
+        const auto index_1 = node_state_indices(element, 1);
 
         const auto x0_data =
-            Kokkos::Array<double, 3>{x0_(i_elem, 0), x0_(i_elem, 1), x0_(i_elem, 2)};
+            Kokkos::Array<double, 3>{x0_(element, 0), x0_(element, 1), x0_(element, 2)};
         const auto u1_data = Kokkos::Array<double, 3>{Q(index_0, 0), Q(index_0, 1), Q(index_0, 2)};
         const auto u2_data = Kokkos::Array<double, 3>{Q(index_1, 0), Q(index_1, 1), Q(index_1, 2)};
         auto r_data = Kokkos::Array<double, 3>{};
@@ -42,8 +42,8 @@ struct CalculateQuadraturePointValues {
         const auto f = Kokkos::View<double[3], DeviceType>(f_data.data());
         const auto a = Kokkos::View<double[3][3], DeviceType>(a_data.data());
 
-        const auto l_ref = l_ref_(i_elem);
-        const auto k = k_(i_elem);
+        const auto l_ref = l_ref_(element);
+        const auto k = k_(element);
 
         springs::CalculateDistanceComponents(x0, u1, u2, r);
         const auto l = springs::CalculateLength<DeviceType>(r);
@@ -52,29 +52,33 @@ struct CalculateQuadraturePointValues {
         springs::CalculateForceVectors(r, c1, f);
         springs::CalculateStiffnessMatrix(c1, c2, r, l, a);
 
-        for (auto i = 0U; i < 3U; ++i) {
-            residual_vector_terms(i_elem, 0, i) = f(i);
-            residual_vector_terms(i_elem, 1, i) = -f(i);
+        for (auto component = 0U; component < 3U; ++component) {
+            residual_vector_terms(element, 0, component) = f(component);
+            residual_vector_terms(element, 1, component) = -f(component);
         }
 
-        for (auto i = 0U; i < 3U; ++i) {
-            for (auto j = 0U; j < 3U; ++j) {
-                stiffness_matrix_terms(i_elem, 0, 0, i, j) = a(i, j);
+        for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
+            for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
+                stiffness_matrix_terms(element, 0, 0, component_1, component_2) =
+                    a(component_1, component_2);
             }
         }
-        for (auto i = 0U; i < 3U; ++i) {
-            for (auto j = 0U; j < 3U; ++j) {
-                stiffness_matrix_terms(i_elem, 0, 1, i, j) = -a(i, j);
+        for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
+            for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
+                stiffness_matrix_terms(element, 0, 1, component_1, component_2) =
+                    -a(component_1, component_2);
             }
         }
-        for (auto i = 0U; i < 3U; ++i) {
-            for (auto j = 0U; j < 3U; ++j) {
-                stiffness_matrix_terms(i_elem, 1, 0, i, j) = -a(i, j);
+        for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
+            for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
+                stiffness_matrix_terms(element, 1, 0, component_1, component_2) =
+                    -a(component_1, component_2);
             }
         }
-        for (auto i = 0U; i < 3U; ++i) {
-            for (auto j = 0U; j < 3U; ++j) {
-                stiffness_matrix_terms(i_elem, 1, 1, i, j) = a(i, j);
+        for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
+            for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
+                stiffness_matrix_terms(element, 1, 1, component_1, component_2) =
+                    a(component_1, component_2);
             }
         }
     }

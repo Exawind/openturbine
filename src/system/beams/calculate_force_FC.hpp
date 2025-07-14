@@ -3,8 +3,6 @@
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "math/vector_operations.hpp"
-
 namespace openturbine::beams {
 
 template <typename DeviceType>

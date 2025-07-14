@@ -2,10 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
-#include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
-#include "math/vector_operations.hpp"
 
 namespace openturbine {
 
@@ -45,8 +42,8 @@ KOKKOS_INLINE_FUNCTION void CalculateFixedBC3DOFConstraint(
     // Phi(0:3) = u2 + X0 - u1 - R1*X0
     QuaternionInverse(R1, R1t);
     RotateVectorByQuaternion(R1, X0, R1_X0);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+    for (auto component = 0; component < 3; ++component) {
+        residual_terms(component) = u2(component) + X0(component) - u1(component) - R1_X0(component);
     }
 
     //----------------------------------------------------------------------
@@ -58,8 +55,8 @@ KOKKOS_INLINE_FUNCTION void CalculateFixedBC3DOFConstraint(
     //---------------------------------
 
     // B(0:3,0:3) = I
-    for (int i = 0; i < 3; ++i) {
-        target_gradient_terms(i, i) = 1.;
+    for (auto component = 0; component < 3; ++component) {
+        target_gradient_terms(component, component) = 1.;
     }
 }
 

@@ -4,9 +4,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "interpolate_to_quadrature_point_for_inertia.hpp"
-#include "system/beams/integrate_inertia_matrix.hpp"
-#include "system/beams/integrate_residual_vector.hpp"
-#include "system/beams/integrate_stiffness_matrix.hpp"
 #include "system/masses/calculate_gravity_force.hpp"
 #include "system/masses/calculate_gyroscopic_matrix.hpp"
 #include "system/masses/calculate_inertia_stiffness_matrix.hpp"
@@ -18,7 +15,7 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateInertialQuadraturePointValues {
-    size_t i_elem;
+    size_t element;
 
     typename Kokkos::View<double**, Kokkos::LayoutLeft, DeviceType>::const_type shape_interp;
     typename Kokkos::View<double[3], DeviceType>::const_type gravity;
@@ -35,10 +32,10 @@ struct CalculateInertialQuadraturePointValues {
     Kokkos::View<double* [6][6], DeviceType> qp_Kuu;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_qp) const {
+    void operator()(size_t qp) const {
         const auto r0_data = Kokkos::Array<double, 4>{
-            qp_r0(i_elem, i_qp, 0), qp_r0(i_elem, i_qp, 1), qp_r0(i_elem, i_qp, 2),
-            qp_r0(i_elem, i_qp, 3)
+            qp_r0(element, qp, 0), qp_r0(element, qp, 1), qp_r0(element, qp, 2),
+            qp_r0(element, qp, 3)
         };
         auto r_data = Kokkos::Array<double, 4>{};
         auto xr_data = Kokkos::Array<double, 4>{};
@@ -79,10 +76,10 @@ struct CalculateInertialQuadraturePointValues {
         const auto Kuu = Kokkos::View<double[6][6], DeviceType>(Kuu_data.data());
 
         KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(qp_Mstar, i_elem, i_qp, Kokkos::ALL, Kokkos::ALL), Mstar
+            Kokkos::subview(qp_Mstar, element, qp, Kokkos::ALL, Kokkos::ALL), Mstar
         );
         beams::InterpolateToQuadraturePointForInertia<DeviceType>(
-            Kokkos::subview(shape_interp, Kokkos::ALL, i_qp), node_u, node_u_dot, node_u_ddot, r,
+            Kokkos::subview(shape_interp, Kokkos::ALL, qp), node_u, node_u_dot, node_u_ddot, r,
             u_ddot, omega, omega_dot
         );
 
@@ -108,19 +105,19 @@ struct CalculateInertialQuadraturePointValues {
         );
 
         KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>::invoke(
-            FI, Kokkos::subview(qp_Fi, i_qp, Kokkos::ALL)
+            FI, Kokkos::subview(qp_Fi, qp, Kokkos::ALL)
         );
         KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>::invoke(
-            FG, Kokkos::subview(qp_Fg, i_qp, Kokkos::ALL)
+            FG, Kokkos::subview(qp_Fg, qp, Kokkos::ALL)
         );
         KokkosBatched::SerialCopy<>::invoke(
-            Muu, Kokkos::subview(qp_Muu, i_qp, Kokkos::ALL, Kokkos::ALL)
+            Muu, Kokkos::subview(qp_Muu, qp, Kokkos::ALL, Kokkos::ALL)
         );
         KokkosBatched::SerialCopy<>::invoke(
-            Guu, Kokkos::subview(qp_Guu, i_qp, Kokkos::ALL, Kokkos::ALL)
+            Guu, Kokkos::subview(qp_Guu, qp, Kokkos::ALL, Kokkos::ALL)
         );
         KokkosBatched::SerialCopy<>::invoke(
-            Kuu, Kokkos::subview(qp_Kuu, i_qp, Kokkos::ALL, Kokkos::ALL)
+            Kuu, Kokkos::subview(qp_Kuu, qp, Kokkos::ALL, Kokkos::ALL)
         );
     }
 };

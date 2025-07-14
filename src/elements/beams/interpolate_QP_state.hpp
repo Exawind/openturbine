@@ -11,23 +11,23 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateQPState_u {
-    size_t i_elem;
+    size_t element;
     size_t num_nodes;
     typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
     typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
     Kokkos::View<double** [3], DeviceType> qp_u;
 
     KOKKOS_FUNCTION
-    void operator()(size_t j_index) const {
+    void operator()(size_t qp) const {
         auto local_total = Kokkos::Array<double, 3>{};
-        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-            const auto phi = shape_interp(i_elem, i_index, j_index);
-            for (auto k = 0U; k < 3U; ++k) {
-                local_total[k] += node_u(i_elem, i_index, k) * phi;
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto phi = shape_interp(element, node, qp);
+            for (auto component = 0U; component < 3U; ++component) {
+                local_total[component] += node_u(element, node, component) * phi;
             }
         }
-        for (auto k = 0U; k < 3U; ++k) {
-            qp_u(i_elem, j_index, k) = local_total[k];
+        for (auto component = 0U; component < 3U; ++component) {
+            qp_u(element, qp, component) = local_total[component];
         }
     }
 };
@@ -37,7 +37,7 @@ struct InterpolateQPState_u {
  */
 template <typename DeviceType>
 struct InterpolateQPState_uprime {
-    size_t i_elem;
+    size_t element;
     size_t num_nodes;
     typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
     typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
@@ -45,17 +45,17 @@ struct InterpolateQPState_uprime {
     Kokkos::View<double** [3], DeviceType> qp_uprime;
 
     KOKKOS_FUNCTION
-    void operator()(size_t j_index) const {
-        const auto jacobian = qp_jacobian(i_elem, j_index);
+    void operator()(size_t qp) const {
+        const auto jacobian = qp_jacobian(element, qp);
         auto local_total = Kokkos::Array<double, 3>{};
-        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-            const auto dphi = shape_deriv(i_elem, i_index, j_index);
-            for (auto k = 0U; k < 3U; ++k) {
-                local_total[k] += node_u(i_elem, i_index, k) * dphi / jacobian;
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto dphi = shape_deriv(element, node, qp);
+            for (auto component = 0U; component < 3U; ++component) {
+                local_total[component] += node_u(element, node, component) * dphi / jacobian;
             }
         }
-        for (auto k = 0U; k < 3U; ++k) {
-            qp_uprime(i_elem, j_index, k) = local_total[k];
+        for (auto component = 0U; component < 3U; ++component) {
+            qp_uprime(element, qp, component) = local_total[component];
         }
     }
 };
@@ -65,24 +65,24 @@ struct InterpolateQPState_uprime {
  */
 template <typename DeviceType>
 struct InterpolateQPState_r {
-    size_t i_elem;
+    size_t element;
     size_t num_nodes;
     typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
     typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
     Kokkos::View<double** [4], DeviceType> qp_r;
 
     KOKKOS_FUNCTION
-    void operator()(size_t j_index) const {
+    void operator()(size_t qp) const {
         auto local_total = Kokkos::Array<double, 4>{};
-        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-            const auto phi = shape_interp(i_elem, i_index, j_index);
-            for (auto k = 0U; k < 4U; ++k) {
-                local_total[k] += node_u(i_elem, i_index, k + 3) * phi;
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto phi = shape_interp(element, node, qp);
+            for (auto component = 0U; component < 4U; ++component) {
+                local_total[component] += node_u(element, node, component + 3) * phi;
             }
         }
 
-        for (auto k = 0U; k < 4U; ++k) {
-            qp_r(i_elem, j_index, k) = NormalizeQuaternion(local_total)[k];
+        for (auto component = 0U; component < 4U; ++component) {
+            qp_r(element, qp, component) = NormalizeQuaternion(local_total)[component];
         }
     }
 };
@@ -92,7 +92,7 @@ struct InterpolateQPState_r {
  */
 template <typename DeviceType>
 struct InterpolateQPState_rprime {
-    size_t i_elem;
+    size_t element;
     size_t num_nodes;
     typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
     typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
@@ -100,17 +100,17 @@ struct InterpolateQPState_rprime {
     Kokkos::View<double** [4], DeviceType> qp_rprime;
 
     KOKKOS_FUNCTION
-    void operator()(size_t j_index) const {
-        const auto jacobian = qp_jacobian(i_elem, j_index);
+    void operator()(size_t qp) const {
+        const auto jacobian = qp_jacobian(element, qp);
         auto local_total = Kokkos::Array<double, 4>{};
-        for (auto i_index = 0U; i_index < num_nodes; ++i_index) {
-            const auto dphi = shape_deriv(i_elem, i_index, j_index);
-            for (auto k = 0U; k < 4U; ++k) {
-                local_total[k] += node_u(i_elem, i_index, k + 3) * dphi / jacobian;
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto dphi = shape_deriv(element, node, qp);
+            for (auto component = 0U; component < 4U; ++component) {
+                local_total[component] += node_u(element, node, component + 3) * dphi / jacobian;
             }
         }
-        for (auto k = 0U; k < 4U; ++k) {
-            qp_rprime(i_elem, j_index, k) = local_total[k];
+        for (auto component = 0U; component < 4U; ++component) {
+            qp_rprime(element, qp, component) = local_total[component];
         }
     }
 };

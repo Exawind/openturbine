@@ -22,7 +22,7 @@ struct ContributeSpringsToSparseMatrix {
 
     KOKKOS_FUNCTION
     void operator()(member_type member) const {
-        const auto i_elem = member.league_rank();
+        const auto element = member.league_rank();
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
@@ -37,19 +37,19 @@ struct ContributeSpringsToSparseMatrix {
                 const auto node_1 = node_12 / num_nodes;
                 const auto node_2 = node_12 % num_nodes;
                 const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
-                    element_freedom_table(i_elem, node_2, 0)
+                    element_freedom_table(element, node_2, 0)
                 );
 
                 for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
                     const auto row_num =
-                        static_cast<int>(element_freedom_table(i_elem, node_1, component_1));
+                        static_cast<int>(element_freedom_table(element, node_1, component_1));
                     auto row = sparse.row(row_num);
                     auto offset = KokkosSparse::findRelOffset(
                         &(row.colidx(0)), row.length, first_column, hint, is_sorted
                     );
                     for (auto component_2 = 0; component_2 < num_dofs; ++component_2, ++offset) {
                         const auto contribution =
-                            dense(i_elem, node_1, node_2, component_1, component_2) * conditioner;
+                            dense(element, node_1, node_2, component_1, component_2) * conditioner;
                         if constexpr (force_atomic) {
                             Kokkos::atomic_add(&(row.value(offset)), contribution);
                         } else {

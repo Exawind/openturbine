@@ -32,8 +32,8 @@ struct CalculateQuadraturePointValues {
     Kokkos::View<double* [6][6], DeviceType> system_matrix_terms;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i_elem) const {
-        const auto index = node_state_indices(i_elem);
+    void operator()(size_t element) const {
+        const auto index = node_state_indices(element);
 
         // Allocate scratch views
         const auto u_ddot_data = Kokkos::Array<double, 3>{A(index, 0), A(index, 1), A(index, 2)};
@@ -62,7 +62,7 @@ struct CalculateQuadraturePointValues {
         {
             auto Mstar_data = Kokkos::Array<double, 36>{};
             const auto r0_data = Kokkos::Array<double, 4>{
-                node_x0(i_elem, 3), node_x0(i_elem, 4), node_x0(i_elem, 5), node_x0(i_elem, 6)
+                node_x0(element, 3), node_x0(element, 4), node_x0(element, 5), node_x0(element, 6)
             };
             const auto r_data =
                 Kokkos::Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
@@ -74,7 +74,7 @@ struct CalculateQuadraturePointValues {
             const auto xr = Kokkos::View<double[4], DeviceType>(xr_data.data());
 
             KokkosBatched::SerialCopy<>::invoke(
-                Kokkos::subview(qp_Mstar, i_elem, Kokkos::ALL, Kokkos::ALL), Mstar
+                Kokkos::subview(qp_Mstar, element, Kokkos::ALL, Kokkos::ALL), Mstar
             );
             QuaternionCompose(r, r0, xr);
             VecTilde(omega, omega_tilde);
@@ -104,8 +104,8 @@ struct CalculateQuadraturePointValues {
                 mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, Fi
             );
 
-            for (auto i = 0U; i < 6U; ++i) {
-                residual_vector_terms(i_elem, i) = Fi(i) - Fg(i);
+            for (auto component = 0U; component < 6U; ++component) {
+                residual_vector_terms(element, component) = Fi(component) - Fg(component);
             }
         }
 
@@ -130,9 +130,10 @@ struct CalculateQuadraturePointValues {
             KokkosBatched::SerialCopy<>::invoke(
                 Kokkos::subview(tangent, index, Kokkos::ALL, Kokkos::ALL), T
             );
-            for (auto i = 0U; i < 6U; ++i) {
-                for (auto j = 0U; j < 6U; ++j) {
-                    STpI(i, j) = beta_prime * Muu(i, j) + gamma_prime * Guu(i, j);
+            for (auto component_1 = 0U; component_1 < 6U; ++component_1) {
+                for (auto component_2 = 0U; component_2 < 6U; ++component_2) {
+                    STpI(component_1, component_2) = beta_prime * Muu(component_1, component_2) +
+                                                     gamma_prime * Guu(component_1, component_2);
                 }
             }
             KokkosBatched::SerialGemm<
@@ -140,7 +141,7 @@ struct CalculateQuadraturePointValues {
                 KokkosBatched::Algo::Gemm::Default>::invoke(1., Kuu, T, 1., STpI);
 
             KokkosBatched::SerialCopy<>::invoke(
-                STpI, Kokkos::subview(system_matrix_terms, i_elem, Kokkos::ALL, Kokkos::ALL)
+                STpI, Kokkos::subview(system_matrix_terms, element, Kokkos::ALL, Kokkos::ALL)
             );
         }
     }

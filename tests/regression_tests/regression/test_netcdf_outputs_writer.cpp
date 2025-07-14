@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
-#include "solver/solver.hpp"
 #include "step/step.hpp"
 #include "utilities/netcdf/node_state_writer.hpp"
 

@@ -1,9 +1,8 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
-#include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
 
@@ -41,8 +40,9 @@ KOKKOS_INLINE_FUNCTION void CalculateRigidJoint3DOFConstraint(
     // Phi(0:3) = u2 + X0 - u1 - R1*X0
     QuaternionInverse(R1, R1t);
     RotateVectorByQuaternion(R1, X0, R1_X0);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+    for (auto constraint = 0; constraint < 3; ++constraint) {
+        residual_terms(constraint) =
+            u2(constraint) + X0(constraint) - u1(constraint) - R1_X0(constraint);
     }
 
     //----------------------------------------------------------------------
@@ -51,22 +51,20 @@ KOKKOS_INLINE_FUNCTION void CalculateRigidJoint3DOFConstraint(
 
     // Target Node gradients
     // B(0:3,0:3) = I
-    for (int i = 0; i < 3; ++i) {
-        target_gradient_terms(i, i) = 1.;
+    for (auto constraint = 0; constraint < 3; ++constraint) {
+        target_gradient_terms(constraint, constraint) = 1.;
     }
 
     // Base Node gradients
     // B(0:3,0:3) = -I
-    for (int i = 0; i < 3; ++i) {
-        base_gradient_terms(i, i) = -1.;
+    for (auto constraint = 0; constraint < 3; ++constraint) {
+        base_gradient_terms(constraint, constraint) = -1.;
     }
 
     // B(0:3,3:6) = tilde(R1*X0)
     VecTilde(R1_X0, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            base_gradient_terms(i, j + 3) = A(i, j);
-        }
-    }
+    KokkosBatched::SerialCopy<>::invoke(
+        A, Kokkos::subview(base_gradient_terms, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6))
+    );
 }
 }  // namespace openturbine

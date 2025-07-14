@@ -6,7 +6,6 @@
 
 #include "compute_k_col_inds.hpp"
 #include "compute_k_row_ptrs.hpp"
-#include "dof_management/freedom_signature.hpp"
 #include "fill_unshifted_row_ptrs.hpp"
 
 namespace openturbine {

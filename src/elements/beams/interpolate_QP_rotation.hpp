@@ -17,19 +17,19 @@ struct InterpolateQPRotation {
     Kokkos::View<double** [4], DeviceType> qp_rotation;  // quadrature point rotation
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        const auto num_nodes = num_nodes_per_element(i_elem);
-        const auto num_qps = num_qps_per_element(i_elem);
+    void operator()(const int element) const {
+        const auto num_nodes = num_nodes_per_element(element);
+        const auto num_qps = num_qps_per_element(element);
         const auto shape_interp = Kokkos::subview(
-            shape_interpolation, i_elem, Kokkos::make_pair(size_t{0U}, num_nodes),
+            shape_interpolation, element, Kokkos::make_pair(size_t{0U}, num_nodes),
             Kokkos::make_pair(size_t{0U}, num_qps)
         );
         const auto node_rot = Kokkos::subview(
-            node_position_rotation, i_elem, Kokkos::make_pair(size_t{0U}, num_nodes),
+            node_position_rotation, element, Kokkos::make_pair(size_t{0U}, num_nodes),
             Kokkos::make_pair(3, 7)
         );
         const auto qp_rot = Kokkos::subview(
-            qp_rotation, i_elem, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL
+            qp_rotation, element, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL
         );
 
         InterpQuaternion(shape_interp, node_rot, qp_rot);

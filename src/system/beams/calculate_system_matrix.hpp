@@ -8,7 +8,7 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateSystemMatrix {
-    size_t i_elem;
+    size_t element;
     size_t num_nodes;
     typename Kokkos::View<double* [6][6], DeviceType>::const_type tangent;
     typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
@@ -17,10 +17,10 @@ struct CalculateSystemMatrix {
     Kokkos::View<double*** [6][6], DeviceType> system_matrix_terms;
 
     KOKKOS_FUNCTION
-    void operator()(size_t ij_node) const {
-        const auto i_node = ij_node / num_nodes;
-        const auto j_node = ij_node % num_nodes;
-        const auto T_node = node_state_indices(i_elem, j_node);
+    void operator()(size_t node_12) const {
+        const auto node_1 = node_12 / num_nodes;
+        const auto node_2 = node_12 % num_nodes;
+        const auto node_T = node_state_indices(element, node_2);
 
         auto S_data = Kokkos::Array<double, 36>{};
         auto T_data = Kokkos::Array<double, 36>{};
@@ -31,13 +31,13 @@ struct CalculateSystemMatrix {
         const auto STpI = Kokkos::View<double[6][6], DeviceType>(STpI_data.data());
 
         KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(stiffness_matrix_terms, i_node, j_node, Kokkos::ALL, Kokkos::ALL), S
+            Kokkos::subview(stiffness_matrix_terms, node_1, node_2, Kokkos::ALL, Kokkos::ALL), S
         );
         KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(tangent, T_node, Kokkos::ALL, Kokkos::ALL), T
+            Kokkos::subview(tangent, node_T, Kokkos::ALL, Kokkos::ALL), T
         );
         KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(inertia_matrix_terms, i_node, j_node, Kokkos::ALL, Kokkos::ALL), STpI
+            Kokkos::subview(inertia_matrix_terms, node_1, node_2, Kokkos::ALL, Kokkos::ALL), STpI
         );
 
         KokkosBatched::SerialGemm<
@@ -46,7 +46,7 @@ struct CalculateSystemMatrix {
 
         KokkosBatched::SerialCopy<>::invoke(
             STpI,
-            Kokkos::subview(system_matrix_terms, i_elem, i_node, j_node, Kokkos::ALL, Kokkos::ALL)
+            Kokkos::subview(system_matrix_terms, element, node_1, node_2, Kokkos::ALL, Kokkos::ALL)
         );
     }
 };

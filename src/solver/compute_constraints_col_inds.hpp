@@ -23,8 +23,8 @@ struct ComputeConstraintsColInds {
     KOKKOS_FUNCTION
     RowPtrValueType CalculateTargetInds(size_t constraint, RowPtrValueType dof_index) const {
         const auto target_cols = target_active_dofs(constraint);
-        for (auto j = 0U; j < target_cols; ++j, ++dof_index) {
-            const auto index = target_node_freedom_table(constraint, j);
+        for (auto column = 0U; column < target_cols; ++column, ++dof_index) {
+            const auto index = target_node_freedom_table(constraint, column);
             col_inds(dof_index) = static_cast<IndicesValueType>(index);
         }
         return dof_index;
@@ -33,8 +33,8 @@ struct ComputeConstraintsColInds {
     KOKKOS_FUNCTION
     RowPtrValueType CalculateBaseInds(size_t constraint, RowPtrValueType dof_index) const {
         const auto base_cols = base_active_dofs(constraint);
-        for (auto j = 0U; j < base_cols; ++j, ++dof_index) {
-            const auto index = base_node_freedom_table(constraint, j);
+        for (auto column = 0U; column < base_cols; ++column, ++dof_index) {
+            const auto index = base_node_freedom_table(constraint, column);
             col_inds(dof_index) = static_cast<IndicesValueType>(index);
         }
         return dof_index;

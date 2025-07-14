@@ -1,13 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "elements/elements.hpp"
-#include "elements/masses/create_masses.hpp"
 #include "model/model.hpp"
 #include "state/state.hpp"
 #include "step/step.hpp"
-#include "step/update_system_variables.hpp"
 #include "test_utilities.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -129,7 +125,7 @@ TEST(MassesTest, ExternalForce) {
 
     // Run simulation for 1000 steps
     const auto n_steps = 1000;
-    for (size_t i = 0; i < n_steps; ++i) {
+    for (auto i = 0; i < n_steps; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }

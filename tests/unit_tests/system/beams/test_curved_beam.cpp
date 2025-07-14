@@ -19,7 +19,7 @@
 #include "system/beams/calculate_force_FD.hpp"
 #include "system/beams/integrate_residual_vector.hpp"
 #include "system/beams/integrate_stiffness_matrix.hpp"
-#include "system/beams/rotate_section_matrix.hpp"
+#include "system/masses/rotate_section_matrix.hpp"
 #include "test_calculate.hpp"
 
 /**
@@ -58,7 +58,7 @@ namespace openturbine::tests::curved_beam {
 TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQPs) {
     std::vector<double> weights;
     // Test interpolation weights at each QP against expected data from Mathematica script
-    for (size_t qp = 0; qp < kNumQPs; ++qp) {
+    for (auto qp = 0U; qp < kNumQPs; ++qp) {
         LagrangePolynomialInterpWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
         ASSERT_EQ(weights.size(), kNumNodes);
         EXPECT_NEAR(weights[0], kExpectedInterpWeights[qp][0], kDefaultTolerance);
@@ -70,7 +70,7 @@ TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQPs)
 TEST(CurvedBeamTests, LagrangePolynomialDerivWeight_SecondOrder_AtSpecifiedQPs) {
     std::vector<double> deriv_weights;
     // Test derivative weights at each QP against expected data from Mathematica script
-    for (size_t qp = 0; qp < kNumQPs; ++qp) {
+    for (auto qp = 0U; qp < kNumQPs; ++qp) {
         LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, deriv_weights);
         ASSERT_EQ(deriv_weights.size(), kNumNodes);
         EXPECT_NEAR(deriv_weights[0], kExpectedDerivWeights[qp][0], kDefaultTolerance);
@@ -102,7 +102,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_jacobian);
 
     // Validate the calculated jacobians against expected values from Mathematica script
-    for (size_t qp = 0; qp < kNumQPs; ++qp) {
+    for (auto qp = 0U; qp < kNumQPs; ++qp) {
         EXPECT_NEAR(qp_jacobian_mirror(0, qp), kExpectedJacobians[qp], kDefaultTolerance)
             << "Jacobian mismatch at quadrature point " << qp;
     }
@@ -110,7 +110,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     // Verify that position derivatives are unit vectors
     const auto qp_position_derivative_mirror =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), qp_position_derivative);
-    for (size_t qp = 0; qp < kNumQPs; ++qp) {
+    for (auto qp = 0U; qp < kNumQPs; ++qp) {
         const auto magnitude = std::sqrt(
             qp_position_derivative_mirror(0, qp, 0) * qp_position_derivative_mirror(0, qp, 0) +
             qp_position_derivative_mirror(0, qp, 1) * qp_position_derivative_mirror(0, qp, 1) +
@@ -203,7 +203,9 @@ void TestRotateSectionMatrixForCurvedBeam() {
     const auto Cuu = Kokkos::View<double[6][6]>("Cuu");
     Kokkos::parallel_for(
         "RotateSectionMatrix", 1,
-        KOKKOS_LAMBDA(size_t) { beams::RotateSectionMatrix(xr, Cstar, Cuu); }
+        KOKKOS_LAMBDA(size_t) {
+            masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>(xr, Cstar, Cuu);
+        }
     );
 
     const auto Cuu_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), Cuu);

@@ -51,61 +51,61 @@ struct InterpolateToQuadraturePoints {
 
     KOKKOS_FUNCTION
     void operator()(member_type member) const {
-        const auto i_elem = static_cast<size_t>(member.league_rank());
-        const auto num_nodes = num_nodes_per_element(i_elem);
-        const auto num_qps = num_qps_per_element(i_elem);
+        const auto element = static_cast<size_t>(member.league_rank());
+        const auto num_nodes = num_nodes_per_element(element);
+        const auto num_qps = num_qps_per_element(element);
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
-            InterpolateQPState_u<DeviceType>{i_elem, num_nodes, shape_interp, node_u, qp_u}
+            InterpolateQPState_u<DeviceType>{element, num_nodes, shape_interp, node_u, qp_u}
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPState_uprime<DeviceType>{
-                i_elem, num_nodes, shape_deriv, qp_jacobian, node_u, qp_uprime
+                element, num_nodes, shape_deriv, qp_jacobian, node_u, qp_uprime
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
-            InterpolateQPState_r<DeviceType>{i_elem, num_nodes, shape_interp, node_u, qp_r}
+            InterpolateQPState_r<DeviceType>{element, num_nodes, shape_interp, node_u, qp_r}
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPState_rprime<DeviceType>{
-                i_elem, num_nodes, shape_deriv, qp_jacobian, node_u, qp_rprime
+                element, num_nodes, shape_deriv, qp_jacobian, node_u, qp_rprime
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector<DeviceType>{
-                i_elem, num_nodes, shape_interp,
+                element, num_nodes, shape_interp,
                 Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_dot
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector<DeviceType>{
-                i_elem, num_nodes, shape_interp,
+                element, num_nodes, shape_interp,
                 Kokkos::subview(node_u_dot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)), qp_omega
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector<DeviceType>{
-                i_elem, num_nodes, shape_interp,
+                element, num_nodes, shape_interp,
                 Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(0, 3)), qp_u_ddot
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
             InterpolateQPVector<DeviceType>{
-                i_elem, num_nodes, shape_interp,
+                element, num_nodes, shape_interp,
                 Kokkos::subview(node_u_ddot, Kokkos::ALL, Kokkos::ALL, Kokkos::pair(3, 6)),
                 qp_omega_dot
             }
         );
         Kokkos::parallel_for(
             Kokkos::TeamThreadRange(member, num_qps),
-            CalculateQPPosition<DeviceType>{i_elem, qp_x0, qp_u, qp_r0, qp_r, qp_x}
+            CalculateQPPosition<DeviceType>{element, qp_x0, qp_u, qp_r0, qp_r, qp_x}
         );
     }
 };

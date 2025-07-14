@@ -4,13 +4,12 @@
 
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateRevoluteJointOutput {
-    int i_constraint;
+    int constraint;
     typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
     typename Kokkos::View<double* [3][3], DeviceType>::const_type axes;
     typename Kokkos::View<double* [7], DeviceType>::const_type node_x0;     // Initial position
@@ -23,23 +22,23 @@ struct CalculateRevoluteJointOutput {
     void operator()() const {
         // Axis of rotation unit vector
         const auto joint_axis0_data = Kokkos::Array<double, 3>{
-            axes(i_constraint, 0, 0), axes(i_constraint, 0, 1), axes(i_constraint, 0, 2)
+            axes(constraint, 0, 0), axes(constraint, 0, 1), axes(constraint, 0, 2)
         };
         const auto joint_axis0 =
             typename Kokkos::View<double[3], DeviceType>::const_type{joint_axis0_data.data()};
 
         // Target node index
-        auto i_node = target_node_index(i_constraint);
+        auto node = target_node_index(constraint);
 
         // Target node initial rotation
         const auto R0_data = Kokkos::Array<double, 4>{
-            node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)
+            node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)
         };
         const auto R0 = typename Kokkos::View<double[4], DeviceType>::const_type{R0_data.data()};
 
         // Target node rotational displacement
         const auto R_data = Kokkos::Array<double, 4>{
-            node_u(i_node, 3), node_u(i_node, 4), node_u(i_node, 5), node_u(i_node, 6)
+            node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)
         };
         const auto R = typename Kokkos::View<double[4], DeviceType>::const_type{R_data.data()};
 
@@ -54,15 +53,13 @@ struct CalculateRevoluteJointOutput {
         QuaternionToRotationVector(R, RotVec);
 
         // Target node rotational velocity vector
-        auto omega_data = Kokkos::Array<double, 3>{
-            node_udot(i_node, 3), node_udot(i_node, 4), node_udot(i_node, 5)
-        };
+        auto omega_data =
+            Kokkos::Array<double, 3>{node_udot(node, 3), node_udot(node, 4), node_udot(node, 5)};
         auto omega = Kokkos::View<double[3], DeviceType>{omega_data.data()};
 
         // Target node rotational acceleration vector
-        auto omega_dot_data = Kokkos::Array<double, 3>{
-            node_uddot(i_node, 3), node_uddot(i_node, 4), node_uddot(i_node, 5)
-        };
+        auto omega_dot_data =
+            Kokkos::Array<double, 3>{node_uddot(node, 3), node_uddot(node, 4), node_uddot(node, 5)};
         auto omega_dot = Kokkos::View<double[3], DeviceType>{omega_dot_data.data()};
 
         // Calculate joint axis in current configuration
@@ -80,9 +77,9 @@ struct CalculateRevoluteJointOutput {
         auto angular_acceleration = DotProduct(joint_axis, omega_dot);
 
         // Save outputs
-        outputs(i_constraint, 0) = angular_rotation;
-        outputs(i_constraint, 1) = angular_velocity;
-        outputs(i_constraint, 2) = angular_acceleration;
+        outputs(constraint, 0) = angular_rotation;
+        outputs(constraint, 1) = angular_velocity;
+        outputs(constraint, 2) = angular_acceleration;
     }
 };
 

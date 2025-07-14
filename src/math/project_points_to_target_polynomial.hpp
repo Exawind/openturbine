@@ -31,20 +31,21 @@ inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
     size_t num_inputs, size_t num_outputs, const std::vector<std::array<double, 3>>& input_points
 ) {
     // Step 1: Calculate locations of GLL points (the order will be num_outputs - 1)
-    auto output_gll_pts = GenerateGLLPoints(num_outputs - 1);
+    const auto output_gll_pts = GenerateGLLPoints(num_outputs - 1);
 
     // Step 2: Calculate matrix of num_inputs points-based LSFE shape function values at ouput
     // locations
-    [[maybe_unused]] const auto [shape_functions, shape_derivatives, gll_pts] =
-        ShapeFunctionMatrices(num_outputs, num_inputs, output_gll_pts);
+    const auto gll_pts = GenerateGLLPoints(num_inputs - 1);
+    const auto shape_functions = ComputeShapeFunctionValues(output_gll_pts, gll_pts);
+    const auto shape_derivatives = ComputeShapeFunctionDerivatives(output_gll_pts, gll_pts);
 
     // Step 3: Project input_points to output locations using LSFE shape functions
     auto output_points = std::vector<std::array<double, 3>>(num_outputs);
-    for (size_t i_output = 0; i_output < num_outputs; ++i_output) {
-        for (size_t i_input = 0; i_input < num_inputs; ++i_input) {
-            for (size_t dim = 0; dim < 3; ++dim) {
-                output_points[i_output][dim] +=
-                    shape_functions[i_input][i_output] * input_points[i_input][dim];
+    for (auto output = 0U; output < num_outputs; ++output) {
+        for (auto input = 0U; input < num_inputs; ++input) {
+            for (auto dim = 0U; dim < 3U; ++dim) {
+                output_points[output][dim] +=
+                    shape_functions[input][output] * input_points[input][dim];
             }
         }
     }

@@ -21,9 +21,9 @@ struct CalculateSystemErrorSumSquares {
     void operator()(const size_t i_node, double& err) const {
         const auto n_node_dofs = active_dofs(i_node);
         const auto node_first_dof = node_freedom_map_table(i_node);
-        for (auto j = 0U; j < n_node_dofs; ++j) {
-            const auto pi = x(node_first_dof + j, 0);
-            const auto xi = q_delta(i_node, j) * h;
+        for (auto component = 0U; component < n_node_dofs; ++component) {
+            const auto pi = x(node_first_dof + component, 0);
+            const auto xi = q_delta(i_node, component) * h;
             const auto err_sqrt = pi / (atol + rtol * Kokkos::abs(xi));
             err += err_sqrt * err_sqrt;
         }

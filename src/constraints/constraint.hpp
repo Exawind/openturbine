@@ -3,8 +3,6 @@
 #include <cstddef>
 
 #include "constraint_type.hpp"
-#include "math/vector_operations.hpp"
-#include "model/node.hpp"
 
 namespace openturbine {
 
@@ -20,8 +18,8 @@ struct Constraint {
     size_t ID;                       ///< Unique identifier for constraint
     ConstraintType type;             ///< Type of constraint
     std::array<size_t, 2> node_ids;  ///< Node IDs for: {base_node, target_node}
-    Array_3 axis_vector;             ///< Vector for rotation/control axis
-    Array_7 initial_displacement;    ///< Initial displacement for prescribed BC
+    std::array<double, 3> axis_vector;           ///< Vector for rotation/control axis
+    std::array<double, 7> initial_displacement;  ///< Initial displacement for prescribed BC
     double* control;                 ///< Pointer to control signal (if any)
 
     /**
@@ -36,8 +34,8 @@ struct Constraint {
      */
     Constraint(
         size_t id, ConstraintType c_type, const std::array<size_t, 2>& ids,
-        const Array_3& v = {0., 0., 0.}, const Array_7& init_disp = {0., 0., 0., 1., 0., 0., 0.},
-        double* ctrl = nullptr
+        const std::array<double, 3>& v = {0., 0., 0.},
+        const std::array<double, 7>& init_disp = {0., 0., 0., 1., 0., 0., 0.}, double* ctrl = nullptr
     )
         : ID(id),
           type(c_type),

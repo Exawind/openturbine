@@ -1,11 +1,11 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <KokkosBatched_Gemm_Decl.hpp>
 #include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
 
 #include "math/vector_operations.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 
@@ -16,7 +16,7 @@ struct CalculateTangentOperator {
     Kokkos::View<double* [6][6], DeviceType> T_gbl;
 
     KOKKOS_FUNCTION
-    void operator()(const int i_node) const {
+    void operator()(const int node) const {
         auto T_data = Kokkos::Array<double, 36>{};
         const auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
 
@@ -32,7 +32,7 @@ struct CalculateTangentOperator {
             T(k, k) = 1.;
         }
 
-        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, i_node, Kokkos::make_pair(3, 6)), rv);
+        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, node, Kokkos::make_pair(3, 6)), rv);
         auto phi = KokkosBlas::serial_nrm2(rv);
         const auto tmp1 = (phi > 1.e-16) ? (Kokkos::cos(phi) - 1.) / (phi * phi) : 0.;
         const auto tmp2 = (phi > 1.e-16) ? (1. - Kokkos::sin(phi) / phi) / (phi * phi) : 0.;
@@ -48,7 +48,7 @@ struct CalculateTangentOperator {
         );
 
         KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(
-            T, Kokkos::subview(T_gbl, i_node, Kokkos::ALL, Kokkos::ALL)
+            T, Kokkos::subview(T_gbl, node, Kokkos::ALL, Kokkos::ALL)
         );
     }
 };

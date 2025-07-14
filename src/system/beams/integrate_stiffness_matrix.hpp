@@ -48,16 +48,16 @@ struct IntegrateStiffnessMatrixElement {
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
             const auto jacobian = simd_type(qp_jacobian_(qp));
-            const auto phi_i = simd_type(shape_interp_(node, qp));
-            auto phi_j = simd_type{};
-            phi_j.copy_from(&shape_interp_(simd_node, qp), tag_type());
-            const auto phi_prime_i = simd_type(shape_deriv_(node, qp));
-            auto phi_prime_j = simd_type{};
-            phi_prime_j.copy_from(&shape_deriv_(simd_node, qp), tag_type());
-            const auto K = (phi_i * phi_j) * (w * jacobian);
-            const auto P = (phi_i * phi_prime_j) * w;
-            const auto C = (phi_prime_i * phi_prime_j) * (w / jacobian);
-            const auto O = (phi_prime_i * phi_j) * w;
+            const auto phi_1 = simd_type(shape_interp_(node, qp));
+            auto phi_2 = simd_type{};
+            phi_2.copy_from(&shape_interp_(simd_node, qp), tag_type());
+            const auto phi_prime_1 = simd_type(shape_deriv_(node, qp));
+            auto phi_prime_2 = simd_type{};
+            phi_prime_2.copy_from(&shape_deriv_(simd_node, qp), tag_type());
+            const auto K = (phi_1 * phi_2) * (w * jacobian);
+            const auto P = (phi_1 * phi_prime_2) * w;
+            const auto C = (phi_prime_1 * phi_prime_2) * (w / jacobian);
+            const auto O = (phi_prime_1 * phi_2) * w;
             const auto Kuu_local = Kokkos::subview(qp_Kuu, qp, Kokkos::ALL);
             const auto Quu_local = Kokkos::subview(qp_Quu, qp, Kokkos::ALL);
             const auto Puu_local = Kokkos::subview(qp_Puu, qp, Kokkos::ALL);

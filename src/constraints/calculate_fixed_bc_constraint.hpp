@@ -1,11 +1,10 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "constraints.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
-#include "math/vector_operations.hpp"
 
 namespace openturbine {
 
@@ -45,8 +44,8 @@ KOKKOS_INLINE_FUNCTION void CalculateFixedBCConstraint(
     // Phi(0:3) = u2 + X0 - u1 - R1*X0
     QuaternionInverse(R1, R1t);
     RotateVectorByQuaternion(R1, X0, R1_X0);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i) = u2(i) + X0(i) - u1(i) - R1_X0(i);
+    for (auto component = 0; component < 3; ++component) {
+        residual_terms(component) = u2(component) + X0(component) - u1(component) - R1_X0(component);
     }
 
     // Angular residual
@@ -54,9 +53,9 @@ KOKKOS_INLINE_FUNCTION void CalculateFixedBCConstraint(
     QuaternionCompose(R2, R1t, R2_R1t);
     QuaternionToRotationMatrix(R2_R1t, C);
     AxialVectorOfMatrix(C, V3);
-    for (int i = 0; i < 3; ++i) {
-        residual_terms(i + 3) = V3(i);
-    }
+    KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>::invoke(
+        V3, Kokkos::subview(residual_terms, Kokkos::make_pair(3, 6))
+    );
 
     //----------------------------------------------------------------------
     // Constraint Gradient Matrix
@@ -67,16 +66,14 @@ KOKKOS_INLINE_FUNCTION void CalculateFixedBCConstraint(
     //---------------------------------
 
     // B(0:3,0:3) = I
-    for (int i = 0; i < 3; ++i) {
-        target_gradient_terms(i, i) = 1.;
+    for (auto component = 0; component < 3; ++component) {
+        target_gradient_terms(component, component) = 1.;
     }
 
     // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
     AX_Matrix(C, A);
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            target_gradient_terms(i + 3, j + 3) = A(j, i);
-        }
-    }
+    KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(
+        A, Kokkos::subview(target_gradient_terms, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
+    );
 }
 }  // namespace openturbine

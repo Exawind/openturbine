@@ -13,23 +13,23 @@ struct UpdateGlobalPosition {
     Kokkos::View<double* [7], DeviceType> x;
 
     KOKKOS_FUNCTION
-    void operator()(int i) const {
+    void operator()(int node) const {
         // Calculate global position
-        x(i, 0) = x0(i, 0) + q(i, 0);
-        x(i, 1) = x0(i, 1) + q(i, 1);
-        x(i, 2) = x0(i, 2) + q(i, 2);
+        x(node, 0) = x0(node, 0) + q(node, 0);
+        x(node, 1) = x0(node, 1) + q(node, 1);
+        x(node, 2) = x0(node, 2) + q(node, 2);
 
         // Calculate global orientation
         auto node_x_data = Kokkos::Array<double, 4>{};
         const auto node_x = Kokkos::View<double[4], DeviceType>{node_x_data.data()};
         QuaternionCompose(
-            Kokkos::subview(q, i, Kokkos::make_pair(3, 7)),
-            Kokkos::subview(x0, i, Kokkos::make_pair(3, 7)), node_x
+            Kokkos::subview(q, node, Kokkos::make_pair(3, 7)),
+            Kokkos::subview(x0, node, Kokkos::make_pair(3, 7)), node_x
         );
-        x(i, 3) = node_x(0);
-        x(i, 4) = node_x(1);
-        x(i, 5) = node_x(2);
-        x(i, 6) = node_x(3);
+        x(node, 3) = node_x(0);
+        x(node, 4) = node_x(1);
+        x(node, 5) = node_x(2);
+        x(node, 6) = node_x(3);
     }
 };
 

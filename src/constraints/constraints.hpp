@@ -8,6 +8,7 @@
 
 #include "constraint.hpp"
 #include "dof_management/freedom_signature.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 
@@ -163,78 +164,79 @@ struct Constraints {
         auto host_axes = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, axes);
 
         auto start_row = size_t{0U};
-        for (auto i = 0U; i < num_constraints; ++i) {
-            const auto& c = constraints[i];
+        for (auto constraint = 0U; constraint < num_constraints; ++constraint) {
+            const auto& c = constraints[constraint];
             const auto base_node_id = c.node_ids[0];
             const auto target_node_id = c.node_ids[1];
 
             // Set constraint properties
-            host_type(i) = c.type;
+            host_type(constraint) = c.type;
 
             // Set the freedom signature from the constraint types
-            if (c.type == ConstraintType::kFixedBC || c.type == ConstraintType::kPrescribedBC) {
-                host_base_freedom(i) = FreedomSignature::NoComponents;
-                host_target_freedom(i) = FreedomSignature::AllComponents;
+            if (c.type == ConstraintType::FixedBC || c.type == ConstraintType::PrescribedBC) {
+                host_base_freedom(constraint) = FreedomSignature::NoComponents;
+                host_target_freedom(constraint) = FreedomSignature::AllComponents;
 
-                host_base_active_dofs(i) = 0UL;
-                host_target_active_dofs(i) = 6UL;
-            } else if (c.type == ConstraintType::kRigidJoint ||
-                       c.type == ConstraintType::kRevoluteJoint ||
-                       c.type == ConstraintType::kRotationControl) {
-                host_base_freedom(i) = FreedomSignature::AllComponents;
-                host_target_freedom(i) = FreedomSignature::AllComponents;
+                host_base_active_dofs(constraint) = 0UL;
+                host_target_active_dofs(constraint) = 6UL;
+            } else if (c.type == ConstraintType::RigidJoint ||
+                       c.type == ConstraintType::RevoluteJoint ||
+                       c.type == ConstraintType::RotationControl) {
+                host_base_freedom(constraint) = FreedomSignature::AllComponents;
+                host_target_freedom(constraint) = FreedomSignature::AllComponents;
 
-                host_base_active_dofs(i) = 6UL;
-                host_target_active_dofs(i) = 6UL;
-            } else if (c.type == ConstraintType::kFixedBC3DOFs ||
-                       c.type == ConstraintType::kPrescribedBC3DOFs) {
-                host_base_freedom(i) = FreedomSignature::NoComponents;
-                host_target_freedom(i) = FreedomSignature::JustPosition;
+                host_base_active_dofs(constraint) = 6UL;
+                host_target_active_dofs(constraint) = 6UL;
+            } else if (c.type == ConstraintType::FixedBC3DOFs ||
+                       c.type == ConstraintType::PrescribedBC3DOFs) {
+                host_base_freedom(constraint) = FreedomSignature::NoComponents;
+                host_target_freedom(constraint) = FreedomSignature::JustPosition;
 
-                host_base_active_dofs(i) = 0UL;
-                host_target_active_dofs(i) = 3UL;
-            } else if (c.type == ConstraintType::kRigidJoint6DOFsTo3DOFs) {
-                host_base_freedom(i) = FreedomSignature::AllComponents;
-                host_target_freedom(i) = FreedomSignature::JustPosition;
+                host_base_active_dofs(constraint) = 0UL;
+                host_target_active_dofs(constraint) = 3UL;
+            } else if (c.type == ConstraintType::RigidJoint6DOFsTo3DOFs) {
+                host_base_freedom(constraint) = FreedomSignature::AllComponents;
+                host_target_freedom(constraint) = FreedomSignature::JustPosition;
 
-                host_base_active_dofs(i) = 6UL;
-                host_target_active_dofs(i) = 3UL;
+                host_base_active_dofs(constraint) = 6UL;
+                host_target_active_dofs(constraint) = 3UL;
             }
 
-            control_signal[i] = c.control;
+            control_signal[constraint] = c.control;
 
             // Set base and target node index
-            host_base_node_index(i) = base_node_id;
-            host_target_node_index(i) = target_node_id;
+            host_base_node_index(constraint) = base_node_id;
+            host_target_node_index(constraint) = target_node_id;
 
             // Set constraint rows
-            auto n_rows = NumRowsForConstraint(host_type(i));
-            host_row_range(i) = Kokkos::make_pair(start_row, start_row + n_rows);
+            auto n_rows = NumRowsForConstraint(host_type(constraint));
+            host_row_range(constraint) = Kokkos::make_pair(start_row, start_row + n_rows);
             start_row += n_rows;
 
             // Calculate initial relative position (X0)
-            Array_3 x0{0., 0., 0.};
-            if (c.type != ConstraintType::kPrescribedBC &&
-                c.type != ConstraintType::kPrescribedBC3DOFs) {
+            std::array<double, 3> x0{0., 0., 0.};
+            if (c.type != ConstraintType::PrescribedBC &&
+                c.type != ConstraintType::PrescribedBC3DOFs) {
                 x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
             }
-            for (size_t j = 0; j < 3; ++j) {
-                host_X0(i, j) = x0[j];
+            for (auto component = 0; component < 3; ++component) {
+                host_X0(constraint, component) = x0[component];
             }
 
             // Calculate rotation axes
             const auto rotation_matrix = CalculateAxes(c, x0);
-            for (size_t j = 0; j < 3; ++j) {
-                for (size_t k = 0; k < 3; ++k) {
-                    host_axes(i, j, k) = rotation_matrix[j][k];
+            for (auto component_1 = 0; component_1 < 3; ++component_1) {
+                for (auto component_2 = 0; component_2 < 3; ++component_2) {
+                    host_axes(constraint, component_1, component_2) =
+                        rotation_matrix[component_1][component_2];
                 }
             }
 
             // Initialize displacement to provided displacement if prescribed BC
-            if (c.type == ConstraintType::kPrescribedBC ||
-                c.type == ConstraintType::kPrescribedBC3DOFs) {
-                for (size_t j = 0; j < 7; ++j) {
-                    host_input(i, j) = c.initial_displacement[j];
+            if (c.type == ConstraintType::PrescribedBC ||
+                c.type == ConstraintType::PrescribedBC3DOFs) {
+                for (auto component = 0; component < 7; ++component) {
+                    host_input(constraint, component) = c.initial_displacement[component];
                 }
             }
         }
@@ -254,10 +256,10 @@ struct Constraints {
     }
 
     /// Calculates the initial relative position (X0) based on constraint type and nodes
-    static Array_3 CalculateX0(
+    static std::array<double, 3> CalculateX0(
         const Constraint& constraint, const Node& target_node, const Node& base_node
     ) {
-        Array_3 x0{0., 0., 0.};
+        std::array<double, 3> x0{0., 0., 0.};
         // Set X0 to the prescribed displacement for fixed and prescribed BCs i.e. constraints
         // with 1 node
         if (GetNumberOfNodes(constraint.type) == 1) {
@@ -275,13 +277,15 @@ struct Constraints {
     }
 
     /// Calculates the rotation axes for a constraint based on its type and configuration
-    static Array_3x3 CalculateAxes(const Constraint& constraint, const Array_3& x0) {
-        Array_3x3 rotation_matrix{};
-        if (constraint.type == ConstraintType::kRevoluteJoint) {
-            constexpr Array_3 x = {1., 0., 0.};
-            const Array_3 x_hat = Norm(constraint.axis_vector) != 0.
-                                      ? UnitVector(constraint.axis_vector)
-                                      : UnitVector(x0);
+    static std::array<std::array<double, 3>, 3> CalculateAxes(
+        const Constraint& constraint, const std::array<double, 3>& x0
+    ) {
+        std::array<std::array<double, 3>, 3> rotation_matrix{};
+        if (constraint.type == ConstraintType::RevoluteJoint) {
+            constexpr std::array<double, 3> x = {1., 0., 0.};
+            const std::array<double, 3> x_hat = Norm(constraint.axis_vector) != 0.
+                                                    ? UnitVector(constraint.axis_vector)
+                                                    : UnitVector(x0);
 
             // Create rotation matrix to rotate x to match vector
             const auto cross_product = CrossProduct(x, x_hat);
@@ -305,7 +309,7 @@ struct Constraints {
         }
 
         // Set rotation_matrix to the unit vector of the constraint axis for rotation control
-        if (constraint.type == ConstraintType::kRotationControl) {
+        if (constraint.type == ConstraintType::RotationControl) {
             const auto unit_vector = UnitVector(constraint.axis_vector);
             rotation_matrix[0][0] = unit_vector[0];
             rotation_matrix[0][1] = unit_vector[1];
@@ -322,16 +326,16 @@ struct Constraints {
 
     /// Sets the new displacement for the given constraint
     void UpdateDisplacement(size_t constraint_id, const std::array<double, 7>& disp) const {
-        for (auto i = 0U; i < 7U; ++i) {
-            host_input(constraint_id, i) = disp[i];
+        for (auto component = 0U; component < 7U; ++component) {
+            host_input(constraint_id, component) = disp[component];
         }
     }
 
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
-        for (auto i = 0U; i < this->num_constraints; ++i) {
-            if (control_signal[i] != nullptr) {
-                host_input(i, 0) = *control_signal[i];
+        for (auto constraint = 0U; constraint < this->num_constraints; ++constraint) {
+            if (control_signal[constraint] != nullptr) {
+                host_input(constraint, 0) = *control_signal[constraint];
             }
         }
         Kokkos::deep_copy(this->input, host_input);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
 

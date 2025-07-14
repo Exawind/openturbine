@@ -26,8 +26,8 @@ struct ComputeSystemRowEntries {
     KOKKOS_FUNCTION
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
-        for (auto n = 0U; n < num_nodes; ++n) {
-            if (node_state_indices(element, n) == node) {
+        for (auto node_index = 0U; node_index < num_nodes; ++node_index) {
+            if (node_state_indices(element, node_index) == node) {
                 return true;
             }
         }
@@ -60,8 +60,8 @@ struct ComputeSystemRowEntries {
     ValueType ComputeEntriesInElement(size_t element) const {
         const auto num_nodes = num_nodes_per_element(element);
         auto entries = ValueType{};
-        for (auto j = 0U; j < num_nodes; ++j) {
-            const auto node_state_index = node_state_indices(element, j);
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto node_state_index = node_state_indices(element, node);
             entries += static_cast<ValueType>(active_dofs(node_state_index));
         }
         return entries;
@@ -92,8 +92,8 @@ struct ComputeSystemRowEntries {
             entries_in_row += entries_in_constraint;
         }
 
-        for (auto j = 0U; j < num_dof; ++j) {
-            row_entries(dof_index + j) = entries_in_row;
+        for (auto component = 0U; component < num_dof; ++component) {
+            row_entries(dof_index + component) = entries_in_row;
         }
     }
 };
