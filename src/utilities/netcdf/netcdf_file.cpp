@@ -26,32 +26,31 @@ NetCDFFile::~NetCDFFile() {
 int NetCDFFile::AddDimension(const std::string& name, size_t length) const {
     int dim_id{-1};
     check_netCDF_error(
-        nc_def_dim(netcdf_id_, name.c_str(), length, &dim_id),
-        "Failed to create dimension " + name
+        nc_def_dim(netcdf_id_, name.c_str(), length, &dim_id), "Failed to create dimension " + name
     );
     return dim_id;
 }
 
-template<>
+template <>
 int NetCDFFile::AddVariable<float>(const std::string& name, const std::vector<int>& dim_ids) const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
-            netcdf_id_, name.c_str(), NC_FLOAT, static_cast<int>(dim_ids.size()),
-            dim_ids.data(), &var_id
+            netcdf_id_, name.c_str(), NC_FLOAT, static_cast<int>(dim_ids.size()), dim_ids.data(),
+            &var_id
         ),
         "Failed to create variable " + name
     );
     return var_id;
 }
 
-template<>
+template <>
 int NetCDFFile::AddVariable<double>(const std::string& name, const std::vector<int>& dim_ids) const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
-            netcdf_id_, name.c_str(), NC_DOUBLE, static_cast<int>(dim_ids.size()),
-            dim_ids.data(), &var_id
+            netcdf_id_, name.c_str(), NC_DOUBLE, static_cast<int>(dim_ids.size()), dim_ids.data(),
+            &var_id
         ),
         "Failed to create variable " + name
     );
@@ -63,8 +62,8 @@ int NetCDFFile::AddVariable<int>(const std::string& name, const std::vector<int>
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
-            netcdf_id_, name.c_str(), NC_INT, static_cast<int>(dim_ids.size()),
-            dim_ids.data(), &var_id
+            netcdf_id_, name.c_str(), NC_INT, static_cast<int>(dim_ids.size()), dim_ids.data(),
+            &var_id
         ),
         "Failed to create variable " + name
     );
@@ -72,12 +71,13 @@ int NetCDFFile::AddVariable<int>(const std::string& name, const std::vector<int>
 }
 
 template <>
-int NetCDFFile::AddVariable<std::string>(const std::string& name, const std::vector<int>& dim_ids) const {
+int NetCDFFile::AddVariable<std::string>(const std::string& name, const std::vector<int>& dim_ids)
+    const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
-            netcdf_id_, name.c_str(), NC_STRING, static_cast<int>(dim_ids.size()),
-            dim_ids.data(), &var_id
+            netcdf_id_, name.c_str(), NC_STRING, static_cast<int>(dim_ids.size()), dim_ids.data(),
+            &var_id
         ),
         "Failed to create variable " + name
     );
@@ -87,15 +87,20 @@ int NetCDFFile::AddVariable<std::string>(const std::string& name, const std::vec
 void NetCDFFile::AddAttribute(const std::string& var_name, const std::string& attr_name, float value)
     const {
     check_netCDF_error(
-        nc_put_att(netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), NC_FLOAT, 1, &value),
+        nc_put_att(
+            netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), NC_FLOAT, 1, &value
+        ),
         "Failed to write attribute " + attr_name
     );
 }
 
-void NetCDFFile::AddAttribute(const std::string& var_name, const std::string& attr_name, double value)
-    const {
+void NetCDFFile::AddAttribute(
+    const std::string& var_name, const std::string& attr_name, double value
+) const {
     check_netCDF_error(
-        nc_put_att(netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), NC_DOUBLE, 1, &value),
+        nc_put_att(
+            netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), NC_DOUBLE, 1, &value
+        ),
         "Failed to write attribute " + attr_name
     );
 }
@@ -108,11 +113,13 @@ void NetCDFFile::AddAttribute(const std::string& var_name, const std::string& at
     );
 }
 
-void NetCDFFile::AddAttribute(const std::string& var_name, const std::string& attr_name, const std::string& value)
-    const {
+void NetCDFFile::AddAttribute(
+    const std::string& var_name, const std::string& attr_name, const std::string& value
+) const {
     check_netCDF_error(
         nc_put_att_text(
-            netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), value.length(), value.c_str()
+            netcdf_id_, this->GetVariableId(var_name), attr_name.c_str(), value.length(),
+            value.c_str()
         ),
         "Failed to write attribute " + attr_name
     );
@@ -120,19 +127,22 @@ void NetCDFFile::AddAttribute(const std::string& var_name, const std::string& at
 
 void NetCDFFile::WriteVariable(const std::string& name, const std::vector<float>& data) const {
     check_netCDF_error(
-        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()), "Failed to write variable " + name
+        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
+        "Failed to write variable " + name
     );
 }
 
 void NetCDFFile::WriteVariable(const std::string& name, const std::vector<double>& data) const {
     check_netCDF_error(
-        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()), "Failed to write variable " + name
+        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
+        "Failed to write variable " + name
     );
 }
 
 void NetCDFFile::WriteVariable(const std::string& name, const std::vector<int>& data) const {
     check_netCDF_error(
-        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()), "Failed to write variable " + name
+        nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
+        "Failed to write variable " + name
     );
 }
 
@@ -194,12 +204,16 @@ void NetCDFFile::WriteVariableAt(
         }
     );
     check_netCDF_error(
-        nc_put_vara_string(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), c_strs.data()),
+        nc_put_vara_string(
+            netcdf_id_, this->GetVariableId(name), start.data(), count.data(), c_strs.data()
+        ),
         "Failed to write string variable " + name
     );
 }
 
-int NetCDFFile::GetNetCDFId() const { return netcdf_id_; }
+int NetCDFFile::GetNetCDFId() const {
+    return netcdf_id_;
+}
 
 int NetCDFFile::GetDimensionId(const std::string& name) const {
     int dim_id{-1};
@@ -229,9 +243,7 @@ size_t NetCDFFile::GetNumberOfDimensions(const std::string& var_name) const {
 
 size_t NetCDFFile::GetDimensionLength(int dim_id) const {
     size_t length{0};
-    check_netCDF_error(
-        nc_inq_dimlen(netcdf_id_, dim_id, &length), "Failed to get dimension length"
-    );
+    check_netCDF_error(nc_inq_dimlen(netcdf_id_, dim_id, &length), "Failed to get dimension length");
     return length;
 }
 
@@ -258,19 +270,22 @@ std::vector<size_t> NetCDFFile::GetShape(const std::string& var_name) const {
 
 void NetCDFFile::ReadVariable(const std::string& name, float* data) const {
     check_netCDF_error(
-        nc_get_var_float(netcdf_id_, this->GetVariableId(name), data), "Failed to read float variable " + name
+        nc_get_var_float(netcdf_id_, this->GetVariableId(name), data),
+        "Failed to read float variable " + name
     );
 }
 
 void NetCDFFile::ReadVariable(const std::string& name, double* data) const {
     check_netCDF_error(
-        nc_get_var_double(netcdf_id_, this->GetVariableId(name), data), "Failed to read double variable " + name
+        nc_get_var_double(netcdf_id_, this->GetVariableId(name), data),
+        "Failed to read double variable " + name
     );
 }
 
 void NetCDFFile::ReadVariable(const std::string& name, int* data) const {
     check_netCDF_error(
-        nc_get_var_int(netcdf_id_, this->GetVariableId(name), data), "Failed to read int variable " + name
+        nc_get_var_int(netcdf_id_, this->GetVariableId(name), data),
+        "Failed to read int variable " + name
     );
 }
 
@@ -333,8 +348,10 @@ void NetCDFFile::ReadVariableWithStride(
     const std::vector<ptrdiff_t>& stride, int* data
 ) const {
     check_netCDF_error(
-        nc_get_vars_int(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), stride.data(), data),
+        nc_get_vars_int(
+            netcdf_id_, this->GetVariableId(name), start.data(), count.data(), stride.data(), data
+        ),
         "Failed to read int variable with stride " + name
     );
 }
-}
+}  // namespace openturbine::util

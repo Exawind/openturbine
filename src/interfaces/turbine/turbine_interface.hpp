@@ -3,15 +3,15 @@
 #include "interfaces/components/controller_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/host_state.hpp"
-#include "utilities/controllers/turbine_controller.hpp"
-#include "model/model.hpp"
 #include "interfaces/outputs.hpp"
+#include "model/model.hpp"
 #include "step/step_parameters.hpp"
+#include "utilities/controllers/turbine_controller.hpp"
 
 namespace openturbine::interfaces::components {
 struct SolutionInput;
 struct TurbineInput;
-}
+}  // namespace openturbine::interfaces::components
 
 namespace openturbine::interfaces {
 

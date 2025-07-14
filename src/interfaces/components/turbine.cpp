@@ -1,12 +1,12 @@
-#include <vector>
-#include <array>
-
 #include "turbine.hpp"
+
+#include <array>
+#include <vector>
+
 #include "interfaces/components/turbine_input.hpp"
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
 #include "model/model.hpp"
-
 
 namespace openturbine::interfaces::components {
 Turbine::Turbine(const TurbineInput& input, Model& model)
@@ -54,11 +54,11 @@ void Turbine::SetLoads(HostState<DeviceType>& host_state) const {
     this->tower.SetLoads(host_state);
 }
 
-const TurbineInput& Turbine::GetTurbineInput() const { return this->turbine_input; }
+const TurbineInput& Turbine::GetTurbineInput() const {
+    return this->turbine_input;
+}
 
-std::vector<Beam> Turbine::CreateBlades(
-    const std::vector<BeamInput>& blade_inputs, Model& model
-) {
+std::vector<Beam> Turbine::CreateBlades(const std::vector<BeamInput>& blade_inputs, Model& model) {
     std::vector<Beam> blades;
     std::transform(
         blade_inputs.begin(), blade_inputs.end(), std::back_inserter(blades),
@@ -223,8 +223,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
 
     // Create one apex node per blade at origin
     for (auto i = 0U; i < this->blades.size(); ++i) {
-        const auto apex_node_id =
-            model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
+        const auto apex_node_id = model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
         this->apex_nodes.emplace_back(apex_node_id);
     }
 
@@ -239,8 +238,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     // Add tower nodes to tower_node_ids vector
     this->tower_node_ids.reserve(this->tower.nodes.size());
     std::transform(
-        this->tower.nodes.begin(), this->tower.nodes.end(),
-        std::back_inserter(this->tower_node_ids),
+        this->tower.nodes.begin(), this->tower.nodes.end(), std::back_inserter(this->tower_node_ids),
         [](const auto& node) {
             return node.id;
         }
@@ -253,8 +251,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     // Add drivetrain nodes (yaw bearing, shaft base, azimuth, hub) to drivetrain_node_ids vector
     this->drivetrain_node_ids.reserve(4);
     this->drivetrain_node_ids = {
-        this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id,
-        this->hub_node.id
+        this->yaw_bearing_node.id, this->shaft_base_node.id, this->azimuth_node.id, this->hub_node.id
     };
 
     //----------------------------------------------------
@@ -297,9 +294,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     //----------------------------------------------------
 
     // Add nacelle nodes (drivetrain nodes + blade nodes) to nacelle_node_ids vector
-    this->nacelle_node_ids.reserve(
-        this->drivetrain_node_ids.size() + this->blade_node_ids.size()
-    );
+    this->nacelle_node_ids.reserve(this->drivetrain_node_ids.size() + this->blade_node_ids.size());
     this->nacelle_node_ids.insert(
         this->nacelle_node_ids.end(), this->drivetrain_node_ids.begin(),
         this->drivetrain_node_ids.end()
@@ -313,12 +308,9 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     //----------------------------------------------------
 
     // Collect all turbine node IDs (tower + nacelle nodes)
-    this->all_turbine_node_ids.reserve(
-        this->tower_node_ids.size() + this->nacelle_node_ids.size()
-    );
+    this->all_turbine_node_ids.reserve(this->tower_node_ids.size() + this->nacelle_node_ids.size());
     this->all_turbine_node_ids.insert(
-        this->all_turbine_node_ids.end(), this->tower_node_ids.begin(),
-        this->tower_node_ids.end()
+        this->all_turbine_node_ids.end(), this->tower_node_ids.begin(), this->tower_node_ids.end()
     );
     this->all_turbine_node_ids.insert(
         this->all_turbine_node_ids.end(), this->nacelle_node_ids.begin(),
@@ -332,8 +324,7 @@ void Turbine::AddMassElements(const TurbineInput& input, Model& model) {
         model.AddMassElement(this->yaw_bearing_node.id, input.yaw_bearing_inertia_matrix);
 
     // Add mass element at hub node (hub assembly mass)
-    this->hub_mass_element_id =
-        model.AddMassElement(this->hub_node.id, input.hub_inertia_matrix);
+    this->hub_mass_element_id = model.AddMassElement(this->hub_node.id, input.hub_inertia_matrix);
 }
 
 void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
@@ -347,8 +338,7 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
         const auto& apex_node = model.GetNode(this->apex_nodes[i].id);
 
         // Get the blade root node
-        const auto& root_node =
-            model.GetNode(this->blades[i].nodes[0].id);  // first node of blade
+        const auto& root_node = model.GetNode(this->blades[i].nodes[0].id);  // first node of blade
 
         // Calculate the pitch axis for the blade (from apex to root)
         const auto pitch_axis = std::array{
@@ -374,11 +364,11 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
 
     // Add rigid constraint between hub and azimuth node
     this->azimuth_to_hub =
-        ConstraintData(model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id})
-        );
+        ConstraintData(model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id}));
 
     // Shaft axis constraint - add revolute joint between shaft base and azimuth node
-    const auto shaft_axis = std::array{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
+    const auto shaft_axis =
+        std::array{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
     this->shaft_base_to_azimuth = ConstraintData(model.AddRevoluteJointConstraint(
         {this->shaft_base_node.id, this->azimuth_node.id}, shaft_axis, &torque_control
     ));
@@ -395,8 +385,7 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
     // Add constraint from tower top to yaw bearing
     this->yaw_control = input.nacelle_yaw_angle;
     this->tower_top_to_yaw_bearing = ConstraintData(model.AddRotationControl(
-        {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.},
-        &this->yaw_control
+        {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.}, &this->yaw_control
     ));
 
     //--------------------------------------------------------------------------
@@ -479,9 +468,8 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     const auto& tower_base_node = model.GetNode(this->tower.nodes.front().id);
-    const auto ref_tower_base_position = std::array{
-        tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]
-    };
+    const auto ref_tower_base_position =
+        std::array{tower_base_node.x0[0], tower_base_node.x0[1], tower_base_node.x0[2]};
 
     // Calculate translation displacement from reference tower base -> input position
     const auto tower_base_displacement = std::array{
@@ -514,8 +502,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Add prescribed BC constraint at the tower base with initial displacements
-    this->tower_base =
-        ConstraintData(model.AddPrescribedBC(tower_base_node.id, tower_base_node.u));
+    this->tower_base = ConstraintData(model.AddPrescribedBC(tower_base_node.id, tower_base_node.u));
 }
 
 void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
@@ -561,4 +548,4 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
         );
     }
 }
-}
+}  // namespace openturbine::interfaces::components

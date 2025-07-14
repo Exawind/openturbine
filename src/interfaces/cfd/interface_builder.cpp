@@ -1,4 +1,5 @@
 #include "interface_builder.hpp"
+
 #include "floating_platform_input.hpp"
 
 namespace openturbine::cfd {
@@ -76,22 +77,30 @@ InterfaceBuilder& InterfaceBuilder::SetMooringLineUndeformedLength(size_t line, 
     return *this;
 }
 
-InterfaceBuilder& InterfaceBuilder::SetMooringLineFairleadPosition(size_t line, const std::array<double, 3>& p) {
+InterfaceBuilder& InterfaceBuilder::SetMooringLineFairleadPosition(
+    size_t line, const std::array<double, 3>& p
+) {
     interface_input.turbine.floating_platform.mooring_lines.at(line).fairlead_position = p;
     return *this;
 }
 
-InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorPosition(size_t line, const std::array<double, 3>& p) {
+InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorPosition(
+    size_t line, const std::array<double, 3>& p
+) {
     interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_position = p;
     return *this;
 }
 
-InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorVelocity(size_t line, const std::array<double, 3>& v) {
+InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorVelocity(
+    size_t line, const std::array<double, 3>& v
+) {
     interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_velocity = v;
     return *this;
 }
 
-InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorAcceleration(size_t line, const std::array<double, 3>& a) {
+InterfaceBuilder& InterfaceBuilder::SetMooringLineAnchorAcceleration(
+    size_t line, const std::array<double, 3>& a
+) {
     interface_input.turbine.floating_platform.mooring_lines.at(line).anchor_acceleration = a;
     return *this;
 }
@@ -101,6 +110,8 @@ InterfaceBuilder& InterfaceBuilder::SetOutputFile(const std::string& path) {
     return *this;
 }
 
-Interface InterfaceBuilder::Build() const { return Interface(interface_input); }
-
+Interface InterfaceBuilder::Build() const {
+    return Interface(interface_input);
 }
+
+}  // namespace openturbine::cfd

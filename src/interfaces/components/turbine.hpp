@@ -2,14 +2,14 @@
 
 #include <vector>
 
-#include "interfaces/components/turbine_input.hpp"
 #include "interfaces/components/beam.hpp"
+#include "interfaces/components/turbine_input.hpp"
 #include "interfaces/constraint_data.hpp"
 #include "interfaces/host_state.hpp"
 #include "interfaces/node_data.hpp"
 
 namespace openturbine {
-    class Model;
+class Model;
 }
 
 namespace openturbine::interfaces::components {

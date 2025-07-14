@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <array>
+#include <vector>
 
 #include "interfaces/node_data.hpp"
 #include "types.hpp"
@@ -9,7 +9,7 @@
 namespace openturbine {
 class Model;
 struct BeamSection;
-}
+}  // namespace openturbine
 
 namespace openturbine::interfaces::components {
 

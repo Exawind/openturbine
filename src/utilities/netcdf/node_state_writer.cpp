@@ -1,8 +1,8 @@
+#include "node_state_writer.hpp"
+
 #include <algorithm>
 #include <array>
 #include <stdexcept>
-
-#include "node_state_writer.hpp"
 
 namespace openturbine::util {
 NodeStateWriter::NodeStateWriter(const std::string& file_path, bool create, size_t num_nodes)
@@ -28,8 +28,7 @@ NodeStateWriter::NodeStateWriter(const std::string& file_path, bool create, size
 void NodeStateWriter::WriteStateDataAtTimestep(
     size_t timestep, const std::string& component_prefix, const std::vector<double>& x,
     const std::vector<double>& y, const std::vector<double>& z, const std::vector<double>& i,
-    const std::vector<double>& j, const std::vector<double>& k,
-    const std::vector<double>& w
+    const std::vector<double>& j, const std::vector<double>& k, const std::vector<double>& w
 ) const {
     // Validate the component prefix - must be one of the valid prefixes:
     // "x" -> position
@@ -89,9 +88,13 @@ void NodeStateWriter::WriteDeformationDataAtTimestep(
     file_.WriteVariableAt("deformation_z", start, count, z);
 }
 
-const NetCDFFile& NodeStateWriter::GetFile() const { return file_; }
+const NetCDFFile& NodeStateWriter::GetFile() const {
+    return file_;
+}
 
-size_t NodeStateWriter::GetNumNodes() const { return num_nodes_; }
+size_t NodeStateWriter::GetNumNodes() const {
+    return num_nodes_;
+}
 
 void NodeStateWriter::DefineStateVariables(
     const std::string& prefix, const std::vector<int>& dimensions, bool has_w
@@ -107,4 +110,4 @@ void NodeStateWriter::DefineStateVariables(
         (void)file_.AddVariable<double>(prefix + "_w", dimensions);
     }
 }
-}
+}  // namespace openturbine::util

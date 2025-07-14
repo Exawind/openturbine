@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cstdint>
+
 #include "beam_input.hpp"
 
 namespace openturbine {
-    class Model;
+class Model;
 }
 
 namespace openturbine::interfaces::components {
@@ -61,7 +62,8 @@ public:
     /// @param ref_axis Reference axis ('X' or 'Z')
     /// @return Reference to this builder for method chaining
     BeamBuilder& AddSection(
-        double grid_location, const std::array<std::array<double, 6>, 6>& mass_matrix, const std::array<std::array<double, 6>, 6>& stiffness_matrix,
+        double grid_location, const std::array<std::array<double, 6>, 6>& mass_matrix,
+        const std::array<std::array<double, 6>, 6>& stiffness_matrix,
         ReferenceAxisOrientation ref_axis
     );
 

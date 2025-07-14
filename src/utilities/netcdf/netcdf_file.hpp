@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <stdexcept>
 
 #include <netcdf.h>
 
@@ -69,14 +69,12 @@ public:
      * This function is a wrapper around the NetCDF library's "nc_put_att_text" and "nc_put_att"
      * functions. It adds an attribute (e.g. metadata) to a variable in the NetCDF file.
      */
-    void AddAttribute(const std::string& var_name, const std::string& attr_name, float value)
-        const;
-    void AddAttribute(const std::string& var_name, const std::string& attr_name, double value)
-        const;
-    void AddAttribute(const std::string& var_name, const std::string& attr_name, int value)
-        const;
-    void AddAttribute(const std::string& var_name, const std::string& attr_name, const std::string& value)
-        const;
+    void AddAttribute(const std::string& var_name, const std::string& attr_name, float value) const;
+    void AddAttribute(const std::string& var_name, const std::string& attr_name, double value) const;
+    void AddAttribute(const std::string& var_name, const std::string& attr_name, int value) const;
+    void AddAttribute(
+        const std::string& var_name, const std::string& attr_name, const std::string& value
+    ) const;
 
     /**
      * @brief Writes data to a variable in the NetCDF file

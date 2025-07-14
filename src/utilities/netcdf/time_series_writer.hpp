@@ -38,7 +38,9 @@ public:
      * @param timestep Current timestep index
      * @param value Value to write at the current timestep
      */
-    void WriteValueAtTimestep(const std::string& variable_name, size_t timestep, const double& value);
+    void WriteValueAtTimestep(
+        const std::string& variable_name, size_t timestep, const double& value
+    );
 
     /// @brief Get the NetCDF file object
     [[nodiscard]] const NetCDFFile& GetFile() const;

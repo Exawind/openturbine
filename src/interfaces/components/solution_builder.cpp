@@ -52,6 +52,8 @@ SolutionBuilder& SolutionBuilder::SetOutputFile(const std::string& output_file_p
     return *this;
 }
 
-const SolutionInput& SolutionBuilder::Input() const { return this->input; }
-
+const SolutionInput& SolutionBuilder::Input() const {
+    return this->input;
 }
+
+}  // namespace openturbine::interfaces::components

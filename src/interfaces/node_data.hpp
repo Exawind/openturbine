@@ -1,11 +1,12 @@
 #pragma once
 
 #include <array>
+
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::interfaces {
 
-template<typename DeviceType>
+template <typename DeviceType>
 struct HostState;
 
 struct NodeData {

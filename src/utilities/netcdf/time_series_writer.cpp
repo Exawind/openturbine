@@ -1,6 +1,6 @@
-#include <stdexcept>
-
 #include "time_series_writer.hpp"
+
+#include <stdexcept>
 
 namespace openturbine::util {
 TimeSeriesWriter::TimeSeriesWriter(const std::string& file_path, bool create)
@@ -36,18 +36,20 @@ void TimeSeriesWriter::WriteValuesAtTimestep(
     }
 
     // Write the values to the time-series variable
-    const std::vector<size_t> start = {
-        timestep, 0
-    };  // Start at the current timestep and value 0
+    const std::vector<size_t> start = {timestep, 0};  // Start at the current timestep and value 0
     const std::vector<size_t> count = {
         1, values.size()
     };  // Write one timestep worth of data for all values
     file_.WriteVariableAt(variable_name, start, count, values);
 }
 
-void TimeSeriesWriter::WriteValueAtTimestep(const std::string& variable_name, size_t timestep, const double& value) {
+void TimeSeriesWriter::WriteValueAtTimestep(
+    const std::string& variable_name, size_t timestep, const double& value
+) {
     WriteValuesAtTimestep(variable_name, timestep, std::vector<double>{value});
 }
 
-const NetCDFFile& TimeSeriesWriter::GetFile() const { return file_; }
+const NetCDFFile& TimeSeriesWriter::GetFile() const {
+    return file_;
 }
+}  // namespace openturbine::util

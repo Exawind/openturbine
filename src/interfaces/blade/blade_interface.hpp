@@ -50,6 +50,7 @@ public:
      * @throws std::runtime_error if prescribed root motion was not enabled
      */
     void SetRootDisplacement(const std::array<double, 7>& u) const;
+
 private:
     Model model;              ///< OpenTurbine class for model construction
     components::Beam blade;   ///< Blade model input/output data

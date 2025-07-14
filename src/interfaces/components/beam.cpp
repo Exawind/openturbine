@@ -1,6 +1,7 @@
 #include "beam.hpp"
-#include "interfaces/components/beam_input.hpp"
+
 #include "elements/beams/interpolation.hpp"
+#include "interfaces/components/beam_input.hpp"
 #include "math/least_squares_fit.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/project_points_to_target_polynomial.hpp"
@@ -10,12 +11,12 @@
 namespace openturbine::interfaces::components {
 
 Beam::Beam(const BeamInput& input, Model& model) {
-     ValidateInput(input);
-     SetupNodeLocations(input);
-     CreateNodeGeometry(input);
-     CreateBeamElement(input, model);
-     PositionBladeInSpace(input, model);
-     SetupRootNode(input, model);
+    ValidateInput(input);
+    SetupNodeLocations(input);
+    CreateNodeGeometry(input);
+    CreateBeamElement(input, model);
+    PositionBladeInSpace(input, model);
+    SetupRootNode(input, model);
 }
 
 std::vector<double> Beam::GetNodeWeights(double s) const {
@@ -88,9 +89,8 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
         const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto [phi_kn_geometry, phi_prime_kn_geometry] =
             ShapeFunctionMatrices(kp_xi, GenerateGLLPoints(n_geometry_pts - 1));
-        const auto geometry_points = PerformLeastSquaresFitting(
-            n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
-        );
+        const auto geometry_points =
+            PerformLeastSquaresFitting(n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates);
         const auto node_coords =
             ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
 
@@ -129,12 +129,9 @@ void Beam::CreateBeamElement(const BeamInput& input, Model& model) {
     // Build beam sections
     const auto sections = BuildBeamSections(input);
     std::vector<double> section_grid(sections.size());
-    std::transform(
-        sections.begin(), sections.end(), section_grid.begin(),
-        [](const auto& section) {
-            return section.position;
-        }
-    );
+    std::transform(sections.begin(), sections.end(), section_grid.begin(), [](const auto& section) {
+        return section.position;
+    });
 
     // Calculate trapezoidal quadrature based on section locations
     const auto trapezoidal_quadrature = CreateTrapezoidalQuadrature(section_grid);
@@ -212,9 +209,8 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
     std::vector<BeamSection> sections;
 
     // Add first section after rotating matrices to account for twist
-    auto twist = LinearInterp(
-        input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
-    );
+    auto twist =
+        LinearInterp(input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist);
     auto q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
     sections.emplace_back(
         input.sections[0].location, RotateMatrix6(input.sections[0].mass_matrix, q_twist),
@@ -230,17 +226,16 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
                 static_cast<double>(j + 1) / static_cast<double>(input.section_refinement + 1);
 
             // Interpolate grid location
-            const auto grid_value = (1. - alpha) * input.sections[i - 1].location +
-                                    alpha * input.sections[i].location;
+            const auto grid_value =
+                (1. - alpha) * input.sections[i - 1].location + alpha * input.sections[i].location;
 
             // Interpolate mass and stiffness matrices from bounding sections
             Array_6x6 mass_matrix;
             Array_6x6 stiffness_matrix;
             for (auto mi = 0U; mi < 6; ++mi) {
                 for (auto ni = 0U; ni < 6; ++ni) {
-                    mass_matrix[mi][ni] =
-                        (1. - alpha) * input.sections[i - 1].mass_matrix[mi][ni] +
-                        alpha * input.sections[i].mass_matrix[mi][ni];
+                    mass_matrix[mi][ni] = (1. - alpha) * input.sections[i - 1].mass_matrix[mi][ni] +
+                                          alpha * input.sections[i].mass_matrix[mi][ni];
                     stiffness_matrix[mi][ni] =
                         (1. - alpha) * input.sections[i - 1].stiffness_matrix[mi][ni] +
                         alpha * input.sections[i].stiffness_matrix[mi][ni];
@@ -273,4 +268,4 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
 
     return sections;
 }
-}
+}  // namespace openturbine::interfaces::components

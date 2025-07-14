@@ -1,6 +1,6 @@
-#include <filesystem>
-
 #include "blade_interface.hpp"
+
+#include <filesystem>
 
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
@@ -9,93 +9,97 @@
 namespace openturbine::interfaces {
 
 BladeInterface::BladeInterface(
-        const components::SolutionInput& solution_input, const components::BeamInput& blade_input
-    )
-        : model(Model(solution_input.gravity)),
-          blade(blade_input, model),
-          state(model.CreateState<DeviceType>()),
-          elements(model.CreateElements<DeviceType>()),
-          constraints(model.CreateConstraints<DeviceType>()),
-          parameters(
-              solution_input.dynamic_solve, solution_input.max_iter, solution_input.time_step,
-              solution_input.rho_inf, solution_input.absolute_error_tolerance,
-              solution_input.relative_error_tolerance
-          ),
-          solver(CreateSolver<DeviceType>(state, elements, constraints)),
-          state_save(CloneState(state)),
-          host_state(state) {
-        // Update the host state with current node motion
-        this->host_state.CopyFromState(this->state);
+    const components::SolutionInput& solution_input, const components::BeamInput& blade_input
+)
+    : model(Model(solution_input.gravity)),
+      blade(blade_input, model),
+      state(model.CreateState<DeviceType>()),
+      elements(model.CreateElements<DeviceType>()),
+      constraints(model.CreateConstraints<DeviceType>()),
+      parameters(
+          solution_input.dynamic_solve, solution_input.max_iter, solution_input.time_step,
+          solution_input.rho_inf, solution_input.absolute_error_tolerance,
+          solution_input.relative_error_tolerance
+      ),
+      solver(CreateSolver<DeviceType>(state, elements, constraints)),
+      state_save(CloneState(state)),
+      host_state(state) {
+    // Update the host state with current node motion
+    this->host_state.CopyFromState(this->state);
 
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
+    // Update the blade motion from state
+    this->blade.GetMotion(this->host_state);
 
-        // Initialize NetCDF writer and write mesh connectivity if output path is specified
-        if (!solution_input.output_file_path.empty()) {
-            // Create output directory if it doesn't exist
-            std::filesystem::create_directories(solution_input.output_file_path);
+    // Initialize NetCDF writer and write mesh connectivity if output path is specified
+    if (!solution_input.output_file_path.empty()) {
+        // Create output directory if it doesn't exist
+        std::filesystem::create_directories(solution_input.output_file_path);
 
-            // Write mesh connectivity to YAML file
-            model.ExportMeshConnectivityToYAML(
-                solution_input.output_file_path + "/mesh_connectivity.yaml"
-            );
+        // Write mesh connectivity to YAML file
+        model.ExportMeshConnectivityToYAML(
+            solution_input.output_file_path + "/mesh_connectivity.yaml"
+        );
 
-            // Initialize outputs
-            this->outputs = std::make_unique<Outputs>(
-                solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
-            );
-        }
+        // Initialize outputs
+        this->outputs = std::make_unique<Outputs>(
+            solution_input.output_file_path + "/blade_interface.nc", blade.nodes.size()
+        );
     }
+}
 
-components::Beam& BladeInterface::Blade() { return this->blade; }
+components::Beam& BladeInterface::Blade() {
+    return this->blade;
+}
 
 bool BladeInterface::Step() {
-        // Transfer node loads -> state
-        for (const auto& node : this->blade.nodes) {
-            for (auto i = 0U; i < 6; ++i) {
-                this->host_state.f(node.id, i) = node.loads[i];
-            }
+    // Transfer node loads -> state
+    for (const auto& node : this->blade.nodes) {
+        for (auto i = 0U; i < 6; ++i) {
+            this->host_state.f(node.id, i) = node.loads[i];
         }
-        Kokkos::deep_copy(this->state.f, this->host_state.f);
+    }
+    Kokkos::deep_copy(this->state.f, this->host_state.f);
 
-        // Solve for state at end of step
-        auto converged = openturbine::Step(
-            this->parameters, this->solver, this->elements, this->state, this->constraints
-        );
-        if (!converged) {
-            return false;
-        }
-
-        // Update the host state with current node motion
-        this->host_state.CopyFromState(this->state);
-
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
-
-        // Write outputs and increment timestep counter
-        if (this->outputs) {
-            outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
-        }
-
-        return true;
+    // Solve for state at end of step
+    auto converged = openturbine::Step(
+        this->parameters, this->solver, this->elements, this->state, this->constraints
+    );
+    if (!converged) {
+        return false;
     }
 
-void BladeInterface::SaveState() { CopyStateData(this->state_save, this->state); }
+    // Update the host state with current node motion
+    this->host_state.CopyFromState(this->state);
+
+    // Update the blade motion from state
+    this->blade.GetMotion(this->host_state);
+
+    // Write outputs and increment timestep counter
+    if (this->outputs) {
+        outputs->WriteNodeOutputsAtTimestep(this->host_state, this->state.time_step);
+    }
+
+    return true;
+}
+
+void BladeInterface::SaveState() {
+    CopyStateData(this->state_save, this->state);
+}
 
 void BladeInterface::RestoreState() {
-        CopyStateData(this->state, this->state_save);
+    CopyStateData(this->state, this->state_save);
 
-        // Update the host state with current node motion
-        this->host_state.CopyFromState(this->state);
+    // Update the host state with current node motion
+    this->host_state.CopyFromState(this->state);
 
-        // Update the blade motion from state
-        this->blade.GetMotion(this->host_state);
-    }
+    // Update the blade motion from state
+    this->blade.GetMotion(this->host_state);
+}
 
 void BladeInterface::SetRootDisplacement(const std::array<double, 7>& u) const {
-        if (this->blade.prescribed_root_constraint_id == kInvalidID) {
-            throw std::runtime_error("prescribed root motion was not enabled");
-        }
-        this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);
+    if (this->blade.prescribed_root_constraint_id == kInvalidID) {
+        throw std::runtime_error("prescribed root motion was not enabled");
+    }
+    this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);
 }
-}
+}  // namespace openturbine::interfaces

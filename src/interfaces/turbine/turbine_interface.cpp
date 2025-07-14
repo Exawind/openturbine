@@ -1,16 +1,16 @@
+#include "turbine_interface.hpp"
+
 #include <filesystem>
 
-#include "turbine_interface.hpp"
+#include "interfaces/components/solution_input.hpp"
 #include "state/clone_state.hpp"
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
-#include "interfaces/components/solution_input.hpp"
 
 namespace openturbine::interfaces {
 
 TurbineInterface::TurbineInterface(
-    const components::SolutionInput& solution_input,
-    const components::TurbineInput& turbine_input,
+    const components::SolutionInput& solution_input, const components::TurbineInput& turbine_input,
     const components::ControllerInput& controller_input
 )
     : model(Model(solution_input.gravity)),
@@ -62,8 +62,7 @@ TurbineInterface::TurbineInterface(
         // Initialize outputs with both node state and time-series files
         this->outputs = std::make_unique<Outputs>(
             solution_input.output_file_path + "/turbine_interface.nc",
-            solution_input.output_file_path + "/turbine_time_series.nc",
-            this->state.num_system_nodes
+            solution_input.output_file_path + "/turbine_time_series.nc", this->state.num_system_nodes
         );
 
         // Write initial state
@@ -76,7 +75,9 @@ TurbineInterface::TurbineInterface(
     }
 }
 
-components::Turbine& TurbineInterface::Turbine() { return this->turbine; }
+components::Turbine& TurbineInterface::Turbine() {
+    return this->turbine;
+}
 
 bool TurbineInterface::Step() {
     // Apply controller if available
@@ -117,7 +118,9 @@ bool TurbineInterface::Step() {
     return true;
 }
 
-void TurbineInterface::SaveState() { CopyStateData(this->state_save, this->state); }
+void TurbineInterface::SaveState() {
+    CopyStateData(this->state_save, this->state);
+}
 
 void TurbineInterface::RestoreState() {
     // Copy saved state back to current state
@@ -162,8 +165,7 @@ double TurbineInterface::CalculateRotorSpeed() const {
 }
 
 void TurbineInterface::InitializeController(
-    const components::TurbineInput& turbine_input,
-    const components::SolutionInput& solution_input
+    const components::TurbineInput& turbine_input, const components::SolutionInput& solution_input
 ) {
     if (!controller) {
         return;
@@ -176,8 +178,8 @@ void TurbineInterface::InitializeController(
     controller->io.n_blades = turbine_input.blades.size();  // Number of blades
 
     // Set controller initial values
-    controller->io.time = 0.;                                    // Current time (seconds)
-    controller->io.azimuth_angle = turbine_input.azimuth_angle;  // Initial azimuth
+    controller->io.time = 0.;                                              // Current time (seconds)
+    controller->io.azimuth_angle = turbine_input.azimuth_angle;            // Initial azimuth
     controller->io.pitch_blade1_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
     controller->io.pitch_blade2_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
     controller->io.pitch_blade3_actual = turbine_input.blade_pitch_angle;  // Blade pitch (rad)
@@ -185,11 +187,10 @@ void TurbineInterface::InitializeController(
         turbine_input.rotor_speed * turbine_input.gear_box_ratio;  // Generator speed (rad/s)
     controller->io.generator_torque_actual =
         turbine_input.generator_power /
-        (turbine_input.rotor_speed * turbine_input.gear_box_ratio);  // Generator torque
-    controller->io.generator_power_actual =
-        turbine_input.generator_power;                                    // Generator power (W)
-    controller->io.rotor_speed_actual = turbine_input.rotor_speed;        // Rotor speed (rad/s)
-    controller->io.horizontal_wind_speed = turbine_input.hub_wind_speed;  // Hub wind speed (m/s)
+        (turbine_input.rotor_speed * turbine_input.gear_box_ratio);         // Generator torque
+    controller->io.generator_power_actual = turbine_input.generator_power;  // Generator power (W)
+    controller->io.rotor_speed_actual = turbine_input.rotor_speed;          // Rotor speed (rad/s)
+    controller->io.horizontal_wind_speed = turbine_input.hub_wind_speed;    // Hub wind speed (m/s)
 
     // Signal first call to controller
     controller->io.status = 0;
@@ -235,4 +236,4 @@ void TurbineInterface::UpdateControllerInputs() {
     // Set status for subsequent calls
     controller->io.status = 1;
 }
-}
+}  // namespace openturbine::interfaces
