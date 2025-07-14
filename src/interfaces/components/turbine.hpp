@@ -9,7 +9,7 @@
 #include "interfaces/node_data.hpp"
 
 namespace openturbine {
-    struct Model;
+    class Model;
 }
 
 namespace openturbine::interfaces::components {
