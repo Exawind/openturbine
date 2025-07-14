@@ -7,13 +7,13 @@
 #include "types.hpp"
 
 namespace openturbine {
-class Model;
-class BeamSection;
+struct Model;
+struct BeamSection;
 }
 
 namespace openturbine::interfaces::components {
 
-class BeamInput;
+struct BeamInput;
 
 /**
  * @brief Represents a turbine blade with nodes, elements, and constraints
