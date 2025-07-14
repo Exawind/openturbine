@@ -1,6 +1,7 @@
 #pragma once
 
-#include "types.hpp"
+#include <vector>
+#include <array>
 
 namespace openturbine::interfaces::components {
 
@@ -45,7 +46,7 @@ struct Section {
      * @param k Stiffness matrix
      */
     Section(double loc, std::array<std::array<double, 6>, 6> m, std::array<std::array<double, 6>, 6> k)
-        : location(loc), mass_matrix(std::move(m)), stiffness_matrix(std::move(k)) {
+        : location(loc), mass_matrix(m), stiffness_matrix(k) {
         // Check that the section location is in range [0,1]
         if (loc < 0. || loc > 1.) {
             throw std::invalid_argument("Section location must be in range [0, 1]");

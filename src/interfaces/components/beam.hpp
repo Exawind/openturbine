@@ -7,7 +7,7 @@
 #include "types.hpp"
 
 namespace openturbine {
-struct Model;
+class Model;
 struct BeamSection;
 }
 

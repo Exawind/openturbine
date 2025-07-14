@@ -3,7 +3,7 @@
 #include "beam_input.hpp"
 
 namespace openturbine {
-    struct Model;
+    class Model;
 }
 
 namespace openturbine::interfaces::components {
