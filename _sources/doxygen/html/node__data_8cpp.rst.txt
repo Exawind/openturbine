@@ -1,0 +1,14 @@
+.. meta::0606301f2179e80ae34695ce2799e2291f89ffb407040e8fe81a323876134d6f8c03b91103a537e017a5fb9ea322f33368bd737d187e7d4adb69b7e8f5cf0511
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/node_data.cpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/node\_data.cpp File Reference
+==================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: node__data_8cpp.html

@@ -193,16 +193,17 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keyword">auto</span> col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">auto</span>*&amp; symbolic = dss_handle.get_symbolic();</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        umfpack_di_symbolic(</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>            num_rows, num_cols, row_ptrs.data(), col_inds.data(), <span class="keyword">nullptr</span>, &amp;symbolic, <span class="keyword">nullptr</span>,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            <span class="keyword">nullptr</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        );</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    }</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <span class="keyword">auto</span>* control = dss_handle.get_control();</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        umfpack_di_symbolic(</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            num_rows, num_cols, row_ptrs.data(), col_inds.data(), <span class="keyword">nullptr</span>, &amp;symbolic, control,</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            <span class="keyword">nullptr</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        );</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    }</div>
 </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>};</div>
 </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="aclassopenturbine_1_1DSSHandle_html"><div class="ttname"><a href="classopenturbine_1_1DSSHandle.html">openturbine::DSSHandle</a></div><div class="ttdef"><b>Definition</b> dss_handle.hpp:21</div></div>
 <div class="ttc" id="adss__handle__umfpack_8hpp_html"><div class="ttname"><a href="dss__handle__umfpack_8hpp.html">dss_handle_umfpack.hpp</a></div></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>

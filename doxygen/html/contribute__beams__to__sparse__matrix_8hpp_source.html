@@ -218,31 +218,33 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                <span class="keyword">const</span> <span class="keyword">auto</span> first_column = <span class="keyword">static_cast&lt;</span>typename CrsMatrixType::ordinal_type<span class="keyword">&gt;</span>(</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                    <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a4f49ae4e4058186943689c722106e127">element_freedom_table</a>(i, node_2, 0)</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                );</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> component_1 = 0; component_1 &lt; num_dofs; ++component_1) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> row_num =</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                        <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a4f49ae4e4058186943689c722106e127">element_freedom_table</a>(i, node_1, component_1));</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                    <span class="keyword">auto</span> row = <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a4b39f7a292931c729760b6a0481d07b3">sparse</a>.row(row_num);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                    <span class="keyword">auto</span> offset = KokkosSparse::findRelOffset(</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                        &amp;(row.colidx(0)), row.length, first_column, hint, is_sorted</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    );</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> component_2 = 0; component_2 &lt; num_dofs; ++component_2, ++offset) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                        <span class="keyword">const</span> <span class="keyword">auto</span> contribution =</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                            <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a62e5471d4f8816f8974ed2da54c6a591">dense</a>(i, node_1, node_2, component_1, component_2) * <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a1e2cfdd7f9a4f95cb63fa93da288d578">conditioner</a>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (force_atomic) {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                            Kokkos::atomic_add(&amp;(row.value(offset)), contribution);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                            row.value(offset) += contribution;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                        }</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                    }</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                }</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            }</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        );</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                <span class="keyword">const</span> <span class="keyword">auto</span> local_dense =</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                    Kokkos::subview(<a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a62e5471d4f8816f8974ed2da54c6a591">dense</a>, i, node_1, node_2, Kokkos::ALL, Kokkos::ALL);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> component_1 = 0; component_1 &lt; num_dofs; ++component_1) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> row_num =</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                        <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a4f49ae4e4058186943689c722106e127">element_freedom_table</a>(i, node_1, component_1));</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                    <span class="keyword">auto</span> row = <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a4b39f7a292931c729760b6a0481d07b3">sparse</a>.row(row_num);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    <span class="keyword">auto</span> offset = KokkosSparse::findRelOffset(</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                        &amp;(row.colidx(0)), row.length, first_column, hint, is_sorted</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    );</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                    <span class="keywordflow">for</span> (<span class="keyword">auto</span> component_2 = 0; component_2 &lt; num_dofs; ++component_2, ++offset) {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                        <span class="keyword">const</span> <span class="keyword">auto</span> contribution =</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                            local_dense(component_1, component_2) * <a class="code hl_variable" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#a1e2cfdd7f9a4f95cb63fa93da288d578">conditioner</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (force_atomic) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                            Kokkos::atomic_add(&amp;(row.value(offset)), contribution);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>                            row.value(offset) += contribution;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                        }</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                    }</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        );</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="afreedom__signature_8hpp_html"><div class="ttname"><a href="freedom__signature_8hpp.html">freedom_signature.hpp</a></div></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
 <div class="ttc" id="astructopenturbine_1_1ContributeBeamsToSparseMatrix_html"><div class="ttname"><a href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html">openturbine::ContributeBeamsToSparseMatrix</a></div><div class="ttdef"><b>Definition</b> contribute_beams_to_sparse_matrix.hpp:11</div></div>

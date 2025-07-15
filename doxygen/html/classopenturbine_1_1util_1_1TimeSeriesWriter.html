@@ -183,14 +183,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa879ae9dfd9803aa0a9a809aa1de786c" id="r_aa879ae9dfd9803aa0a9a809aa1de786c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#aa879ae9dfd9803aa0a9a809aa1de786c">TimeSeriesWriter</a> (const std::string &amp;file_path, bool create=true)</td></tr>
 <tr class="memdesc:aa879ae9dfd9803aa0a9a809aa1de786c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html" title="Class for writing time-series data to NetCDF file.">TimeSeriesWriter</a> object.  <br /></td></tr>
 <tr class="separator:aa879ae9dfd9803aa0a9a809aa1de786c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a347077a61d914896fe6602963bc721d9" id="r_a347077a61d914896fe6602963bc721d9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a347077a61d914896fe6602963bc721d9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#a347077a61d914896fe6602963bc721d9">WriteValuesAtTimestep</a> (const std::string &amp;variable_name, size_t timestep, const std::vector&lt; T &gt; &amp;values)</td></tr>
-<tr class="memdesc:a347077a61d914896fe6602963bc721d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes multiple values for a time-series variable at a specific timestep.  <br /></td></tr>
-<tr class="separator:a347077a61d914896fe6602963bc721d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a296d6e7297dbcf7962b42599f13468ea" id="r_a296d6e7297dbcf7962b42599f13468ea"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a296d6e7297dbcf7962b42599f13468ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#a296d6e7297dbcf7962b42599f13468ea">WriteValueAtTimestep</a> (const std::string &amp;variable_name, size_t timestep, const T &amp;value)</td></tr>
-<tr class="memdesc:a296d6e7297dbcf7962b42599f13468ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a single value for a time-series variable at a specific timestep.  <br /></td></tr>
-<tr class="separator:a296d6e7297dbcf7962b42599f13468ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6281d9790c584106059a85a8b144edcc" id="r_a6281d9790c584106059a85a8b144edcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#a6281d9790c584106059a85a8b144edcc">WriteValuesAtTimestep</a> (const std::string &amp;variable_name, size_t timestep, const std::vector&lt; double &gt; &amp;values)</td></tr>
+<tr class="memdesc:a6281d9790c584106059a85a8b144edcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes multiple values for a time-series variable at a specific timestep.  <br /></td></tr>
+<tr class="separator:a6281d9790c584106059a85a8b144edcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76997cb3e7759ae1988ab9027fea9479" id="r_a76997cb3e7759ae1988ab9027fea9479"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#a76997cb3e7759ae1988ab9027fea9479">WriteValueAtTimestep</a> (const std::string &amp;variable_name, size_t timestep, const double &amp;value)</td></tr>
+<tr class="memdesc:a76997cb3e7759ae1988ab9027fea9479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a single value for a time-series variable at a specific timestep.  <br /></td></tr>
+<tr class="separator:a76997cb3e7759ae1988ab9027fea9479"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62eeb7982abea37e6b40a68770d925f7" id="r_a62eeb7982abea37e6b40a68770d925f7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html#a62eeb7982abea37e6b40a68770d925f7">GetFile</a> () const</td></tr>
 <tr class="memdesc:a62eeb7982abea37e6b40a68770d925f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the NetCDF file object.  <br /></td></tr>
 <tr class="separator:a62eeb7982abea37e6b40a68770d925f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -227,7 +225,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -249,9 +247,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> &amp; openturbine::util::TimeSeriesWriter::GetFile </td>
@@ -260,27 +255,17 @@ Public Member Functions</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Get the NetCDF file object. </p>
 
 </div>
 </div>
-<a id="a296d6e7297dbcf7962b42599f13468ea" name="a296d6e7297dbcf7962b42599f13468ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a296d6e7297dbcf7962b42599f13468ea">&#9670;&#160;</a></span>WriteValueAtTimestep()</h2>
+<a id="a76997cb3e7759ae1988ab9027fea9479" name="a76997cb3e7759ae1988ab9027fea9479"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76997cb3e7759ae1988ab9027fea9479">&#9670;&#160;</a></span>WriteValueAtTimestep()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::util::TimeSeriesWriter::WriteValueAtTimestep </td>
@@ -297,7 +282,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramtype">const double &amp;&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
@@ -306,20 +291,9 @@ template&lt;typename T &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Writes a single value for a time-series variable at a specific timestep. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>The data type of the value to write </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">variable_name</td><td>Name of the variable to write </td></tr>
@@ -331,16 +305,11 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a347077a61d914896fe6602963bc721d9" name="a347077a61d914896fe6602963bc721d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a347077a61d914896fe6602963bc721d9">&#9670;&#160;</a></span>WriteValuesAtTimestep()</h2>
+<a id="a6281d9790c584106059a85a8b144edcc" name="a6281d9790c584106059a85a8b144edcc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6281d9790c584106059a85a8b144edcc">&#9670;&#160;</a></span>WriteValuesAtTimestep()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::util::TimeSeriesWriter::WriteValuesAtTimestep </td>
@@ -357,7 +326,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; T &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
           <td class="paramname"><em>values</em>&#160;</td>
         </tr>
         <tr>
@@ -366,20 +335,9 @@ template&lt;typename T &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Writes multiple values for a time-series variable at a specific timestep. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>The data type of the values to write </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">variable_name</td><td>Name of the variable to write </td></tr>
@@ -391,8 +349,9 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/<a class="el" href="time__series__writer_8hpp_source.html">time_series_writer.hpp</a></li>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/<a class="el" href="time__series__writer_8cpp.html">time_series_writer.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

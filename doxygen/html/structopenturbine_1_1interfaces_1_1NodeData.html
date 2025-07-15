@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1interfaces_1_1NodeData-members.html">List of all members</a>  </div>
@@ -176,6 +177,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="node__data_8hpp_source.html">node_data.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a48f04a073e044ebae9b5d6ea6a4d4231" id="r_a48f04a073e044ebae9b5d6ea6a4d4231"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:a48f04a073e044ebae9b5d6ea6a4d4231"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0fa36c8e97f6b513b092dd193f00f214" id="r_a0fa36c8e97f6b513b092dd193f00f214"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a0fa36c8e97f6b513b092dd193f00f214">NodeData</a> (size_t id_)</td></tr>
@@ -184,14 +190,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1508085cf5730d129ca12f8130ec922" id="r_ae1508085cf5730d129ca12f8130ec922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#ae1508085cf5730d129ca12f8130ec922">ClearLoads</a> ()</td></tr>
 <tr class="memdesc:ae1508085cf5730d129ca12f8130ec922"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set point loads and moments to zero.  <br /></td></tr>
 <tr class="separator:ae1508085cf5730d129ca12f8130ec922"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ed1d770d78015d9fd592b25484d4071" id="r_a1ed1d770d78015d9fd592b25484d4071"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a1ed1d770d78015d9fd592b25484d4071"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a1ed1d770d78015d9fd592b25484d4071">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state)</td></tr>
-<tr class="memdesc:a1ed1d770d78015d9fd592b25484d4071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates node position, displacement, velocity, acceleration from state data.  <br /></td></tr>
-<tr class="separator:a1ed1d770d78015d9fd592b25484d4071"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac514f52842a1d0ab0a27630ee5ddfc1" id="r_aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#aac514f52842a1d0ab0a27630ee5ddfc1">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state) const</td></tr>
-<tr class="memdesc:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the node loads in the host state.  <br /></td></tr>
-<tr class="separator:aac514f52842a1d0ab0a27630ee5ddfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80d0a6845802deb346f2119881ba2f6f" id="r_a80d0a6845802deb346f2119881ba2f6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a80d0a6845802deb346f2119881ba2f6f">GetMotion</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">DeviceType</a> &gt; &amp;host_state)</td></tr>
+<tr class="memdesc:a80d0a6845802deb346f2119881ba2f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Populates node position, displacement, velocity, acceleration from state data.  <br /></td></tr>
+<tr class="separator:a80d0a6845802deb346f2119881ba2f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31b0af8edefc076556a7f7deb4ae0ecc" id="r_a31b0af8edefc076556a7f7deb4ae0ecc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a31b0af8edefc076556a7f7deb4ae0ecc">SetLoads</a> (<a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">DeviceType</a> &gt; &amp;host_state) const</td></tr>
+<tr class="memdesc:a31b0af8edefc076556a7f7deb4ae0ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the node loads in the host state.  <br /></td></tr>
+<tr class="separator:a31b0af8edefc076556a7f7deb4ae0ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -214,6 +218,21 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:aef07afea2da433205d1b548347dc3ff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Point loads/moment applied to node in global coordinates.  <br /></td></tr>
 <tr class="separator:aef07afea2da433205d1b548347dc3ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a48f04a073e044ebae9b5d6ea6a4d4231" name="a48f04a073e044ebae9b5d6ea6a4d4231"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48f04a073e044ebae9b5d6ea6a4d4231">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">openturbine::interfaces::NodeData::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0fa36c8e97f6b513b092dd193f00f214" name="a0fa36c8e97f6b513b092dd193f00f214"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0fa36c8e97f6b513b092dd193f00f214">&#9670;&#160;</a></span>NodeData()</h2>
@@ -255,9 +274,6 @@ Public Attributes</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::interfaces::NodeData::ClearLoads </td>
@@ -266,41 +282,26 @@ Public Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Set point loads and moments to zero. </p>
 
 </div>
 </div>
-<a id="a1ed1d770d78015d9fd592b25484d4071" name="a1ed1d770d78015d9fd592b25484d4071"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ed1d770d78015d9fd592b25484d4071">&#9670;&#160;</a></span>GetMotion()</h2>
+<a id="a80d0a6845802deb346f2119881ba2f6f" name="a80d0a6845802deb346f2119881ba2f6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80d0a6845802deb346f2119881ba2f6f">&#9670;&#160;</a></span>GetMotion()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::interfaces::NodeData::GetMotion </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">DeviceType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Populates node position, displacement, velocity, acceleration from state data. </p>
@@ -313,30 +314,20 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="aac514f52842a1d0ab0a27630ee5ddfc1" name="aac514f52842a1d0ab0a27630ee5ddfc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac514f52842a1d0ab0a27630ee5ddfc1">&#9670;&#160;</a></span>SetLoads()</h2>
+<a id="a31b0af8edefc076556a7f7deb4ae0ecc" name="a31b0af8edefc076556a7f7deb4ae0ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31b0af8edefc076556a7f7deb4ae0ecc">&#9670;&#160;</a></span>SetLoads()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::interfaces::NodeData::SetLoads </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html#a48f04a073e044ebae9b5d6ea6a4d4231">DeviceType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Updates the node loads in the host state. </p>
@@ -446,8 +437,9 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<hr/>The documentation for this struct was generated from the following files:<ul>
 <li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/<a class="el" href="node__data_8hpp_source.html">node_data.hpp</a></li>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/<a class="el" href="node__data_8cpp.html">node_data.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -183,6 +183,8 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ad5b708c1ba7632d144080c7234a54375"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum for selecting where on elements to write the outputs.  <a href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">More...</a><br /></td></tr>
 <tr class="separator:ad5b708c1ba7632d144080c7234a54375"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0701693a41e6fd316467fbc4d25410" id="r_a6d0701693a41e6fd316467fbc4d25410"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6d0701693a41e6fd316467fbc4d25410">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:a6d0701693a41e6fd316467fbc4d25410"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -196,16 +198,30 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6670fc1d971605ef991c5733ac9151fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac19df2efb5487b9522bc360d096c9372" id="r_ac19df2efb5487b9522bc360d096c9372"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac19df2efb5487b9522bc360d096c9372">GetTimeSeriesWriter</a> ()</td></tr>
 <tr class="separator:ac19df2efb5487b9522bc360d096c9372"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3e319693f5d4308938010daf44716fc" id="r_ac3e319693f5d4308938010daf44716fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac3e319693f5d4308938010daf44716fc">GetLocation</a> () const</td></tr>
-<tr class="separator:ac3e319693f5d4308938010daf44716fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6deec9769211de75fd34c1ad05c0ca3b" id="r_a6deec9769211de75fd34c1ad05c0ca3b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a6deec9769211de75fd34c1ad05c0ca3b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6deec9769211de75fd34c1ad05c0ca3b">WriteNodeOutputsAtTimestep</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;host_state, size_t timestep)</td></tr>
-<tr class="memdesc:a6deec9769211de75fd34c1ad05c0ca3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write node state outputs to NetCDF file at specified timestep.  <br /></td></tr>
-<tr class="separator:a6deec9769211de75fd34c1ad05c0ca3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac28f91fea7371c14db846dfc84167bd6" id="r_ac28f91fea7371c14db846dfc84167bd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac28f91fea7371c14db846dfc84167bd6">GetLocation</a> () const</td></tr>
+<tr class="separator:ac28f91fea7371c14db846dfc84167bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b446bdcc8a389ad25e3fd7ded8f636" id="r_a72b446bdcc8a389ad25e3fd7ded8f636"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a72b446bdcc8a389ad25e3fd7ded8f636">WriteNodeOutputsAtTimestep</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6d0701693a41e6fd316467fbc4d25410">DeviceType</a> &gt; &amp;host_state, size_t timestep)</td></tr>
+<tr class="memdesc:a72b446bdcc8a389ad25e3fd7ded8f636"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write node state outputs to NetCDF file at specified timestep.  <br /></td></tr>
+<tr class="separator:a72b446bdcc8a389ad25e3fd7ded8f636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0170b92107fce11f812558ebb2c55a6" id="r_aa0170b92107fce11f812558ebb2c55a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#aa0170b92107fce11f812558ebb2c55a6">WriteRotorTimeSeriesAtTimestep</a> (size_t timestep, double azimuth_angle, double rotor_speed)</td></tr>
 <tr class="memdesc:aa0170b92107fce11f812558ebb2c55a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write rotor time-series data at specified timestep.  <br /></td></tr>
 <tr class="separator:aa0170b92107fce11f812558ebb2c55a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a6d0701693a41e6fd316467fbc4d25410" name="a6d0701693a41e6fd316467fbc4d25410"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d0701693a41e6fd316467fbc4d25410">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6d0701693a41e6fd316467fbc4d25410">openturbine::interfaces::Outputs::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="ad5b708c1ba7632d144080c7234a54375" name="ad5b708c1ba7632d144080c7234a54375"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5b708c1ba7632d144080c7234a54375">&#9670;&#160;</a></span>OutputLocation</h2>
@@ -243,9 +259,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">openturbine::interfaces::Outputs::Outputs </td>
@@ -271,11 +284,6 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Constructor taking an output file and location. </p>
@@ -287,9 +295,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">openturbine::interfaces::Outputs::Outputs </td>
@@ -321,11 +326,6 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Constructor taking an output file, time-series file, and location. </p>
@@ -333,27 +333,19 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac3e319693f5d4308938010daf44716fc" name="ac3e319693f5d4308938010daf44716fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3e319693f5d4308938010daf44716fc">&#9670;&#160;</a></span>GetLocation()</h2>
+<a id="ac28f91fea7371c14db846dfc84167bd6" name="ac28f91fea7371c14db846dfc84167bd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac28f91fea7371c14db846dfc84167bd6">&#9670;&#160;</a></span>GetLocation()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a> openturbine::interfaces::Outputs::GetLocation </td>
+          <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">Outputs::OutputLocation</a> openturbine::interfaces::Outputs::GetLocation </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -363,9 +355,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt; &amp; openturbine::interfaces::Outputs::GetOutputWriter </td>
@@ -374,11 +363,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -388,9 +372,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp; openturbine::interfaces::Outputs::GetTimeSeriesWriter </td>
@@ -399,30 +380,20 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6deec9769211de75fd34c1ad05c0ca3b" name="a6deec9769211de75fd34c1ad05c0ca3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6deec9769211de75fd34c1ad05c0ca3b">&#9670;&#160;</a></span>WriteNodeOutputsAtTimestep()</h2>
+<a id="a72b446bdcc8a389ad25e3fd7ded8f636" name="a72b446bdcc8a389ad25e3fd7ded8f636"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72b446bdcc8a389ad25e3fd7ded8f636">&#9670;&#160;</a></span>WriteNodeOutputsAtTimestep()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::interfaces::Outputs::WriteNodeOutputsAtTimestep </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6d0701693a41e6fd316467fbc4d25410">DeviceType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>host_state</em>, </td>
         </tr>
         <tr>
@@ -437,11 +408,6 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Write node state outputs to NetCDF file at specified timestep. </p>
@@ -453,9 +419,6 @@ template&lt;typename DeviceType &gt; </div>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void openturbine::interfaces::Outputs::WriteRotorTimeSeriesAtTimestep </td>
@@ -481,19 +444,15 @@ template&lt;typename DeviceType &gt; </div>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Write rotor time-series data at specified timestep. </p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/<a class="el" href="outputs_8hpp_source.html">outputs.hpp</a></li>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/<a class="el" href="outputs_8cpp.html">outputs.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

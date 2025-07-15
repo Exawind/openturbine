@@ -201,9 +201,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab3c263b66d82b4765dbdfe4f5aec4d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa176b6b92883bde3c97640ab404cf3fd" id="r_aa176b6b92883bde3c97640ab404cf3fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#aa176b6b92883bde3c97640ab404cf3fd">ClearSections</a> ()</td></tr>
 <tr class="separator:aa176b6b92883bde3c97640ab404cf3fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add09a37d972b26e110f440cd28ba6b43" id="r_add09a37d972b26e110f440cd28ba6b43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#add09a37d972b26e110f440cd28ba6b43">AddSection</a> (double grid_location, const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;mass_matrix, const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;stiffness_matrix, <a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#a45f226e241ddd12a4de07ec25ed276a5">ReferenceAxisOrientation</a> ref_axis)</td></tr>
-<tr class="memdesc:add09a37d972b26e110f440cd28ba6b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds sectional location, mass matrix, and stiffness matrix. Can handle reference axis along X or Z.  <br /></td></tr>
-<tr class="separator:add09a37d972b26e110f440cd28ba6b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d53ee04d99206e1c7878eb48491be7e" id="r_a7d53ee04d99206e1c7878eb48491be7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#a7d53ee04d99206e1c7878eb48491be7e">AddSection</a> (double grid_location, const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;mass_matrix, const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;stiffness_matrix, <a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#a45f226e241ddd12a4de07ec25ed276a5">ReferenceAxisOrientation</a> ref_axis)</td></tr>
+<tr class="memdesc:a7d53ee04d99206e1c7878eb48491be7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds sectional location, mass matrix, and stiffness matrix. Can handle reference axis along X or Z.  <br /></td></tr>
+<tr class="separator:a7d53ee04d99206e1c7878eb48491be7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56ef44a4236ded925e6629cad2ec5c75" id="r_a56ef44a4236ded925e6629cad2ec5c75"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#a56ef44a4236ded925e6629cad2ec5c75">Input</a> () const</td></tr>
 <tr class="memdesc:a56ef44a4236ded925e6629cad2ec5c75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current blade input configuration.  <br /></td></tr>
 <tr class="separator:a56ef44a4236ded925e6629cad2ec5c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,9 +219,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::AddRefAxisPoint </td>
@@ -247,11 +244,6 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Adds a reference axis point with specified orientation. </p>
@@ -272,9 +264,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::AddRefAxisTwist </td>
@@ -294,23 +283,15 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="add09a37d972b26e110f440cd28ba6b43" name="add09a37d972b26e110f440cd28ba6b43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add09a37d972b26e110f440cd28ba6b43">&#9670;&#160;</a></span>AddSection()</h2>
+<a id="a7d53ee04d99206e1c7878eb48491be7e" name="a7d53ee04d99206e1c7878eb48491be7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d53ee04d99206e1c7878eb48491be7e">&#9670;&#160;</a></span>AddSection()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::AddSection </td>
@@ -321,13 +302,13 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;&#160;</td>
+          <td class="paramtype">const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;&#160;</td>
           <td class="paramname"><em>mass_matrix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> &amp;&#160;</td>
+          <td class="paramtype">const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;&#160;</td>
           <td class="paramname"><em>stiffness_matrix</em>, </td>
         </tr>
         <tr>
@@ -342,11 +323,6 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Adds sectional location, mass matrix, and stiffness matrix. Can handle reference axis along X or Z. </p>
@@ -368,9 +344,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a> openturbine::interfaces::components::BeamBuilder::Build </td>
@@ -380,11 +353,6 @@ Public Member Functions</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Build a Blade object from the current configuration. </p>
@@ -403,9 +371,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::ClearReferenceAxisPoints </td>
@@ -414,11 +379,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -428,9 +388,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::ClearSections </td>
@@ -439,11 +396,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -453,9 +405,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html">BeamInput</a> &amp; openturbine::interfaces::components::BeamBuilder::Input </td>
@@ -464,11 +413,6 @@ Public Member Functions</h2></td></tr>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Get the current blade input configuration. </p>
@@ -481,9 +425,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::PrescribedRootMotion </td>
@@ -493,11 +434,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -507,9 +443,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::SetElementOrder </td>
@@ -519,11 +452,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -533,9 +461,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::SetRootAcceleration </td>
@@ -545,11 +470,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -559,9 +479,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::SetRootPosition </td>
@@ -571,11 +488,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -585,9 +497,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::SetRootVelocity </td>
@@ -597,11 +506,6 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -611,9 +515,6 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html">BeamBuilder</a> &amp; openturbine::interfaces::components::BeamBuilder::SetSectionRefinement </td>
@@ -623,17 +524,13 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="beam__builder_8hpp_source.html">beam_builder.hpp</a></li>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="beam__builder_8cpp.html">beam_builder.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

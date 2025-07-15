@@ -1,0 +1,14 @@
+.. meta::131087ac3333097a41edbf5b55038715be302a7a5128026e19ea1703d3a8d8962240bc7628ce54aa99c27173bcf8464853cdb748bb99812cf9ef7fce20f39a6d
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/blade/blade_interface.cpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/blade/blade\_interface.cpp File Reference
+==============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: blade__interface_8cpp.html
