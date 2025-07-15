@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
 #include <klu.h>
 
 namespace openturbine {
@@ -15,11 +16,15 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType> {
         auto& common = dss_handle.get_common();
 
         if (numeric != nullptr) {
-            klu_free_numeric(&numeric, &common);
+            klu_refactor(
+                const_cast<int*>(row_ptrs.data()), col_inds.data(), values.data(), symbolic, numeric,
+                &common
+            );
+        } else {
+            numeric = klu_factor(
+                const_cast<int*>(row_ptrs.data()), col_inds.data(), values.data(), symbolic, &common
+            );
         }
-        numeric = klu_factor(
-            const_cast<int*>(row_ptrs.data()), col_inds.data(), values.data(), symbolic, &common
-        );
     }
 };
 
