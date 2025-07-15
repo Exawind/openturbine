@@ -12,7 +12,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
     const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
     const auto& wio_blade = wio["components"]["blade"];
-    const auto write_output{false};
+    const auto write_output{true};
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
