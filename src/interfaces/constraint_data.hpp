@@ -1,7 +1,5 @@
 #pragma once
 
-#include "types.hpp"
-
 namespace openturbine::interfaces {
 
 struct ConstraintData {

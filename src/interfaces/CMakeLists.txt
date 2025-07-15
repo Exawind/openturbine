@@ -1,6 +1,13 @@
 add_subdirectory(cfd)
 add_subdirectory(blade)
 add_subdirectory(components)
+add_subdirectory(turbine)
+
+target_sources(openturbine_library
+  PRIVATE
+  node_data.cpp
+  outputs.cpp
+)
 
 install(FILES
         host_state.hpp

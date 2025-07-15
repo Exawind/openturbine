@@ -2,8 +2,8 @@
 #include <yaml-cpp/yaml.h>
 
 #include "elements/beams/hollow_circle_properties.hpp"
+#include "interfaces/turbine/turbine_interface.hpp"
 #include "interfaces/turbine/turbine_interface_builder.hpp"
-#include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 

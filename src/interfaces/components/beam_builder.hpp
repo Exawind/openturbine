@@ -1,9 +1,16 @@
 #pragma once
 
-#include "beam.hpp"
+#include <cstdint>
+
 #include "beam_input.hpp"
 
+namespace openturbine {
+class Model;
+}
+
 namespace openturbine::interfaces::components {
+
+class Beam;
 
 /**
  * @brief Enum to represent reference axis orientation
@@ -18,21 +25,11 @@ enum class ReferenceAxisOrientation : std::uint8_t {
  */
 class BeamBuilder {
 public:
-    BeamBuilder& SetElementOrder(size_t element_order) {
-        input.element_order = element_order;
-        return *this;
-    }
+    BeamBuilder& SetElementOrder(size_t element_order);
 
-    BeamBuilder& SetSectionRefinement(size_t section_refinement) {
-        input.section_refinement = section_refinement;
-        return *this;
-    }
+    BeamBuilder& SetSectionRefinement(size_t section_refinement);
 
-    BeamBuilder& ClearReferenceAxisPoints() {
-        input.ref_axis.coordinate_grid.clear();
-        input.ref_axis.coordinates.clear();
-        return *this;
-    }
+    BeamBuilder& ClearReferenceAxisPoints();
 
     /**
      * @brief Adds a reference axis point with specified orientation
@@ -44,52 +41,19 @@ public:
     BeamBuilder& AddRefAxisPoint(
         double grid_location, const std::array<double, 3>& coordinates,
         ReferenceAxisOrientation ref_axis
-    ) {
-        input.ref_axis.coordinate_grid.emplace_back(grid_location);
-        if (ref_axis == ReferenceAxisOrientation::X) {
-            input.ref_axis.coordinates.emplace_back(coordinates);
-            return *this;
-        }
-        if (ref_axis == ReferenceAxisOrientation::Z) {
-            const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
-            input.ref_axis.coordinates.emplace_back(RotateVectorByQuaternion(q_z_to_x, coordinates));
-            return *this;
-        }
-        throw std::invalid_argument("Invalid reference axis orientation");
-    }
+    );
 
-    BeamBuilder& AddRefAxisTwist(double grid_location, double twist) {
-        input.ref_axis.twist_grid.emplace_back(grid_location);
-        input.ref_axis.twist.emplace_back(twist * M_PI / 180.);
-        return *this;
-    }
+    BeamBuilder& AddRefAxisTwist(double grid_location, double twist);
 
-    BeamBuilder& PrescribedRootMotion(bool enable) {
-        input.root.prescribe_root_motion = enable;
-        return *this;
-    }
+    BeamBuilder& PrescribedRootMotion(bool enable);
 
-    BeamBuilder& SetRootPosition(const std::array<double, 7>& p) {
-        input.root.position = p;
-        return *this;
-    }
+    BeamBuilder& SetRootPosition(const std::array<double, 7>& p);
 
-    BeamBuilder& SetRootVelocity(const std::array<double, 6>& v) {
-        input.root.velocity = v;
-        return *this;
-    }
+    BeamBuilder& SetRootVelocity(const std::array<double, 6>& v);
 
-    BeamBuilder& SetRootAcceleration(const std::array<double, 6>& a) {
-        input.root.acceleration = a;
-        return *this;
-    }
+    BeamBuilder& SetRootAcceleration(const std::array<double, 6>& a);
 
-    BeamBuilder& ClearSections() {
-        input.ref_axis.coordinate_grid.clear();
-        input.ref_axis.coordinates.clear();
-        return *this;
-    }
-
+    BeamBuilder& ClearSections();
     /// @brief Adds sectional location, mass matrix, and stiffness matrix. Can handle reference
     /// axis along X or Z.
     /// @param grid_location section location [0,1] along blade
@@ -98,36 +62,23 @@ public:
     /// @param ref_axis Reference axis ('X' or 'Z')
     /// @return Reference to this builder for method chaining
     BeamBuilder& AddSection(
-        double grid_location, const Array_6x6& mass_matrix, const Array_6x6& stiffness_matrix,
+        double grid_location, const std::array<std::array<double, 6>, 6>& mass_matrix,
+        const std::array<std::array<double, 6>, 6>& stiffness_matrix,
         ReferenceAxisOrientation ref_axis
-    ) {
-        if (ref_axis == ReferenceAxisOrientation::X) {
-            input.sections.emplace_back(grid_location, mass_matrix, stiffness_matrix);
-            return *this;
-        }
-        if (ref_axis == ReferenceAxisOrientation::Z) {
-            const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
-            input.sections.emplace_back(
-                grid_location, RotateMatrix6(mass_matrix, q_z_to_x),
-                RotateMatrix6(stiffness_matrix, q_z_to_x)
-            );
-            return *this;
-        }
-        throw std::invalid_argument("Invalid reference axis orientation");
-    }
+    );
 
     /**
      * @brief Get the current blade input configuration
      * @return Reference to the current blade input
      */
-    [[nodiscard]] const BeamInput& Input() const { return this->input; }
+    [[nodiscard]] const BeamInput& Input() const;
 
     /**
      * @brief Build a Blade object from the current configuration
      * @param model The model to associate with this blade
      * @return A new Blade object
      */
-    [[nodiscard]] Beam Build(Model& model) const { return {this->input, model}; }
+    [[nodiscard]] Beam Build(Model& model) const;
 
 private:
     BeamInput input;
