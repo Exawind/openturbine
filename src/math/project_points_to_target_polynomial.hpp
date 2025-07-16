@@ -30,16 +30,13 @@ namespace openturbine {
 inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
     size_t num_inputs, size_t num_outputs, const std::vector<std::array<double, 3>>& input_points
 ) {
-    // Step 1: Calculate locations of GLL points (the order will be num_outputs - 1)
-    const auto output_gll_pts = GenerateGLLPoints(num_outputs - 1);
-
-    // Step 2: Calculate matrix of num_inputs points-based LSFE shape function values at ouput
+    // Calculate matrix of num_inputs points-based LSFE shape function values at ouput
     // locations
-    const auto gll_pts = GenerateGLLPoints(num_inputs - 1);
-    const auto shape_functions = ComputeShapeFunctionValues(output_gll_pts, gll_pts);
-    const auto shape_derivatives = ComputeShapeFunctionDerivatives(output_gll_pts, gll_pts);
+    const auto shape_functions = ComputeShapeFunctionValues(
+        GenerateGLLPoints(num_outputs - 1), GenerateGLLPoints(num_inputs - 1)
+    );
 
-    // Step 3: Project input_points to output locations using LSFE shape functions
+    // Project input_points to output locations using LSFE shape functions
     auto output_points = std::vector<std::array<double, 3>>(num_outputs);
     for (auto output = 0U; output < num_outputs; ++output) {
         for (auto input = 0U; input < num_inputs; ++input) {
