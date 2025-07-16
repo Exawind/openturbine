@@ -264,8 +264,8 @@ class WindIOPreprocessor:
         - Normalizes all windIO-provided airfoils to a common grid
         - Interpolates new airfoil cross-section between normalized airfoils using the piecewise
           cubic hermite polynomial (PCHIP) interpolation
-        - Interpolates chord, twist, section_offset_y, relative thickness (rthick), and
-          aerodynamic center using PCHIP
+        - Interpolates chord, twist, section_offset_y, section_offset_x, relative thickness (rthick),
+          and aerodynamic center using PCHIP
 
         Args:
             aero_nodes: Array of aerodynamic node positions [0-1] along blade span, r/R
@@ -273,7 +273,7 @@ class WindIOPreprocessor:
         Returns:
             Tuple with two dictionaries:
             - normalized_airfoils: Dictionary with normalized airfoil cross-sections
-            - interpolated_sections: Dictionary with interpolated airfoil cross-sections at each node, including:
+            - interpolated_cross_sections: Dictionary with interpolated airfoil cross-sections at each node, including:
                 - airfoil_coordinates: normalized x,y coordinates
                 - interpolation_method: 'direct_copy' or 'pchip'
                 - source_airfoils: list of provided airfoils used
@@ -281,6 +281,7 @@ class WindIOPreprocessor:
                 - chord: interpolated chord
                 - twist: interpolated twist
                 - section_offset_y: interpolated section offset y
+                - section_offset_x: interpolated section offset x
                 - relative_thickness: interpolated thickness ratio
                 - aerodynamic_center: interpolated aerodynamic center
         """
@@ -298,7 +299,7 @@ class WindIOPreprocessor:
         #-------------------------------------------------------------
         # Interpolate airfoil cross-sections
         #-------------------------------------------------------------
-        interpolated_sections = {}
+        interpolated_cross_sections = {}
         for i_node, node_pos in enumerate(aero_nodes):
             node_name = f'node_{i_node:03d}'
 
@@ -306,7 +307,7 @@ class WindIOPreprocessor:
             if node_pos <= self.span_positions[0] or node_pos >= self.span_positions[-1]:
                 airfoil_name = self.airfoil_labels[0] if node_pos <= self.span_positions[0] else self.airfoil_labels[-1]
                 if airfoil_name in normalized_airfoils:
-                    interpolated_sections[node_name] = {
+                    interpolated_cross_sections[node_name] = {
                         'position': node_pos,
                         'airfoil_coordinates': normalized_airfoils[airfoil_name].copy(),
                         'interpolation_method': 'direct_copy',
@@ -332,7 +333,7 @@ class WindIOPreprocessor:
                     x_interpolator = PchipInterpolator([0, 1], [coords_lower['x'], coords_upper['x']], axis=0)
                     y_interpolator = PchipInterpolator([0, 1], [coords_lower['y'], coords_upper['y']], axis=0)
 
-                    interpolated_sections[node_name] = {
+                    interpolated_cross_sections[node_name] = {
                         'position': node_pos,
                         'airfoil_coordinates': {
                             'x': x_interpolator(weight),
@@ -347,17 +348,17 @@ class WindIOPreprocessor:
                 else:
                     print(f"Warning: Could not interpolate at node {node_name} - missing normalized airfoils")
 
-            # Apply interpolations for chord, twist, section_offset_y, rthick, and aerodynamic center
+            # Apply interpolations for chord, twist, section_offset_y, section_offset_x, rthick, and aerodynamic center
             interpolators = self._setup_property_interpolators()
-            if node_name in interpolated_sections:
+            if node_name in interpolated_cross_sections:
                 for property_name, interp_data in interpolators.items():
                     try:
-                        interpolated_sections[node_name][property_name] = float(interp_data['interpolator'](node_pos))
+                        interpolated_cross_sections[node_name][property_name] = float(interp_data['interpolator'](node_pos))
                     except:
                         print(f"Warning: Could not interpolate {property_name} at {node_name}")
 
         print(f"Successfully interpolated airfoil sections at all aerodynamic nodes")
-        return normalized_airfoils, interpolated_sections
+        return normalized_airfoils, interpolated_cross_sections
 
     def _normalize_airfoil_coordinates(self, airfoil_name: str, num_points: int = 300) -> Dict[str, np.ndarray]:
         """
@@ -453,8 +454,8 @@ class WindIOPreprocessor:
     def _setup_property_interpolators(self) -> Dict[str, Dict[str, Any]]:
         """
         Sets up interpolators for blade properties including outer_shape properties
-        like chord, twist, section_offset_y, and rthick, and airfoil-specific properties
-        like aerodynamic center.
+        like chord, twist, section_offset_y, section_offset_x, and rthick, and
+        airfoil-specific properties like aerodynamic center.
 
         Returns:
             Dictionary of interpolators for each property
@@ -472,6 +473,7 @@ class WindIOPreprocessor:
                 'chord': 'chord',
                 'twist': 'twist',
                 'section_offset_y': 'chord',  # Uses chord grid
+                'section_offset_x': 'chord',  # Uses chord grid
                 'rthick': 'chord'  # Uses chord grid
             }
             for property_name, grid_source in properties.items():
@@ -488,7 +490,6 @@ class WindIOPreprocessor:
                         'positions': positions,
                         'values': values
                     }
-
 
             # Setup aerodynamic center interpolator (under airfoil_data)
             aerodynamic_centers = []
@@ -584,17 +585,26 @@ class WindIOPreprocessor:
             cd_interp = np.interp(target_alpha, alpha, cd)
             cm_interp = np.interp(target_alpha, alpha, cm)
 
-            # Get Reynolds number if available
-            reynolds = 1.e6  # default value
+            # Extract Reynolds number and unsteady aero parameters
+            reynolds = 1.e7  # default value
+            unsteady_params = {}
             if 're_sets' in polar_set and polar_set['re_sets']:
-                reynolds = polar_set['re_sets'][0]['re']  # Use the number from first Reynolds set
+                first_re_set = polar_set['re_sets'][0]
+                reynolds = first_re_set['re']
+                unsteady_param_names = [
+                    'eta_e', 'T_f0', 'T_V0', 'T_p', 'T_VL', 'b1', 'b2', 'A1', 'A2', 'A5',
+                    'S1', 'S2', 'S3', 'S4', 'St_sh', 'cm0', 'k0', 'k1', 'k2', 'k3',
+                    'k1_hat', 'x_cp_bar', 'UACutout', 'filtCutOff'
+                ]
+                unsteady_params = {param: first_re_set[param] for param in unsteady_param_names if param in first_re_set}
 
             return {
                 'alpha': target_alpha,
                 'cl': cl_interp,
                 'cd': cd_interp,
                 'cm': cm_interp,
-                'reynolds': reynolds
+                'reynolds': reynolds,
+                'unsteady_params': unsteady_params
             }
 
         except Exception as e:
@@ -720,7 +730,7 @@ class WindIOPreprocessor:
         """
         # Interpolate airfoil cross-sections
         print("\nInterpolating airfoil cross-sections at aerodynamic nodes...")
-        normalized_sections, interpolated_sections = self._interpolate_airfoil_cross_sections(aero_nodes)
+        normalized_cross_sections, interpolated_cross_sections = self._interpolate_airfoil_cross_sections(aero_nodes)
 
         # Create target angle of attack array in radians (from -π to +π radians)
         # target_alpha = np.linspace(-np.pi, np.pi, 361)  # 361 points for 1° resolution
@@ -734,7 +744,7 @@ class WindIOPreprocessor:
         # Interpolate polars at each aerodynamic node
         print("\nInterpolating polar data at each aerodynamic node...")
         interpolated_polars = {}
-        for node_name, section_data in interpolated_sections.items():
+        for node_name, section_data in interpolated_cross_sections.items():
             node_position = section_data['position']
             source_airfoils = section_data['source_airfoils']
             try:
@@ -750,8 +760,8 @@ class WindIOPreprocessor:
 
         processed_data = {
             'aerodynamic_nodes': aero_nodes.tolist(),
-            'normalized_cross_sections': normalized_sections,
-            'interpolated_cross_sections': interpolated_sections,
+            'normalized_cross_sections': normalized_cross_sections,
+            'interpolated_cross_sections': interpolated_cross_sections,
             'normalized_polars': normalized_polars,
             'interpolated_polars': interpolated_polars,
         }
@@ -763,7 +773,8 @@ class WindIOPreprocessor:
         processed_data: Dict[str, Any],
         output_file: str
     ) -> None:
-        """Saves processed data as a new windIO v2.0 file with additional airfoil information.
+        """Saves processed data as a new windIO v2.0 file with additional airfoil information
+        for Blade Element Analysis at aerodynamic nodes.
 
         This method creates a new windIO file that includes:
         - All original windIO data
@@ -775,57 +786,10 @@ class WindIOPreprocessor:
             output_file: Output windIO file path
         """
         new_windio_data = windIO.load_yaml(self.windIO_file) # load original windIO data
+        new_windio_data['airfoils'] = []  # clear original airfoil references
 
         #-------------------------------------------------------------
-        # Replace original section and polar data -> normalized data
-        #-------------------------------------------------------------
-
-        normalized_sections = processed_data['normalized_cross_sections'] # normalized cross-sections of source data
-        normalized_polars = processed_data['normalized_polars'] # normalized polars of source data
-        for airfoil in new_windio_data['airfoils']:
-            airfoil_name = airfoil.get('name')
-            if airfoil_name in normalized_polars:
-                # Convert normalized cross-sections to windIO format
-                normalized_section_data = normalized_sections[airfoil_name]
-                windIO_section = {
-                    'name': airfoil_name,
-                    'coordinates': {
-                        'x': normalized_section_data['x'],
-                        'y': normalized_section_data['y']
-                    }
-                }
-                airfoil['coordinates'] = windIO_section['coordinates']
-
-                # Convert normalized polar data to windIO v2.0 format
-                normalized_polar_data = normalized_polars[airfoil_name]
-                windIO_polars = []
-                for _, polar_set in normalized_polar_data.items():
-                    if isinstance(polar_set, dict) and 'alpha' in polar_set:
-                        windio_polar = {
-                            'configuration': f"Normalized_{airfoil_name}",
-                            're_sets': [{
-                                're': polar_set.get('reynolds', 1000000.),  # default 1.e6
-                                'cl': {
-                                    'grid': polar_set['alpha'],
-                                    'values': polar_set['cl']
-                                },
-                                'cd': {
-                                    'grid': polar_set['alpha'],
-                                    'values': polar_set['cd']
-                                },
-                                'cm': {
-                                    'grid': polar_set['alpha'],
-                                    'values': polar_set['cm']
-                                }
-                            }]
-                        }
-                        windIO_polars.append(windio_polar)
-
-                airfoil['polars'] = windIO_polars
-                print(f"Replaced section and polar data for original airfoil: {airfoil_name}")
-
-        #-------------------------------------------------------------
-        # Create processed airfoil entries -> polars
+        # Create processed airfoil entries: cross-sections and polars
         #-------------------------------------------------------------
 
         processed_airfoil_names = []
@@ -842,7 +806,7 @@ class WindIOPreprocessor:
                     'x': section_data['airfoil_coordinates']['x'],
                     'y': section_data['airfoil_coordinates']['y']
                 },
-                'aerodynamic_center': section_data.get('aerodynamic_center', 0.25),  # Default quarter chord
+                'aerodynamic_center': section_data.get('aerodynamic_center'),
                 'polars': [],
                 'rthick': section_data.get('rthick', 0.)
             }
@@ -855,9 +819,10 @@ class WindIOPreprocessor:
                     for _, polar_set in polar_data['polar_data'].items():
                         if isinstance(polar_set, dict) and 'alpha' in polar_set:
                             processed_polar = {
-                                'configuration': f"Processed {node_name} using all source airfoil polars",
+                                'configuration': f"Processed {node_name} using all source airfoil polars at "
+                                f"spanwise position {processed_data['interpolated_cross_sections'][node_name]['position']}",
                                 're_sets': [{
-                                    're': polar_set.get('reynolds', 1000000.),  # default 1.e6
+                                    're': polar_set.get('reynolds'),
                                     'cl': {
                                         'grid': polar_set['alpha'],
                                         'values': polar_set['cl']
@@ -877,7 +842,7 @@ class WindIOPreprocessor:
             new_windio_data['airfoils'].append(processed_airfoil)
 
         #-------------------------------------------------------------
-        # Update outer_shape section for processed airfoils
+        # Create outer_shape section for processed airfoils
         #-------------------------------------------------------------
 
         # Update the outer_shape section to include processed airfoils (windIO v2.0 format)
@@ -886,7 +851,9 @@ class WindIOPreprocessor:
             if 'outer_shape' in blade_data:
                 outer_shape = blade_data['outer_shape']
                 if 'airfoils' in outer_shape:
-                    # Add processed airfoil positions to existing airfoils array
+                    outer_shape['airfoils'] = []  # clear original airfoil references
+
+                    # Add processed airfoil positions to airfoils array
                     for node_name, section_data in processed_data['interpolated_cross_sections'].items():
                         node_position = section_data['position']
                         node_number = node_name.split('_')[1]
@@ -896,7 +863,63 @@ class WindIOPreprocessor:
                             'name': airfoil_name,
                             'spanwise_position': node_position,
                             'configuration': ['default'],
-                            'weight': [1.0]
+                            'weight': [1.]
+                        }
+                        outer_shape['airfoils'].append(processed_airfoil_ref)
+
+        #-------------------------------------------------------------
+        # Create outer_shape section for processed airfoils
+        #-------------------------------------------------------------
+
+        # Update the outer_shape section to include processed airfoils (windIO v2.0 format)
+        if 'components' in new_windio_data and 'blade' in new_windio_data['components']:
+            blade_data = new_windio_data['components']['blade']
+            if 'outer_shape' in blade_data:
+                outer_shape = blade_data['outer_shape']
+
+                aero_node_positions = []
+                chord_values = []
+                twist_values = []
+                section_offset_y_values = []
+                section_offset_x_values = []
+                rthick_values = []
+                for node_name, section_data in processed_data['interpolated_cross_sections'].items():
+                    node_position = section_data['position']
+                    aero_node_positions.append(node_position)
+                    chord_values.append(section_data.get('chord', 0.))
+                    twist_values.append(section_data.get('twist', 0.))
+                    section_offset_y_values.append(section_data.get('section_offset_y', 0.))
+                    section_offset_x_values.append(section_data.get('section_offset_x', 0.))
+                    rthick_values.append(section_data.get('rthick', 0.))
+
+                properties = {
+                    'chord': chord_values,
+                    'twist': twist_values,
+                    'section_offset_y': section_offset_y_values,
+                    'section_offset_x': section_offset_x_values,
+                    'rthick': rthick_values
+                }
+                for prop, values in properties.items():
+                    if prop in outer_shape:
+                        outer_shape[prop] = {
+                            'grid': list(aero_node_positions),
+                            'values': list(values)
+                        }
+
+                if 'airfoils' in outer_shape:
+                    outer_shape['airfoils'] = []  # clear original airfoil references
+
+                    # Add processed airfoil positions to airfoils array
+                    for node_name, section_data in processed_data['interpolated_cross_sections'].items():
+                        node_position = section_data['position']
+                        node_number = node_name.split('_')[1]
+                        airfoil_name = f"aerodynamic_node_{node_number}"
+
+                        processed_airfoil_ref = {
+                            'name': airfoil_name,
+                            'spanwise_position': node_position,
+                            'configuration': ['default'],
+                            'weight': [1.]
                         }
                         outer_shape['airfoils'].append(processed_airfoil_ref)
 
@@ -976,6 +999,7 @@ def main():
         preprocessor = WindIOPreprocessor(args.input_file)
 
         # Process all airfoil cross-sections and polars
+        # TODO: Add option to calculate non-uniform spacing of aerodynamic nodes
         aero_nodes = np.linspace(0., 1., args.nodes)
         processed_data = preprocessor.process_all_data(aero_nodes)
         preprocessor.save_processed_data(processed_data, args.output)
