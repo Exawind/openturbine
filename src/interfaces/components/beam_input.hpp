@@ -1,6 +1,8 @@
 #pragma once
 
-#include "types.hpp"
+#include <array>
+#include <stdexcept>
+#include <vector>
 
 namespace openturbine::interfaces::components {
 
@@ -33,10 +35,10 @@ struct Section {
     double location;
 
     /// @brief Mass matrix (6x6) at the section
-    Array_6x6 mass_matrix;
+    std::array<std::array<double, 6>, 6> mass_matrix;
 
     /// @brief Stiffness matrix (6x6) at the section
-    Array_6x6 stiffness_matrix;
+    std::array<std::array<double, 6>, 6> stiffness_matrix;
 
     /**
      * @brief Construct a new Section
@@ -44,7 +46,9 @@ struct Section {
      * @param m Mass matrix
      * @param k Stiffness matrix
      */
-    Section(double loc, Array_6x6 m, Array_6x6 k)
+    Section(
+        double loc, std::array<std::array<double, 6>, 6> m, std::array<std::array<double, 6>, 6> k
+    )
         : location(loc), mass_matrix(m), stiffness_matrix(k) {
         // Check that the section location is in range [0,1]
         if (loc < 0. || loc > 1.) {

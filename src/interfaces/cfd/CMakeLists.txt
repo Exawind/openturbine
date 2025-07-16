@@ -1,6 +1,7 @@
 target_sources(openturbine_library
   PRIVATE
   interface.cpp
+  interface_builder.cpp
 )
 
 install(FILES

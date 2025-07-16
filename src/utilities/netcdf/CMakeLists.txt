@@ -1,4 +1,9 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(openturbine_library
+  PRIVATE
+  netcdf_file.cpp
+  node_state_writer.cpp
+  time_series_writer.cpp
+)
 
 install(FILES
   netcdf_file.hpp

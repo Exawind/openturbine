@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
-#include "KokkosSparse_IOUtils.hpp"
+#include "interfaces/blade/blade_interface.hpp"
 #include "interfaces/blade/blade_interface_builder.hpp"
 #include "interfaces/components/beam_builder.hpp"
-#include "regression/test_utilities.hpp"
+#include "step/step.hpp"
 
 namespace openturbine::tests {
 

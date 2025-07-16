@@ -1,3 +1,11 @@
+target_sources(openturbine_library
+  PRIVATE
+  beam.cpp
+  beam_builder.cpp
+  solution_builder.cpp
+  turbine.cpp
+  turbine_builder.cpp
+)
 
 install(FILES
         beam.hpp
