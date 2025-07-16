@@ -15,12 +15,12 @@ namespace openturbine {
  * signals.
  */
 struct Constraint {
-    size_t ID;                       ///< Unique identifier for constraint
-    ConstraintType type;             ///< Type of constraint
-    std::array<size_t, 2> node_ids;  ///< Node IDs for: {base_node, target_node}
+    size_t ID;                                   ///< Unique identifier for constraint
+    ConstraintType type;                         ///< Type of constraint
+    std::array<size_t, 2> node_ids;              ///< Node IDs for: {base_node, target_node}
     std::array<double, 3> axis_vector;           ///< Vector for rotation/control axis
     std::array<double, 7> initial_displacement;  ///< Initial displacement for prescribed BC
-    double* control;                 ///< Pointer to control signal (if any)
+    double* control;                             ///< Pointer to control signal (if any)
 
     /**
      * @brief Constructs a constraint with specified parameters

@@ -24,12 +24,12 @@ namespace openturbine {
  * where the first 3 are translational and the last 3 are rotational components.
  */
 struct Node {
-    size_t id;   //< Node identifier
+    size_t id;                 //< Node identifier
     std::array<double, 7> x0;  //< Initial node positions and orientations
     std::array<double, 7> u;   //< Node displacement
     std::array<double, 6> v;   //< Node velocity
     std::array<double, 6> vd;  //< Node acceleration
-    double s;    //< Position of node in element on range [0, 1]
+    double s;                  //< Position of node in element on range [0, 1]
 
     /// @brief Construct a node with an ID
     explicit Node(size_t node_id)

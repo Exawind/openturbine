@@ -63,7 +63,7 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
     }};
 
     // matmul(r,m)
-    std::array<std::array<double, 6>, 6> mt;
+    std::array<std::array<double, 6>, 6> mt{};
     for (auto i = 0U; i < 6; ++i) {
         for (auto j = 0U; j < 6; ++j) {
             mt[i][j] = 0.;
@@ -74,7 +74,7 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
     }
 
     // matmul(matmul(r,m),r^T)
-    std::array<std::array<double, 6>, 6> mo;
+    std::array<std::array<double, 6>, 6> mo{};
     for (auto i = 0U; i < 6; ++i) {
         for (auto j = 0U; j < 6; ++j) {
             mo[i][j] = 0.;

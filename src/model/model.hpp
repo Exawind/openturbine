@@ -450,11 +450,11 @@ public:
 
 private:
     std::array<double, 3> gravity_ = {0., 0., 0.};  //< Gravity components
-    std::vector<Node> nodes_;                     //< Nodes in the model
-    std::vector<BeamElement> beam_elements_;      //< Beam elements in the model
-    std::vector<MassElement> mass_elements_;      //< Mass elements in the model
-    std::vector<SpringElement> spring_elements_;  //< Spring elements in the model
-    std::vector<Constraint> constraints_;         //< Constraints in the model
+    std::vector<Node> nodes_;                       //< Nodes in the model
+    std::vector<BeamElement> beam_elements_;        //< Beam elements in the model
+    std::vector<MassElement> mass_elements_;        //< Mass elements in the model
+    std::vector<SpringElement> spring_elements_;    //< Spring elements in the model
+    std::vector<Constraint> constraints_;           //< Constraints in the model
     MeshConnectivity mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
 };
 

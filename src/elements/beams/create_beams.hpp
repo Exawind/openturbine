@@ -43,7 +43,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     host_gravity(1) = beams_input.gravity[1];
     host_gravity(2) = beams_input.gravity[2];
 
-    for (auto element = 0; element < beams_input.NumElements(); element++) {
+    for (auto element = 0U; element < beams_input.NumElements(); ++element) {
         // Get number of nodes and quadrature points in element
         const auto num_nodes = beams_input.elements[element].node_ids.size();
         const auto num_qps = beams_input.elements[element].quadrature.size();
@@ -53,7 +53,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         host_num_qps_per_element(element) = num_qps;
 
         // Populate beam node->state indices
-        for (auto node = 0; node < num_nodes; ++node) {
+        for (auto node = 0U; node < num_nodes; ++node) {
             host_node_state_indices(element, node) = beams_input.elements[element].node_ids[node];
         }
 

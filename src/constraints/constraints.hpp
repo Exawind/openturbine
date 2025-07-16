@@ -219,14 +219,14 @@ struct Constraints {
                 c.type != ConstraintType::PrescribedBC3DOFs) {
                 x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
             }
-            for (auto component = 0; component < 3; ++component) {
+            for (auto component = 0U; component < 3U; ++component) {
                 host_X0(constraint, component) = x0[component];
             }
 
             // Calculate rotation axes
             const auto rotation_matrix = CalculateAxes(c, x0);
-            for (auto component_1 = 0; component_1 < 3; ++component_1) {
-                for (auto component_2 = 0; component_2 < 3; ++component_2) {
+            for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
+                for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
                     host_axes(constraint, component_1, component_2) =
                         rotation_matrix[component_1][component_2];
                 }
@@ -235,7 +235,7 @@ struct Constraints {
             // Initialize displacement to provided displacement if prescribed BC
             if (c.type == ConstraintType::PrescribedBC ||
                 c.type == ConstraintType::PrescribedBC3DOFs) {
-                for (auto component = 0; component < 7; ++component) {
+                for (auto component = 0U; component < 7U; ++component) {
                     host_input(constraint, component) = c.initial_displacement[component];
                 }
             }

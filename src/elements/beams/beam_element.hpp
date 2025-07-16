@@ -14,9 +14,9 @@ namespace openturbine {
  * mass and stiffness matrices along the length of the beam.
  */
 struct BeamElement {
-    size_t ID;                          // Element identifier
-    std::vector<size_t> node_ids;       // Element node identifiers
-    std::vector<BeamSection> sections;  // Element mass/stiffness in material frame
+    size_t ID;                                      // Element identifier
+    std::vector<size_t> node_ids;                   // Element node identifiers
+    std::vector<BeamSection> sections;              // Element mass/stiffness in material frame
     std::vector<std::array<double, 2>> quadrature;  // Element quadrature points and weights
 
     BeamElement(
