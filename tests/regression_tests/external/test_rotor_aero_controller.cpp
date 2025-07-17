@@ -251,6 +251,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     std::vector<std::vector<size_t>> beam_elem_node_ids;
     constexpr double d_theta = 2. * M_PI / static_cast<double>(n_blades);
     std::vector<std::array<double, 4>> q_roots;
+    q_roots.reserve(n_blades);
     for (auto i = 0U; i < n_blades; ++i) {
         q_roots.emplace_back(
             RotationVectorToQuaternion({d_theta * static_cast<double>(i) + azimuth_init, 0., 0.})
