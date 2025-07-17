@@ -31,7 +31,7 @@ protected:
         auto model = Model();
         std::vector<double> s{0., 0.5, 1.0, 0., 1., 0., 0.33, 0.67, 1.0};
         std::vector<size_t> node_ids;
-	node_ids.reserve(9U);
+        node_ids.reserve(9U);
         for (auto i = 0U; i < 9U; ++i) {
             node_ids.emplace_back(
                 model.AddNode()
