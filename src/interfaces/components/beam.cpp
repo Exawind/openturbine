@@ -92,7 +92,6 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
         const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto gll_points = GenerateGLLPoints(n_geometry_pts - 1);
         const auto phi_kn_geometry = ComputeShapeFunctionValues(kp_xi, gll_points);
-        const auto phi_prime_kn_geometry = ComputeShapeFunctionDerivatives(kp_xi, gll_points);
         const auto geometry_points =
             PerformLeastSquaresFitting(n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates);
         const auto node_coords =
@@ -107,7 +106,6 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
         // Fit node coordinates to key points
         const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto phi_kn = ComputeShapeFunctionValues(kp_xi, this->node_xi);
-        const auto phi_prime_kn = ComputeShapeFunctionDerivatives(kp_xi, this->node_xi);
         this->node_coordinates =
             PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
     }
