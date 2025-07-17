@@ -869,10 +869,10 @@ public:
         channel_units.resize(sim_controls_.n_channels);
         std::string tmp;
         for (auto i = 0U; i < sim_controls_.n_channels; ++i) {
-            tmp = channel_names_c.substr(20 * i, 20);
+            tmp = channel_names_c.substr(20UL * i, 20);
             tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_names[i] = tmp;
-            tmp = channel_units_c.substr(20 * i, 20);
+            tmp = channel_units_c.substr(20UL * i, 20);
             tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_units[i] = tmp;
         }
