@@ -7,7 +7,6 @@ target_sources(
     test_integrate_stiffness_matrix.cpp
     test_integrate_inertia_matrix.cpp
     test_integrate_residual_vector.cpp
-    test_rotate_section_matrix.cpp
     test_calculate_strain.cpp
     test_calculate_temporary_variables.cpp
     test_calculate_force_FC.cpp

@@ -15,9 +15,10 @@ template <typename DeviceType>
 inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) {
     auto region = Kokkos::Profiling::ScopedRegion("Solve System");
 
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+
     Kokkos::parallel_for(
-        "ConditionR",
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_dofs),
+        "ConditionR", RangePolicy(0, solver.num_system_dofs),
         ConditionR<DeviceType>{parameters.conditioner, solver.b}
     );
 
@@ -30,10 +31,7 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
     }
 
     Kokkos::parallel_for(
-        "UnconditionSolution",
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(
-            0, solver.num_dofs - solver.num_system_dofs
-        ),
+        "UnconditionSolution", RangePolicy(0, solver.num_dofs - solver.num_system_dofs),
         UnconditionSolution<DeviceType>{solver.num_system_dofs, parameters.conditioner, solver.x}
     );
 }

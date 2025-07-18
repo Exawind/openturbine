@@ -5,7 +5,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
 #include "vector_operations.hpp"
 
 namespace openturbine {
@@ -31,8 +30,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(
 /**
  * @brief Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
  */
-inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
-    return std::array<Array_3, 3>{{
+inline std::array<std::array<double, 3>, 3> QuaternionToRotationMatrix(const std::array<double, 4>& q
+) {
+    return std::array<std::array<double, 3>, 3>{{
         {
             q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3],
             2. * (q[1] * q[2] - q[0] * q[3]),
@@ -56,10 +56,11 @@ inline std::array<Array_3, 3> QuaternionToRotationMatrix(const Array_4& q) {
  * https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/ for
  * implementation details
  */
-inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
+inline std::array<double, 4> RotationMatrixToQuaternion(const std::array<std::array<double, 3>, 3>& m
+) {
     auto m22_p_m33 = m[1][1] + m[2][2];
     auto m22_m_m33 = m[1][1] - m[2][2];
-    Array_4 vals{
+    std::array<double, 4> vals{
         m[0][0] + m22_p_m33,
         m[0][0] - m22_p_m33,
         -m[0][0] + m22_m_m33,
@@ -74,7 +75,7 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
     auto c = 0.5 / tmp;
 
     if (max_idx == 0) {
-        return Array_4{
+        return std::array<double, 4>{
             0.5 * tmp,
             (m[2][1] - m[1][2]) * c,
             (m[0][2] - m[2][0]) * c,
@@ -82,7 +83,7 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
         };
     }
     if (max_idx == 1) {
-        return Array_4{
+        return std::array<double, 4>{
             (m[2][1] - m[1][2]) * c,
             0.5 * tmp,
             (m[0][1] + m[1][0]) * c,
@@ -90,7 +91,7 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
         };
     }
     if (max_idx == 2) {
-        return Array_4{
+        return std::array<double, 4>{
             (m[0][2] - m[2][0]) * c,
             (m[0][1] + m[1][0]) * c,
             0.5 * tmp,
@@ -98,14 +99,14 @@ inline Array_4 RotationMatrixToQuaternion(const Array_3x3& m) {
         };
     }
     if (max_idx == 3) {
-        return Array_4{
+        return std::array<double, 4>{
             (m[1][0] - m[0][1]) * c,
             (m[0][2] + m[2][0]) * c,
             (m[1][2] + m[2][1]) * c,
             0.5 * tmp,
         };
     }
-    return Array_4{1., 0., 0., 0};
+    return std::array<double, 4>{1., 0., 0., 0};
 }
 
 /**
@@ -127,7 +128,9 @@ KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(
 /**
  * @brief Rotates provided vector by provided *unit* quaternion and returns the result
  */
-inline std::array<double, 3> RotateVectorByQuaternion(const Array_4& q, const Array_3& v) {
+inline std::array<double, 3> RotateVectorByQuaternion(
+    const std::array<double, 4>& q, const std::array<double, 3>& v
+) {
     auto v_rot = std::array<double, 3>{};
     v_rot[0] = (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) * v[0] +
                2. * (q[1] * q[2] - q[0] * q[3]) * v[1] + 2. * (q[1] * q[3] + q[0] * q[2]) * v[2];
@@ -170,7 +173,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
 
     // Inverse of a quaternion is the conjugate divided by the length
     q_out(0) = q_in(0) / length;
-    for (int i = 1; i < 4; ++i) {
+    for (auto i = 1; i < 4; ++i) {
         q_out(i) = -q_in(i) / length;
     }
 }
@@ -191,7 +194,9 @@ KOKKOS_INLINE_FUNCTION void QuaternionCompose(
 /**
  * @brief Composes (i.e. multiplies) two quaternions and returns the result
  */
-inline Array_4 QuaternionCompose(const Array_4& q1, const Array_4& q2) {
+inline std::array<double, 4> QuaternionCompose(
+    const std::array<double, 4>& q1, const std::array<double, 4>& q2
+) {
     auto qn = std::array<double, 4>{};
     qn[0] = q1[0] * q2[0] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
     qn[1] = q1[0] * q2[1] + q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2];
@@ -212,7 +217,7 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.) / angle;
 
     quaternion(0) = cos_angle;
-    for (int i = 1; i < 4; ++i) {
+    for (auto i = 1; i < 4; ++i) {
         quaternion(i) = phi(i - 1) * factor;
     }
 }
@@ -240,10 +245,10 @@ KOKKOS_INLINE_FUNCTION void QuaternionToRotationVector(
 /**
  * @brief Returns a 3-D rotation vector from provided 4-D quaternion
  */
-inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
+inline std::array<double, 3> QuaternionToRotationVector(const std::array<double, 4>& quaternion) {
     auto theta = 2. * Kokkos::acos(quaternion[0]);
     const auto sin_half_theta = std::sqrt(1. - quaternion[0] * quaternion[0]);
-    Array_3 phi;
+    std::array<double, 3> phi{};
     if (sin_half_theta > 1e-12) {
         phi[0] = theta * quaternion[1] / sin_half_theta;
         phi[1] = theta * quaternion[2] / sin_half_theta;
@@ -259,7 +264,7 @@ inline Array_3 QuaternionToRotationVector(const Array_4& quaternion) {
 /**
  * @brief Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map
  */
-inline Array_4 RotationVectorToQuaternion(const Array_3& phi) {
+inline std::array<double, 4> RotationVectorToQuaternion(const std::array<double, 3>& phi) {
     const auto angle = std::sqrt(phi[0] * phi[0] + phi[1] * phi[1] + phi[2] * phi[2]);
 
     if (std::abs(angle) < 1e-12) {
@@ -286,12 +291,12 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
     const auto length_squared = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
 
     // If the length is 1, our work is done
-    if (std::abs(length_squared - 1.) < kTolerance) {
+    if (std::abs(length_squared - 1.) < 1.e-16) {
         return q;
     }
 
     // If the length of the quaternion is zero, return a default unit quaternion
-    if (std::abs(length_squared) < kTolerance) {
+    if (std::abs(length_squared) < 1.e-16) {
         return Kokkos::Array<double, 4>{1., 0., 0., 0.};
     }
 
@@ -307,16 +312,19 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
 /**
  * @brief Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent
  */
-inline Array_4 TangentTwistToQuaternion(const Array_3& tangent, const double twist) {
+inline std::array<double, 4> TangentTwistToQuaternion(
+    const std::array<double, 3>& tangent, const double twist
+) {
     const auto e1 = UnitVector(tangent);
-    Array_3 temp{0., 1., 0.};
-    if (std::abs(Dot3(e1, temp)) > 0.9) {
+    std::array<double, 3> temp{0., 1., 0.};
+    if (std::abs(DotProduct(e1, temp)) > 0.9) {
         temp = {1., 0., 0.};
     }
-    const auto a = Dot3(e1, temp);
+    const auto a = DotProduct(e1, temp);
 
     // Construct e2 orthogonal to e1 and lying in the y-z plane
-    Array_3 e2 = UnitVector({temp[0] - e1[0] * a, temp[1] - e1[1] * a, temp[2] - e1[2] * a});
+    std::array<double, 3> e2 =
+        UnitVector({temp[0] - e1[0] * a, temp[1] - e1[1] * a, temp[2] - e1[2] * a});
 
     // Construct e3 as cross product
     const auto e3 = CrossProduct(e1, e2);
@@ -341,7 +349,7 @@ inline Array_4 TangentTwistToQuaternion(const Array_3& tangent, const double twi
  * @param tolerance The tolerance for the comparison (default: 1e-12)
  * @return true if the quaternion is approximately the identity quaternion, false otherwise
  */
-inline bool IsIdentityQuaternion(const Array_4& q, double tolerance = 1e-12) {
+inline bool IsIdentityQuaternion(const std::array<double, 4>& q, double tolerance = 1e-12) {
     return std::abs(q[0] - 1.) <= tolerance && std::abs(q[1]) <= tolerance &&
            std::abs(q[2]) <= tolerance && std::abs(q[3]) <= tolerance;
 }

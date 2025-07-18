@@ -122,8 +122,8 @@ TEST(BladeInterfaceTest, BladeWindIO) {
 
 TEST(BladeInterfaceTest, RotatingBeam) {
     const auto time_step{0.01};
-    const Array_3 omega{0., 0., 1.};
-    const Array_3 x0_root{2., 0., 0.};
+    const auto omega = std::array{0., 0., 1.};
+    const auto x0_root = std::array{2., 0., 0.};
     const auto root_vel = CrossProduct(omega, x0_root);
 
     // Create interface builder
@@ -199,9 +199,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         // Calculate root displacement from initial position and apply
         const auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
         const auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
-        const Array_3 u_trans{
-            x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]
-        };
+        const auto u_trans =
+            std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         interface.SetRootDisplacement(
             {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
         );
@@ -432,7 +431,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     auto interface = builder.Build();
 
     // Create vector to store deformed tip positions
-    std::vector<Array_3> tip_positions;
+    std::vector<std::array<double, 3>> tip_positions;
 
     // Get reference to tip node
     auto& tip_node = interface.Blade().nodes[interface.Blade().nodes.size() - 1];
@@ -451,7 +450,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
         // Add tip position
         tip_positions.emplace_back(
-            Array_3{tip_node.position[0], tip_node.position[1], tip_node.position[2]}
+            std::array{tip_node.position[0], tip_node.position[1], tip_node.position[2]}
         );
     }
 

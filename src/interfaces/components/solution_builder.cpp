@@ -1,5 +1,7 @@
 #include "solution_builder.hpp"
 
+#include <stdexcept>
+
 namespace openturbine::interfaces::components {
 SolutionBuilder& SolutionBuilder::EnableStaticSolve() {
     input.dynamic_solve = false;

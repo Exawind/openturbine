@@ -1,6 +1,3 @@
-#include <array>
-#include <string_view>
-
 #include <Kokkos_Core.hpp>
 
 namespace openturbine::tests {

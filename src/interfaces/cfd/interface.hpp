@@ -1,12 +1,17 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 
+#include "constraints/constraints.hpp"
+#include "elements/elements.hpp"
 #include "interfaces/cfd/interface_input.hpp"
 #include "interfaces/cfd/turbine.hpp"
 #include "interfaces/host_state.hpp"
 #include "interfaces/outputs.hpp"
 #include "model/model.hpp"
+#include "solver/solver.hpp"
+#include "state/state.hpp"
 #include "step/step_parameters.hpp"
 
 namespace openturbine::cfd {

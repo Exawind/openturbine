@@ -15,9 +15,9 @@ TEST(ConstraintsTest, EmptyConstructor) {
 }
 
 TEST(ConstraintsTest, SingleConstraintConstructorWithFixedBC) {
-    auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
-    auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
-    auto constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
+    auto node1 = Node(0, std::array{0., 0., 0., 1., 0., 0., 0.});
+    auto node2 = Node(1, std::array{1., 0., 0., 1., 0., 0., 0.});
+    auto constraint = Constraint(0, ConstraintType::FixedBC, {0, 1});
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
@@ -34,14 +34,14 @@ TEST(ConstraintsTest, SingleConstraintConstructorWithFixedBC) {
 }
 
 TEST(ConstraintsTest, MultipleConstraintsConstructor) {
-    auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
-    auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
-    auto node3 = Node(2, Array_7{2., 0., 0., 1., 0., 0., 0.});
+    auto node1 = Node(0, std::array{0., 0., 0., 1., 0., 0., 0.});
+    auto node2 = Node(1, std::array{1., 0., 0., 1., 0., 0., 0.});
+    auto node3 = Node(2, std::array{2., 0., 0., 1., 0., 0., 0.});
 
-    auto fixed_constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
+    auto fixed_constraint = Constraint(0, ConstraintType::FixedBC, {0, 1});
 
     auto revolute_constraint =
-        Constraint(1, ConstraintType::kRevoluteJoint, {1, 2}, Array_3{0., 1., 0.});
+        Constraint(1, ConstraintType::RevoluteJoint, {1, 2}, std::array{0., 1., 0.});
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
@@ -52,15 +52,15 @@ TEST(ConstraintsTest, MultipleConstraintsConstructor) {
 }
 
 TEST(ConstraintsTest, UpdateDisplacementAndUpdateViews) {
-    auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
-    auto node2 = Node(1, Array_7{1., 0., 0., 1., 0., 0., 0.});
-    auto constraint = Constraint(0, ConstraintType::kFixedBC, {0, 1});
+    auto node1 = Node(0, std::array{0., 0., 0., 1., 0., 0., 0.});
+    auto node2 = Node(1, std::array{1., 0., 0., 1., 0., 0., 0.});
+    auto constraint = Constraint(0, ConstraintType::FixedBC, {0, 1});
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto constraints = Constraints<DeviceType>({constraint}, {node1, node2});
 
-    const Array_7 new_displacement{0.1, 0.2, 0.3, 1., 0., 0., 0.};
+    const auto new_displacement = std::array{0.1, 0.2, 0.3, 1., 0., 0., 0.};
     constraints.UpdateDisplacement(0, new_displacement);
     constraints.UpdateViews();
 
@@ -72,11 +72,11 @@ TEST(ConstraintsTest, UpdateDisplacementAndUpdateViews) {
 }
 
 TEST(ConstraintsTest, UpdateViewsWithControlSignal) {
-    auto node1 = Node(0, Array_7{0., 0., 0., 1., 0., 0., 0.});
+    auto node1 = Node(0, std::array{0., 0., 0., 1., 0., 0., 0.});
     double control_signal = 1.5;
     auto constraint = Constraint(
-        0, ConstraintType::kRotationControl, {0, 0}, Array_3{1., 0., 0.},
-        Array_7{0., 0., 0., 1., 0., 0., 0.}, &control_signal
+        0, ConstraintType::RotationControl, {0, 0}, std::array{1., 0., 0.},
+        std::array{0., 0., 0., 1., 0., 0., 0.}, &control_signal
     );
 
     using DeviceType =

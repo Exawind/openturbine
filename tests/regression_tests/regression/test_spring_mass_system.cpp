@@ -1,18 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "dof_management/compute_node_freedom_map_table.hpp"
-#include "dof_management/create_constraint_freedom_table.hpp"
-#include "dof_management/create_element_freedom_table.hpp"
-#include "elements/beams/create_beams.hpp"
-#include "elements/elements.hpp"
-#include "elements/masses/create_masses.hpp"
-#include "elements/springs/create_springs.hpp"
-#include "elements/springs/springs.hpp"
 #include "model/model.hpp"
-#include "solver/solver.hpp"
 #include "step/step.hpp"
-#include "test_utilities.hpp"
+#include "step/step_parameters.hpp"
 
 namespace openturbine::tests {
 

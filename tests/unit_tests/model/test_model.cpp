@@ -1,8 +1,5 @@
-#include <iostream>
-
 #include <gtest/gtest.h>
 
-#include "elements/beams/beam_element.hpp"
 #include "model/model.hpp"
 
 namespace openturbine::tests {
@@ -52,7 +49,7 @@ TEST(ModelTest, AddBeamElementToModel) {
 
     // Add a beam element to the model
     auto sections = std::vector<BeamSection>{};
-    auto quadrature = BeamQuadrature{};
+    auto quadrature = std::vector<std::array<double, 2>>{};
     model.AddBeamElement({node1_id, node2_id}, sections, quadrature);
 
     ASSERT_EQ(model.NumBeamElements(), 1);

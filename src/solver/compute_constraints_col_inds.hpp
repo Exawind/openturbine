@@ -8,23 +8,26 @@ template <typename RowPtrType, typename IndicesType>
 struct ComputeConstraintsColInds {
     using RowPtrValueType = typename RowPtrType::value_type;
     using IndicesValueType = typename IndicesType::value_type;
+    using DeviceType = typename RowPtrType::device_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+
     size_t num_system_dofs{};
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type base_active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type target_active_dofs;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        base_node_freedom_table;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        target_node_freedom_table;
-    typename Kokkos::View<
-        Kokkos::pair<size_t, size_t>*, typename RowPtrType::device_type>::const_type row_range;
+    ConstView<size_t*> base_active_dofs;
+    ConstView<size_t*> target_active_dofs;
+    ConstView<size_t* [6]> base_node_freedom_table;
+    ConstView<size_t* [6]> target_node_freedom_table;
+    ConstView<Kokkos::pair<size_t, size_t>*> row_range;
     typename RowPtrType::const_type row_ptrs;
     IndicesType col_inds;
 
     KOKKOS_FUNCTION
     RowPtrValueType CalculateTargetInds(size_t constraint, RowPtrValueType dof_index) const {
         const auto target_cols = target_active_dofs(constraint);
-        for (auto j = 0U; j < target_cols; ++j, ++dof_index) {
-            const auto index = target_node_freedom_table(constraint, j);
+        for (auto column = 0U; column < target_cols; ++column, ++dof_index) {
+            const auto index = target_node_freedom_table(constraint, column);
             col_inds(dof_index) = static_cast<IndicesValueType>(index);
         }
         return dof_index;
@@ -33,8 +36,8 @@ struct ComputeConstraintsColInds {
     KOKKOS_FUNCTION
     RowPtrValueType CalculateBaseInds(size_t constraint, RowPtrValueType dof_index) const {
         const auto base_cols = base_active_dofs(constraint);
-        for (auto j = 0U; j < base_cols; ++j, ++dof_index) {
-            const auto index = base_node_freedom_table(constraint, j);
+        for (auto column = 0U; column < base_cols; ++column, ++dof_index) {
+            const auto index = base_node_freedom_table(constraint, column);
             col_inds(dof_index) = static_cast<IndicesValueType>(index);
         }
         return dof_index;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "elements/beams/calculate_QP_position.hpp"
 #include "masses.hpp"
 #include "masses_input.hpp"
+#include "model/node.hpp"
 
 namespace openturbine {
 
@@ -10,36 +10,40 @@ template <typename DeviceType>
 inline Masses<DeviceType> CreateMasses(
     const MassesInput& masses_input, const std::vector<Node>& nodes
 ) {
+    using Kokkos::create_mirror_view;
+    using Kokkos::deep_copy;
+    using Kokkos::WithoutInitializing;
+
     Masses<DeviceType> masses(masses_input.NumElements());
 
-    auto host_gravity = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.gravity);
-    auto host_state_indices =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.state_indices);
-    auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.node_x0);
-    auto host_Mstar = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.qp_Mstar);
+    auto host_gravity = create_mirror_view(WithoutInitializing, masses.gravity);
+    auto host_state_indices = create_mirror_view(WithoutInitializing, masses.state_indices);
+    auto host_x0 = create_mirror_view(WithoutInitializing, masses.node_x0);
+    auto host_Mstar = create_mirror_view(WithoutInitializing, masses.qp_Mstar);
 
     host_gravity(0) = masses_input.gravity[0];
     host_gravity(1) = masses_input.gravity[1];
     host_gravity(2) = masses_input.gravity[2];
 
     // Populate element data - x0 and Mstar
-    for (size_t i_elem = 0; i_elem < masses_input.NumElements(); i_elem++) {
-        host_state_indices(i_elem) = static_cast<size_t>(masses_input.elements[i_elem].node_id);
-        const auto& elem = masses_input.elements[i_elem];
-        for (auto i_dof = 0U; i_dof < nodes[elem.node_id].x0.size(); ++i_dof) {
-            host_x0(i_elem, i_dof) = nodes[elem.node_id].x0[i_dof];
+    for (auto element = 0U; element < masses_input.NumElements(); element++) {
+        host_state_indices(element) = static_cast<size_t>(masses_input.elements[element].node_id);
+        const auto& elem = masses_input.elements[element];
+        for (auto component = 0U; component < nodes[elem.node_id].x0.size(); ++component) {
+            host_x0(element, component) = nodes[elem.node_id].x0[component];
         }
-        for (auto m = 0U; m < 6U; ++m) {
-            for (auto n = 0U; n < 6U; ++n) {
-                host_Mstar(i_elem, m, n) = elem.M_star[m][n];
+        for (auto component_1 = 0U; component_1 < 6U; ++component_1) {
+            for (auto component_2 = 0U; component_2 < 6U; ++component_2) {
+                host_Mstar(element, component_1, component_2) =
+                    elem.M_star[component_1][component_2];
             }
         }
     }
 
-    Kokkos::deep_copy(masses.gravity, host_gravity);
-    Kokkos::deep_copy(masses.state_indices, host_state_indices);
-    Kokkos::deep_copy(masses.node_x0, host_x0);
-    Kokkos::deep_copy(masses.qp_Mstar, host_Mstar);
+    deep_copy(masses.gravity, host_gravity);
+    deep_copy(masses.state_indices, host_state_indices);
+    deep_copy(masses.node_x0, host_x0);
+    deep_copy(masses.qp_Mstar, host_Mstar);
 
     return masses;
 }

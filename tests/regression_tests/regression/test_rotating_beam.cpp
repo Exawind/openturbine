@@ -1,4 +1,3 @@
-#include <filesystem>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
@@ -8,9 +7,6 @@
 #include "model/model.hpp"
 #include "step/step.hpp"
 #include "test_utilities.hpp"
-#include "types.hpp"
-
-using Array_7 = std::array<double, 7>;
 
 namespace openturbine::tests {
 
@@ -76,7 +72,7 @@ const auto node_s = std::vector{
 };
 
 // Element quadrature
-const auto quadrature = BeamQuadrature{
+const auto quadrature = std::vector<std::array<double, 2>>{
     {-0.9491079123427585, 0.1294849661688697},  {-0.7415311855993943, 0.27970539148927664},
     {-0.40584515137739696, 0.3818300505051189}, {6.123233995736766e-17, 0.4179591836734694},
     {0.4058451513773971, 0.3818300505051189},   {0.7415311855993945, 0.27970539148927664},
@@ -99,7 +95,7 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Set gravity
     model.SetGravity(0., 0., 0.);
 
-    const Array_3 x0_root{2., 0., 0.};
+    const auto x0_root = std::array{2., 0., 0.};
 
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
@@ -137,13 +133,12 @@ TEST(RotatingBeamTest, StepConvergence) {
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
-    for (int i = 0; i < 10; ++i) {
+    for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         const auto x_root = RotateVectorByQuaternion(q, x0_root);
-        const Array_3 u_root = {
-            x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]
-        };
+        const auto u_root =
+            std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         constraints.UpdateDisplacement(0, {u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
@@ -397,7 +392,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Perform 10 time steps and check for convergence within max_iter iterations
-    for (int i = 0; i < 10; ++i) {
+    for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
@@ -541,14 +536,14 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         const auto t = step_size * static_cast<double>(i + 1);
         pitch = t * M_PI / 2.;
         azimuth = 0.5 * t * M_PI / 2.;
-        auto q = RotationVectorToQuaternion(Array_3{0., 0., azimuth});
+        auto q = RotationVectorToQuaternion({0., 0., azimuth});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
     auto q = kokkos_view_2D_to_vector(state.q);
-    auto rv = QuaternionToRotationVector(Array_4{q[0][3], q[0][4], q[0][5], q[0][6]});
+    auto rv = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
 
     // Same as euler rotation xz [azimuth, pitch]
     EXPECT_NEAR(rv[0], 1.482189821649821, 1e-8);
@@ -608,7 +603,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Run 10 steps
-    for (size_t i = 0; i < 5; ++i) {
+    for (auto i = 0; i < 5; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
@@ -701,7 +696,7 @@ void GeneratorTorqueWithAxisTilt(
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Run 10 steps
-    for (size_t i = 0; i < 10; ++i) {
+    for (auto i = 0; i < 10; ++i) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }

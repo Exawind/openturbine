@@ -1,12 +1,11 @@
+#include <array>
 #include <initializer_list>
+#include <vector>
 
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
-#include "state/state.hpp"
-#include "step/update_system_variables_beams.hpp"
 #include "test_utilities.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -112,14 +111,14 @@ inline auto SetUpBeams() {
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        BeamQuadrature{
-            {-0.9491079123427585, 0.1294849661688697},
-            {-0.7415311855993943, 0.27970539148927664},
-            {-0.40584515137739696, 0.3818300505051189},
-            {6.123233995736766e-17, 0.4179591836734694},
-            {0.4058451513773971, 0.3818300505051189},
-            {0.7415311855993945, 0.27970539148927664},
-            {0.9491079123427585, 0.1294849661688697},
+        std::vector{
+            std::array{-0.9491079123427585, 0.1294849661688697},
+            std::array{-0.7415311855993943, 0.27970539148927664},
+            std::array{-0.40584515137739696, 0.3818300505051189},
+            std::array{6.123233995736766e-17, 0.4179591836734694},
+            std::array{0.4058451513773971, 0.3818300505051189},
+            std::array{0.7415311855993945, 0.27970539148927664},
+            std::array{0.9491079123427585, 0.1294849661688697},
         }
     );
 
@@ -151,7 +150,7 @@ TEST(BeamsTest, NodeInitialPositionX0) {
 
 TEST(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
     const auto beams = SetUpBeams();
-    auto Mstar = View_NxN("Mstar", beams.qp_Mstar.extent(2), beams.qp_Mstar.extent(3));
+    auto Mstar = Kokkos::View<double[6][6]>("Mstar");
     Kokkos::deep_copy(Mstar, Kokkos::subview(beams.qp_Mstar, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Mstar,
@@ -169,7 +168,7 @@ TEST(BeamsTest, QuadraturePointMassMatrixInMaterialFrame) {
 
 TEST(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     const auto beams = SetUpBeams();
-    auto Cstar = View_NxN("Cstar", beams.qp_Cstar.extent(2), beams.qp_Cstar.extent(3));
+    auto Cstar = Kokkos::View<double[6][6]>("Cstar");
     Kokkos::deep_copy(Cstar, Kokkos::subview(beams.qp_Cstar, 0, 0, Kokkos::ALL, Kokkos::ALL));
     expect_kokkos_view_2D_equal(
         Cstar,

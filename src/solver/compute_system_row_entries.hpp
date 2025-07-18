@@ -7,27 +7,28 @@ namespace openturbine {
 template <typename RowPtrType>
 struct ComputeSystemRowEntries {
     using ValueType = typename RowPtrType::value_type;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
-        node_freedom_map_table;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
-        num_nodes_per_element;
-    typename Kokkos::View<size_t**, typename RowPtrType::device_type>::const_type node_state_indices;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type base_active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type target_active_dofs;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        base_node_freedom_table;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        target_node_freedom_table;
-    typename Kokkos::View<
-        Kokkos::pair<size_t, size_t>*, typename RowPtrType::device_type>::const_type row_range;
+    using DeviceType = typename RowPtrType::device_type;
+    template <typename value_type>
+    using View = Kokkos::View<value_type, DeviceType>;
+    template <typename value_type>
+    using ConstView = typename View<value_type>::const_type;
+
+    ConstView<size_t*> active_dofs;
+    ConstView<size_t*> node_freedom_map_table;
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t**> node_state_indices;
+    ConstView<size_t*> base_active_dofs;
+    ConstView<size_t*> target_active_dofs;
+    ConstView<size_t* [6]> base_node_freedom_table;
+    ConstView<size_t* [6]> target_node_freedom_table;
+    ConstView<Kokkos::pair<size_t, size_t>*> row_range;
     RowPtrType row_entries;
 
     KOKKOS_FUNCTION
     bool ElementContainsNode(size_t element, size_t node) const {
         const auto num_nodes = num_nodes_per_element(element);
-        for (auto n = 0U; n < num_nodes; ++n) {
-            if (node_state_indices(element, n) == node) {
+        for (auto node_index = 0U; node_index < num_nodes; ++node_index) {
+            if (node_state_indices(element, node_index) == node) {
                 return true;
             }
         }
@@ -60,8 +61,8 @@ struct ComputeSystemRowEntries {
     ValueType ComputeEntriesInElement(size_t element) const {
         const auto num_nodes = num_nodes_per_element(element);
         auto entries = ValueType{};
-        for (auto j = 0U; j < num_nodes; ++j) {
-            const auto node_state_index = node_state_indices(element, j);
+        for (auto node = 0U; node < num_nodes; ++node) {
+            const auto node_state_index = node_state_indices(element, node);
             entries += static_cast<ValueType>(active_dofs(node_state_index));
         }
         return entries;
@@ -92,8 +93,8 @@ struct ComputeSystemRowEntries {
             entries_in_row += entries_in_constraint;
         }
 
-        for (auto j = 0U; j < num_dof; ++j) {
-            row_entries(dof_index + j) = entries_in_row;
+        for (auto component = 0U; component < num_dof; ++component) {
+            row_entries(dof_index + component) = entries_in_row;
         }
     }
 };

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
+#include <string>
+
 #include "interfaces/cfd/turbine_input.hpp"
-#include "types.hpp"
 
 namespace openturbine::cfd {
 

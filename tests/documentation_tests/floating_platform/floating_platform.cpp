@@ -23,7 +23,6 @@ int main() {
         // Construct platform mass matrix as a 6x6 "array of arrays"
         constexpr auto platform_mass{1.419625E+7};                                     // kg
         constexpr auto platform_moi = std::array{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-        constexpr auto platform_cm_position = std::array{0., 0., -7.53};               // m
         constexpr auto platform_mass_matrix = std::array{
             std::array{platform_mass, 0., 0., 0., 0., 0.},    // Row 1
             std::array{0., platform_mass, 0., 0., 0., 0.},    // Row 2
@@ -67,7 +66,7 @@ int main() {
         const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
         // Iterate through time steps
-        for (size_t i = 0U; i < n_steps; ++i) {
+        for (auto i = 0U; i < n_steps; ++i) {
             // Calculate current time
             const auto t = static_cast<double>(i) * time_step;
 

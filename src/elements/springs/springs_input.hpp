@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "spring_element.hpp"
 
 namespace openturbine {

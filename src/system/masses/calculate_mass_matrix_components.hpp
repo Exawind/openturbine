@@ -1,8 +1,7 @@
 #pragma once
 
+#include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
-
-#include "math/vector_operations.hpp"
 
 namespace openturbine::masses {
 
@@ -23,11 +22,9 @@ KOKKOS_INLINE_FUNCTION void CalculateRho(
     const typename Kokkos::View<double[6][6], DeviceType>::const_type& Muu,
     const Kokkos::View<double[3][3], DeviceType>& rho
 ) {
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
-            rho(i, j) = Muu(i + 3U, j + 3U);
-        }
-    }
+    KokkosBatched::SerialCopy<>::invoke(
+        Kokkos::subview(Muu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6)), rho
+    );
 }
 
 }  // namespace openturbine::masses

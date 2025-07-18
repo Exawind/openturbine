@@ -165,6 +165,5 @@ install(EXPORT OpenTurbineTargets
 )
 
 install(FILES
-  types.hpp
   DESTINATION include/OpenTurbine/
 )
