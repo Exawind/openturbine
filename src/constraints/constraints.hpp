@@ -34,10 +34,10 @@ struct Constraints {
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    View<ConstraintType*> type;                      //< Type of each constraint
-    std::vector<double*> control_signal;             //< Control signal for each constraint
-    View<size_t*> base_node_index;                   //< Index of the base node for each constraint
-    View<size_t*> target_node_index;                 //< Index of the target node for each constraint
+    View<ConstraintType*> type;           //< Type of each constraint
+    std::vector<double*> control_signal;  //< Control signal for each constraint
+    View<size_t*> base_node_index;        //< Index of the base node for each constraint
+    View<size_t*> target_node_index;      //< Index of the target node for each constraint
 
     // DOF management
     View<Kokkos::pair<size_t, size_t>*> row_range;
