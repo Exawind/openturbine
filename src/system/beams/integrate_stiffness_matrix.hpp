@@ -8,10 +8,14 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct IntegrateStiffnessMatrixElement {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
-    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;
@@ -31,10 +35,10 @@ struct IntegrateStiffnessMatrixElement {
     void operator()(size_t node_simd_node) const {
         using simd_type = Kokkos::Experimental::simd<double>;
         using tag_type = Kokkos::Experimental::vector_aligned_tag;
+        using Kokkos::ALL;
         using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using Kokkos::make_pair;
+        using Kokkos::make_pair;
+        using Kokkos::subview;
 
         constexpr auto width = simd_type::size();
         const auto extra_component = num_nodes % width == 0U ? 0U : 1U;
@@ -44,16 +48,11 @@ struct IntegrateStiffnessMatrixElement {
 
         auto local_M = Array<simd_type, 36>{};
 
-        const auto qp_Kuu =
-            ConstView<double* [36]>(qp_Kuu_.data(), num_qps);
-        const auto qp_Puu =
-            ConstView<double* [36]>(qp_Puu_.data(), num_qps);
-        const auto qp_Cuu =
-            ConstView<double* [36]>(qp_Cuu_.data(), num_qps);
-        const auto qp_Ouu =
-            ConstView<double* [36]>(qp_Ouu_.data(), num_qps);
-        const auto qp_Quu =
-            ConstView<double* [36]>(qp_Quu_.data(), num_qps);
+        const auto qp_Kuu = ConstView<double* [36]>(qp_Kuu_.data(), num_qps);
+        const auto qp_Puu = ConstView<double* [36]>(qp_Puu_.data(), num_qps);
+        const auto qp_Cuu = ConstView<double* [36]>(qp_Cuu_.data(), num_qps);
+        const auto qp_Ouu = ConstView<double* [36]>(qp_Ouu_.data(), num_qps);
+        const auto qp_Quu = ConstView<double* [36]>(qp_Quu_.data(), num_qps);
 
         for (auto qp = 0U; qp < num_qps; ++qp) {
             const auto w = simd_type(qp_weight_(qp));
@@ -85,11 +84,9 @@ struct IntegrateStiffnessMatrixElement {
         }
 
         const auto num_lanes = Kokkos::min(width, num_nodes - simd_node);
-        const auto global_M =
-            View<double** [36]>(gbl_M_.data(), num_nodes, num_nodes);
-        const auto M_slice = subview(
-            global_M, node, make_pair(simd_node, simd_node + num_lanes), ALL
-        );
+        const auto global_M = View<double** [36]>(gbl_M_.data(), num_nodes, num_nodes);
+        const auto M_slice =
+            subview(global_M, node, make_pair(simd_node, simd_node + num_lanes), ALL);
 
         for (auto lane = 0U; lane < num_lanes; ++lane) {
             for (auto component = 0; component < 36; ++component) {

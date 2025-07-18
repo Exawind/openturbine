@@ -15,18 +15,21 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateQPPosition {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> num_nodes_per_element;
     ConstView<size_t*> num_qps_per_element;
     ConstView<double***> shape_interpolation;  //< num_elem x num_nodes x num_qps
-    ConstView<double** [7]> node_position_rotation;  //< node position vector/generalized coordinates in global csys
+    ConstView<double** [7]>
+        node_position_rotation;      //< node position vector/generalized coordinates in global csys
     View<double** [3]> qp_position;  //< quadrature point position - x, y, z (computed)
 
     KOKKOS_FUNCTION
     void operator()(int element) const {
-	using Kokkos::Array;
+        using Kokkos::Array;
 
         const auto num_nodes = num_nodes_per_element(element);
         const auto num_qps = num_qps_per_element(element);

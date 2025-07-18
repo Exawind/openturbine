@@ -7,8 +7,10 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct UpdateNodeStateElement {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element{};
     ConstView<size_t**> node_state_indices;
@@ -37,8 +39,10 @@ template <typename DeviceType>
 struct UpdateNodeState {
     using TeamPolicy = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>;
     using member_type = typename TeamPolicy::member_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<double* [7]> Q;
     ConstView<double* [6]> V;
@@ -64,11 +68,17 @@ struct UpdateNodeState {
         };
         Kokkos::parallel_for(node_range, node_state_updater);
 
-	using CopyMatrix = KokkosBatched::TeamVectorCopy<member_type>;
+        using CopyMatrix = KokkosBatched::TeamVectorCopy<member_type>;
 
-        CopyMatrix::invoke(member, node_u, Kokkos::subview(node_u_, element, Kokkos::ALL, Kokkos::ALL));
-        CopyMatrix::invoke(member, node_u_dot, Kokkos::subview(node_u_dot_, element, Kokkos::ALL, Kokkos::ALL));
-        CopyMatrix::invoke(member, node_u_ddot, Kokkos::subview(node_u_ddot_, element, Kokkos::ALL, Kokkos::ALL));
+        CopyMatrix::invoke(
+            member, node_u, Kokkos::subview(node_u_, element, Kokkos::ALL, Kokkos::ALL)
+        );
+        CopyMatrix::invoke(
+            member, node_u_dot, Kokkos::subview(node_u_dot_, element, Kokkos::ALL, Kokkos::ALL)
+        );
+        CopyMatrix::invoke(
+            member, node_u_ddot, Kokkos::subview(node_u_ddot_, element, Kokkos::ALL, Kokkos::ALL)
+        );
     }
 };
 

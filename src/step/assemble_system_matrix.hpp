@@ -21,8 +21,10 @@ inline void AssembleSystemMatrix(
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
 
     const auto num_nodes = elements.beams.max_elem_nodes;
-    const auto vector_length = std::min(static_cast<int>(num_nodes), TeamPolicy::vector_length_max());
-    auto beams_sparse_matrix_policy = TeamPolicy(elements.beams.num_elems, Kokkos::AUTO(), vector_length);
+    const auto vector_length =
+        std::min(static_cast<int>(num_nodes), TeamPolicy::vector_length_max());
+    auto beams_sparse_matrix_policy =
+        TeamPolicy(elements.beams.num_elems, Kokkos::AUTO(), vector_length);
     auto masses_sparse_matrix_policy = TeamPolicy(elements.masses.num_elems, Kokkos::AUTO());
     auto springs_sparse_matrix_policy = TeamPolicy(elements.springs.num_elems, Kokkos::AUTO());
 

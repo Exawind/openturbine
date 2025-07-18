@@ -26,8 +26,10 @@ struct CalculateConstraintResidualGradient {
         KokkosBatched::Algo::Gemm::Default>;
     using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
     using CopyMatrix = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 2>;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<ConstraintType*> type_;
     ConstView<size_t*> base_node_index_;
@@ -49,8 +51,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void FixedBC(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -95,8 +97,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void FixedBC3DOF(size_t constraint) const {
-        using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -141,8 +143,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void PrescribedBC(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -190,8 +192,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void PrescribedBC3DOF(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -239,8 +241,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RigidJoint(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -286,7 +288,9 @@ struct CalculateConstraintResidualGradient {
         CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRigidJointConstraint<DeviceType>::invoke(X0, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRigidJointConstraint<DeviceType>::invoke(
+            X0, b_node_u, t_node_u, res, b_grad, t_grad
+        );
 
         TransposeMatrix::invoke(b_grad, b_grad_trans);
         TransposeMatrix::invoke(t_grad, t_grad_trans);
@@ -306,8 +310,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RigidJoint3DOF(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -353,7 +357,9 @@ struct CalculateConstraintResidualGradient {
         CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRigidJoint3DOFConstraint<DeviceType>::invoke(X0, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRigidJoint3DOFConstraint<DeviceType>::invoke(
+            X0, b_node_u, t_node_u, res, b_grad, t_grad
+        );
 
         TransposeMatrix::invoke(b_grad, b_grad_trans);
         TransposeMatrix::invoke(t_grad, t_grad_trans);
@@ -373,8 +379,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RevoluteJoint(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
@@ -428,7 +434,9 @@ struct CalculateConstraintResidualGradient {
         CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
         CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRevoluteJointConstraint<DeviceType>::invoke(X0, axes, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRevoluteJointConstraint<DeviceType>::invoke(
+            X0, axes, b_node_u, t_node_u, res, b_grad, t_grad
+        );
         CalculateRevoluteJointForce<DeviceType>::invoke(axes, inputs, t_node_u, system_res);
 
         TransposeMatrix::invoke(b_grad, b_grad_trans);
@@ -450,8 +458,8 @@ struct CalculateConstraintResidualGradient {
 
     KOKKOS_FUNCTION
     void RotationControl(size_t constraint) const {
-	using Kokkos::Array;
         using Kokkos::ALL;
+        using Kokkos::Array;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 

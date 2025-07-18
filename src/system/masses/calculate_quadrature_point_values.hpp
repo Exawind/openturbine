@@ -15,8 +15,10 @@ template <typename DeviceType>
 struct CalculateQuadraturePointValues {
     using TeamPolicy = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>;
     using member_type = typename TeamPolicy::member_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     double beta_prime;
     double gamma_prime;
@@ -36,12 +38,12 @@ struct CalculateQuadraturePointValues {
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
+        using Kokkos::ALL;
         using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using CopyMatrix = KokkosBatched::SerialCopy<>;
-	using NoTranspose = KokkosBatched::Trans::NoTranspose;
-	using Default = KokkosBatched::Algo::Gemm::Default;
+        using Kokkos::subview;
+        using CopyMatrix = KokkosBatched::SerialCopy<>;
+        using NoTranspose = KokkosBatched::Trans::NoTranspose;
+        using Default = KokkosBatched::Algo::Gemm::Default;
         using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
 
         const auto index = node_state_indices(element);
@@ -72,8 +74,7 @@ struct CalculateQuadraturePointValues {
             const auto r0_data = Array<double, 4>{
                 node_x0(element, 3), node_x0(element, 4), node_x0(element, 5), node_x0(element, 6)
             };
-            const auto r_data =
-                Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
+            const auto r_data = Array<double, 4>{Q(index, 3), Q(index, 4), Q(index, 5), Q(index, 6)};
             auto xr_data = Array<double, 4>{};
 
             const auto Mstar = View<double[6][6]>(Mstar_data.data());
@@ -142,9 +143,11 @@ struct CalculateQuadraturePointValues {
                 }
             }
 
-	    Gemm::invoke(1., Kuu, T, 1., STpI);
+            Gemm::invoke(1., Kuu, T, 1., STpI);
 
-            CopyMatrix::invoke(STpI, Kokkos::subview(system_matrix_terms, element, Kokkos::ALL, Kokkos::ALL));
+            CopyMatrix::invoke(
+                STpI, Kokkos::subview(system_matrix_terms, element, Kokkos::ALL, Kokkos::ALL)
+            );
         }
     }
 };

@@ -8,9 +8,12 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeLambdaToVector {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
     ConstView<FreedomSignature*> base_node_freedom_signature;
     ConstView<FreedomSignature*> target_node_freedom_signature;

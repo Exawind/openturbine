@@ -12,7 +12,8 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Springs {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
     size_t num_elems;  //< Total number of elements
 

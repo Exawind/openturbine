@@ -13,13 +13,15 @@ struct ContributeSpringsToSparseMatrix {
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     using TeamPolicy = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>;
     using member_type = typename TeamPolicy::member_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     double conditioner{};
     ConstView<FreedomSignature* [2]> element_freedom_signature;
     ConstView<size_t* [2][3]> element_freedom_table;
-    ConstView<double* [2][2][3][3]> dense;             //< Element Stiffness matrices
+    ConstView<double* [2][2][3][3]> dense;  //< Element Stiffness matrices
     CrsMatrixType sparse;  //< Global sparse stiffness matrix
 
     KOKKOS_FUNCTION

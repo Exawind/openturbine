@@ -6,10 +6,14 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct InterpolateQPVector {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using StrideView = Kokkos::View<ValueType, Kokkos::LayoutStride, DeviceType>;
-    template <typename ValueType> using ConstStrideView = typename StrideView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using StrideView = Kokkos::View<ValueType, Kokkos::LayoutStride, DeviceType>;
+    template <typename ValueType>
+    using ConstStrideView = typename StrideView<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;

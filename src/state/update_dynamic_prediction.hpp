@@ -8,10 +8,14 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct UpdateDynamicPrediction {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
-    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     double h;
     double beta_prime;

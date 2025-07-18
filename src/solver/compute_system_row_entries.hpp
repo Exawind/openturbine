@@ -8,8 +8,10 @@ template <typename RowPtrType>
 struct ComputeSystemRowEntries {
     using ValueType = typename RowPtrType::value_type;
     using DeviceType = typename RowPtrType::device_type;
-    template <typename value_type> using View = Kokkos::View<value_type, DeviceType>;
-    template <typename value_type> using ConstView = typename View<value_type>::const_type;
+    template <typename value_type>
+    using View = Kokkos::View<value_type, DeviceType>;
+    template <typename value_type>
+    using ConstView = typename View<value_type>::const_type;
 
     ConstView<size_t*> active_dofs;
     ConstView<size_t*> node_freedom_map_table;

@@ -6,10 +6,14 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct IntegrateResidualVectorElement {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
-    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     size_t element;
     size_t num_qps;

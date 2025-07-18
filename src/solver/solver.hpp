@@ -74,8 +74,10 @@ struct Solver {
     using CrsMatrixType = KokkosSparse::CrsMatrix<ValueType, IndexType, DeviceType, void, IndexType>;
     using MultiVectorType = Kokkos::View<ValueType* [1], Kokkos::LayoutLeft, DeviceType>;
 
-    template <typename value_type> using View = Kokkos::View<value_type, DeviceType>;
-    template <typename value_type> using ConstView = typename View<value_type>::const_type;
+    template <typename value_type>
+    using View = Kokkos::View<value_type, DeviceType>;
+    template <typename value_type>
+    using ConstView = typename View<value_type>::const_type;
 
     size_t num_system_nodes;  //< Number of system nodes
     size_t num_system_dofs;   //< Number of system degrees of freedom
@@ -107,14 +109,11 @@ struct Solver {
      * @param constraint_row_range View containing row ranges for each constraint
      */
     Solver(
-        const ConstView<size_t*>& node_IDs,
-        const ConstView<size_t*>& active_dofs,
+        const ConstView<size_t*>& node_IDs, const ConstView<size_t*>& active_dofs,
         const ConstView<size_t*>& node_freedom_map_table,
         const ConstView<size_t*>& num_nodes_per_element,
-        const ConstView<size_t**>& node_state_indices,
-        size_t num_constraint_dofs,
-        const ConstView<size_t*>& base_active_dofs,
-        const ConstView<size_t*>& target_active_dofs,
+        const ConstView<size_t**>& node_state_indices, size_t num_constraint_dofs,
+        const ConstView<size_t*>& base_active_dofs, const ConstView<size_t*>& target_active_dofs,
         const ConstView<size_t* [6]>& constraint_base_node_freedom_table,
         const ConstView<size_t* [6]>& constraint_target_node_freedom_table,
         const ConstView<Kokkos::pair<size_t, size_t>*>& constraint_row_range

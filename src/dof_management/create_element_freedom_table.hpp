@@ -9,8 +9,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Beams {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> num_nodes_per_element;
     ConstView<size_t**> node_state_indices;
@@ -31,8 +33,10 @@ struct CreateElementFreedomTable_Beams {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Masses {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> node_state_indices;
     ConstView<size_t*> node_freedom_map_table;
@@ -51,8 +55,10 @@ struct CreateElementFreedomTable_Masses {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Springs {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> num_nodes_per_element;
     ConstView<size_t* [2]> node_state_indices;

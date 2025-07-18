@@ -9,8 +9,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CreateConstraintFreedomTable {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<ConstraintType*> type;
     ConstView<size_t*> target_node_index;

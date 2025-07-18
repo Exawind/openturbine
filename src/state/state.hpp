@@ -15,7 +15,8 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct State {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
     size_t time_step{0};
     size_t num_system_nodes;

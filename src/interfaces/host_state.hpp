@@ -20,7 +20,8 @@ namespace openturbine::interfaces {
  */
 template <typename DeviceType>
 struct HostState {
-    template <typename ValueType> using HostView = typename Kokkos::View<ValueType, DeviceType>::HostMirror;
+    template <typename ValueType>
+    using HostView = typename Kokkos::View<ValueType, DeviceType>::HostMirror;
 
     /// @brief Host local copy of current position
     HostView<double* [7]> x;

@@ -11,14 +11,13 @@ inline Masses<DeviceType> CreateMasses(
     const MassesInput& masses_input, const std::vector<Node>& nodes
 ) {
     using Kokkos::create_mirror_view;
-    using Kokkos::WithoutInitializing;
     using Kokkos::deep_copy;
+    using Kokkos::WithoutInitializing;
 
     Masses<DeviceType> masses(masses_input.NumElements());
 
     auto host_gravity = create_mirror_view(WithoutInitializing, masses.gravity);
-    auto host_state_indices =
-        create_mirror_view(WithoutInitializing, masses.state_indices);
+    auto host_state_indices = create_mirror_view(WithoutInitializing, masses.state_indices);
     auto host_x0 = create_mirror_view(WithoutInitializing, masses.node_x0);
     auto host_Mstar = create_mirror_view(WithoutInitializing, masses.qp_Mstar);
 

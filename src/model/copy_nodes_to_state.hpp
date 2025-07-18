@@ -11,8 +11,8 @@ namespace openturbine {
 template <typename DeviceType>
 inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& nodes) {
     using Kokkos::create_mirror_view;
-    using Kokkos::WithoutInitializing;
     using Kokkos::deep_copy;
+    using Kokkos::WithoutInitializing;
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
 
     auto host_id = create_mirror_view(WithoutInitializing, state.ID);

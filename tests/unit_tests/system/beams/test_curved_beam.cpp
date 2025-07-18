@@ -226,7 +226,9 @@ void TestCalculateOuu() {
     Kokkos::parallel_for(
         "CalculateOuu", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculateOuu<Kokkos::DefaultExecutionSpace>::invoke(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
+            beams::CalculateOuu<Kokkos::DefaultExecutionSpace>::invoke(
+                Cuu, x0pupSS, M_tilde, N_tilde, Ouu
+            );
         }
     );
 

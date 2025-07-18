@@ -21,7 +21,8 @@ inline void UpdateSystemVariablesBeams(
     const auto num_qps = beams.max_elem_qps;
     const auto padded_num_nodes = (num_nodes / width + 1) * width;
 
-    const auto vector_length = std::min(static_cast<int>(num_nodes * num_nodes), TeamPolicy::vector_length_max());
+    const auto vector_length =
+        std::min(static_cast<int>(num_nodes * num_nodes), TeamPolicy::vector_length_max());
     auto range_policy = TeamPolicy(static_cast<int>(beams.num_elems), Kokkos::AUTO(), vector_length);
 
     const auto shape_size = Kokkos::View<double**>::shmem_size(padded_num_nodes, num_qps);

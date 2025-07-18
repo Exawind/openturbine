@@ -11,8 +11,8 @@ inline Springs<DeviceType> CreateSprings(
     const SpringsInput& springs_input, const std::vector<Node>& nodes
 ) {
     using Kokkos::create_mirror_view;
-    using Kokkos::WithoutInitializing;
     using Kokkos::deep_copy;
+    using Kokkos::WithoutInitializing;
 
     Springs<DeviceType> springs(springs_input.NumElements());
 

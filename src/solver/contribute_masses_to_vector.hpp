@@ -6,9 +6,12 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeMassesToVector {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
     ConstView<size_t* [6]> element_freedom_table;
     ConstView<double* [6]> elements;

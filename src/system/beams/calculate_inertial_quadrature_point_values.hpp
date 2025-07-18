@@ -15,10 +15,14 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateInertialQuadraturePointValues {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
-    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     size_t element;
 
@@ -38,11 +42,11 @@ struct CalculateInertialQuadraturePointValues {
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {
-	using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using CopyMatrix = KokkosBatched::SerialCopy<>;
-	using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
+        using Kokkos::ALL;
+        using Kokkos::Array;
+        using Kokkos::subview;
+        using CopyMatrix = KokkosBatched::SerialCopy<>;
+        using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
 
         const auto r0_data = Array<double, 4>{
             qp_r0(element, qp, 0), qp_r0(element, qp, 1), qp_r0(element, qp, 2),
@@ -77,8 +81,7 @@ struct CalculateInertialQuadraturePointValues {
         const auto eta_tilde = View<double[3][3]>(eta_tilde_data.data());
         const auto rho = View<double[3][3]>(rho_data.data());
         const auto omega_tilde = View<double[3][3]>(omega_tilde_data.data());
-        const auto omega_dot_tilde =
-            View<double[3][3]>(omega_dot_tilde_data.data());
+        const auto omega_dot_tilde = View<double[3][3]>(omega_dot_tilde_data.data());
         const auto FI = View<double[6]>(FI_data.data());
         const auto FG = View<double[6]>(FG_data.data());
         const auto Mstar = View<double[6][6]>(Mstar_data.data());
@@ -86,12 +89,10 @@ struct CalculateInertialQuadraturePointValues {
         const auto Guu = View<double[6][6]>(Guu_data.data());
         const auto Kuu = View<double[6][6]>(Kuu_data.data());
 
-        CopyMatrix::invoke(
-            subview(qp_Mstar, element, qp, ALL, ALL), Mstar
-        );
+        CopyMatrix::invoke(subview(qp_Mstar, element, qp, ALL, ALL), Mstar);
         beams::InterpolateToQuadraturePointForInertia<DeviceType>::invoke(
-            subview(shape_interp, ALL, qp), node_u, node_u_dot, node_u_ddot, r,
-            u_ddot, omega, omega_dot
+            subview(shape_interp, ALL, qp), node_u, node_u_dot, node_u_ddot, r, u_ddot, omega,
+            omega_dot
         );
 
         QuaternionCompose(r, r0, xr);
@@ -110,26 +111,18 @@ struct CalculateInertialQuadraturePointValues {
         );
         masses::CalculateGravityForce<DeviceType>::invoke(mass, gravity, eta_tilde, FG);
 
-        masses::CalculateGyroscopicMatrix<DeviceType>::invoke(mass, omega, eta, rho, omega_tilde, Guu);
+        masses::CalculateGyroscopicMatrix<DeviceType>::invoke(
+            mass, omega, eta, rho, omega_tilde, Guu
+        );
         masses::CalculateInertiaStiffnessMatrix<DeviceType>::invoke(
             mass, u_ddot, omega, omega_dot, eta, rho, omega_tilde, omega_dot_tilde, Kuu
         );
 
-        CopyVector::invoke(
-            FI, subview(qp_Fi, qp, ALL)
-        );
-        CopyVector::invoke(
-            FG, subview(qp_Fg, qp, ALL)
-        );
-        CopyMatrix::invoke(
-            Muu, subview(qp_Muu, qp, ALL, ALL)
-        );
-        CopyMatrix::invoke(
-            Guu, subview(qp_Guu, qp, ALL, ALL)
-        );
-        CopyMatrix::invoke(
-            Kuu, subview(qp_Kuu, qp, ALL, ALL)
-        );
+        CopyVector::invoke(FI, subview(qp_Fi, qp, ALL));
+        CopyVector::invoke(FG, subview(qp_Fg, qp, ALL));
+        CopyMatrix::invoke(Muu, subview(qp_Muu, qp, ALL, ALL));
+        CopyMatrix::invoke(Guu, subview(qp_Guu, qp, ALL, ALL));
+        CopyMatrix::invoke(Kuu, subview(qp_Kuu, qp, ALL, ALL));
     }
 };
 

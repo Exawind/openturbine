@@ -11,8 +11,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateTangentOperator {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     double h;
     ConstView<double* [6]> q_delta;
@@ -20,15 +22,15 @@ struct CalculateTangentOperator {
 
     KOKKOS_FUNCTION
     void operator()(int node) const {
-	using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::make_pair;
-	using Kokkos::ALL;
-	using CopyMatrix = KokkosBatched::SerialCopy<>;
-	using CopyMatrixTranspose = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
-	using NoTranspose = KokkosBatched::Trans::NoTranspose;
-	using Default = KokkosBatched::Algo::Gemm::Default;
-	using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
+        using Kokkos::ALL;
+        using Kokkos::Array;
+        using Kokkos::make_pair;
+        using Kokkos::subview;
+        using CopyMatrix = KokkosBatched::SerialCopy<>;
+        using CopyMatrixTranspose = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
+        using NoTranspose = KokkosBatched::Trans::NoTranspose;
+        using Default = KokkosBatched::Algo::Gemm::Default;
+        using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
 
         auto T_data = Array<double, 36>{};
         const auto T = View<double[6][6]>(T_data.data());
@@ -54,13 +56,9 @@ struct CalculateTangentOperator {
         CopyMatrix::invoke(m2, m1);
         Gemm::invoke(tmp2, m2, m2, tmp1, m1);
 
-        KokkosBlas::serial_axpy(
-            1., m1, subview(T, make_pair(3, 6), make_pair(3, 6))
-        );
+        KokkosBlas::serial_axpy(1., m1, subview(T, make_pair(3, 6), make_pair(3, 6)));
 
-        CopyMatrixTranspose::invoke(
-            T, subview(T_gbl, node, ALL, ALL)
-        );
+        CopyMatrixTranspose::invoke(T, subview(T_gbl, node, ALL, ALL));
     }
 };
 

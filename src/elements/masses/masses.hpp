@@ -15,9 +15,10 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Masses {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
-    size_t num_elems;  //< Total number of elements
+    size_t num_elems;                     //< Total number of elements
     View<size_t*> num_nodes_per_element;  //< This is always 1 for masses
     View<size_t*> state_indices;
     View<FreedomSignature*> element_freedom_signature;

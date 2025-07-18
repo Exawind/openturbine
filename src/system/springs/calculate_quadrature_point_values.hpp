@@ -12,8 +12,10 @@ namespace openturbine::springs {
 
 template <typename DeviceType>
 struct CalculateQuadraturePointValues {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<double* [7]> Q;
 
@@ -27,13 +29,12 @@ struct CalculateQuadraturePointValues {
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
-	using Kokkos::Array;
+        using Kokkos::Array;
 
         const auto index_0 = node_state_indices(element, 0);
         const auto index_1 = node_state_indices(element, 1);
 
-        const auto x0_data =
-            Array<double, 3>{x0_(element, 0), x0_(element, 1), x0_(element, 2)};
+        const auto x0_data = Array<double, 3>{x0_(element, 0), x0_(element, 1), x0_(element, 2)};
         const auto u1_data = Array<double, 3>{Q(index_0, 0), Q(index_0, 1), Q(index_0, 2)};
         const auto u2_data = Array<double, 3>{Q(index_1, 0), Q(index_1, 1), Q(index_1, 2)};
         auto r_data = Array<double, 3>{};

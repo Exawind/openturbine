@@ -8,8 +8,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateDisplacement {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     double h;
     ConstView<double* [6]> q_delta;
@@ -18,23 +20,21 @@ struct CalculateDisplacement {
 
     KOKKOS_FUNCTION
     void operator()(int node) const {
-	using Kokkos::Array;
+        using Kokkos::Array;
 
         for (auto component = 0; component < 3; ++component) {
             q(node, component) = q_prev(node, component) + h * q_delta(node, component);
         }
 
-        auto delta_data = Array<double, 3>{
-            h * q_delta(node, 3), h * q_delta(node, 4), h * q_delta(node, 5)
-        };
+        auto delta_data =
+            Array<double, 3>{h * q_delta(node, 3), h * q_delta(node, 4), h * q_delta(node, 5)};
         auto delta = View<double[3]>{delta_data.data()};
 
         auto quat_delta_data = Array<double, 4>{};
         auto quat_delta = View<double[4]>{quat_delta_data.data()};
         RotationVectorToQuaternion(delta, quat_delta);
-        auto quat_prev_data = Array<double, 4>{
-            q_prev(node, 3), q_prev(node, 4), q_prev(node, 5), q_prev(node, 6)
-        };
+        auto quat_prev_data =
+            Array<double, 4>{q_prev(node, 3), q_prev(node, 4), q_prev(node, 5), q_prev(node, 6)};
         auto quat_prev = View<double[4]>{quat_prev_data.data()};
         auto quat_new_data = Array<double, 4>{};
         auto quat_new = View<double[4]>{quat_new_data.data()};

@@ -11,8 +11,10 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateQPState_u {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;
@@ -40,8 +42,10 @@ struct InterpolateQPState_u {
  */
 template <typename DeviceType>
 struct InterpolateQPState_uprime {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;
@@ -71,8 +75,10 @@ struct InterpolateQPState_uprime {
  */
 template <typename DeviceType>
 struct InterpolateQPState_r {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;
@@ -101,8 +107,10 @@ struct InterpolateQPState_r {
  */
 template <typename DeviceType>
 struct InterpolateQPState_rprime {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;

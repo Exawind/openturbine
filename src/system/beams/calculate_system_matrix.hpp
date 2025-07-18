@@ -8,8 +8,10 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateSystemMatrix {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     size_t num_nodes;
@@ -21,13 +23,13 @@ struct CalculateSystemMatrix {
 
     KOKKOS_FUNCTION
     void operator()(size_t node_12) const {
-	using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using CopyMatrix = KokkosBatched::SerialCopy<>;
-	using NoTranspose = KokkosBatched::Trans::NoTranspose;
-	using Default = KokkosBatched::Algo::Gemm::Default;
-	using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
+        using Kokkos::ALL;
+        using Kokkos::Array;
+        using Kokkos::subview;
+        using CopyMatrix = KokkosBatched::SerialCopy<>;
+        using NoTranspose = KokkosBatched::Trans::NoTranspose;
+        using Default = KokkosBatched::Algo::Gemm::Default;
+        using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
 
         const auto node_1 = node_12 / num_nodes;
         const auto node_2 = node_12 % num_nodes;
@@ -41,22 +43,13 @@ struct CalculateSystemMatrix {
         const auto T = View<double[6][6]>(T_data.data());
         const auto STpI = View<double[6][6]>(STpI_data.data());
 
-        CopyMatrix::invoke(
-            subview(stiffness_matrix_terms, node_1, node_2, ALL, ALL), S
-        );
-        CopyMatrix::invoke(
-            subview(tangent, node_T, ALL, ALL), T
-        );
-        CopyMatrix::invoke(
-            subview(inertia_matrix_terms, node_1, node_2, ALL, ALL), STpI
-        );
+        CopyMatrix::invoke(subview(stiffness_matrix_terms, node_1, node_2, ALL, ALL), S);
+        CopyMatrix::invoke(subview(tangent, node_T, ALL, ALL), T);
+        CopyMatrix::invoke(subview(inertia_matrix_terms, node_1, node_2, ALL, ALL), STpI);
 
         Gemm::invoke(1., S, T, 1., STpI);
 
-        CopyMatrix::invoke(
-            STpI,
-            subview(system_matrix_terms, element, node_1, node_2, ALL, ALL)
-        );
+        CopyMatrix::invoke(STpI, subview(system_matrix_terms, element, node_1, node_2, ALL, ALL));
     }
 };
 

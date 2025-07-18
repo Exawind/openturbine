@@ -17,10 +17,14 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateStiffnessQuadraturePointValues {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
-    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     size_t element;
 
@@ -41,12 +45,12 @@ struct CalculateStiffnessQuadraturePointValues {
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {
-	using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using Kokkos::make_pair;
-	using CopyMatrix = KokkosBatched::SerialCopy<>;
-	using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
+        using Kokkos::ALL;
+        using Kokkos::Array;
+        using Kokkos::make_pair;
+        using Kokkos::subview;
+        using CopyMatrix = KokkosBatched::SerialCopy<>;
+        using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
 
         const auto r0_data = Array<double, 4>{
             qp_r0(element, qp, 0), qp_r0(element, qp, 1), qp_r0(element, qp, 2),
@@ -92,13 +96,11 @@ struct CalculateStiffnessQuadraturePointValues {
         const auto Puu = View<double[6][6]>(Puu_data.data());
         const auto Quu = View<double[6][6]>(Quu_data.data());
 
-        CopyMatrix::invoke(
-            subview(qp_Cstar, element, qp, ALL, ALL), Cstar
-        );
+        CopyMatrix::invoke(subview(qp_Cstar, element, qp, ALL, ALL), Cstar);
 
         beams::InterpolateToQuadraturePointForStiffness<DeviceType>::invoke(
-            qp_jacobian(qp), subview(shape_interp, ALL, qp),
-            subview(shape_deriv, ALL, qp), node_u, u, r, u_prime, r_prime
+            qp_jacobian(qp), subview(shape_interp, ALL, qp), subview(shape_deriv, ALL, qp), node_u,
+            u, r, u_prime, r_prime
         );
         QuaternionCompose(r, r0, xr);
 
@@ -116,25 +118,13 @@ struct CalculateStiffnessQuadraturePointValues {
         beams::CalculatePuu<DeviceType>::invoke(Cuu, x0pupSS, N_tilde, Puu);
         beams::CalculateQuu<DeviceType>::invoke(Cuu, x0pupSS, N_tilde, Quu);
 
-        CopyVector::invoke(
-            FC, subview(qp_Fc, qp, ALL)
-        );
-        CopyVector::invoke(
-            FD, subview(qp_Fd, qp, ALL)
-        );
+        CopyVector::invoke(FC, subview(qp_Fc, qp, ALL));
+        CopyVector::invoke(FD, subview(qp_Fd, qp, ALL));
 
-        CopyMatrix::invoke(
-            Cuu, subview(qp_Cuu, qp, ALL, ALL)
-        );
-        CopyMatrix::invoke(
-            Ouu, subview(qp_Ouu, qp, ALL, ALL)
-        );
-        CopyMatrix::invoke(
-            Puu, subview(qp_Puu, qp, ALL, ALL)
-        );
-        CopyMatrix::invoke(
-            Quu, subview(qp_Quu, qp, ALL, ALL)
-        );
+        CopyMatrix::invoke(Cuu, subview(qp_Cuu, qp, ALL, ALL));
+        CopyMatrix::invoke(Ouu, subview(qp_Ouu, qp, ALL, ALL));
+        CopyMatrix::invoke(Puu, subview(qp_Puu, qp, ALL, ALL));
+        CopyMatrix::invoke(Quu, subview(qp_Quu, qp, ALL, ALL));
     }
 };
 

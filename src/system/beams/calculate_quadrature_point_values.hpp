@@ -16,9 +16,12 @@ template <typename DeviceType>
 struct CalculateQuadraturePointValues {
     using TeamPolicy = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>;
     using member_type = typename TeamPolicy::member_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
     double beta_prime_;
     double gamma_prime_;
@@ -47,13 +50,14 @@ struct CalculateQuadraturePointValues {
     KOKKOS_FUNCTION
     void operator()(member_type member) const {
         using simd_type = Kokkos::Experimental::simd<double>;
+        using Kokkos::ALL;
+        using Kokkos::make_pair;
+        using Kokkos::parallel_for;
+        using Kokkos::subview;
         using Kokkos::TeamVectorRange;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using Kokkos::make_pair;
-	using Kokkos::parallel_for;
-	using CopyMatrix = KokkosBatched::TeamVectorCopy<member_type>;
-	using CopyVector = KokkosBatched::TeamVectorCopy<member_type, KokkosBatched::Trans::NoTranspose, 1>;
+        using CopyMatrix = KokkosBatched::TeamVectorCopy<member_type>;
+        using CopyVector =
+            KokkosBatched::TeamVectorCopy<member_type, KokkosBatched::Trans::NoTranspose, 1>;
 
         const auto element = static_cast<size_t>(member.league_rank());
         const auto num_nodes = num_nodes_per_element(element);
@@ -70,8 +74,10 @@ struct CalculateQuadraturePointValues {
         const auto node_squared_range = TeamVectorRange(member, num_nodes * num_nodes);
         const auto node_squared_simd_range = TeamVectorRange(member, num_nodes * simd_nodes);
 
-        const auto shape_interp = LeftView<double**>(member.team_scratch(0), padded_num_nodes, num_qps);
-        const auto shape_deriv = LeftView<double**>(member.team_scratch(0), padded_num_nodes, num_qps);
+        const auto shape_interp =
+            LeftView<double**>(member.team_scratch(0), padded_num_nodes, num_qps);
+        const auto shape_deriv =
+            LeftView<double**>(member.team_scratch(0), padded_num_nodes, num_qps);
 
         const auto qp_weight = View<double*>(member.team_scratch(0), num_qps);
         const auto qp_jacobian = View<double*>(member.team_scratch(0), num_qps);
@@ -94,8 +100,10 @@ struct CalculateQuadraturePointValues {
         const auto qp_Muu = View<double* [6][6]>(member.team_scratch(1), num_qps);
         const auto qp_Guu = View<double* [6][6]>(member.team_scratch(1), num_qps);
 
-        const auto stiffness_matrix_terms = View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
-        const auto inertia_matrix_terms = View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
+        const auto stiffness_matrix_terms =
+            View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
+        const auto inertia_matrix_terms =
+            View<double** [6][6]>(member.team_scratch(1), num_nodes, num_nodes);
 
         CopyMatrix::invoke(
             member, subview(shape_interp_, element, node_pair, qp_pair),
@@ -105,12 +113,8 @@ struct CalculateQuadraturePointValues {
             member, subview(shape_deriv_, element, node_pair, qp_pair),
             subview(shape_deriv, node_pair, qp_pair)
         );
-        CopyMatrix::invoke(
-            member, subview(qp_FE_, element, qp_pair, ALL), qp_Fe
-        );
-        CopyMatrix::invoke(
-            member, subview(node_FX_, element, node_pair, ALL), node_FX
-        );
+        CopyMatrix::invoke(member, subview(qp_FE_, element, qp_pair, ALL), qp_Fe);
+        CopyMatrix::invoke(member, subview(node_FX_, element, node_pair, ALL), node_FX);
 
         CopyVector::invoke(member, subview(qp_weight_, element, qp_pair), qp_weight);
         CopyVector::invoke(member, subview(qp_jacobian_, element, qp_pair), qp_jacobian);
@@ -123,7 +127,7 @@ struct CalculateQuadraturePointValues {
 
         const auto inertia_quad_point_calculator =
             beams::CalculateInertialQuadraturePointValues<DeviceType>{
-                element,      shape_interp, gravity_, qp_r0_, qp_Mstar_, node_u, node_u_dot,
+                element,     shape_interp, gravity_, qp_r0_, qp_Mstar_, node_u, node_u_dot,
                 node_u_ddot, qp_Fi,        qp_Fg,    qp_Muu, qp_Guu,    qp_Kuu
             };
         parallel_for(qp_range, inertia_quad_point_calculator);
@@ -131,26 +135,26 @@ struct CalculateQuadraturePointValues {
         const auto stiffness_quad_point_calculator =
             beams::CalculateStiffnessQuadraturePointValues<DeviceType>{
                 element, qp_jacobian, shape_interp, shape_deriv, qp_r0_, qp_x0_prime_, qp_Cstar_,
-                node_u, qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu
+                node_u,  qp_Fc,       qp_Fd,        qp_Cuu,      qp_Ouu, qp_Puu,       qp_Quu
             };
         parallel_for(qp_range, stiffness_quad_point_calculator);
         member.team_barrier();
 
         const auto residual_integrator = beams::IntegrateResidualVectorElement<DeviceType>{
             element, num_qps, qp_weight, qp_jacobian, shape_interp, shape_deriv,           node_FX,
-            qp_Fc,  qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_
+            qp_Fc,   qp_Fd,   qp_Fi,     qp_Fe,       qp_Fg,        residual_vector_terms_
         };
         parallel_for(node_range, residual_integrator);
 
         const auto stiffness_matrix_integrator = beams::IntegrateStiffnessMatrixElement<DeviceType>{
             element, num_nodes, num_qps, qp_weight, qp_jacobian, shape_interp,          shape_deriv,
-            qp_Kuu, qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms
+            qp_Kuu,  qp_Puu,    qp_Cuu,  qp_Ouu,    qp_Quu,      stiffness_matrix_terms
         };
         parallel_for(node_squared_simd_range, stiffness_matrix_integrator);
 
         const auto inertia_matrix_integrator = beams::IntegrateInertiaMatrixElement<DeviceType>{
             element, num_nodes, num_qps,     qp_weight,    qp_jacobian,         shape_interp,
-            qp_Muu, qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms
+            qp_Muu,  qp_Guu,    beta_prime_, gamma_prime_, inertia_matrix_terms
         };
         parallel_for(node_squared_simd_range, inertia_matrix_integrator);
         member.team_barrier();

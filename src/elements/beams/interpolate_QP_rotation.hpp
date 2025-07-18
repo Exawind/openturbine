@@ -8,20 +8,22 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct InterpolateQPRotation {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> num_nodes_per_element;
     ConstView<size_t*> num_qps_per_element;
-    ConstView<double***> shape_interpolation;  // Num Nodes x Num Quadrature points
-    ConstView<double** [7]> node_position_rotation;                          // Node global position vector
-    View<double** [4]> qp_rotation;  // quadrature point rotation
+    ConstView<double***> shape_interpolation;        // Num Nodes x Num Quadrature points
+    ConstView<double** [7]> node_position_rotation;  // Node global position vector
+    View<double** [4]> qp_rotation;                  // quadrature point rotation
 
     KOKKOS_FUNCTION
     void operator()(int element) const {
-	using Kokkos::subview;
-	using Kokkos::make_pair;
-	using Kokkos::ALL;
+        using Kokkos::ALL;
+        using Kokkos::make_pair;
+        using Kokkos::subview;
 
         const auto num_nodes = num_nodes_per_element(element);
         const auto num_qps = num_qps_per_element(element);
@@ -30,12 +32,9 @@ struct InterpolateQPRotation {
             make_pair(size_t{0U}, num_qps)
         );
         const auto node_rot = subview(
-            node_position_rotation, element, make_pair(size_t{0U}, num_nodes),
-            make_pair(3, 7)
+            node_position_rotation, element, make_pair(size_t{0U}, num_nodes), make_pair(3, 7)
         );
-        const auto qp_rot = subview(
-            qp_rotation, element, make_pair(size_t{0U}, num_qps), ALL
-        );
+        const auto qp_rot = subview(qp_rotation, element, make_pair(size_t{0U}, num_qps), ALL);
 
         InterpQuaternion(shape_interp, node_rot, qp_rot);
     }

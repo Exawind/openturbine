@@ -8,8 +8,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct UpdateGlobalPosition {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<double* [7]> q;
     ConstView<double* [7]> x0;
@@ -17,9 +19,9 @@ struct UpdateGlobalPosition {
 
     KOKKOS_FUNCTION
     void operator()(int node) const {
-	using Kokkos::Array;
-	using Kokkos::subview;
-	using Kokkos::make_pair;
+        using Kokkos::Array;
+        using Kokkos::make_pair;
+        using Kokkos::subview;
 
         // Calculate global position
         x(node, 0) = x0(node, 0) + q(node, 0);
@@ -30,8 +32,7 @@ struct UpdateGlobalPosition {
         auto node_x_data = Array<double, 4>{};
         const auto node_x = View<double[4]>{node_x_data.data()};
         QuaternionCompose(
-            subview(q, node, make_pair(3, 7)),
-            subview(x0, node, make_pair(3, 7)), node_x
+            subview(q, node, make_pair(3, 7)), subview(x0, node, make_pair(3, 7)), node_x
         );
         x(node, 3) = node_x(0);
         x(node, 4) = node_x(1);

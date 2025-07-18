@@ -25,17 +25,19 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Constraints {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t num_constraints;  //< Total number of constraints in the system
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    View<ConstraintType*> type;  //< Type of each constraint
+    View<ConstraintType*> type;                      //< Type of each constraint
     std::vector<double*> control_signal;             //< Control signal for each constraint
-    View<size_t*> base_node_index;  //< Index of the base node for each constraint
-    View<size_t*> target_node_index;  //< Index of the target node for each constraint
+    View<size_t*> base_node_index;                   //< Index of the base node for each constraint
+    View<size_t*> target_node_index;                 //< Index of the target node for each constraint
 
     // DOF management
     View<Kokkos::pair<size_t, size_t>*> row_range;
@@ -147,26 +149,22 @@ struct Constraints {
               Kokkos::view_alloc("target_gradient_transpose_terms", Kokkos::WithoutInitializing),
               num_constraints
           ) {
-	using Kokkos::create_mirror_view;
-	using Kokkos::WithoutInitializing;
-	using Kokkos::subview;
-	using Kokkos::ALL;
-	using Kokkos::deep_copy;
-	
+        using Kokkos::ALL;
+        using Kokkos::create_mirror_view;
+        using Kokkos::deep_copy;
+        using Kokkos::subview;
+        using Kokkos::WithoutInitializing;
+
         auto host_type = create_mirror_view(WithoutInitializing, type);
         auto host_row_range = create_mirror_view(WithoutInitializing, row_range);
-        auto host_base_node_index =
-            create_mirror_view(WithoutInitializing, base_node_index);
-        auto host_target_node_index =
-            create_mirror_view(WithoutInitializing, target_node_index);
+        auto host_base_node_index = create_mirror_view(WithoutInitializing, base_node_index);
+        auto host_target_node_index = create_mirror_view(WithoutInitializing, target_node_index);
         auto host_base_freedom =
             create_mirror_view(WithoutInitializing, base_node_freedom_signature);
         auto host_target_freedom =
             create_mirror_view(WithoutInitializing, target_node_freedom_signature);
-        auto host_base_active_dofs =
-            create_mirror_view(WithoutInitializing, base_active_dofs);
-        auto host_target_active_dofs =
-            create_mirror_view(WithoutInitializing, target_active_dofs);
+        auto host_base_active_dofs = create_mirror_view(WithoutInitializing, base_active_dofs);
+        auto host_target_active_dofs = create_mirror_view(WithoutInitializing, target_active_dofs);
         auto host_X0 = create_mirror_view(WithoutInitializing, X0);
         auto host_axes = create_mirror_view(WithoutInitializing, axes);
 
@@ -248,18 +246,18 @@ struct Constraints {
             }
         }
 
-       deep_copy(type, host_type);
-       deep_copy(row_range, host_row_range);
-       deep_copy(base_node_index, host_base_node_index);
-       deep_copy(target_node_index, host_target_node_index);
-       deep_copy(base_node_freedom_signature, host_base_freedom);
-       deep_copy(target_node_freedom_signature, host_target_freedom);
-       deep_copy(base_active_dofs, host_base_active_dofs);
-       deep_copy(target_active_dofs, host_target_active_dofs);
-       deep_copy(X0, host_X0);
-       deep_copy(axes, host_axes);
+        deep_copy(type, host_type);
+        deep_copy(row_range, host_row_range);
+        deep_copy(base_node_index, host_base_node_index);
+        deep_copy(target_node_index, host_target_node_index);
+        deep_copy(base_node_freedom_signature, host_base_freedom);
+        deep_copy(target_node_freedom_signature, host_target_freedom);
+        deep_copy(base_active_dofs, host_base_active_dofs);
+        deep_copy(target_active_dofs, host_target_active_dofs);
+        deep_copy(X0, host_X0);
+        deep_copy(axes, host_axes);
 
-       deep_copy(subview(this->input, ALL, 3), 1.);
+        deep_copy(subview(this->input, ALL, 3), 1.);
     }
 
     /// Calculates the initial relative position (X0) based on constraint type and nodes

@@ -20,23 +20,25 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct CalculateJacobian {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     ConstView<size_t*> num_nodes_per_element;
     ConstView<size_t*> num_qps_per_element;
-    ConstView<double***> shape_derivative;  //< num_elems x num_nodes x num_qps
+    ConstView<double***> shape_derivative;           //< num_elems x num_nodes x num_qps
     ConstView<double** [7]> node_position_rotation;  //< num_elems x num_nodes x 7
-    View<double** [3]> qp_position_derivative;                      //< output: num_elems x num_qps x 3
-    View<double**> qp_jacobian;  //< output: num_elems x num_qps
+    View<double** [3]> qp_position_derivative;       //< output: num_elems x num_qps x 3
+    View<double**> qp_jacobian;                      //< output: num_elems x num_qps
 
     KOKKOS_FUNCTION
     void operator()(int element) const {
-	using Kokkos::subview;
-	using Kokkos::make_pair;
-	using Kokkos::ALL;
-	using Kokkos::sqrt;
-	using Kokkos::pow;
+        using Kokkos::ALL;
+        using Kokkos::make_pair;
+        using Kokkos::pow;
+        using Kokkos::sqrt;
+        using Kokkos::subview;
 
         const auto num_nodes = num_nodes_per_element(element);
         const auto num_qps = num_qps_per_element(element);
@@ -44,15 +46,12 @@ struct CalculateJacobian {
             shape_derivative, element, make_pair(size_t{0U}, num_nodes),
             make_pair(size_t{0U}, num_qps)
         );
-        const auto qp_pos_deriv = subview(
-            qp_position_derivative, element, make_pair(size_t{0U}, num_qps), ALL
-        );
+        const auto qp_pos_deriv =
+            subview(qp_position_derivative, element, make_pair(size_t{0U}, num_qps), ALL);
         const auto node_pos = subview(
-            node_position_rotation, element, make_pair(size_t{0U}, num_nodes),
-            make_pair(0U, 3U)
+            node_position_rotation, element, make_pair(size_t{0U}, num_nodes), make_pair(0U, 3U)
         );
-        const auto qp_jacob =
-            subview(qp_jacobian, element, make_pair(size_t{0U}, num_qps));
+        const auto qp_jacob = subview(qp_jacobian, element, make_pair(size_t{0U}, num_qps));
 
         // Interpolate position derivatives at quadrature points using shape functions
         // qp_pos_deriv = Σ(dN/dξ * node_pos)

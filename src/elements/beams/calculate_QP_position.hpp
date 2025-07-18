@@ -24,8 +24,10 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct CalculateQPPosition {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t element;
     ConstView<double** [3]> qp_x0_;
@@ -35,8 +37,8 @@ struct CalculateQPPosition {
     View<double** [7]> qp_x_;
 
     KOKKOS_FUNCTION void operator()(int qp) const {
-	using Kokkos::subview;
-	using Kokkos::ALL;
+        using Kokkos::ALL;
+        using Kokkos::subview;
 
         // Calculate current position
         qp_x_(element, qp, 0) = qp_x0_(element, qp, 0) + qp_u_(element, qp, 0);
@@ -46,10 +48,7 @@ struct CalculateQPPosition {
         // Calculate current orientation
         auto RR0_data = Kokkos::Array<double, 4>{};
         auto RR0 = View<double[4]>(RR0_data.data());
-        QuaternionCompose(
-            subview(qp_r_, element, qp, ALL),
-            subview(qp_r0_, element, qp, ALL), RR0
-        );
+        QuaternionCompose(subview(qp_r_, element, qp, ALL), subview(qp_r0_, element, qp, ALL), RR0);
         qp_x_(element, qp, 3) = RR0(0);
         qp_x_(element, qp, 4) = RR0(1);
         qp_x_(element, qp, 5) = RR0(2);

@@ -14,13 +14,13 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
-    using Kokkos::create_mirror_view;
-    using Kokkos::WithoutInitializing;
-    using Kokkos::subview;
-    using Kokkos::make_pair;
     using Kokkos::ALL;
+    using Kokkos::create_mirror_view;
     using Kokkos::deep_copy;
+    using Kokkos::make_pair;
     using Kokkos::parallel_for;
+    using Kokkos::subview;
+    using Kokkos::WithoutInitializing;
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
 
@@ -34,22 +34,18 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         create_mirror_view(WithoutInitializing, beams.num_nodes_per_element);
     auto host_num_qps_per_element =
         create_mirror_view(WithoutInitializing, beams.num_qps_per_element);
-    auto host_node_state_indices =
-        create_mirror_view(WithoutInitializing, beams.node_state_indices);
+    auto host_node_state_indices = create_mirror_view(WithoutInitializing, beams.node_state_indices);
     auto host_node_x0 = create_mirror_view(WithoutInitializing, beams.node_x0);
     auto host_node_u = create_mirror_view(WithoutInitializing, beams.node_u);
     auto host_node_u_dot = create_mirror_view(WithoutInitializing, beams.node_u_dot);
-    auto host_node_u_ddot =
-        create_mirror_view(WithoutInitializing, beams.node_u_ddot);
+    auto host_node_u_ddot = create_mirror_view(WithoutInitializing, beams.node_u_ddot);
 
     auto host_qp_weight = create_mirror_view(WithoutInitializing, beams.qp_weight);
     auto host_qp_Mstar = create_mirror_view(WithoutInitializing, beams.qp_Mstar);
     auto host_qp_Cstar = create_mirror_view(WithoutInitializing, beams.qp_Cstar);
 
-    auto host_shape_interp =
-        create_mirror_view(WithoutInitializing, beams.shape_interp);
-    auto host_shape_deriv =
-        create_mirror_view(WithoutInitializing, beams.shape_deriv);
+    auto host_shape_interp = create_mirror_view(WithoutInitializing, beams.shape_interp);
+    auto host_shape_deriv = create_mirror_view(WithoutInitializing, beams.shape_deriv);
 
     host_gravity(0) = beams_input.gravity[0];
     host_gravity(1) = beams_input.gravity[1];
@@ -75,34 +71,23 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
             subview(host_node_x0, element, make_pair(0UL, num_nodes), ALL)
         );
         PopulateQPWeight(
-            beams_input.elements[element],
-            subview(host_qp_weight, element, make_pair(0UL, num_qps))
+            beams_input.elements[element], subview(host_qp_weight, element, make_pair(0UL, num_qps))
         );
         PopulateShapeFunctionValues(
             beams_input.elements[element], nodes,
-            subview(
-                host_shape_interp, element, make_pair(0UL, num_nodes),
-                make_pair(0UL, num_qps)
-            )
+            subview(host_shape_interp, element, make_pair(0UL, num_nodes), make_pair(0UL, num_qps))
         );
         PopulateShapeFunctionDerivatives(
             beams_input.elements[element], nodes,
-            subview(
-                host_shape_deriv, element, make_pair(0UL, num_nodes),
-                make_pair(0UL, num_qps)
-            )
+            subview(host_shape_deriv, element, make_pair(0UL, num_nodes), make_pair(0UL, num_qps))
         );
         PopulateQPMstar(
             beams_input.elements[element],
-            subview(
-                host_qp_Mstar, element, make_pair(0UL, num_qps), ALL, ALL
-            )
+            subview(host_qp_Mstar, element, make_pair(0UL, num_qps), ALL, ALL)
         );
         PopulateQPCstar(
             beams_input.elements[element],
-            subview(
-                host_qp_Cstar, element, make_pair(0UL, num_qps), ALL, ALL
-            )
+            subview(host_qp_Cstar, element, make_pair(0UL, num_qps), ALL, ALL)
         );
     }
 
@@ -152,7 +137,6 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
             beams.qp_jacobian,
         }
     );
-
 
     auto team_policy = TeamPolicy(beams.num_elems, Kokkos::AUTO());
 

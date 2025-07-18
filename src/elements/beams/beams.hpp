@@ -20,7 +20,8 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Beams {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
     size_t num_elems;       // Total number of element
     size_t max_elem_nodes;  // Maximum number of nodes per element
@@ -42,25 +43,25 @@ struct Beams {
     View<double** [6]> node_FX;      // External forces
 
     // Quadrature point data
-    View<double**> qp_weight;        // Integration weights
-    View<double**> qp_jacobian;      // Jacobian vector
-    View<double** [6][6]> qp_Mstar;  // Mass matrix in material frame
-    View<double** [6][6]> qp_Cstar;  // Stiffness matrix in material frame
-    View<double** [7]> qp_x;         // Current position/orientation
-    View<double** [3]> qp_x0;        // Initial position
-    View<double** [3]> qp_x0_prime;  // Initial position derivative
-    View<double** [4]> qp_r0;        // Initial rotation
-    View<double** [3]> qp_u;         // State: translation displacement
-    View<double** [3]> qp_u_prime;  // State: translation displacement derivative
-    View<double** [3]> qp_u_dot;    // State: translation velocity
-    View<double** [3]> qp_u_ddot;   // State: translation acceleration
-    View<double** [4]> qp_r;        // State: rotation
-    View<double** [4]> qp_r_prime;  // State: rotation derivative
-    View<double** [3]> qp_omega;    // State: angular velocity
-    View<double** [3]> qp_omega_dot;  // State: position/rotation
-    View<double** [3]> qp_deformation;                              // Deformation relative to rigid body motion
-    View<double** [3][4]> qp_E;  // Quaternion derivative
-    View<double** [6]> qp_Fe;    // External force
+    View<double**> qp_weight;           // Integration weights
+    View<double**> qp_jacobian;         // Jacobian vector
+    View<double** [6][6]> qp_Mstar;     // Mass matrix in material frame
+    View<double** [6][6]> qp_Cstar;     // Stiffness matrix in material frame
+    View<double** [7]> qp_x;            // Current position/orientation
+    View<double** [3]> qp_x0;           // Initial position
+    View<double** [3]> qp_x0_prime;     // Initial position derivative
+    View<double** [4]> qp_r0;           // Initial rotation
+    View<double** [3]> qp_u;            // State: translation displacement
+    View<double** [3]> qp_u_prime;      // State: translation displacement derivative
+    View<double** [3]> qp_u_dot;        // State: translation velocity
+    View<double** [3]> qp_u_ddot;       // State: translation acceleration
+    View<double** [4]> qp_r;            // State: rotation
+    View<double** [4]> qp_r_prime;      // State: rotation derivative
+    View<double** [3]> qp_omega;        // State: angular velocity
+    View<double** [3]> qp_omega_dot;    // State: position/rotation
+    View<double** [3]> qp_deformation;  // Deformation relative to rigid body motion
+    View<double** [3][4]> qp_E;         // Quaternion derivative
+    View<double** [6]> qp_Fe;           // External force
 
     View<double** [6]> residual_vector_terms;
     View<double*** [6][6]> system_matrix_terms;

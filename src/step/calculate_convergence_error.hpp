@@ -22,7 +22,8 @@ inline double CalculateConvergenceError(
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
 
     auto sum_error_squared_system = 0.;
-    Kokkos::parallel_reduce(RangePolicy(0, solver.num_system_nodes),
+    Kokkos::parallel_reduce(
+        RangePolicy(0, solver.num_system_nodes),
         CalculateSystemErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,

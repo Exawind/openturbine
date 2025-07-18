@@ -9,8 +9,10 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateRevoluteJointOutput {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     int constraint;
     ConstView<size_t*> target_node_index;
@@ -23,27 +25,24 @@ struct CalculateRevoluteJointOutput {
 
     KOKKOS_FUNCTION
     void operator()() const {
-	using Kokkos::Array;
+        using Kokkos::Array;
 
         // Axis of rotation unit vector
-        const auto joint_axis0_data = Array<double, 3>{
-            axes(constraint, 0, 0), axes(constraint, 0, 1), axes(constraint, 0, 2)
-        };
+        const auto joint_axis0_data =
+            Array<double, 3>{axes(constraint, 0, 0), axes(constraint, 0, 1), axes(constraint, 0, 2)};
         const auto joint_axis0 = ConstView<double[3]>{joint_axis0_data.data()};
 
         // Target node index
         auto node = target_node_index(constraint);
 
         // Target node initial rotation
-        const auto R0_data = Array<double, 4>{
-            node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)
-        };
+        const auto R0_data =
+            Array<double, 4>{node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)};
         const auto R0 = ConstView<double[4]>{R0_data.data()};
 
         // Target node rotational displacement
-        const auto R_data = Array<double, 4>{
-            node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)
-        };
+        const auto R_data =
+            Array<double, 4>{node_u(node, 3), node_u(node, 4), node_u(node, 5), node_u(node, 6)};
         const auto R = ConstView<double[4]>{R_data.data()};
 
         // Calculate current orientation

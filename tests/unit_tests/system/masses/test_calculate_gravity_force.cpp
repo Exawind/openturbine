@@ -19,7 +19,9 @@ struct ExecuteCalculateGravityForce {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::CalculateGravityForce<Kokkos::DefaultExecutionSpace>::invoke(mass, gravity, eta_tilde, FG);
+        masses::CalculateGravityForce<Kokkos::DefaultExecutionSpace>::invoke(
+            mass, gravity, eta_tilde, FG
+        );
     }
 };
 

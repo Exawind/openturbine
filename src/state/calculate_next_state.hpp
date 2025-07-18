@@ -6,7 +6,8 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateNextState {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
     double h;
     double alpha_f;
@@ -21,7 +22,7 @@ struct CalculateNextState {
     KOKKOS_FUNCTION
     void operator()(size_t node) const {
         for (auto component = 0U; component < 6U; ++component) {
-            const double v_p = v(node, component); 
+            const double v_p = v(node, component);
             const double vd_p = vd(node, component);
             const double a_p = a(node, component);
             vd(node, component) = 0.;

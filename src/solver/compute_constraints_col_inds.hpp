@@ -9,8 +9,10 @@ struct ComputeConstraintsColInds {
     using RowPtrValueType = typename RowPtrType::value_type;
     using IndicesValueType = typename IndicesType::value_type;
     using DeviceType = typename RowPtrType::device_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     size_t num_system_dofs{};
     ConstView<size_t*> base_active_dofs;

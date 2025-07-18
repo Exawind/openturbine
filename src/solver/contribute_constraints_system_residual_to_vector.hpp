@@ -6,9 +6,12 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeConstraintsSystemResidualToVector {
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
-    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
     ConstView<size_t* [6]> target_node_freedom_table;
     ConstView<size_t*> target_active_dofs;

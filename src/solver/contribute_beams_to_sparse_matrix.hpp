@@ -14,8 +14,10 @@ struct ContributeBeamsToSparseMatrix {
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
     using member_type = typename TeamPolicy::member_type;
-    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
-    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
     double conditioner{};
     ConstView<size_t*> num_nodes_per_element;
