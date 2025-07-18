@@ -7,20 +7,19 @@ namespace openturbine {
 template <typename RowPtrType>
 struct ComputeSystemRowEntries {
     using ValueType = typename RowPtrType::value_type;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
-        node_freedom_map_table;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type
-        num_nodes_per_element;
-    typename Kokkos::View<size_t**, typename RowPtrType::device_type>::const_type node_state_indices;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type base_active_dofs;
-    typename Kokkos::View<size_t*, typename RowPtrType::device_type>::const_type target_active_dofs;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        base_node_freedom_table;
-    typename Kokkos::View<size_t* [6], typename RowPtrType::device_type>::const_type
-        target_node_freedom_table;
-    typename Kokkos::View<
-        Kokkos::pair<size_t, size_t>*, typename RowPtrType::device_type>::const_type row_range;
+    using DeviceType = typename RowPtrType::device_type;
+    template <typename value_type> using View = Kokkos::View<value_type, DeviceType>;
+    template <typename value_type> using ConstView = typename View<value_type>::const_type;
+
+    ConstView<size_t*> active_dofs;
+    ConstView<size_t*> node_freedom_map_table;
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t**> node_state_indices;
+    ConstView<size_t*> base_active_dofs;
+    ConstView<size_t*> target_active_dofs;
+    ConstView<size_t* [6]> base_node_freedom_table;
+    ConstView<size_t* [6]> target_node_freedom_table;
+    ConstView<Kokkos::pair<size_t, size_t>*> row_range;
     RowPtrType row_entries;
 
     KOKKOS_FUNCTION

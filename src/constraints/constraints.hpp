@@ -25,48 +25,49 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Constraints {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t num_constraints;  //< Total number of constraints in the system
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    Kokkos::View<ConstraintType*, DeviceType> type;  //< Type of each constraint
+    View<ConstraintType*> type;  //< Type of each constraint
     std::vector<double*> control_signal;             //< Control signal for each constraint
-    Kokkos::View<size_t*, DeviceType>
-        base_node_index;  //< Index of the base node for each constraint
-    Kokkos::View<size_t*, DeviceType>
-        target_node_index;  //< Index of the target node for each constraint
+    View<size_t*> base_node_index;  //< Index of the base node for each constraint
+    View<size_t*> target_node_index;  //< Index of the target node for each constraint
 
     // DOF management
-    Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType> row_range;
-    Kokkos::View<FreedomSignature*, DeviceType> base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*, DeviceType> target_node_freedom_signature;
-    Kokkos::View<size_t*, DeviceType> base_active_dofs;
-    Kokkos::View<size_t*, DeviceType> target_active_dofs;
-    Kokkos::View<size_t* [6], DeviceType> base_node_freedom_table;
-    Kokkos::View<size_t* [6], DeviceType> target_node_freedom_table;
+    View<Kokkos::pair<size_t, size_t>*> row_range;
+    View<FreedomSignature*> base_node_freedom_signature;
+    View<FreedomSignature*> target_node_freedom_signature;
+    View<size_t*> base_active_dofs;
+    View<size_t*> target_active_dofs;
+    View<size_t* [6]> base_node_freedom_table;
+    View<size_t* [6]> target_node_freedom_table;
 
     // Geometric configuration
-    Kokkos::View<double* [3], DeviceType> X0;       //< Initial relative position
-    Kokkos::View<double* [3][3], DeviceType> axes;  //< Rotation axes
+    View<double* [3]> X0;       //< Initial relative position
+    View<double* [3][3]> axes;  //< Rotation axes
 
     // State variables
-    Kokkos::View<double* [7], DeviceType> input;   //< Current state input
-    Kokkos::View<double* [3], DeviceType> output;  //< Current state output
-    Kokkos::View<double* [6], DeviceType> lambda;
+    View<double* [7]> input;   //< Current state input
+    View<double* [3]> output;  //< Current state output
+    View<double* [6]> lambda;
 
     // Host mirrors for CPU access
-    typename Kokkos::View<double* [7], DeviceType>::HostMirror host_input;
-    typename Kokkos::View<double* [3], DeviceType>::HostMirror host_output;
+    typename View<double* [7]>::HostMirror host_input;
+    typename View<double* [3]>::HostMirror host_output;
 
     // System contributions
-    Kokkos::View<double* [6], DeviceType> residual_terms;
-    Kokkos::View<double* [6], DeviceType> base_lambda_residual_terms;
-    Kokkos::View<double* [6], DeviceType> target_lambda_residual_terms;
-    Kokkos::View<double* [6], DeviceType> system_residual_terms;
-    Kokkos::View<double* [6][6], DeviceType> base_gradient_terms;
-    Kokkos::View<double* [6][6], DeviceType> target_gradient_terms;
-    Kokkos::View<double* [6][6], DeviceType> base_gradient_transpose_terms;
-    Kokkos::View<double* [6][6], DeviceType> target_gradient_transpose_terms;
+    View<double* [6]> residual_terms;
+    View<double* [6]> base_lambda_residual_terms;
+    View<double* [6]> target_lambda_residual_terms;
+    View<double* [6]> system_residual_terms;
+    View<double* [6][6]> base_gradient_terms;
+    View<double* [6][6]> target_gradient_terms;
+    View<double* [6][6]> base_gradient_transpose_terms;
+    View<double* [6][6]> target_gradient_transpose_terms;
 
     explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
@@ -146,22 +147,28 @@ struct Constraints {
               Kokkos::view_alloc("target_gradient_transpose_terms", Kokkos::WithoutInitializing),
               num_constraints
           ) {
-        auto host_type = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, type);
-        auto host_row_range = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, row_range);
+	using Kokkos::create_mirror_view;
+	using Kokkos::WithoutInitializing;
+	using Kokkos::subview;
+	using Kokkos::ALL;
+	using Kokkos::deep_copy;
+	
+        auto host_type = create_mirror_view(WithoutInitializing, type);
+        auto host_row_range = create_mirror_view(WithoutInitializing, row_range);
         auto host_base_node_index =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_node_index);
+            create_mirror_view(WithoutInitializing, base_node_index);
         auto host_target_node_index =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_node_index);
+            create_mirror_view(WithoutInitializing, target_node_index);
         auto host_base_freedom =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_node_freedom_signature);
+            create_mirror_view(WithoutInitializing, base_node_freedom_signature);
         auto host_target_freedom =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_node_freedom_signature);
+            create_mirror_view(WithoutInitializing, target_node_freedom_signature);
         auto host_base_active_dofs =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, base_active_dofs);
+            create_mirror_view(WithoutInitializing, base_active_dofs);
         auto host_target_active_dofs =
-            Kokkos::create_mirror_view(Kokkos::WithoutInitializing, target_active_dofs);
-        auto host_X0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, X0);
-        auto host_axes = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, axes);
+            create_mirror_view(WithoutInitializing, target_active_dofs);
+        auto host_X0 = create_mirror_view(WithoutInitializing, X0);
+        auto host_axes = create_mirror_view(WithoutInitializing, axes);
 
         auto start_row = size_t{0U};
         for (auto constraint = 0U; constraint < num_constraints; ++constraint) {
@@ -241,18 +248,18 @@ struct Constraints {
             }
         }
 
-        Kokkos::deep_copy(type, host_type);
-        Kokkos::deep_copy(row_range, host_row_range);
-        Kokkos::deep_copy(base_node_index, host_base_node_index);
-        Kokkos::deep_copy(target_node_index, host_target_node_index);
-        Kokkos::deep_copy(base_node_freedom_signature, host_base_freedom);
-        Kokkos::deep_copy(target_node_freedom_signature, host_target_freedom);
-        Kokkos::deep_copy(base_active_dofs, host_base_active_dofs);
-        Kokkos::deep_copy(target_active_dofs, host_target_active_dofs);
-        Kokkos::deep_copy(X0, host_X0);
-        Kokkos::deep_copy(axes, host_axes);
+       deep_copy(type, host_type);
+       deep_copy(row_range, host_row_range);
+       deep_copy(base_node_index, host_base_node_index);
+       deep_copy(target_node_index, host_target_node_index);
+       deep_copy(base_node_freedom_signature, host_base_freedom);
+       deep_copy(target_node_freedom_signature, host_target_freedom);
+       deep_copy(base_active_dofs, host_base_active_dofs);
+       deep_copy(target_active_dofs, host_target_active_dofs);
+       deep_copy(X0, host_X0);
+       deep_copy(axes, host_axes);
 
-        Kokkos::deep_copy(Kokkos::subview(this->input, Kokkos::ALL, 3), 1.);
+       deep_copy(subview(this->input, ALL, 3), 1.);
     }
 
     /// Calculates the initial relative position (X0) based on constraint type and nodes

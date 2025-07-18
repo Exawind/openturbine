@@ -11,11 +11,15 @@
 namespace openturbine::masses {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateGyroscopicMatrix(
-    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& omega,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& eta,
-    const typename Kokkos::View<double[3][3], DeviceType>::const_type& rho,
-    const typename Kokkos::View<double[3][3], DeviceType>::const_type& omega_tilde,
+struct CalculateGyroscopicMatrix {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    
+KOKKOS_FUNCTION static void invoke(
+    double mass, const ConstView<double[3]>& omega,
+    const ConstView<double[3]>& eta,
+    const ConstView<double[3][3]>& rho,
+    const ConstView<double[3][3]>& omega_tilde,
     const Kokkos::View<double[6][6], DeviceType>& Guu
 ) {
     using NoTranspose = KokkosBatched::Trans::NoTranspose;
@@ -25,28 +29,34 @@ KOKKOS_INLINE_FUNCTION void CalculateGyroscopicMatrix(
     using GemmNN = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, GemmDefault>;
     using GemmNT = KokkosBatched::SerialGemm<NoTranspose, Transpose, GemmDefault>;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, GemvDefault>;
-    auto v1 = Kokkos::Array<double, 3>{};
-    auto V1 = Kokkos::View<double[3], DeviceType>(v1.data());
-    auto v2 = Kokkos::Array<double, 3>{};
-    auto V2 = Kokkos::View<double[3], DeviceType>(v2.data());
-    auto m1 = Kokkos::Array<double, 9>{};
-    auto M1 = Kokkos::View<double[3][3], DeviceType>(m1.data());
+    using CopyMatrix = KokkosBatched::SerialCopy<>;
+    using CopyMatrixTranspose = KokkosBatched::SerialCopy<Transpose>;
+    using Kokkos::Array;
+    using Kokkos::subview;
+    using Kokkos::make_pair;
+
+    auto v1 = Array<double, 3>{};
+    auto V1 = View<double[3]>(v1.data());
+    auto v2 = Array<double, 3>{};
+    auto V2 = View<double[3]>(v2.data());
+    auto m1 = Array<double, 9>{};
+    auto M1 = View<double[3][3]>(m1.data());
 
     // omega.tilde() * m * eta.tilde().t() + (omega.tilde() * m * eta).tilde().t()
-    auto Guu_12 = Kokkos::subview(Guu, Kokkos::make_pair(0, 3), Kokkos::make_pair(3, 6));
+    auto Guu_12 = subview(Guu, make_pair(0, 3), make_pair(3, 6));
     KokkosBlas::serial_axpy(mass, eta, V1);
     Gemv::invoke(1., omega_tilde, V1, 0., V2);
     VecTilde(V2, M1);
-    KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(M1, Guu_12);
+    CopyMatrixTranspose::invoke(M1, Guu_12);
 
     VecTilde(V1, M1);
     GemmNT::invoke(1., omega_tilde, M1, 1., Guu_12);
     // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
     Gemv::invoke(1., rho, omega, 0., V1);
     VecTilde(V1, M1);
-    auto Guu_22 = Kokkos::subview(Guu, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6));
-    KokkosBatched::SerialCopy<>::invoke(M1, Guu_22);
+    auto Guu_22 = subview(Guu, make_pair(3, 6), make_pair(3, 6));
+    CopyMatrix::invoke(M1, Guu_22);
     GemmNN::invoke(1., omega_tilde, rho, -1., Guu_22);
 }
-
+};
 }  // namespace openturbine::masses

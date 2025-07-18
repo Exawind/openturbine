@@ -19,18 +19,13 @@ inline void AssembleSystemResidual(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Residual");
 
-    auto forces_vector_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
-        0, static_cast<int>(state.num_system_nodes)
-    );
-    auto beams_vector_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(elements.beams.num_elems), Kokkos::AUTO()
-    );
-    auto masses_vector_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
-        0, static_cast<int>(elements.masses.num_elems)
-    );
-    auto springs_vector_policy = Kokkos::RangePolicy<typename DeviceType::execution_space>(
-        0, static_cast<int>(elements.springs.num_elems)
-    );
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+
+    auto forces_vector_policy = RangePolicy(0, state.num_system_nodes);
+    auto beams_vector_policy = TeamPolicy(elements.beams.num_elems, Kokkos::AUTO());
+    auto masses_vector_policy = RangePolicy(0, elements.masses.num_elems);
+    auto springs_vector_policy = RangePolicy(0, elements.springs.num_elems);
 
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,

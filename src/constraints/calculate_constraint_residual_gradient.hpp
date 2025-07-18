@@ -20,505 +20,507 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateConstraintResidualGradient {
-    using MatrixTranspose = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
+    using TransposeMatrix = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
     using Gemm = KokkosBatched::SerialGemm<
         KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
         KokkosBatched::Algo::Gemm::Default>;
-    using VectorCopy = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
-    using MatrixCopy = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 2>;
+    using CopyVector = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 1>;
+    using CopyMatrix = KokkosBatched::SerialCopy<KokkosBatched::Trans::NoTranspose, 2>;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
 
-    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type_;
-    typename Kokkos::View<size_t*, DeviceType>::const_type base_node_index_;
-    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index_;
-    typename Kokkos::View<double* [3], DeviceType>::const_type X0_;
-    typename Kokkos::View<double* [3][3], DeviceType>::const_type axes_;
-    typename Kokkos::View<double* [7], DeviceType>::const_type constraint_inputs_;
-    typename Kokkos::View<double* [6], DeviceType>::const_type lambda_;
-    typename Kokkos::View<double* [6][6], DeviceType>::const_type tangent_;
-    typename Kokkos::View<double* [7], DeviceType>::const_type node_u_;
-    Kokkos::View<double* [6], DeviceType> res_;
-    Kokkos::View<double* [6], DeviceType> b_lambda_res_;
-    Kokkos::View<double* [6], DeviceType> t_lambda_res_;
-    Kokkos::View<double* [6], DeviceType> system_res_;
-    Kokkos::View<double* [6][6], DeviceType> b_grad_;
-    Kokkos::View<double* [6][6], DeviceType> t_grad_;
-    Kokkos::View<double* [6][6], DeviceType> b_grad_trans_;
-    Kokkos::View<double* [6][6], DeviceType> t_grad_trans_;
+    ConstView<ConstraintType*> type_;
+    ConstView<size_t*> base_node_index_;
+    ConstView<size_t*> target_node_index_;
+    ConstView<double* [3]> X0_;
+    ConstView<double* [3][3]> axes_;
+    ConstView<double* [7]> constraint_inputs_;
+    ConstView<double* [6]> lambda_;
+    ConstView<double* [6][6]> tangent_;
+    ConstView<double* [7]> node_u_;
+    View<double* [6]> res_;
+    View<double* [6]> b_lambda_res_;
+    View<double* [6]> t_lambda_res_;
+    View<double* [6]> system_res_;
+    View<double* [6][6]> b_grad_;
+    View<double* [6][6]> t_grad_;
+    View<double* [6][6]> b_grad_trans_;
+    View<double* [6][6]> t_grad_trans_;
 
     KOKKOS_FUNCTION
     void FixedBC(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateFixedBCConstraint(X0, t_node_u, res, t_grad);
+        CalculateFixedBCConstraint<DeviceType>::invoke(X0, t_node_u, res, t_grad);
 
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void FixedBC3DOF(size_t constraint) const {
+        using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateFixedBC3DOFConstraint(X0, t_node_u, res, t_grad);
+        CalculateFixedBC3DOFConstraint<DeviceType>::invoke(X0, t_node_u, res, t_grad);
 
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void PrescribedBC(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto inputs_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto inputs_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto inputs = Kokkos::View<double[7], DeviceType>(inputs_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto inputs = View<double[7]>(inputs_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculatePrescribedBCConstraint(X0, inputs, t_node_u, res, t_grad);
+        CalculatePrescribedBCConstraint<DeviceType>::invoke(X0, inputs, t_node_u, res, t_grad);
 
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void PrescribedBC3DOF(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto inputs_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto inputs_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto inputs = Kokkos::View<double[7], DeviceType>(inputs_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto inputs = View<double[7]>(inputs_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculatePrescribedBC3DOFConstraint(X0, inputs, t_node_u, res, t_grad);
+        CalculatePrescribedBC3DOFConstraint<DeviceType>::invoke(X0, inputs, t_node_u, res, t_grad);
 
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void RigidJoint(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto b_node_u_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto b_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto b_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto b_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto base_tangent_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto b_grad_tan_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto b_node_u_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto b_lambda_res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto b_grad_data = Array<double, 36>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto b_grad_trans_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto base_tangent_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto b_grad_tan_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto b_node_u = Kokkos::View<double[7], DeviceType>(b_node_u_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto b_lambda_res = Kokkos::View<double[6], DeviceType>(b_lambda_res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto b_grad = Kokkos::View<double[6][6], DeviceType>(b_grad_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto b_node_u = View<double[7]>(b_node_u_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto b_lambda_res = View<double[6]>(b_lambda_res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto b_grad = View<double[6][6]>(b_grad_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto b_grad_trans = View<double[6][6]>(b_grad_trans_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto base_tangent = View<double[6][6]>(base_tangent_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto b_grad_tan = View<double[6][6]>(b_grad_tan_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto base_node_index = base_node_index_(constraint);
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRigidJointConstraint(X0, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRigidJointConstraint<DeviceType>::invoke(X0, b_node_u, t_node_u, res, b_grad, t_grad);
 
-        MatrixTranspose::invoke(b_grad, b_grad_trans);
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(b_grad, b_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., b_grad, base_tangent, 0., b_grad_tan);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void RigidJoint3DOF(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto b_node_u_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto b_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto b_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto b_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto base_tangent_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto b_grad_tan_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto b_node_u_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto res_data = Array<double, 6>{};
+        auto b_lambda_res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto b_grad_data = Array<double, 36>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto b_grad_trans_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto base_tangent_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto b_grad_tan_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto b_node_u = Kokkos::View<double[7], DeviceType>(b_node_u_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto b_lambda_res = Kokkos::View<double[6], DeviceType>(b_lambda_res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto b_grad = Kokkos::View<double[6][6], DeviceType>(b_grad_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto b_node_u = View<double[7]>(b_node_u_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto b_lambda_res = View<double[6]>(b_lambda_res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto b_grad = View<double[6][6]>(b_grad_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto b_grad_trans = View<double[6][6]>(b_grad_trans_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto base_tangent = View<double[6][6]>(base_tangent_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto b_grad_tan = View<double[6][6]>(b_grad_tan_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto base_node_index = base_node_index_(constraint);
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRigidJoint3DOFConstraint(X0, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRigidJoint3DOFConstraint<DeviceType>::invoke(X0, b_node_u, t_node_u, res, b_grad, t_grad);
 
-        MatrixTranspose::invoke(b_grad, b_grad_trans);
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(b_grad, b_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., b_grad, base_tangent, 0., b_grad_tan);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void RevoluteJoint(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto inputs_data = Kokkos::Array<double, 7>{};
-        auto b_node_u_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto axes_data = Kokkos::Array<double, 9>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto b_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto system_res_data = Kokkos::Array<double, 6>{};
-        auto b_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto b_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto base_tangent_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto b_grad_tan_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto inputs_data = Array<double, 7>{};
+        auto b_node_u_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto axes_data = Array<double, 9>{};
+        auto res_data = Array<double, 6>{};
+        auto b_lambda_res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto system_res_data = Array<double, 6>{};
+        auto b_grad_data = Array<double, 36>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto b_grad_trans_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto base_tangent_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto b_grad_tan_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto inputs = Kokkos::View<double[7], DeviceType>(inputs_data.data());
-        const auto b_node_u = Kokkos::View<double[7], DeviceType>(b_node_u_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto axes = Kokkos::View<double[3][3], DeviceType>(axes_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto b_lambda_res = Kokkos::View<double[6], DeviceType>(b_lambda_res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto system_res = Kokkos::View<double[6], DeviceType>(system_res_data.data());
-        const auto b_grad = Kokkos::View<double[6][6], DeviceType>(b_grad_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto inputs = View<double[7]>(inputs_data.data());
+        const auto b_node_u = View<double[7]>(b_node_u_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto axes = View<double[3][3]>(axes_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto b_lambda_res = View<double[6]>(b_lambda_res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto system_res = View<double[6]>(system_res_data.data());
+        const auto b_grad = View<double[6][6]>(b_grad_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto b_grad_trans = View<double[6][6]>(b_grad_trans_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto base_tangent = View<double[6][6]>(base_tangent_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto b_grad_tan = View<double[6][6]>(b_grad_tan_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto base_node_index = base_node_index_(constraint);
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
-        VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(axes_, constraint, ALL, ALL), axes);
-        MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
+        CopyVector::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(axes_, constraint, ALL, ALL), axes);
+        CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRevoluteJointConstraint(X0, axes, b_node_u, t_node_u, res, b_grad, t_grad);
-        CalculateRevoluteJointForce(axes, inputs, t_node_u, system_res);
+        CalculateRevoluteJointConstraint<DeviceType>::invoke(X0, axes, b_node_u, t_node_u, res, b_grad, t_grad);
+        CalculateRevoluteJointForce<DeviceType>::invoke(axes, inputs, t_node_u, system_res);
 
-        MatrixTranspose::invoke(b_grad, b_grad_trans);
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(b_grad, b_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., b_grad, base_tangent, 0., b_grad_tan);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        VectorCopy::invoke(system_res, subview(system_res_, constraint, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyVector::invoke(system_res, subview(system_res_, constraint, ALL));
+        CopyMatrix::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION
     void RotationControl(size_t constraint) const {
+	using Kokkos::Array;
         using Kokkos::ALL;
         using Kokkos::subview;
         using KokkosBlas::Experimental::serial_gemv;
 
-        auto X0_data = Kokkos::Array<double, 3>{};
-        auto inputs_data = Kokkos::Array<double, 7>{};
-        auto b_node_u_data = Kokkos::Array<double, 7>{};
-        auto t_node_u_data = Kokkos::Array<double, 7>{};
-        auto lambda_data = Kokkos::Array<double, 6>{};
-        auto axes_data = Kokkos::Array<double, 9>{};
-        auto res_data = Kokkos::Array<double, 6>{};
-        auto b_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto t_lambda_res_data = Kokkos::Array<double, 6>{};
-        auto b_grad_data = Kokkos::Array<double, 36>{};
-        auto t_grad_data = Kokkos::Array<double, 36>{};
-        auto b_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto t_grad_trans_data = Kokkos::Array<double, 36>{};
-        auto base_tangent_data = Kokkos::Array<double, 36>{};
-        auto target_tangent_data = Kokkos::Array<double, 36>{};
-        auto b_grad_tan_data = Kokkos::Array<double, 36>{};
-        auto t_grad_tan_data = Kokkos::Array<double, 36>{};
+        auto X0_data = Array<double, 3>{};
+        auto inputs_data = Array<double, 7>{};
+        auto b_node_u_data = Array<double, 7>{};
+        auto t_node_u_data = Array<double, 7>{};
+        auto lambda_data = Array<double, 6>{};
+        auto axes_data = Array<double, 9>{};
+        auto res_data = Array<double, 6>{};
+        auto b_lambda_res_data = Array<double, 6>{};
+        auto t_lambda_res_data = Array<double, 6>{};
+        auto b_grad_data = Array<double, 36>{};
+        auto t_grad_data = Array<double, 36>{};
+        auto b_grad_trans_data = Array<double, 36>{};
+        auto t_grad_trans_data = Array<double, 36>{};
+        auto base_tangent_data = Array<double, 36>{};
+        auto target_tangent_data = Array<double, 36>{};
+        auto b_grad_tan_data = Array<double, 36>{};
+        auto t_grad_tan_data = Array<double, 36>{};
 
-        const auto X0 = Kokkos::View<double[3], DeviceType>(X0_data.data());
-        const auto inputs = Kokkos::View<double[7], DeviceType>(inputs_data.data());
-        const auto b_node_u = Kokkos::View<double[7], DeviceType>(b_node_u_data.data());
-        const auto t_node_u = Kokkos::View<double[7], DeviceType>(t_node_u_data.data());
-        const auto lambda = Kokkos::View<double[6], DeviceType>(lambda_data.data());
-        const auto axes = Kokkos::View<double[3][3], DeviceType>(axes_data.data());
-        const auto res = Kokkos::View<double[6], DeviceType>(res_data.data());
-        const auto b_lambda_res = Kokkos::View<double[6], DeviceType>(b_lambda_res_data.data());
-        const auto t_lambda_res = Kokkos::View<double[6], DeviceType>(t_lambda_res_data.data());
-        const auto b_grad = Kokkos::View<double[6][6], DeviceType>(b_grad_data.data());
-        const auto t_grad = Kokkos::View<double[6][6], DeviceType>(t_grad_data.data());
-        const auto b_grad_trans = Kokkos::View<double[6][6], DeviceType>(b_grad_trans_data.data());
-        const auto t_grad_trans = Kokkos::View<double[6][6], DeviceType>(t_grad_trans_data.data());
-        const auto base_tangent = Kokkos::View<double[6][6], DeviceType>(base_tangent_data.data());
-        const auto target_tangent =
-            Kokkos::View<double[6][6], DeviceType>(target_tangent_data.data());
-        const auto b_grad_tan = Kokkos::View<double[6][6], DeviceType>(b_grad_tan_data.data());
-        const auto t_grad_tan = Kokkos::View<double[6][6], DeviceType>(t_grad_tan_data.data());
+        const auto X0 = View<double[3]>(X0_data.data());
+        const auto inputs = View<double[7]>(inputs_data.data());
+        const auto b_node_u = View<double[7]>(b_node_u_data.data());
+        const auto t_node_u = View<double[7]>(t_node_u_data.data());
+        const auto lambda = View<double[6]>(lambda_data.data());
+        const auto axes = View<double[3][3]>(axes_data.data());
+        const auto res = View<double[6]>(res_data.data());
+        const auto b_lambda_res = View<double[6]>(b_lambda_res_data.data());
+        const auto t_lambda_res = View<double[6]>(t_lambda_res_data.data());
+        const auto b_grad = View<double[6][6]>(b_grad_data.data());
+        const auto t_grad = View<double[6][6]>(t_grad_data.data());
+        const auto b_grad_trans = View<double[6][6]>(b_grad_trans_data.data());
+        const auto t_grad_trans = View<double[6][6]>(t_grad_trans_data.data());
+        const auto base_tangent = View<double[6][6]>(base_tangent_data.data());
+        const auto target_tangent = View<double[6][6]>(target_tangent_data.data());
+        const auto b_grad_tan = View<double[6][6]>(b_grad_tan_data.data());
+        const auto t_grad_tan = View<double[6][6]>(t_grad_tan_data.data());
 
         const auto base_node_index = base_node_index_(constraint);
         const auto target_node_index = target_node_index_(constraint);
 
-        VectorCopy::invoke(subview(X0_, constraint, ALL), X0);
-        VectorCopy::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
-        VectorCopy::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
-        VectorCopy::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
-        VectorCopy::invoke(subview(lambda_, constraint, ALL), lambda);
-        MatrixCopy::invoke(subview(axes_, constraint, ALL, ALL), axes);
-        MatrixCopy::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
-        MatrixCopy::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
+        CopyVector::invoke(subview(X0_, constraint, ALL), X0);
+        CopyVector::invoke(subview(constraint_inputs_, constraint, ALL), inputs);
+        CopyVector::invoke(subview(node_u_, base_node_index, ALL), b_node_u);
+        CopyVector::invoke(subview(node_u_, target_node_index, ALL), t_node_u);
+        CopyVector::invoke(subview(lambda_, constraint, ALL), lambda);
+        CopyMatrix::invoke(subview(axes_, constraint, ALL, ALL), axes);
+        CopyMatrix::invoke(subview(tangent_, base_node_index, ALL, ALL), base_tangent);
+        CopyMatrix::invoke(subview(tangent_, target_node_index, ALL, ALL), target_tangent);
 
-        CalculateRotationControlConstraint(
+        CalculateRotationControlConstraint<DeviceType>::invoke(
             X0, axes, inputs, b_node_u, t_node_u, res, b_grad, t_grad
         );
 
-        MatrixTranspose::invoke(b_grad, b_grad_trans);
-        MatrixTranspose::invoke(t_grad, t_grad_trans);
+        TransposeMatrix::invoke(b_grad, b_grad_trans);
+        TransposeMatrix::invoke(t_grad, t_grad_trans);
         Gemm::invoke(1., b_grad, base_tangent, 0., b_grad_tan);
         Gemm::invoke(1., t_grad, target_tangent, 0., t_grad_tan);
         serial_gemv('N', 1., b_grad_trans, lambda, 0., b_lambda_res);
         serial_gemv('N', 1., t_grad_trans, lambda, 0., t_lambda_res);
 
-        VectorCopy::invoke(res, subview(res_, constraint, ALL));
-        VectorCopy::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
-        VectorCopy::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
-        MatrixCopy::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
-        MatrixCopy::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
-        MatrixCopy::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
+        CopyVector::invoke(res, subview(res_, constraint, ALL));
+        CopyVector::invoke(b_lambda_res, subview(b_lambda_res_, constraint, ALL));
+        CopyVector::invoke(t_lambda_res, subview(t_lambda_res_, constraint, ALL));
+        CopyMatrix::invoke(b_grad_tan, subview(b_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_tan, subview(t_grad_, constraint, ALL, ALL));
+        CopyMatrix::invoke(b_grad_trans, subview(b_grad_trans_, constraint, ALL, ALL));
+        CopyMatrix::invoke(t_grad_trans, subview(t_grad_trans_, constraint, ALL, ALL));
     }
 
     KOKKOS_FUNCTION

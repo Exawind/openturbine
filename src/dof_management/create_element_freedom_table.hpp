@@ -9,10 +9,13 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Beams {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    Kokkos::View<size_t***, DeviceType> element_freedom_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t**> node_state_indices;
+    ConstView<size_t*> node_freedom_map_table;
+    View<size_t***> element_freedom_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
@@ -28,9 +31,12 @@ struct CreateElementFreedomTable_Beams {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Masses {
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    Kokkos::View<size_t**, DeviceType> element_freedom_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> node_state_indices;
+    ConstView<size_t*> node_freedom_map_table;
+    View<size_t**> element_freedom_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
@@ -45,10 +51,13 @@ struct CreateElementFreedomTable_Masses {
 
 template <typename DeviceType>
 struct CreateElementFreedomTable_Springs {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t* [2], DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    Kokkos::View<size_t* [2][3], DeviceType> element_freedom_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t* [2]> node_state_indices;
+    ConstView<size_t*> node_freedom_map_table;
+    View<size_t* [2][3]> element_freedom_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
@@ -68,10 +77,11 @@ template <typename DeviceType>
 inline void create_element_freedom_table(
     Elements<DeviceType>& elements, const State<DeviceType>& state
 ) {
+    using Kokkos::parallel_for;
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
     auto beams_range = RangePolicy(0, elements.beams.num_elems);
 
-    Kokkos::parallel_for(
+    parallel_for(
         "CreateElementFreedomTable_Beams", beams_range,
         CreateElementFreedomTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
@@ -79,7 +89,7 @@ inline void create_element_freedom_table(
         }
     );
     auto masses_range = RangePolicy(0, elements.masses.num_elems);
-    Kokkos::parallel_for(
+    parallel_for(
         "CreateElementFreedomTable_Masses", masses_range,
         CreateElementFreedomTable_Masses<DeviceType>{
             elements.masses.state_indices, state.node_freedom_map_table,
@@ -87,7 +97,7 @@ inline void create_element_freedom_table(
         }
     );
     auto springs_range = RangePolicy(0, elements.springs.num_elems);
-    Kokkos::parallel_for(
+    parallel_for(
         "CreateElementFreedomTable_Springs", springs_range,
         CreateElementFreedomTable_Springs<DeviceType>{
             elements.springs.num_nodes_per_element, elements.springs.node_state_indices,

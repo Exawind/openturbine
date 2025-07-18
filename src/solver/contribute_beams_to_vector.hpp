@@ -6,12 +6,16 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeBeamsToVector {
-    using member_type =
-        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t** [6], DeviceType>::const_type element_freedom_table;
-    typename Kokkos::View<double** [6], DeviceType>::const_type elements;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> vector;
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+    using member_type = typename TeamPolicy::member_type;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t** [6]> element_freedom_table;
+    ConstView<double** [6]> elements;
+    LeftView<double* [1]> vector;
 
     KOKKOS_FUNCTION
     void operator()(member_type member) const {

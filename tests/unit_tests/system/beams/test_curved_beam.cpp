@@ -128,7 +128,7 @@ void TestCalculateForceFc() {
     Kokkos::parallel_for(
         "CalculateForceFc", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>(Cuu, strain, Fc);
+            beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>::invoke(Cuu, strain, Fc);
         }
     );
 
@@ -148,7 +148,7 @@ void TestCalculateForceFd() {
     Kokkos::parallel_for(
         "CalculateForceFd", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, Fc, Fd);
+            beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>::invoke(x0pupSS, Fc, Fd);
         }
     );
 
@@ -204,7 +204,7 @@ void TestRotateSectionMatrixForCurvedBeam() {
     Kokkos::parallel_for(
         "RotateSectionMatrix", 1,
         KOKKOS_LAMBDA(size_t) {
-            masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>(xr, Cstar, Cuu);
+            masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>::invoke(xr, Cstar, Cuu);
         }
     );
 
@@ -226,7 +226,7 @@ void TestCalculateOuu() {
     Kokkos::parallel_for(
         "CalculateOuu", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculateOuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
+            beams::CalculateOuu<Kokkos::DefaultExecutionSpace>::invoke(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
         }
     );
 
@@ -247,7 +247,7 @@ void TestCalculatePuuForCurvedBeam() {
     Kokkos::parallel_for(
         "CalculatePuu", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculatePuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Puu);
+            beams::CalculatePuu<Kokkos::DefaultExecutionSpace>::invoke(Cuu, x0pupSS, N_tilde, Puu);
         }
     );
 
@@ -268,7 +268,7 @@ void TestCalculateQuuForCurvedBeam() {
     Kokkos::parallel_for(
         "CalculateQuu", 1,
         KOKKOS_LAMBDA(size_t) {
-            beams::CalculateQuu<Kokkos::DefaultExecutionSpace>(Cuu, x0pupSS, N_tilde, Quu);
+            beams::CalculateQuu<Kokkos::DefaultExecutionSpace>::invoke(Cuu, x0pupSS, N_tilde, Quu);
         }
     );
 

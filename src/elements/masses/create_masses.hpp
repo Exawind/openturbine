@@ -10,13 +10,17 @@ template <typename DeviceType>
 inline Masses<DeviceType> CreateMasses(
     const MassesInput& masses_input, const std::vector<Node>& nodes
 ) {
+    using Kokkos::create_mirror_view;
+    using Kokkos::WithoutInitializing;
+    using Kokkos::deep_copy;
+
     Masses<DeviceType> masses(masses_input.NumElements());
 
-    auto host_gravity = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.gravity);
+    auto host_gravity = create_mirror_view(WithoutInitializing, masses.gravity);
     auto host_state_indices =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.state_indices);
-    auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.node_x0);
-    auto host_Mstar = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, masses.qp_Mstar);
+        create_mirror_view(WithoutInitializing, masses.state_indices);
+    auto host_x0 = create_mirror_view(WithoutInitializing, masses.node_x0);
+    auto host_Mstar = create_mirror_view(WithoutInitializing, masses.qp_Mstar);
 
     host_gravity(0) = masses_input.gravity[0];
     host_gravity(1) = masses_input.gravity[1];
@@ -37,10 +41,10 @@ inline Masses<DeviceType> CreateMasses(
         }
     }
 
-    Kokkos::deep_copy(masses.gravity, host_gravity);
-    Kokkos::deep_copy(masses.state_indices, host_state_indices);
-    Kokkos::deep_copy(masses.node_x0, host_x0);
-    Kokkos::deep_copy(masses.qp_Mstar, host_Mstar);
+    deep_copy(masses.gravity, host_gravity);
+    deep_copy(masses.state_indices, host_state_indices);
+    deep_copy(masses.node_x0, host_x0);
+    deep_copy(masses.qp_Mstar, host_Mstar);
 
     return masses;
 }

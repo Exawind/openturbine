@@ -6,10 +6,14 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeConstraintsSystemResidualToVector {
-    typename Kokkos::View<size_t* [6], DeviceType>::const_type target_node_freedom_table;
-    typename Kokkos::View<size_t*, DeviceType>::const_type target_active_dofs;
-    typename Kokkos::View<double* [6], DeviceType>::const_type system_residual_terms;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> residual;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+
+    ConstView<size_t* [6]> target_node_freedom_table;
+    ConstView<size_t*> target_active_dofs;
+    ConstView<double* [6]> system_residual_terms;
+    LeftView<double* [1]> residual;
 
     KOKKOS_FUNCTION
     void operator()(size_t i_constraint) const {

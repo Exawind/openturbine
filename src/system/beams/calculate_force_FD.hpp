@@ -6,21 +6,28 @@
 namespace openturbine::beams {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateForceFD(
-    const typename Kokkos::View<double[3][3], DeviceType>::const_type& x0pupSS,
-    const typename Kokkos::View<double[6], DeviceType>::const_type& FC,
-    const Kokkos::View<double[6], DeviceType>& FD
+struct CalculateForceFD {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+KOKKOS_FUNCTION static void invoke(
+    const ConstView<double[3][3]>& x0pupSS,
+    const ConstView<double[6]>& FC,
+    const View<double[6]>& FD
 ) {
     using Transpose = KokkosBlas::Trans::Transpose;
     using Default = KokkosBlas::Algo::Gemv::Default;
     using Gemv = KokkosBlas::SerialGemv<Transpose, Default>;
+    using Kokkos::subview;
+    using Kokkos::make_pair;
+
     for (auto component = 0U; component < 6U; ++component) {
         FD(component) = 0.;
     }
     Gemv::invoke(
-        1., x0pupSS, Kokkos::subview(FC, Kokkos::make_pair(0, 3)), 0.,
-        Kokkos::subview(FD, Kokkos::make_pair(3, 6))
+        1., x0pupSS, subview(FC, make_pair(0, 3)), 0.,
+        subview(FD, make_pair(3, 6))
     );
 }
-
+};
 }  // namespace openturbine::beams

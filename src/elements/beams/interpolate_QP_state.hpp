@@ -11,11 +11,14 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateQPState_u {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t element;
     size_t num_nodes;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
-    Kokkos::View<double** [3], DeviceType> qp_u;
+    ConstView<double***> shape_interp;
+    ConstView<double** [7]> node_u;
+    View<double** [3]> qp_u;
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {
@@ -37,12 +40,15 @@ struct InterpolateQPState_u {
  */
 template <typename DeviceType>
 struct InterpolateQPState_uprime {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t element;
     size_t num_nodes;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
-    typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
-    Kokkos::View<double** [3], DeviceType> qp_uprime;
+    ConstView<double***> shape_deriv;
+    ConstView<double**> qp_jacobian;
+    ConstView<double** [7]> node_u;
+    View<double** [3]> qp_uprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {
@@ -65,11 +71,14 @@ struct InterpolateQPState_uprime {
  */
 template <typename DeviceType>
 struct InterpolateQPState_r {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t element;
     size_t num_nodes;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_interp;
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
-    Kokkos::View<double** [4], DeviceType> qp_r;
+    ConstView<double***> shape_interp;
+    ConstView<double** [7]> node_u;
+    View<double** [4]> qp_r;
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {
@@ -92,12 +101,15 @@ struct InterpolateQPState_r {
  */
 template <typename DeviceType>
 struct InterpolateQPState_rprime {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t element;
     size_t num_nodes;
-    typename Kokkos::View<double***, DeviceType>::const_type shape_deriv;
-    typename Kokkos::View<double**, DeviceType>::const_type qp_jacobian;
-    typename Kokkos::View<double** [7], DeviceType>::const_type node_u;
-    Kokkos::View<double** [4], DeviceType> qp_rprime;
+    ConstView<double***> shape_deriv;
+    ConstView<double**> qp_jacobian;
+    ConstView<double** [7]> node_u;
+    View<double** [4]> qp_rprime;
 
     KOKKOS_FUNCTION
     void operator()(size_t qp) const {

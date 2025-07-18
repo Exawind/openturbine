@@ -7,34 +7,40 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculatePrescribedBC3DOFConstraint(
-    const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
-    const typename Kokkos::View<double[7], DeviceType>::const_type& inputs,
-    const typename Kokkos::View<double[7], DeviceType>::const_type& node_u,
-    const Kokkos::View<double[6], DeviceType>& residual_terms,
-    const Kokkos::View<double[6][6], DeviceType>& target_gradient_terms
-) {
-    const auto u1_data = Kokkos::Array<double, 3>{inputs(0), inputs(1), inputs(2)};
-    const auto R1_data = Kokkos::Array<double, 4>{inputs(3), inputs(4), inputs(5), inputs(6)};
-    const auto u2_data = Kokkos::Array<double, 3>{node_u(0), node_u(1), node_u(2)};
-    const auto R2_data = Kokkos::Array<double, 4>{node_u(3), node_u(4), node_u(5), node_u(6)};
-    auto R1t_data = Kokkos::Array<double, 4>{};
-    auto R1_X0_data = Kokkos::Array<double, 4>{};
-    auto R2_R1t_data = Kokkos::Array<double, 4>{};
-    auto A_data = Kokkos::Array<double, 9>{};
-    auto C_data = Kokkos::Array<double, 9>{};
-    auto V3_data = Kokkos::Array<double, 3>{};
+struct CalculatePrescribedBC3DOFConstraint {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
 
-    const auto u1 = typename Kokkos::View<double[3], DeviceType>::const_type{u1_data.data()};
-    const auto R1 = typename Kokkos::View<double[4], DeviceType>::const_type{R1_data.data()};
-    const auto u2 = typename Kokkos::View<double[3], DeviceType>::const_type{u2_data.data()};
-    const auto R2 = typename Kokkos::View<double[4], DeviceType>::const_type{R2_data.data()};
-    const auto R1t = Kokkos::View<double[4], DeviceType>{R1t_data.data()};
-    const auto R1_X0 = Kokkos::View<double[4], DeviceType>{R1_X0_data.data()};
-    const auto R2_R1t = Kokkos::View<double[4], DeviceType>{R2_R1t_data.data()};
-    const auto A = Kokkos::View<double[3][3], DeviceType>{A_data.data()};
-    const auto C = Kokkos::View<double[3][3], DeviceType>{C_data.data()};
-    const auto V3 = Kokkos::View<double[3], DeviceType>{V3_data.data()};
+KOKKOS_FUNCTION static void invoke(
+    const ConstView<double[3]>& X0,
+    const ConstView<double[7]>& inputs,
+    const ConstView<double[7]>& node_u,
+    const View<double[6]>& residual_terms,
+    const View<double[6][6]>& target_gradient_terms
+) {
+    using Kokkos::Array;
+
+    const auto u1_data = Array<double, 3>{inputs(0), inputs(1), inputs(2)};
+    const auto R1_data = Array<double, 4>{inputs(3), inputs(4), inputs(5), inputs(6)};
+    const auto u2_data = Array<double, 3>{node_u(0), node_u(1), node_u(2)};
+    const auto R2_data = Array<double, 4>{node_u(3), node_u(4), node_u(5), node_u(6)};
+    auto R1t_data = Array<double, 4>{};
+    auto R1_X0_data = Array<double, 4>{};
+    auto R2_R1t_data = Array<double, 4>{};
+    auto A_data = Array<double, 9>{};
+    auto C_data = Array<double, 9>{};
+    auto V3_data = Array<double, 3>{};
+
+    const auto u1 = ConstView<double[3]>{u1_data.data()};
+    const auto R1 = ConstView<double[4]>{R1_data.data()};
+    const auto u2 = ConstView<double[3]>{u2_data.data()};
+    const auto R2 = ConstView<double[4]>{R2_data.data()};
+    const auto R1t = View<double[4]>{R1t_data.data()};
+    const auto R1_X0 = View<double[4]>{R1_X0_data.data()};
+    const auto R2_R1t = View<double[4]>{R2_R1t_data.data()};
+    const auto A = View<double[3][3]>{A_data.data()};
+    const auto C = View<double[3][3]>{C_data.data()};
+    const auto V3 = View<double[3]>{V3_data.data()};
 
     //----------------------------------------------------------------------
     // Residual Vector
@@ -60,5 +66,6 @@ KOKKOS_INLINE_FUNCTION void CalculatePrescribedBC3DOFConstraint(
         target_gradient_terms(component, component) = 1.;
     }
 }
+};
 
 }  // namespace openturbine

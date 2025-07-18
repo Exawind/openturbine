@@ -11,44 +11,55 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CalculateTangentOperator {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     double h;
-    typename Kokkos::View<double* [6], DeviceType>::const_type q_delta;
-    Kokkos::View<double* [6][6], DeviceType> T_gbl;
+    ConstView<double* [6]> q_delta;
+    View<double* [6][6]> T_gbl;
 
     KOKKOS_FUNCTION
-    void operator()(const int node) const {
-        auto T_data = Kokkos::Array<double, 36>{};
-        const auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
+    void operator()(int node) const {
+	using Kokkos::Array;
+	using Kokkos::subview;
+	using Kokkos::make_pair;
+	using Kokkos::ALL;
+	using CopyMatrix = KokkosBatched::SerialCopy<>;
+	using CopyMatrixTranspose = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;
+	using NoTranspose = KokkosBatched::Trans::NoTranspose;
+	using Default = KokkosBatched::Algo::Gemm::Default;
+	using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
 
-        auto rv_data = Kokkos::Array<double, 3>{};
-        auto rv = Kokkos::View<double[3], DeviceType>{rv_data.data()};
+        auto T_data = Array<double, 36>{};
+        const auto T = View<double[6][6]>(T_data.data());
 
-        auto m1_data = Kokkos::Array<double, 9>{};
-        auto m1 = Kokkos::View<double[3][3], DeviceType>(m1_data.data());
-        auto m2_data = Kokkos::Array<double, 9>{};
-        auto m2 = Kokkos::View<double[3][3], DeviceType>(m2_data.data());
+        auto rv_data = Array<double, 3>{};
+        auto rv = View<double[3]>{rv_data.data()};
 
-        for (auto k = 0U; k < 6U; ++k) {
+        auto m1_data = Array<double, 9>{};
+        auto m1 = View<double[3][3]>(m1_data.data());
+        auto m2_data = Array<double, 9>{};
+        auto m2 = View<double[3][3]>(m2_data.data());
+
+        for (auto k = 0; k < 6; ++k) {
             T(k, k) = 1.;
         }
 
-        KokkosBlas::serial_axpy(h, Kokkos::subview(q_delta, node, Kokkos::make_pair(3, 6)), rv);
+        KokkosBlas::serial_axpy(h, subview(q_delta, node, make_pair(3, 6)), rv);
         auto phi = KokkosBlas::serial_nrm2(rv);
         const auto tmp1 = (phi > 1.e-16) ? (Kokkos::cos(phi) - 1.) / (phi * phi) : 0.;
         const auto tmp2 = (phi > 1.e-16) ? (1. - Kokkos::sin(phi) / phi) / (phi * phi) : 0.;
 
         VecTilde(rv, m2);
-        KokkosBatched::SerialCopy<>::invoke(m2, m1);
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(tmp2, m2, m2, tmp1, m1);
+        CopyMatrix::invoke(m2, m1);
+        Gemm::invoke(tmp2, m2, m2, tmp1, m1);
 
         KokkosBlas::serial_axpy(
-            1., m1, Kokkos::subview(T, Kokkos::make_pair(3, 6), Kokkos::make_pair(3, 6))
+            1., m1, subview(T, make_pair(3, 6), make_pair(3, 6))
         );
 
-        KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>::invoke(
-            T, Kokkos::subview(T_gbl, node, Kokkos::ALL, Kokkos::ALL)
+        CopyMatrixTranspose::invoke(
+            T, subview(T_gbl, node, ALL, ALL)
         );
     }
 };

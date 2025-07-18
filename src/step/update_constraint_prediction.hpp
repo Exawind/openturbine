@@ -14,8 +14,8 @@ inline void UpdateConstraintPrediction(
     Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Constraint Prediction");
-    auto range_policy =
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+    auto range_policy = RangePolicy(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "UpdateLambdaPrediction", range_policy,
         UpdateLambdaPrediction<DeviceType>{

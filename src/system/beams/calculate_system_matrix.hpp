@@ -8,45 +8,54 @@ namespace openturbine::beams {
 
 template <typename DeviceType>
 struct CalculateSystemMatrix {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     size_t element;
     size_t num_nodes;
-    typename Kokkos::View<double* [6][6], DeviceType>::const_type tangent;
-    typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<double** [6][6], DeviceType>::const_type stiffness_matrix_terms;
-    typename Kokkos::View<double** [6][6], DeviceType>::const_type inertia_matrix_terms;
-    Kokkos::View<double*** [6][6], DeviceType> system_matrix_terms;
+    ConstView<double* [6][6]> tangent;
+    ConstView<size_t**> node_state_indices;
+    ConstView<double** [6][6]> stiffness_matrix_terms;
+    ConstView<double** [6][6]> inertia_matrix_terms;
+    View<double*** [6][6]> system_matrix_terms;
 
     KOKKOS_FUNCTION
     void operator()(size_t node_12) const {
+	using Kokkos::Array;
+	using Kokkos::subview;
+	using Kokkos::ALL;
+	using CopyMatrix = KokkosBatched::SerialCopy<>;
+	using NoTranspose = KokkosBatched::Trans::NoTranspose;
+	using Default = KokkosBatched::Algo::Gemm::Default;
+	using Gemm = KokkosBatched::SerialGemm<NoTranspose, NoTranspose, Default>;
+
         const auto node_1 = node_12 / num_nodes;
         const auto node_2 = node_12 % num_nodes;
         const auto node_T = node_state_indices(element, node_2);
 
-        auto S_data = Kokkos::Array<double, 36>{};
-        auto T_data = Kokkos::Array<double, 36>{};
-        auto STpI_data = Kokkos::Array<double, 36>{};
+        auto S_data = Array<double, 36>{};
+        auto T_data = Array<double, 36>{};
+        auto STpI_data = Array<double, 36>{};
 
-        const auto S = Kokkos::View<double[6][6], DeviceType>(S_data.data());
-        const auto T = Kokkos::View<double[6][6], DeviceType>(T_data.data());
-        const auto STpI = Kokkos::View<double[6][6], DeviceType>(STpI_data.data());
+        const auto S = View<double[6][6]>(S_data.data());
+        const auto T = View<double[6][6]>(T_data.data());
+        const auto STpI = View<double[6][6]>(STpI_data.data());
 
-        KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(stiffness_matrix_terms, node_1, node_2, Kokkos::ALL, Kokkos::ALL), S
+        CopyMatrix::invoke(
+            subview(stiffness_matrix_terms, node_1, node_2, ALL, ALL), S
         );
-        KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(tangent, node_T, Kokkos::ALL, Kokkos::ALL), T
+        CopyMatrix::invoke(
+            subview(tangent, node_T, ALL, ALL), T
         );
-        KokkosBatched::SerialCopy<>::invoke(
-            Kokkos::subview(inertia_matrix_terms, node_1, node_2, Kokkos::ALL, Kokkos::ALL), STpI
+        CopyMatrix::invoke(
+            subview(inertia_matrix_terms, node_1, node_2, ALL, ALL), STpI
         );
 
-        KokkosBatched::SerialGemm<
-            KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose,
-            KokkosBatched::Algo::Gemm::Default>::invoke(1., S, T, 1., STpI);
+        Gemm::invoke(1., S, T, 1., STpI);
 
-        KokkosBatched::SerialCopy<>::invoke(
+        CopyMatrix::invoke(
             STpI,
-            Kokkos::subview(system_matrix_terms, element, node_1, node_2, Kokkos::ALL, Kokkos::ALL)
+            subview(system_matrix_terms, element, node_1, node_2, ALL, ALL)
         );
     }
 };

@@ -23,7 +23,7 @@ void TestCalculateForceFD() {
     Kokkos::parallel_for(
         "CalculateForceFD", 1,
         KOKKOS_LAMBDA(size_t) {
-            openturbine::beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>(x0pupSS, FC, FD);
+            openturbine::beams::CalculateForceFD<Kokkos::DefaultExecutionSpace>::invoke(x0pupSS, FC, FD);
         }
     );
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
+
 #include "beams.hpp"
 #include "beams_input.hpp"
 #include "calculate_jacobian.hpp"
@@ -12,32 +14,42 @@ namespace openturbine {
 
 template <typename DeviceType>
 inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
+    using Kokkos::create_mirror_view;
+    using Kokkos::WithoutInitializing;
+    using Kokkos::subview;
+    using Kokkos::make_pair;
+    using Kokkos::ALL;
+    using Kokkos::deep_copy;
+    using Kokkos::parallel_for;
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+
     Beams<DeviceType> beams(
         beams_input.NumElements(), beams_input.MaxElemNodes(), beams_input.MaxElemQuadraturePoints()
     );
 
-    auto host_gravity = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.gravity);
+    auto host_gravity = create_mirror_view(WithoutInitializing, beams.gravity);
 
     auto host_num_nodes_per_element =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.num_nodes_per_element);
+        create_mirror_view(WithoutInitializing, beams.num_nodes_per_element);
     auto host_num_qps_per_element =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.num_qps_per_element);
+        create_mirror_view(WithoutInitializing, beams.num_qps_per_element);
     auto host_node_state_indices =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.node_state_indices);
-    auto host_node_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.node_x0);
-    auto host_node_u = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.node_u);
-    auto host_node_u_dot = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.node_u_dot);
+        create_mirror_view(WithoutInitializing, beams.node_state_indices);
+    auto host_node_x0 = create_mirror_view(WithoutInitializing, beams.node_x0);
+    auto host_node_u = create_mirror_view(WithoutInitializing, beams.node_u);
+    auto host_node_u_dot = create_mirror_view(WithoutInitializing, beams.node_u_dot);
     auto host_node_u_ddot =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.node_u_ddot);
+        create_mirror_view(WithoutInitializing, beams.node_u_ddot);
 
-    auto host_qp_weight = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.qp_weight);
-    auto host_qp_Mstar = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.qp_Mstar);
-    auto host_qp_Cstar = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.qp_Cstar);
+    auto host_qp_weight = create_mirror_view(WithoutInitializing, beams.qp_weight);
+    auto host_qp_Mstar = create_mirror_view(WithoutInitializing, beams.qp_Mstar);
+    auto host_qp_Cstar = create_mirror_view(WithoutInitializing, beams.qp_Cstar);
 
     auto host_shape_interp =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.shape_interp);
+        create_mirror_view(WithoutInitializing, beams.shape_interp);
     auto host_shape_deriv =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, beams.shape_deriv);
+        create_mirror_view(WithoutInitializing, beams.shape_deriv);
 
     host_gravity(0) = beams_input.gravity[0];
     host_gravity(1) = beams_input.gravity[1];
@@ -60,61 +72,60 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         // Populate views for this element
         PopulateNodeX0(
             beams_input.elements[element], nodes,
-            Kokkos::subview(host_node_x0, element, Kokkos::make_pair(0UL, num_nodes), Kokkos::ALL)
+            subview(host_node_x0, element, make_pair(0UL, num_nodes), ALL)
         );
         PopulateQPWeight(
             beams_input.elements[element],
-            Kokkos::subview(host_qp_weight, element, Kokkos::make_pair(0UL, num_qps))
+            subview(host_qp_weight, element, make_pair(0UL, num_qps))
         );
         PopulateShapeFunctionValues(
             beams_input.elements[element], nodes,
-            Kokkos::subview(
-                host_shape_interp, element, Kokkos::make_pair(0UL, num_nodes),
-                Kokkos::make_pair(0UL, num_qps)
+            subview(
+                host_shape_interp, element, make_pair(0UL, num_nodes),
+                make_pair(0UL, num_qps)
             )
         );
         PopulateShapeFunctionDerivatives(
             beams_input.elements[element], nodes,
-            Kokkos::subview(
-                host_shape_deriv, element, Kokkos::make_pair(0UL, num_nodes),
-                Kokkos::make_pair(0UL, num_qps)
+            subview(
+                host_shape_deriv, element, make_pair(0UL, num_nodes),
+                make_pair(0UL, num_qps)
             )
         );
         PopulateQPMstar(
             beams_input.elements[element],
-            Kokkos::subview(
-                host_qp_Mstar, element, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
+            subview(
+                host_qp_Mstar, element, make_pair(0UL, num_qps), ALL, ALL
             )
         );
         PopulateQPCstar(
             beams_input.elements[element],
-            Kokkos::subview(
-                host_qp_Cstar, element, Kokkos::make_pair(0UL, num_qps), Kokkos::ALL, Kokkos::ALL
+            subview(
+                host_qp_Cstar, element, make_pair(0UL, num_qps), ALL, ALL
             )
         );
     }
 
-    Kokkos::deep_copy(beams.gravity, host_gravity);
-    Kokkos::deep_copy(beams.num_nodes_per_element, host_num_nodes_per_element);
-    Kokkos::deep_copy(beams.num_qps_per_element, host_num_qps_per_element);
-    Kokkos::deep_copy(beams.node_state_indices, host_node_state_indices);
-    Kokkos::deep_copy(beams.node_x0, host_node_x0);
-    Kokkos::deep_copy(beams.node_u, host_node_u);
-    Kokkos::deep_copy(beams.node_u_dot, host_node_u_dot);
-    Kokkos::deep_copy(beams.node_u_ddot, host_node_u_ddot);
-    Kokkos::deep_copy(beams.qp_weight, host_qp_weight);
-    Kokkos::deep_copy(beams.qp_Mstar, host_qp_Mstar);
-    Kokkos::deep_copy(beams.qp_Cstar, host_qp_Cstar);
-    Kokkos::deep_copy(beams.shape_interp, host_shape_interp);
-    Kokkos::deep_copy(beams.shape_deriv, host_shape_deriv);
+    deep_copy(beams.gravity, host_gravity);
+    deep_copy(beams.num_nodes_per_element, host_num_nodes_per_element);
+    deep_copy(beams.num_qps_per_element, host_num_qps_per_element);
+    deep_copy(beams.node_state_indices, host_node_state_indices);
+    deep_copy(beams.node_x0, host_node_x0);
+    deep_copy(beams.node_u, host_node_u);
+    deep_copy(beams.node_u_dot, host_node_u_dot);
+    deep_copy(beams.node_u_ddot, host_node_u_ddot);
+    deep_copy(beams.qp_weight, host_qp_weight);
+    deep_copy(beams.qp_Mstar, host_qp_Mstar);
+    deep_copy(beams.qp_Cstar, host_qp_Cstar);
+    deep_copy(beams.shape_interp, host_shape_interp);
+    deep_copy(beams.shape_deriv, host_shape_deriv);
 
-    Kokkos::deep_copy(beams.node_FX, 0.);
-    Kokkos::deep_copy(beams.qp_Fe, 0.);
+    deep_copy(beams.node_FX, 0.);
+    deep_copy(beams.qp_Fe, 0.);
 
-    auto range_policy =
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, beams.num_elems);
+    auto range_policy = RangePolicy(0, beams.num_elems);
 
-    Kokkos::parallel_for(
+    parallel_for(
         "InterpolateQPPosition", range_policy,
         InterpolateQPPosition<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
@@ -122,7 +133,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    Kokkos::parallel_for(
+    parallel_for(
         "InterpolateQPRotation", range_policy,
         InterpolateQPRotation<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
@@ -130,7 +141,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    Kokkos::parallel_for(
+    parallel_for(
         "CalculateJacobian", range_policy,
         CalculateJacobian<DeviceType>{
             beams.num_nodes_per_element,
@@ -142,10 +153,10 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    auto team_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(beams.num_elems), Kokkos::AUTO()
-    );
-    Kokkos::parallel_for(
+
+    auto team_policy = TeamPolicy(beams.num_elems, Kokkos::AUTO());
+
+    parallel_for(
         "InterpolateToQuadraturePoints", team_policy,
         InterpolateToQuadraturePoints<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,

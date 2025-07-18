@@ -8,48 +8,54 @@
 namespace openturbine {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointConstraint(
-    const typename Kokkos::View<double[3], DeviceType>::const_type& X0,
-    const typename Kokkos::View<double[3][3], DeviceType>::const_type& axes,
-    const typename Kokkos::View<double[7], DeviceType>::const_type& base_node_u,
-    const typename Kokkos::View<double[7], DeviceType>::const_type& target_node_u,
-    const Kokkos::View<double[6], DeviceType>& residual_terms,
-    const Kokkos::View<double[6][6], DeviceType>& base_gradient_terms,
-    const Kokkos::View<double[6][6], DeviceType>& target_gradient_terms
+struct CalculateRevoluteJointConstraint {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+KOKKOS_FUNCTION static void invoke(
+    const ConstView<double[3]>& X0,
+    const ConstView<double[3][3]>& axes,
+    const ConstView<double[7]>& base_node_u,
+    const ConstView<double[7]>& target_node_u,
+    const View<double[6]>& residual_terms,
+    const View<double[6][6]>& base_gradient_terms,
+    const View<double[6][6]>& target_gradient_terms
 ) {
-    const auto u1_data = Kokkos::Array<double, 3>{base_node_u(0), base_node_u(1), base_node_u(2)};
+    using Kokkos::Array;
+
+    const auto u1_data = Array<double, 3>{base_node_u(0), base_node_u(1), base_node_u(2)};
     const auto R1_data =
-        Kokkos::Array<double, 4>{base_node_u(3), base_node_u(4), base_node_u(5), base_node_u(6)};
+        Array<double, 4>{base_node_u(3), base_node_u(4), base_node_u(5), base_node_u(6)};
     const auto u2_data =
-        Kokkos::Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
-    const auto R2_data = Kokkos::Array<double, 4>{
+        Array<double, 3>{target_node_u(0), target_node_u(1), target_node_u(2)};
+    const auto R2_data = Array<double, 4>{
         target_node_u(3), target_node_u(4), target_node_u(5), target_node_u(6)
     };
-    const auto x0_data = Kokkos::Array<double, 3>{axes(0, 0), axes(0, 1), axes(0, 2)};
-    const auto y0_data = Kokkos::Array<double, 3>{axes(1, 0), axes(1, 1), axes(1, 2)};
-    const auto z0_data = Kokkos::Array<double, 3>{axes(2, 0), axes(2, 1), axes(2, 2)};
-    auto R1t_data = Kokkos::Array<double, 4>{};
-    auto R1_X0_data = Kokkos::Array<double, 4>{};
-    auto x_data = Kokkos::Array<double, 3>{};
-    auto y_data = Kokkos::Array<double, 3>{};
-    auto z_data = Kokkos::Array<double, 3>{};
-    auto xcy_data = Kokkos::Array<double, 3>{};
-    auto xcz_data = Kokkos::Array<double, 3>{};
+    const auto x0_data = Array<double, 3>{axes(0, 0), axes(0, 1), axes(0, 2)};
+    const auto y0_data = Array<double, 3>{axes(1, 0), axes(1, 1), axes(1, 2)};
+    const auto z0_data = Array<double, 3>{axes(2, 0), axes(2, 1), axes(2, 2)};
+    auto R1t_data = Array<double, 4>{};
+    auto R1_X0_data = Array<double, 4>{};
+    auto x_data = Array<double, 3>{};
+    auto y_data = Array<double, 3>{};
+    auto z_data = Array<double, 3>{};
+    auto xcy_data = Array<double, 3>{};
+    auto xcz_data = Array<double, 3>{};
 
-    const auto u1 = typename Kokkos::View<double[3], DeviceType>::const_type{u1_data.data()};
-    const auto R1 = typename Kokkos::View<double[4], DeviceType>::const_type{R1_data.data()};
-    const auto u2 = typename Kokkos::View<double[3], DeviceType>::const_type{u2_data.data()};
-    const auto R2 = typename Kokkos::View<double[4], DeviceType>::const_type{R2_data.data()};
-    const auto x0 = typename Kokkos::View<double[3], DeviceType>::const_type{x0_data.data()};
-    const auto y0 = typename Kokkos::View<double[3], DeviceType>::const_type{y0_data.data()};
-    const auto z0 = typename Kokkos::View<double[3], DeviceType>::const_type{z0_data.data()};
-    const auto R1t = Kokkos::View<double[4], DeviceType>{R1t_data.data()};
-    const auto R1_X0 = Kokkos::View<double[4], DeviceType>{R1_X0_data.data()};
-    const auto x = Kokkos::View<double[3], DeviceType>{x_data.data()};
-    const auto y = Kokkos::View<double[3], DeviceType>{y_data.data()};
-    const auto z = Kokkos::View<double[3], DeviceType>{z_data.data()};
-    const auto xcy = Kokkos::View<double[3], DeviceType>{xcy_data.data()};
-    const auto xcz = Kokkos::View<double[3], DeviceType>{xcz_data.data()};
+    const auto u1 = ConstView<double[3]>{u1_data.data()};
+    const auto R1 = ConstView<double[4]>{R1_data.data()};
+    const auto u2 = ConstView<double[3]>{u2_data.data()};
+    const auto R2 = ConstView<double[4]>{R2_data.data()};
+    const auto x0 = ConstView<double[3]>{x0_data.data()};
+    const auto y0 = ConstView<double[3]>{y0_data.data()};
+    const auto z0 = ConstView<double[3]>{z0_data.data()};
+    const auto R1t = View<double[4]>{R1t_data.data()};
+    const auto R1_X0 = View<double[4]>{R1_X0_data.data()};
+    const auto x = View<double[3]>{x_data.data()};
+    const auto y = View<double[3]>{y_data.data()};
+    const auto z = View<double[3]>{z_data.data()};
+    const auto xcy = View<double[3]>{xcy_data.data()};
+    const auto xcz = View<double[3]>{xcz_data.data()};
 
     //----------------------------------------------------------------------
     // Residual Vector, Phi
@@ -105,4 +111,5 @@ KOKKOS_INLINE_FUNCTION void CalculateRevoluteJointConstraint(
         base_gradient_terms(4, component + 3) = xcy(component);
     }
 }
+};
 }  // namespace openturbine

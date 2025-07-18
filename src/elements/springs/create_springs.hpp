@@ -10,13 +10,17 @@ template <typename DeviceType>
 inline Springs<DeviceType> CreateSprings(
     const SpringsInput& springs_input, const std::vector<Node>& nodes
 ) {
+    using Kokkos::create_mirror_view;
+    using Kokkos::WithoutInitializing;
+    using Kokkos::deep_copy;
+
     Springs<DeviceType> springs(springs_input.NumElements());
 
     auto host_node_state_indices =
-        Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.node_state_indices);
-    auto host_x0 = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.x0);
-    auto host_l_ref = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.l_ref);
-    auto host_k = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, springs.k);
+        create_mirror_view(WithoutInitializing, springs.node_state_indices);
+    auto host_x0 = create_mirror_view(WithoutInitializing, springs.x0);
+    auto host_l_ref = create_mirror_view(WithoutInitializing, springs.l_ref);
+    auto host_k = create_mirror_view(WithoutInitializing, springs.k);
 
     for (auto elementIdx = 0U; elementIdx < springs_input.NumElements(); elementIdx++) {
         const auto& element = springs_input.elements[elementIdx];
@@ -33,10 +37,10 @@ inline Springs<DeviceType> CreateSprings(
         host_k(elementIdx) = element.stiffness;
     }
 
-    Kokkos::deep_copy(springs.node_state_indices, host_node_state_indices);
-    Kokkos::deep_copy(springs.x0, host_x0);
-    Kokkos::deep_copy(springs.l_ref, host_l_ref);
-    Kokkos::deep_copy(springs.k, host_k);
+    deep_copy(springs.node_state_indices, host_node_state_indices);
+    deep_copy(springs.x0, host_x0);
+    deep_copy(springs.l_ref, host_l_ref);
+    deep_copy(springs.k, host_k);
 
     return springs;
 }

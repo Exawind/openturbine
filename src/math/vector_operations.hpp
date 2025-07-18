@@ -21,8 +21,8 @@ KOKKOS_INLINE_FUNCTION void VecTilde(const VectorType& vector, const MatrixType&
 }
 
 /// Calculate the dot product between two vector views
-template <typename VectorType>
-KOKKOS_INLINE_FUNCTION double DotProduct(const VectorType& a, const VectorType& b) {
+template <typename AVectorType, typename BVectorType>
+KOKKOS_INLINE_FUNCTION double DotProduct(const AVectorType& a, const BVectorType& b) {
     double sum = 0.;
     for (auto i = 0; i < a.extent_int(0); ++i) {
         sum += a(i) * b(i);
@@ -73,10 +73,4 @@ constexpr std::array<double, 3> UnitVector(const std::array<double, 3>& v) {
         v[2] / norm,
     };
 }
-
-/// Dot3 returns the dot product of two 3-component vectors
-constexpr double Dot3(const std::array<double, 3>& v1, const std::array<double, 3>& v2) {
-    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
-}
-
 }  // namespace openturbine

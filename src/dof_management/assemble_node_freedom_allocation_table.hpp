@@ -11,10 +11,13 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Beams {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t**, DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<FreedomSignature**, DeviceType>::const_type element_freedom_signature;
-    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t**> node_state_indices;
+    ConstView<FreedomSignature**> element_freedom_signature;
+    View<FreedomSignature*> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
@@ -30,8 +33,11 @@ struct AssembleNodeFreedomMapTable_Beams {
 
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Masses {
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type element_freedom_signature;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> node_state_indices;
+    ConstView<FreedomSignature*> element_freedom_signature;
     Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
@@ -46,9 +52,12 @@ struct AssembleNodeFreedomMapTable_Masses {
 
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Springs {
-    typename Kokkos::View<size_t* [2], DeviceType>::const_type node_state_indices;
-    typename Kokkos::View<FreedomSignature* [2], DeviceType>::const_type element_freedom_signature;
-    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t* [2]> node_state_indices;
+    ConstView<FreedomSignature* [2]> element_freedom_signature;
+    View<FreedomSignature*> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t element) const {
@@ -64,12 +73,15 @@ struct AssembleNodeFreedomMapTable_Springs {
 
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Constraints {
-    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type;
-    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
-    typename Kokkos::View<size_t*, DeviceType>::const_type base_node_index;
-    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type target_node_freedom_signature;
-    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type base_node_freedom_signature;
-    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<ConstraintType*> type;
+    ConstView<size_t*> target_node_index;
+    ConstView<size_t*> base_node_index;
+    ConstView<FreedomSignature*> target_node_freedom_signature;
+    ConstView<FreedomSignature*> base_node_freedom_signature;
+    View<FreedomSignature*> node_freedom_allocation_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t node) const {
@@ -94,12 +106,13 @@ inline void assemble_node_freedom_allocation_table(
     State<DeviceType>& state, const Elements<DeviceType>& elements,
     const Constraints<DeviceType>& constraints
 ) {
+    using Kokkos::parallel_for;
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
     Kokkos::deep_copy(state.node_freedom_allocation_table, FreedomSignature::NoComponents);
 
     auto beams_range = RangePolicy(0, elements.beams.num_elems);
 
-    Kokkos::parallel_for(
+    parallel_for(
         "AssembleNodeFreedomMapTable_Beams", beams_range,
         AssembleNodeFreedomMapTable_Beams<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.node_state_indices,
@@ -107,7 +120,7 @@ inline void assemble_node_freedom_allocation_table(
         }
     );
     auto masses_range = RangePolicy(0, elements.masses.num_elems);
-    Kokkos::parallel_for(
+    parallel_for(
         "AssembleNodeFreedomMapTable_Masses", masses_range,
         AssembleNodeFreedomMapTable_Masses<DeviceType>{
             elements.masses.state_indices, elements.masses.element_freedom_signature,
@@ -115,7 +128,7 @@ inline void assemble_node_freedom_allocation_table(
         }
     );
     auto springs_range = RangePolicy(0, elements.springs.num_elems);
-    Kokkos::parallel_for(
+    parallel_for(
         "AssembleNodeFreedomMapTable_Springs", springs_range,
         AssembleNodeFreedomMapTable_Springs<DeviceType>{
             elements.springs.node_state_indices, elements.springs.element_freedom_signature,
@@ -123,7 +136,7 @@ inline void assemble_node_freedom_allocation_table(
         }
     );
     auto constraints_range = RangePolicy(0, constraints.num_constraints);
-    Kokkos::parallel_for(
+    parallel_for(
         "AssembleNodeFreedomMapTable_Constraints", constraints_range,
         AssembleNodeFreedomMapTable_Constraints<DeviceType>{
             constraints.type, constraints.target_node_index, constraints.base_node_index,
@@ -135,7 +148,7 @@ inline void assemble_node_freedom_allocation_table(
     const auto active_dofs = state.active_dofs;
     const auto node_freedom_allocation_table = state.node_freedom_allocation_table;
     auto system_range = RangePolicy(0, state.num_system_nodes);
-    Kokkos::parallel_for(
+    parallel_for(
         "ComputeActiveDofs", system_range,
         KOKKOS_LAMBDA(size_t node) {
             active_dofs(node) = count_active_dofs(node_freedom_allocation_table(node));

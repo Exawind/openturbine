@@ -6,20 +6,26 @@
 namespace openturbine::masses {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateGravityForce(
-    double mass, const typename Kokkos::View<double[3], DeviceType>::const_type& gravity,
-    const typename Kokkos::View<double[3][3], DeviceType>::const_type& eta_tilde,
-    const Kokkos::View<double[6], DeviceType>& FG
+struct CalculateGravityForce {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+KOKKOS_FUNCTION static void invoke(
+    double mass, const ConstView<double[3]>& gravity,
+    const ConstView<double[3][3]>& eta_tilde,
+    const View<double[6]>& FG
 ) {
     using NoTranspose = KokkosBlas::Trans::NoTranspose;
     using Default = KokkosBlas::Algo::Gemv::Default;
     using Gemv = KokkosBlas::SerialGemv<NoTranspose, Default>;
+    using Kokkos::subview;
+    using Kokkos::make_pair;
 
-    KokkosBlas::serial_axpy(mass, gravity, Kokkos::subview(FG, Kokkos::make_pair(0, 3)));
+    KokkosBlas::serial_axpy(mass, gravity, subview(FG, make_pair(0, 3)));
     Gemv::invoke(
-        1., eta_tilde, Kokkos::subview(FG, Kokkos::make_pair(0, 3)), 0.,
-        Kokkos::subview(FG, Kokkos::make_pair(3, 6))
+        1., eta_tilde, subview(FG, make_pair(0, 3)), 0.,
+        subview(FG, make_pair(3, 6))
     );
 }
-
+};
 }  // namespace openturbine::masses

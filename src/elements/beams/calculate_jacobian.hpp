@@ -20,33 +20,39 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct CalculateJacobian {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type
-        shape_derivative;  //< num_elems x num_nodes x num_qps
-    typename Kokkos::View<double** [7], DeviceType>::const_type
-        node_position_rotation;  //< num_elems x num_nodes x 7
-    Kokkos::View<double** [3], DeviceType>
-        qp_position_derivative;                      //< output: num_elems x num_qps x 3
-    Kokkos::View<double**, DeviceType> qp_jacobian;  //< output: num_elems x num_qps
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t*> num_qps_per_element;
+    ConstView<double***> shape_derivative;  //< num_elems x num_nodes x num_qps
+    ConstView<double** [7]> node_position_rotation;  //< num_elems x num_nodes x 7
+    View<double** [3]> qp_position_derivative;                      //< output: num_elems x num_qps x 3
+    View<double**> qp_jacobian;  //< output: num_elems x num_qps
 
     KOKKOS_FUNCTION
-    void operator()(const int element) const {
+    void operator()(int element) const {
+	using Kokkos::subview;
+	using Kokkos::make_pair;
+	using Kokkos::ALL;
+	using Kokkos::sqrt;
+	using Kokkos::pow;
+
         const auto num_nodes = num_nodes_per_element(element);
         const auto num_qps = num_qps_per_element(element);
-        const auto shape_deriv = Kokkos::subview(
-            shape_derivative, element, Kokkos::make_pair(size_t{0U}, num_nodes),
-            Kokkos::make_pair(size_t{0U}, num_qps)
+        const auto shape_deriv = subview(
+            shape_derivative, element, make_pair(size_t{0U}, num_nodes),
+            make_pair(size_t{0U}, num_qps)
         );
-        const auto qp_pos_deriv = Kokkos::subview(
-            qp_position_derivative, element, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL
+        const auto qp_pos_deriv = subview(
+            qp_position_derivative, element, make_pair(size_t{0U}, num_qps), ALL
         );
-        const auto node_pos = Kokkos::subview(
-            node_position_rotation, element, Kokkos::make_pair(size_t{0U}, num_nodes),
-            Kokkos::make_pair(0U, 3U)
+        const auto node_pos = subview(
+            node_position_rotation, element, make_pair(size_t{0U}, num_nodes),
+            make_pair(0U, 3U)
         );
         const auto qp_jacob =
-            Kokkos::subview(qp_jacobian, element, Kokkos::make_pair(size_t{0U}, num_qps));
+            subview(qp_jacobian, element, make_pair(size_t{0U}, num_qps));
 
         // Interpolate position derivatives at quadrature points using shape functions
         // qp_pos_deriv = Σ(dN/dξ * node_pos)
@@ -56,9 +62,9 @@ struct CalculateJacobian {
             // Calculate Jacobian - this is a scalar that represents the "stretching" factor between
             // parametric (ξ) and physical (x) space
             // J = |dx/dξ| = sqrt((dx/dξ)² + (dy/dξ)² + (dz/dξ)²)
-            const auto jacobian = Kokkos::sqrt(
-                Kokkos::pow(qp_pos_deriv(qp, 0), 2.) + Kokkos::pow(qp_pos_deriv(qp, 1), 2.) +
-                Kokkos::pow(qp_pos_deriv(qp, 2), 2.)
+            const auto jacobian = sqrt(
+                pow(qp_pos_deriv(qp, 0), 2.) + pow(qp_pos_deriv(qp, 1), 2.) +
+                pow(qp_pos_deriv(qp, 2), 2.)
             );
             qp_jacob(qp) = jacobian;
 

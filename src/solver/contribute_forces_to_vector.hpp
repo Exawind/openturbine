@@ -8,10 +8,14 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct ContributeForcesToVector {
-    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type node_freedom_allocation_table;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    typename Kokkos::View<double**, DeviceType>::const_type node_loads;
-    Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType> vector;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+
+    ConstView<FreedomSignature*> node_freedom_allocation_table;
+    ConstView<size_t*> node_freedom_map_table;
+    ConstView<double**> node_loads;
+    LeftView<double* [1]> vector;
 
     KOKKOS_FUNCTION
     void operator()(size_t node) const {

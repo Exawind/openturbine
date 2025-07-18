@@ -317,10 +317,10 @@ inline std::array<double, 4> TangentTwistToQuaternion(
 ) {
     const auto e1 = UnitVector(tangent);
     std::array<double, 3> temp{0., 1., 0.};
-    if (std::abs(Dot3(e1, temp)) > 0.9) {
+    if (std::abs(DotProduct(e1, temp)) > 0.9) {
         temp = {1., 0., 0.};
     }
-    const auto a = Dot3(e1, temp);
+    const auto a = DotProduct(e1, temp);
 
     // Construct e2 orthogonal to e1 and lying in the y-z plane
     std::array<double, 3> e2 =

@@ -8,28 +8,33 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct InterpolateQPRotation {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type
-        shape_interpolation;  // Num Nodes x Num Quadrature points
-    typename Kokkos::View<double** [7], DeviceType>::const_type
-        node_position_rotation;                          // Node global position vector
-    Kokkos::View<double** [4], DeviceType> qp_rotation;  // quadrature point rotation
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t*> num_qps_per_element;
+    ConstView<double***> shape_interpolation;  // Num Nodes x Num Quadrature points
+    ConstView<double** [7]> node_position_rotation;                          // Node global position vector
+    View<double** [4]> qp_rotation;  // quadrature point rotation
 
     KOKKOS_FUNCTION
-    void operator()(const int element) const {
+    void operator()(int element) const {
+	using Kokkos::subview;
+	using Kokkos::make_pair;
+	using Kokkos::ALL;
+
         const auto num_nodes = num_nodes_per_element(element);
         const auto num_qps = num_qps_per_element(element);
-        const auto shape_interp = Kokkos::subview(
-            shape_interpolation, element, Kokkos::make_pair(size_t{0U}, num_nodes),
-            Kokkos::make_pair(size_t{0U}, num_qps)
+        const auto shape_interp = subview(
+            shape_interpolation, element, make_pair(size_t{0U}, num_nodes),
+            make_pair(size_t{0U}, num_qps)
         );
-        const auto node_rot = Kokkos::subview(
-            node_position_rotation, element, Kokkos::make_pair(size_t{0U}, num_nodes),
-            Kokkos::make_pair(3, 7)
+        const auto node_rot = subview(
+            node_position_rotation, element, make_pair(size_t{0U}, num_nodes),
+            make_pair(3, 7)
         );
-        const auto qp_rot = Kokkos::subview(
-            qp_rotation, element, Kokkos::make_pair(size_t{0U}, num_qps), Kokkos::ALL
+        const auto qp_rot = subview(
+            qp_rotation, element, make_pair(size_t{0U}, num_qps), ALL
         );
 
         InterpQuaternion(shape_interp, node_rot, qp_rot);

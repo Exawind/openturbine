@@ -12,12 +12,15 @@ struct ContributeMassesToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    using member_type =
-        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+    using member_type = typename TeamPolicy::member_type;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
     double conditioner{};
-    typename Kokkos::View<FreedomSignature*, DeviceType>::const_type element_freedom_signature;
-    typename Kokkos::View<size_t* [6], DeviceType>::const_type element_freedom_table;
-    typename Kokkos::View<double* [6][6], DeviceType>::const_type dense;
+    ConstView<FreedomSignature*> element_freedom_signature;
+    ConstView<size_t* [6]> element_freedom_table;
+    ConstView<double* [6][6]> dense;
     CrsMatrixType sparse;
 
     KOKKOS_FUNCTION

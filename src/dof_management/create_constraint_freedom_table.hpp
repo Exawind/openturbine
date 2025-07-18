@@ -9,13 +9,16 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct CreateConstraintFreedomTable {
-    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type;
-    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
-    typename Kokkos::View<size_t*, DeviceType>::const_type base_node_index;
-    typename Kokkos::View<size_t*, DeviceType>::const_type active_dofs;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    Kokkos::View<size_t* [6], DeviceType> target_node_freedom_table;
-    Kokkos::View<size_t* [6], DeviceType> base_node_freedom_table;
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<ConstraintType*> type;
+    ConstView<size_t*> target_node_index;
+    ConstView<size_t*> base_node_index;
+    ConstView<size_t*> active_dofs;
+    ConstView<size_t*> node_freedom_map_table;
+    View<size_t* [6]> target_node_freedom_table;
+    View<size_t* [6]> base_node_freedom_table;
 
     KOKKOS_FUNCTION
     void operator()(size_t constraint) const {

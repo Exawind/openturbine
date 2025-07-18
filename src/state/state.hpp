@@ -15,23 +15,25 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct State {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+
     size_t time_step{0};
     size_t num_system_nodes;
-    Kokkos::View<size_t*, DeviceType> ID;
-    Kokkos::View<FreedomSignature*, DeviceType> node_freedom_allocation_table;
-    Kokkos::View<size_t*, DeviceType> active_dofs;
-    Kokkos::View<size_t*, DeviceType> node_freedom_map_table;
+    View<size_t*> ID;
+    View<FreedomSignature*> node_freedom_allocation_table;
+    View<size_t*> active_dofs;
+    View<size_t*> node_freedom_map_table;
 
-    Kokkos::View<double* [7], DeviceType> x0;          //< Initial global position/rotation
-    Kokkos::View<double* [7], DeviceType> x;           //< Current global position/rotation
-    Kokkos::View<double* [6], DeviceType> q_delta;     //< Displacement increment
-    Kokkos::View<double* [7], DeviceType> q_prev;      //< Previous state
-    Kokkos::View<double* [7], DeviceType> q;           //< Current state
-    Kokkos::View<double* [6], DeviceType> v;           //< Velocity
-    Kokkos::View<double* [6], DeviceType> vd;          //< Acceleration
-    Kokkos::View<double* [6], DeviceType> a;           //< Algorithmic acceleration
-    Kokkos::View<double* [6], DeviceType> f;           //< External forces
-    Kokkos::View<double* [6][6], DeviceType> tangent;  //< Tangent matrix
+    View<double* [7]> x0;          //< Initial global position/rotation
+    View<double* [7]> x;           //< Current global position/rotation
+    View<double* [6]> q_delta;     //< Displacement increment
+    View<double* [7]> q_prev;      //< Previous state
+    View<double* [7]> q;           //< Current state
+    View<double* [6]> v;           //< Velocity
+    View<double* [6]> vd;          //< Acceleration
+    View<double* [6]> a;           //< Algorithmic acceleration
+    View<double* [6]> f;           //< External forces
+    View<double* [6][6]> tangent;  //< Tangent matrix
 
     explicit State(size_t num_system_nodes_)
         : num_system_nodes(num_system_nodes_),

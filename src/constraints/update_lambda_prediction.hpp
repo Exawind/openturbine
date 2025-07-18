@@ -6,10 +6,15 @@ namespace openturbine {
 
 template <typename DeviceType>
 struct UpdateLambdaPrediction {
+    template <typename ValueType> using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType> using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType> using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType> using ConstLeftView = typename LeftView<ValueType>::const_type;
+
     size_t num_system_dofs;
-    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
-    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x;
-    Kokkos::View<double* [6], DeviceType> lambda;
+    ConstView<Kokkos::pair<size_t, size_t>*> row_range;
+    ConstLeftView<double* [1]> x;
+    View<double* [6]> lambda;
 
     KOKKOS_FUNCTION
     void operator()(size_t constraint) const {

@@ -21,7 +21,7 @@ void TestCalculateForceVectors_ThreeElements_1() {
             const auto r0 = Kokkos::View<double[3]>::const_type(r0_data.data());
             constexpr auto c10 = 2.;
 
-            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>(r0, c10, f0);
+            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>::invoke(r0, c10, f0);
         }
     );
 
@@ -43,7 +43,7 @@ void TestCalculateForceVectors_ThreeElements_2() {
             const auto r1 = Kokkos::View<double[3]>::const_type(r1_data.data());
             constexpr auto c11 = -1.;
 
-            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>(r1, c11, f1);
+            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>::invoke(r1, c11, f1);
         }
     );
 
@@ -65,7 +65,7 @@ void TestCalculateForceVectors_ThreeElements_3() {
             const auto r2 = Kokkos::View<double[3]>::const_type(r2_data.data());
             constexpr auto c12 = 0.5;
 
-            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>(r2, c12, f2);
+            openturbine::springs::CalculateForceVectors<Kokkos::DefaultExecutionSpace>::invoke(r2, c12, f2);
         }
     );
 
