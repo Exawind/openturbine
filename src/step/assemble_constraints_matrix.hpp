@@ -17,7 +17,8 @@ inline void AssembleConstraintsMatrix(
 
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
 
-    auto constraint_policy = TeamPolicy(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
+    auto constraint_policy =
+        TeamPolicy(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,

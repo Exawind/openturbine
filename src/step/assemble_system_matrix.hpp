@@ -25,10 +25,8 @@ inline void AssembleSystemMatrix(
     const auto num_masses = static_cast<int>(elements.masses.num_elems);
     const auto num_springs = static_cast<int>(elements.springs.num_elems);
 
-    const auto vector_length =
-        std::min(num_nodes, TeamPolicy::vector_length_max());
-    auto beams_sparse_matrix_policy =
-        TeamPolicy(num_beams, Kokkos::AUTO(), vector_length);
+    const auto vector_length = std::min(num_nodes, TeamPolicy::vector_length_max());
+    auto beams_sparse_matrix_policy = TeamPolicy(num_beams, Kokkos::AUTO(), vector_length);
     auto masses_sparse_matrix_policy = TeamPolicy(num_masses, Kokkos::AUTO());
     auto springs_sparse_matrix_policy = TeamPolicy(num_springs, Kokkos::AUTO());
 
