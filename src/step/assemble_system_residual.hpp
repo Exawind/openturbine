@@ -22,10 +22,15 @@ inline void AssembleSystemResidual(
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
 
-    auto forces_vector_policy = RangePolicy(0, state.num_system_nodes);
-    auto beams_vector_policy = TeamPolicy(elements.beams.num_elems, Kokkos::AUTO());
-    auto masses_vector_policy = RangePolicy(0, elements.masses.num_elems);
-    auto springs_vector_policy = RangePolicy(0, elements.springs.num_elems);
+    const auto num_nodes = static_cast<int>(elements.beams.max_elem_nodes);
+    const auto num_beams = static_cast<int>(elements.beams.num_elems);
+    const auto num_masses = static_cast<int>(elements.masses.num_elems);
+    const auto num_springs = static_cast<int>(elements.springs.num_elems);
+
+    auto forces_vector_policy = RangePolicy(0, num_nodes);
+    auto beams_vector_policy = TeamPolicy(num_beams, Kokkos::AUTO());
+    auto masses_vector_policy = RangePolicy(0, num_masses);
+    auto springs_vector_policy = RangePolicy(0, num_springs);
 
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
