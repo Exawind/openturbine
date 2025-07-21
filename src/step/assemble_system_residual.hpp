@@ -22,7 +22,7 @@ inline void AssembleSystemResidual(
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
 
-    const auto num_nodes = static_cast<int>(elements.beams.max_elem_nodes);
+    const auto num_nodes = static_cast<int>(state.num_system_nodes);
     const auto num_beams = static_cast<int>(elements.beams.num_elems);
     const auto num_masses = static_cast<int>(elements.masses.num_elems);
     const auto num_springs = static_cast<int>(elements.springs.num_elems);
