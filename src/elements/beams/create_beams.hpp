@@ -138,7 +138,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
     );
 
-    auto team_policy = TeamPolicy(beams.num_elems, Kokkos::AUTO());
+    auto team_policy = TeamPolicy(static_cast<int>(beams.num_elems), Kokkos::AUTO());
 
     parallel_for(
         "InterpolateToQuadraturePoints", team_policy,
