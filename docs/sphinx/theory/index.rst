@@ -15,3 +15,4 @@ elements, constraints, and other relevant topics.
    lsfe
    quadrature
    lsfit
+   constraints
