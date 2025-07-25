@@ -1,21 +1,10 @@
 #pragma once
 
-#include <cstdint>
+#include "dss_algorithm.hpp"
 
 #include "OpenTurbine_config.h"
 
 namespace openturbine {
-
-enum class DSSAlgorithm : std::uint8_t {
-    CUSOLVER_SP,
-    CUDSS,
-    KLU,
-    UMFPACK,
-    SUPERLU,
-    SUPERLU_MT,
-    MKL,
-    NONE,
-};
 
 template <DSSAlgorithm>
 class DSSHandle {

@@ -3,39 +3,45 @@
 #include <Kokkos_Core.hpp>
 
 #include "constraints/constraints.hpp"
-#include "freedom_signature.hpp"
 #include "state/state.hpp"
 
 namespace openturbine {
 
 template <typename DeviceType>
 struct CreateConstraintFreedomTable {
-    typename Kokkos::View<ConstraintType*, DeviceType>::const_type type;
-    typename Kokkos::View<size_t*, DeviceType>::const_type target_node_index;
-    typename Kokkos::View<size_t*, DeviceType>::const_type base_node_index;
-    typename Kokkos::View<size_t*, DeviceType>::const_type active_dofs;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    Kokkos::View<size_t* [6], DeviceType> target_node_freedom_table;
-    Kokkos::View<size_t* [6], DeviceType> base_node_freedom_table;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<ConstraintType*> type;
+    ConstView<size_t*> target_node_index;
+    ConstView<size_t*> base_node_index;
+    ConstView<size_t*> active_dofs;
+    ConstView<size_t*> node_freedom_map_table;
+    View<size_t* [6]> target_node_freedom_table;
+    View<size_t* [6]> base_node_freedom_table;
 
     KOKKOS_FUNCTION
-    void operator()(size_t i) const {
+    void operator()(size_t constraint) const {
         {
-            const auto node_index = target_node_index(i);
+            const auto node_index = target_node_index(constraint);
             const auto num_active_dofs = active_dofs(node_index);
-            for (auto k = 0U; k < num_active_dofs; ++k) {
-                target_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
+            for (auto component = 0U; component < num_active_dofs; ++component) {
+                target_node_freedom_table(constraint, component) =
+                    node_freedom_map_table(node_index) + component;
             }
         }
-        if (GetNumberOfNodes(type(i)) == 2U) {
-            const auto node_index = base_node_index(i);
+        if (GetNumberOfNodes(type(constraint)) == 2U) {
+            const auto node_index = base_node_index(constraint);
             const auto num_active_dofs = active_dofs(node_index);
-            for (auto k = 0U; k < num_active_dofs; ++k) {
-                base_node_freedom_table(i, k) = node_freedom_map_table(node_index) + k;
+            for (auto component = 0U; component < num_active_dofs; ++component) {
+                base_node_freedom_table(constraint, component) =
+                    node_freedom_map_table(node_index) + component;
             }
         } else {
-            for (auto k = 0U; k < 6U; ++k) {
-                base_node_freedom_table(i, k) = 0UL;
+            for (auto component = 0U; component < 6U; ++component) {
+                base_node_freedom_table(constraint, component) = 0UL;
             }
         }
     }
@@ -45,8 +51,8 @@ template <typename DeviceType>
 inline void create_constraint_freedom_table(
     Constraints<DeviceType>& constraints, const State<DeviceType>& state
 ) {
-    auto constraints_range =
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+    auto constraints_range = RangePolicy(0, constraints.num_constraints);
 
     Kokkos::parallel_for(
         "Create Constraint Node Freedom Table", constraints_range,

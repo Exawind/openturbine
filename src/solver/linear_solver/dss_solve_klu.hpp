@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
 #include <klu.h>
 
+#include "dss_algorithm.hpp"
 #include "dss_handle_klu.hpp"
 
 namespace openturbine {

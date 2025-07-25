@@ -12,9 +12,11 @@ namespace openturbine {
 template <typename DeviceType>
 inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>& state) {
     auto region = Kokkos::Profiling::ScopedRegion("Update Tangent Operator");
+
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+
     Kokkos::parallel_for(
-        "CalculateTangentOperator",
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, state.num_system_nodes),
+        "CalculateTangentOperator", RangePolicy(0, state.num_system_nodes),
         CalculateTangentOperator<DeviceType>{
             parameters.h,
             state.q_delta,

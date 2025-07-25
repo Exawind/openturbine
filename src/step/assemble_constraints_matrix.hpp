@@ -14,9 +14,11 @@ inline void AssembleConstraintsMatrix(
     Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble Constraints Matrix");
-    auto constraint_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(constraints.num_constraints), Kokkos::AUTO()
-    );
+
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+
+    auto constraint_policy =
+        TeamPolicy(static_cast<int>(constraints.num_constraints), Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,

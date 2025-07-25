@@ -1,19 +1,17 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <vector>
-
-#include "types.hpp"
 
 namespace openturbine {
 
-using BeamQuadrature = std::vector<Array_2>;
-
-inline BeamQuadrature CreateTrapezoidalQuadrature(const std::vector<double>& grid) {
+inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(const std::vector<double>& grid
+) {
     const auto n{grid.size()};
     const auto [grid_min, grid_max] = std::minmax_element(begin(grid), end(grid));
     const auto grid_range{*grid_max - *grid_min};
-    BeamQuadrature quadrature{
+    auto quadrature = std::vector<std::array<double, 2>>{
         {-1., (grid[1] - grid[0]) / grid_range},
     };
     for (auto i = 1U; i < n - 1; ++i) {

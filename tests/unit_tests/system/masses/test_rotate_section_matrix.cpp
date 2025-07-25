@@ -18,7 +18,7 @@ struct ExecuteRotateSectionMatrix {
 
     KOKKOS_FUNCTION
     void operator()(size_t) const {
-        masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>(xr, Cstar, Cuu);
+        masses::RotateSectionMatrix<Kokkos::DefaultExecutionSpace>::invoke(xr, Cstar, Cuu);
     };
 };
 

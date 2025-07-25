@@ -21,8 +21,8 @@ inline void UpdateConstraintVariables(
 
     constraints.UpdateViews();
 
-    auto range_policy =
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+    auto range_policy = RangePolicy(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", range_policy,
         CalculateConstraintResidualGradient<DeviceType>{

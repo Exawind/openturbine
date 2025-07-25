@@ -27,13 +27,13 @@ void GetNodeMotion(
     const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_v,
     const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_vd
 ) {
-    for (auto i = 0U; i < kLieGroupComponents; ++i) {
-        node.position[i] = host_state_x(node.id, i);
-        node.displacement[i] = host_state_q(node.id, i);
+    for (auto component = 0U; component < 7U; ++component) {
+        node.position[component] = host_state_x(node.id, component);
+        node.displacement[component] = host_state_q(node.id, component);
     }
-    for (auto i = 0U; i < kLieAlgebraComponents; ++i) {
-        node.velocity[i] = host_state_v(node.id, i);
-        node.acceleration[i] = host_state_vd(node.id, i);
+    for (auto component = 0U; component < 6U; ++component) {
+        node.velocity[component] = host_state_v(node.id, component);
+        node.acceleration[component] = host_state_vd(node.id, component);
     }
 }
 
@@ -122,8 +122,8 @@ void SetPlatformLoads(
     }
 
     // Set external loads on platform node
-    for (auto i = 0U; i < 6; ++i) {
-        host_state.f(platform.node.id, i) = platform.node.loads[i];
+    for (auto component = 0U; component < 6; ++component) {
+        host_state.f(platform.node.id, component) = platform.node.loads[component];
     }
 }
 

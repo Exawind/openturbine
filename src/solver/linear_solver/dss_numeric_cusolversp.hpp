@@ -3,6 +3,9 @@
 #include <cusolverSp.h>
 #include <cusolverSp_LOWLEVEL_PREVIEW.h>
 
+#include "dss_algorithm.hpp"
+#include "dss_handle_cusolversp.hpp"
+
 namespace openturbine {
 template <typename CrsMatrixType>
 struct DSSNumericFunction<DSSHandle<DSSAlgorithm::CUSOLVER_SP>, CrsMatrixType> {

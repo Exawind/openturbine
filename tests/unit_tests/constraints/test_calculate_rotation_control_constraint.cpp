@@ -18,7 +18,7 @@ struct ExecuteCalculateRotationControlConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRotationControlConstraint<Kokkos::DefaultExecutionSpace>(
+        CalculateRotationControlConstraint<Kokkos::DefaultExecutionSpace>::invoke(
             X0, axes, constraint_inputs, base_node_u, target_node_u, residual_terms,
             base_gradient_terms, target_gradient_terms
         );

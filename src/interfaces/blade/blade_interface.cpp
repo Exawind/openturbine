@@ -54,8 +54,8 @@ components::Beam& BladeInterface::Blade() {
 bool BladeInterface::Step() {
     // Transfer node loads -> state
     for (const auto& node : this->blade.nodes) {
-        for (auto i = 0U; i < 6; ++i) {
-            this->host_state.f(node.id, i) = node.loads[i];
+        for (auto component = 0U; component < 6; ++component) {
+            this->host_state.f(node.id, component) = node.loads[component];
         }
     }
     Kokkos::deep_copy(this->state.f, this->host_state.f);
@@ -97,7 +97,7 @@ void BladeInterface::RestoreState() {
 }
 
 void BladeInterface::SetRootDisplacement(const std::array<double, 7>& u) const {
-    if (this->blade.prescribed_root_constraint_id == kInvalidID) {
+    if (this->blade.prescribed_root_constraint_id == components::Beam::invalid_id) {
         throw std::runtime_error("prescribed root motion was not enabled");
     }
     this->constraints.UpdateDisplacement(this->blade.prescribed_root_constraint_id, u);

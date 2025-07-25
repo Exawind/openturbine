@@ -92,10 +92,13 @@ public:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
-    /// Minimum valid hub diameter
+    /// @brief Placeholder node ID value for uninitialized components
+    static constexpr size_t invalid_id{9999999};
+
+    /// @brief Minimum valid hub diameter
     static constexpr double kMinHubDiameter{1e-8};
 
-    /// Tolerance for near zero comparisons
+    /// @brief Tolerance for near zero comparisons
     static constexpr double kZeroTolerance{1e-12};
 
     //--------------------------------------------------------------------------
@@ -104,8 +107,8 @@ public:
 
     std::vector<Beam> blades;                        //< Blades in the turbine
     Beam tower;                                      //< Tower in the turbine
-    size_t hub_mass_element_id{kInvalidID};          //< Hub mass element ID
-    size_t yaw_bearing_mass_element_id{kInvalidID};  //< Yaw bearing mass element ID
+    size_t hub_mass_element_id{invalid_id};          //< Hub mass element ID
+    size_t yaw_bearing_mass_element_id{invalid_id};  //< Yaw bearing mass element ID
 
     //--------------------------------------------------------------------------
     // Nodes

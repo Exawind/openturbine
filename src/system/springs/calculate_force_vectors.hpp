@@ -1,20 +1,22 @@
 #pragma once
 
-#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
-
-#include "math/vector_operations.hpp"
 
 namespace openturbine::springs {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateForceVectors(
-    const typename Kokkos::View<double[3], DeviceType>::const_type& r, double c1,
-    const Kokkos::View<double[3], DeviceType>& f
-) {
-    for (auto i = 0U; i < 3U; ++i) {
-        f(i) = c1 * r(i);
-    }
-}
+struct CalculateForceVectors {
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
+    KOKKOS_FUNCTION static void invoke(
+        const ConstView<double[3]>& r, double c1, const View<double[3]>& f
+    ) {
+        for (auto component = 0; component < 3; ++component) {
+            f(component) = c1 * r(component);
+        }
+    }
+};
 }  // namespace openturbine::springs

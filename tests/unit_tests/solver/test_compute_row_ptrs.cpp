@@ -38,7 +38,7 @@ TEST(ComputeRowPtrs, OneElementOneNode) {
     const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range
@@ -69,7 +69,7 @@ TEST(ComputeRowPtrs, OneElementTwoNodes) {
     const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range
@@ -100,7 +100,7 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesNoOverlap) {
     const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range
@@ -132,7 +132,7 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesOverlap) {
     const auto target_node_freedom_table = Kokkos::View<size_t* [6]>("target_node_freedom_table", 0);
     const auto row_range = Kokkos::View<Kokkos::pair<size_t, size_t>*>("row_range", 0);
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range
@@ -176,7 +176,7 @@ TEST(ComputeRowPtrs, OneElementOneNode_OneConstraint) {
         "row_range", std::array{Kokkos::make_pair(0UL, 6UL)}
     );
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range
@@ -215,7 +215,7 @@ TEST(ComputeRowPtrs, OneElementOneNode_TwoConstraint) {
         "row_range", std::array{Kokkos::make_pair(0UL, 6UL), Kokkos::make_pair(6UL, 12UL)}
     );
 
-    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>(
+    const auto row_ptrs = ComputeRowPtrs<Kokkos::View<size_t*>>::invoke(
         num_system_dofs, num_dofs, active_dofs, node_freedom_map_table, num_nodes_per_element,
         node_state_indices, base_active_dofs, target_active_dofs, base_node_freedom_table,
         target_node_freedom_table, row_range

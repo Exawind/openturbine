@@ -1,9 +1,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "utilities/controllers/discon.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
-#include "vendor/dylib/dylib.hpp"
 
 #include "OpenTurbine_config.h"
 

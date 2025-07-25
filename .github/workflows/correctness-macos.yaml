@@ -24,7 +24,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/spack
-        key: macos-spack_v4
+        key: macos-spack_v5
     - name: Install Dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       run: |

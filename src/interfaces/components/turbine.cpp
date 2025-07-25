@@ -12,15 +12,15 @@ namespace openturbine::interfaces::components {
 Turbine::Turbine(const TurbineInput& input, Model& model)
     : blades(CreateBlades(input.blades, model)),
       tower(input.tower, model),
-      hub_node(kInvalidID),
-      azimuth_node(kInvalidID),
-      shaft_base_node(kInvalidID),
-      yaw_bearing_node(kInvalidID),
-      tower_base(kInvalidID),
-      tower_top_to_yaw_bearing(kInvalidID),
-      yaw_bearing_to_shaft_base(kInvalidID),
-      shaft_base_to_azimuth(kInvalidID),
-      azimuth_to_hub(kInvalidID),
+      hub_node(invalid_id),
+      azimuth_node(invalid_id),
+      shaft_base_node(invalid_id),
+      yaw_bearing_node(invalid_id),
+      tower_base{invalid_id},
+      tower_top_to_yaw_bearing{invalid_id},
+      yaw_bearing_to_shaft_base{invalid_id},
+      shaft_base_to_azimuth{invalid_id},
+      azimuth_to_hub{invalid_id},
       blade_pitch_control(input.blades.size(), input.blade_pitch_angle) {
     // Validate turbine inputs
     ValidateInput(input);
@@ -129,11 +129,11 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Loop over blades
-    for (auto i = 0U; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         // Get node IDs for this blade only
         std::vector<size_t> current_blade_node_ids;
         std::transform(
-            this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
             std::back_inserter(current_blade_node_ids),
             [](const NodeData& node) {
                 return node.id;
@@ -153,7 +153,7 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
         }
 
         // Add blade apex node -> current_blade_node_ids vector
-        current_blade_node_ids.push_back(this->apex_nodes[i].id);
+        current_blade_node_ids.push_back(this->apex_nodes[beam].id);
 
         //----------------------------------------------------
         // Blade cone and azimuth transformations
@@ -161,7 +161,7 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
 
         // Calculate azimuth angle rotation quaternion (rotate about x-axis)
         const auto q_azimuth =
-            RotationVectorToQuaternion({static_cast<double>(i) * blade_angle_delta, 0., 0.});
+            RotationVectorToQuaternion({static_cast<double>(beam) * blade_angle_delta, 0., 0.});
 
         // Rotate blade nodes (including apex node) -> cone angle -> azimuth angle
         for (const auto& node_id : current_blade_node_ids) {
@@ -222,7 +222,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     this->apex_nodes.reserve(this->blades.size());
 
     // Create one apex node per blade at origin
-    for (auto i = 0U; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         const auto apex_node_id = model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
         this->apex_nodes.emplace_back(apex_node_id);
     }
@@ -262,17 +262,17 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     this->blade_node_ids.reserve(
         this->blades.size() * (this->blades[0].nodes.size() + 1)  // +1 for apex node
     );
-    for (auto i = 0U; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         // Add blade structural nodes
         std::transform(
-            this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
             std::back_inserter(this->blade_node_ids),
             [](const NodeData& node) {
                 return node.id;
             }
         );
         // Add apex node for this blade
-        this->blade_node_ids.push_back(this->apex_nodes[i].id);
+        this->blade_node_ids.push_back(this->apex_nodes[beam].id);
     }
 
     //----------------------------------------------------
@@ -333,12 +333,13 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Loop through blades
-    for (auto i = 0U; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         // Get the blade apex node
-        const auto& apex_node = model.GetNode(this->apex_nodes[i].id);
+        const auto& apex_node = model.GetNode(this->apex_nodes[beam].id);
 
         // Get the blade root node
-        const auto& root_node = model.GetNode(this->blades[i].nodes[0].id);  // first node of blade
+        const auto& root_node =
+            model.GetNode(this->blades[beam].nodes[0].id);  // first node of blade
 
         // Calculate the pitch axis for the blade (from apex to root)
         const auto pitch_axis = std::array{
@@ -348,13 +349,13 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
         };
 
         // Create pitch control constraint
-        this->blade_pitch.emplace_back(model.AddRotationControl(
-            {root_node.id, apex_node.id}, pitch_axis, &this->blade_pitch_control[i]
-        ));
+        this->blade_pitch.emplace_back(ConstraintData{model.AddRotationControl(
+            {root_node.id, apex_node.id}, pitch_axis, &this->blade_pitch_control[beam]
+        )});
 
         // Add rigid constraint between hub and blade apex
         this->apex_to_hub.emplace_back(
-            model.AddRigidJointConstraint({this->hub_node.id, apex_node.id})
+            ConstraintData{model.AddRigidJointConstraint({this->hub_node.id, apex_node.id})}
         );
     }
 
@@ -364,19 +365,19 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
 
     // Add rigid constraint between hub and azimuth node
     this->azimuth_to_hub =
-        ConstraintData(model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id}));
+        ConstraintData{model.AddRigidJointConstraint({this->azimuth_node.id, this->hub_node.id})};
 
     // Shaft axis constraint - add revolute joint between shaft base and azimuth node
     const auto shaft_axis =
         std::array{-cos(input.shaft_tilt_angle), 0., sin(input.shaft_tilt_angle)};
-    this->shaft_base_to_azimuth = ConstraintData(model.AddRevoluteJointConstraint(
+    this->shaft_base_to_azimuth = ConstraintData{model.AddRevoluteJointConstraint(
         {this->shaft_base_node.id, this->azimuth_node.id}, shaft_axis, &torque_control
-    ));
+    )};
 
     // Add rigid constraint from yaw bearing to shaft base
-    this->yaw_bearing_to_shaft_base = ConstraintData(
+    this->yaw_bearing_to_shaft_base = ConstraintData{
         model.AddRigidJointConstraint({this->yaw_bearing_node.id, this->shaft_base_node.id})
-    );
+    };
 
     //--------------------------------------------------------------------------
     // Nacelle control constraints
@@ -384,9 +385,9 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
 
     // Add constraint from tower top to yaw bearing
     this->yaw_control = input.nacelle_yaw_angle;
-    this->tower_top_to_yaw_bearing = ConstraintData(model.AddRotationControl(
+    this->tower_top_to_yaw_bearing = ConstraintData{model.AddRotationControl(
         {this->tower.nodes.back().id, this->yaw_bearing_node.id}, {0., 0., 1.}, &this->yaw_control
-    ));
+    )};
 
     //--------------------------------------------------------------------------
     // Tower base constraint
@@ -411,10 +412,10 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
     // Apply initial blade pitch
     //--------------------------------------------------------------------------
-    for (auto i = 0U; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         // Get the blade root and apex nodes
-        const auto& root_node = model.GetNode(this->blades[i].nodes.front().id);
-        const auto& apex_node = model.GetNode(this->apex_nodes[i].id);
+        const auto& root_node = model.GetNode(this->blades[beam].nodes.front().id);
+        const auto& apex_node = model.GetNode(this->apex_nodes[beam].id);
 
         // Calculate the pitch axis
         const auto pitch_axis = std::array{
@@ -425,7 +426,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
 
         // Create rotation vector about the pitch axis
         const auto pitch_axis_unit = UnitVector(pitch_axis);
-        const Array_3 rotation_vector{
+        const auto rotation_vector = std::array{
             input.blade_pitch_angle * pitch_axis_unit[0],
             input.blade_pitch_angle * pitch_axis_unit[1],
             input.blade_pitch_angle * pitch_axis_unit[2]
@@ -438,7 +439,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
         const auto pitch_center = std::array{apex_node.x0[0], apex_node.x0[1], apex_node.x0[2]};
 
         // Apply pitch rotation as displacement to all blade nodes and apex node
-        for (const auto& blade_node : this->blades[i].nodes) {
+        for (const auto& blade_node : this->blades[beam].nodes) {
             model.GetNode(blade_node.id).RotateDisplacementAboutPoint(q_pitch, pitch_center);
         }
     }
@@ -502,7 +503,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Add prescribed BC constraint at the tower base with initial displacements
-    this->tower_base = ConstraintData(model.AddPrescribedBC(tower_base_node.id, tower_base_node.u));
+    this->tower_base = ConstraintData{model.AddPrescribedBC(tower_base_node.id, tower_base_node.u)};
 }
 
 void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
@@ -518,17 +519,17 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
     std::vector<size_t> rotor_velocity_node_ids{this->hub_node.id, this->azimuth_node.id};
 
     // Add all blade nodes and apex nodes
-    for (size_t i = 0; i < this->blades.size(); ++i) {
+    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
         // Add blade nodes
         std::transform(
-            this->blades[i].nodes.begin(), this->blades[i].nodes.end(),
+            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
             std::back_inserter(rotor_velocity_node_ids),
             [](const auto& blade_node) {
                 return blade_node.id;
             }
         );
         // Add apex node
-        rotor_velocity_node_ids.push_back(this->apex_nodes[i].id);
+        rotor_velocity_node_ids.push_back(this->apex_nodes[beam].id);
     }
 
     // Create rigid body velocity -> transl. vel = 0, angular vel. about shaft axis

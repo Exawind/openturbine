@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
+#include "dss_algorithm.hpp"
 #include "slu_mt_ddefs.h"
 
 namespace openturbine {

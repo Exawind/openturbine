@@ -1,5 +1,8 @@
 #pragma once
 
+#include <array>
+#include <string>
+
 #include "step/step_parameters.hpp"
 
 namespace openturbine::interfaces::components {

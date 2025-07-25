@@ -2,8 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "types.hpp"
-
 namespace openturbine {
 
 template <typename DeviceType>

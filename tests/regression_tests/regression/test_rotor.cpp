@@ -1,21 +1,13 @@
 #include <array>
-#include <filesystem>
 #include <fstream>
-#include <initializer_list>
 #include <iostream>
 
 #include <gtest/gtest.h>
 
 #include "iea15_rotor_data.hpp"
 #include "model/model.hpp"
-#include "solver/solver.hpp"
-#include "state/state.hpp"
 #include "step/step.hpp"
-#include "test_utilities.hpp"
-#include "types.hpp"
-#include "utilities/controllers/discon.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
-#include "vendor/dylib/dylib.hpp"
 
 namespace openturbine::tests {
 
@@ -130,7 +122,7 @@ TEST(RotorTest, IEA15Rotor) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < num_steps; ++i) {
+    for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
@@ -184,7 +176,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < num_steps; ++i) {
+    for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
@@ -256,7 +248,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < num_steps; ++i) {
+    for (auto i = 0U; i < num_steps; ++i) {
         // Time at end of step
         const double t = step_size * static_cast<double>(i + 1);
 
@@ -315,7 +307,7 @@ TEST(RotorTest, IEA15RotorHost) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<Device>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (size_t i = 0; i < num_steps; ++i) {
+    for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
         const auto q_hub = RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),

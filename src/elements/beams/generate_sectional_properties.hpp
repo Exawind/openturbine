@@ -3,8 +3,6 @@
 #include <array>
 #include <cmath>
 
-#include "types.hpp"
-
 namespace openturbine {
 
 /**
@@ -40,7 +38,7 @@ namespace openturbine {
  *
  * @return 6x6 cross-sectional stiffness matrix
  */
-static Array_6x6 GenerateStiffnessMatrix(
+static std::array<std::array<double, 6>, 6> GenerateStiffnessMatrix(
     double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C,
     double y_C, double theta_p, double x_S, double y_S, double theta_s
 ) {
@@ -62,7 +60,7 @@ static Array_6x6 GenerateStiffnessMatrix(
     //--------------------------------------------------------------------------
     // Assemble stiffness matrix by blocks
     //--------------------------------------------------------------------------
-    Array_6x6 stiffness_matrix = {};  // initialized to zeros
+    std::array<std::array<double, 6>, 6> stiffness_matrix = {};  // initialized to zeros
 
     // Shear-shear coupling (rows 0-1, cols 0-1)
     stiffness_matrix[0][0] = shear_xx;
@@ -125,7 +123,7 @@ static Array_6x6 GenerateStiffnessMatrix(
  *
  * @return 6x6 cross-sectional mass matrix
  */
-static Array_6x6 GenerateMassMatrix(
+static std::array<std::array<double, 6>, 6> GenerateMassMatrix(
     double m, double I_x, double I_y, double I_p, double x_G = 0., double y_G = 0.,
     double theta_i = 0.
 ) {
@@ -140,7 +138,7 @@ static Array_6x6 GenerateMassMatrix(
     //--------------------------------------------------------------------------
     // Assemble mass matrix by blocks
     //--------------------------------------------------------------------------
-    Array_6x6 mass_matrix = {};  // initialized to zeros
+    std::array<std::array<double, 6>, 6> mass_matrix = {};  // initialized to zeros
 
     // Translational mass with CG coupling (rows 0-2, cols 0-2)
     mass_matrix[0][0] = m;

@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "interfaces/node_data.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 class Model;
@@ -27,17 +26,20 @@ public:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
+    /// @brief Placeholder node ID value for uninitialized components
+    static constexpr size_t invalid_id{9999999};
+
     /// @brief Maximum number of points allowed in blade geometry definition
     static constexpr size_t kMaxGeometryPoints{10};
 
     /// @brief Beam element ID
-    size_t beam_element_id{kInvalidID};
+    size_t beam_element_id{invalid_id};
 
     /// @brief Blade node data
     std::vector<NodeData> nodes;
 
     /// @brief Constraint ID of prescribed root displacement
-    size_t prescribed_root_constraint_id{kInvalidID};
+    size_t prescribed_root_constraint_id{invalid_id};
 
     /// @brief Location of nodes in blade element [-1, 1]
     std::vector<double> node_xi;

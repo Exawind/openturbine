@@ -1,8 +1,6 @@
 #pragma once
 
-#include "dof_management/freedom_signature.hpp"
 #include "math/quaternion_operations.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 
@@ -26,28 +24,29 @@ namespace openturbine {
  * where the first 3 are translational and the last 3 are rotational components.
  */
 struct Node {
-    size_t id;   //< Node identifier
-    Array_7 x0;  //< Initial node positions and orientations
-    Array_7 u;   //< Node displacement
-    Array_6 v;   //< Node velocity
-    Array_6 vd;  //< Node acceleration
-    double s;    //< Position of node in element on range [0, 1]
+    size_t id;                 //< Node identifier
+    std::array<double, 7> x0;  //< Initial node positions and orientations
+    std::array<double, 7> u;   //< Node displacement
+    std::array<double, 6> v;   //< Node velocity
+    std::array<double, 6> vd;  //< Node acceleration
+    double s;                  //< Position of node in element on range [0, 1]
 
     /// @brief Construct a node with an ID
     explicit Node(size_t node_id)
         : id(node_id),
-          x0(Array_7{0., 0., 0., 1., 0., 0., 0.}),
-          u(Array_7{0., 0., 0., 1., 0., 0., 0.}),
-          v(Array_6{0., 0., 0., 0., 0., 0.}),
-          vd(Array_6{0., 0., 0., 0., 0., 0.}),
+          x0(std::array<double, 7>{0., 0., 0., 1., 0., 0., 0.}),
+          u(std::array<double, 7>{0., 0., 0., 1., 0., 0., 0.}),
+          v(std::array<double, 6>{0., 0., 0., 0., 0., 0.}),
+          vd(std::array<double, 6>{0., 0., 0., 0., 0., 0.}),
           s(0.) {}
 
     /// @brief Construct a node with an ID, position, displacement, velocity, and acceleration
     /// vectors
     Node(
-        size_t node_id, Array_7 position, Array_7 displacement = Array_7{0., 0., 0., 1., 0., 0., 0.},
-        Array_6 velocity = Array_6{0., 0., 0., 0., 0., 0.},
-        Array_6 acceleration = Array_6{0., 0., 0., 0., 0., 0.}
+        size_t node_id, std::array<double, 7> position,
+        std::array<double, 7> displacement = std::array<double, 7>{0., 0., 0., 1., 0., 0., 0.},
+        std::array<double, 6> velocity = std::array<double, 6>{0., 0., 0., 0., 0., 0.},
+        std::array<double, 6> acceleration = std::array<double, 6>{0., 0., 0., 0., 0., 0.}
     )
         : id(node_id), x0(position), u(displacement), v(velocity), vd(acceleration), s(0.) {}
 
@@ -57,10 +56,10 @@ struct Node {
 
     /*
      * @brief Get the displaced position (initial position + displacement)
-     * @return Array_7 containing displaced position and orientation
+     * @return std::array<double, 7> containing displaced position and orientation
      */
-    [[nodiscard]] Array_7 DisplacedPosition() const {
-        Array_7 displaced_position{0., 0., 0., 1., 0., 0., 0.};
+    [[nodiscard]] std::array<double, 7> DisplacedPosition() const {
+        auto displaced_position = std::array{0., 0., 0., 1., 0., 0., 0.};
 
         // Add translational components (x, y, z)
         displaced_position[0] = this->x0[0] + this->u[0];
@@ -85,7 +84,7 @@ struct Node {
     //--------------------------------------------------------------------------
 
     /// Translate node by a displacement vector
-    Node& Translate(const Array_3& displacement) {
+    Node& Translate(const std::array<double, 3>& displacement) {
         //----------------------------------------------------
         // Position, x(0:2)
         //----------------------------------------------------
@@ -98,12 +97,13 @@ struct Node {
     }
 
     /// Rotate node by a quaternion about the given point
-    Node& RotateAboutPoint(const Array_4& q, const Array_3& point) {
+    Node& RotateAboutPoint(const std::array<double, 4>& q, const std::array<double, 3>& point) {
         //----------------------------------------------------
         // Position, x(0:2)
         //----------------------------------------------------
         // Get vector from reference point to initial node position
-        const Array_3 r{this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]};
+        const auto r =
+            std::array{this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]};
 
         // Rotate the vector r using the provided quaternion q
         const auto rotated_r = RotateVectorByQuaternion(q, r);
@@ -129,7 +129,7 @@ struct Node {
     }
 
     /// Rotate node by a rotation vector about the given point
-    Node& RotateAboutPoint(const Array_3& rv, const Array_3& point) {
+    Node& RotateAboutPoint(const std::array<double, 3>& rv, const std::array<double, 3>& point) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateAboutPoint(q, point);
         return *this;
@@ -140,7 +140,7 @@ struct Node {
     //--------------------------------------------------------------------------
 
     /// Add translational displacement to node displacement vector
-    Node& TranslateDisplacement(const Array_3& displacement) {
+    Node& TranslateDisplacement(const std::array<double, 3>& displacement) {
         this->u[0] += displacement[0];
         this->u[1] += displacement[1];
         this->u[2] += displacement[2];
@@ -148,13 +148,15 @@ struct Node {
     }
 
     /// Rotate node displacement by a quaternion about the given point
-    Node& RotateDisplacementAboutPoint(const Array_4& q, const Array_3& point) {
+    Node& RotateDisplacementAboutPoint(
+        const std::array<double, 4>& q, const std::array<double, 3>& point
+    ) {
         //----------------------------------------------------
         // Displacement position, u(0:2)
         //----------------------------------------------------
         // Get vector from reference point to displaced node position
         const auto displaced_position = this->DisplacedPosition();
-        const Array_3 r{
+        const std::array<double, 3> r{
             displaced_position[0] - point[0], displaced_position[1] - point[1],
             displaced_position[2] - point[2]
         };
@@ -184,7 +186,9 @@ struct Node {
     }
 
     /// Rotate node displacement by a rotation vector about the given point
-    Node& RotateDisplacementAboutPoint(const Array_3& rv, const Array_3& point) {
+    Node& RotateDisplacementAboutPoint(
+        const std::array<double, 3>& rv, const std::array<double, 3>& point
+    ) {
         const auto q = RotationVectorToQuaternion(rv);
         this->RotateDisplacementAboutPoint(q, point);
         return *this;
@@ -195,16 +199,18 @@ struct Node {
     //--------------------------------------------------------------------------
 
     /// Set node velocity based on rigid body motion about a reference point
-    void SetVelocityAboutPoint(const Array_6& velocity, const Array_3& point) {
+    void SetVelocityAboutPoint(
+        const std::array<double, 6>& velocity, const std::array<double, 3>& point
+    ) {
         // Get vector from reference point to displaced node position
         const auto displaced_position = this->DisplacedPosition();
-        const Array_3 r{
+        const auto r = std::array{
             displaced_position[0] - point[0], displaced_position[1] - point[1],
             displaced_position[2] - point[2]
         };
 
         // Calculate velocity contribution from angular velocity
-        const Array_3 omega{velocity[3], velocity[4], velocity[5]};
+        const auto omega = std::array{velocity[3], velocity[4], velocity[5]};
         const auto omega_cross_r = CrossProduct(omega, r);
 
         // Set node translational velocity
@@ -224,17 +230,18 @@ struct Node {
 
     /// Set node acceleration based on rigid body motion about a reference point
     void SetAccelerationAboutPoint(
-        const Array_6& acceleration, const Array_3& omega, const Array_3& point
+        const std::array<double, 6>& acceleration, const std::array<double, 3>& omega,
+        const std::array<double, 3>& point
     ) {
         // Get vector from reference point to displaced node position
         const auto displaced_position = this->DisplacedPosition();
-        const Array_3 r{
+        const auto r = std::array{
             displaced_position[0] - point[0], displaced_position[1] - point[1],
             displaced_position[2] - point[2]
         };
 
         // Calculate translational acceleration contribution from angular velocity
-        const Array_3 alpha{acceleration[3], acceleration[4], acceleration[5]};
+        const auto alpha = std::array{acceleration[3], acceleration[4], acceleration[5]};
         const auto alpha_cross_r = CrossProduct(alpha, r);
         const auto omega_cross_omega_cross_r = CrossProduct(omega, CrossProduct(omega, r));
 
@@ -287,7 +294,7 @@ public:
      * @brief Sets the node position from a 7 x 1 vector
      * @param p -> 7 x 1 vector (x, y, z, w, i, j, k)
      */
-    NodeBuilder& SetPosition(const Array_7& p) {
+    NodeBuilder& SetPosition(const std::array<double, 7>& p) {
         this->node.x0 = p;
         return *this;
     }
@@ -303,7 +310,7 @@ public:
      * @param k quaternion k component (z vector part)
      */
     NodeBuilder& SetPosition(double x, double y, double z, double w, double i, double j, double k) {
-        return this->SetPosition(Array_7{x, y, z, w, i, j, k});
+        return this->SetPosition(std::array{x, y, z, w, i, j, k});
     }
 
     /*
@@ -312,7 +319,7 @@ public:
      * @param y Y position component
      * @param z Z position component
      */
-    NodeBuilder& SetPosition(const Array_3& p) {
+    NodeBuilder& SetPosition(const std::array<double, 3>& p) {
         this->node.x0[0] = p[0];
         this->node.x0[1] = p[1];
         this->node.x0[2] = p[2];
@@ -326,7 +333,7 @@ public:
      * @param z Z position component
      */
     NodeBuilder& SetPosition(double x, double y, double z) {
-        return this->SetPosition(Array_3{x, y, z});
+        return this->SetPosition(std::array{x, y, z});
     }
 
     //--------------------------------------------------------------------------
@@ -337,7 +344,7 @@ public:
      * @brief Sets the node orientation from quaternion
      * @param p quaternion (w,i,j,k)
      */
-    NodeBuilder& SetOrientation(const Array_4& p) {
+    NodeBuilder& SetOrientation(const std::array<double, 4>& p) {
         this->node.x0[3] = p[0];
         this->node.x0[4] = p[1];
         this->node.x0[5] = p[2];
@@ -353,7 +360,7 @@ public:
      * @param k quaternion k component (z vector part)
      */
     NodeBuilder& SetOrientation(double w, double i, double j, double k) {
-        return this->SetOrientation(Array_4{w, i, j, k});
+        return this->SetOrientation(std::array{w, i, j, k});
     }
 
     //--------------------------------------------------------------------------
@@ -364,7 +371,7 @@ public:
      * @brief Sets the node displacement from a 7 x 1 vector
      * @param p -> 7 x 1 vector (x, y, z, w, i, j, k)
      */
-    NodeBuilder& SetDisplacement(const Array_7& p) {
+    NodeBuilder& SetDisplacement(const std::array<double, 7>& p) {
         this->node.u = p;
         return *this;
     }
@@ -382,7 +389,7 @@ public:
     NodeBuilder& SetDisplacement(
         double x, double y, double z, double w, double i, double j, double k
     ) {
-        return this->SetDisplacement(Array_7{x, y, z, w, i, j, k});
+        return this->SetDisplacement(std::array{x, y, z, w, i, j, k});
     }
 
     /*
@@ -391,7 +398,7 @@ public:
      * @param y displacement Y component
      * @param z displacement Z component
      */
-    NodeBuilder& SetDisplacement(const Array_3& p) {
+    NodeBuilder& SetDisplacement(const std::array<double, 3>& p) {
         this->node.u[0] = p[0];
         this->node.u[1] = p[1];
         this->node.u[2] = p[2];
@@ -405,7 +412,7 @@ public:
      * @param z displacement Z component
      */
     NodeBuilder& SetDisplacement(double x, double y, double z) {
-        return this->SetDisplacement(Array_3{x, y, z});
+        return this->SetDisplacement(std::array{x, y, z});
     }
 
     //--------------------------------------------------------------------------
@@ -430,7 +437,7 @@ public:
      * @brief Sets the node velocity from a vector
      * @param v -> 6 x 1 vector (x, y, z, rx, ry, rz)
      */
-    NodeBuilder& SetVelocity(const Array_6& v) {
+    NodeBuilder& SetVelocity(const std::array<double, 6>& v) {
         return this->SetVelocity(v[0], v[1], v[2], v[3], v[4], v[5]);
     }
 
@@ -451,7 +458,9 @@ public:
      * @brief Sets the node velocity from a 3 x 1 vector
      * @param v -> 3D vector (x, y, z)
      */
-    NodeBuilder& SetVelocity(const Array_3& v) { return this->SetVelocity(v[0], v[1], v[2]); }
+    NodeBuilder& SetVelocity(const std::array<double, 3>& v) {
+        return this->SetVelocity(v[0], v[1], v[2]);
+    }
 
     //--------------------------------------------------------------------------
     // Set acceleration
@@ -475,7 +484,7 @@ public:
      * @brief Sets the node acceleration from a vector
      * @param v -> 6 x 1 vector (x, y, z, rx, ry, rz)
      */
-    NodeBuilder& SetAcceleration(const Array_6& v) {
+    NodeBuilder& SetAcceleration(const std::array<double, 6>& v) {
         return this->SetAcceleration(v[0], v[1], v[2], v[3], v[4], v[5]);
     }
 
@@ -496,7 +505,7 @@ public:
      * @brief Sets the node acceleration from a vector
      * @param v -> 3 x 1 vector (x, y, z)
      */
-    NodeBuilder& SetAcceleration(const Array_3& v) {
+    NodeBuilder& SetAcceleration(const std::array<double, 3>& v) {
         return this->SetAcceleration(v[0], v[1], v[2]);
     }
 

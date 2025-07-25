@@ -12,19 +12,24 @@ struct ContributeBeamsToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
     using RowDataType = typename CrsMatrixType::values_type::non_const_type;
     using ColIdxType = typename CrsMatrixType::staticcrsgraph_type::entries_type::non_const_type;
-    using member_type =
-        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+    using member_type = typename TeamPolicy::member_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+
     double conditioner{};
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<FreedomSignature**, DeviceType>::const_type element_freedom_signature;
-    typename Kokkos::View<size_t** [6], DeviceType>::const_type element_freedom_table;
-    typename Kokkos::View<double*** [6][6], DeviceType>::const_type dense;
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<FreedomSignature**> element_freedom_signature;
+    ConstView<size_t** [6]> element_freedom_table;
+    ConstView<double*** [6][6]> dense;
     CrsMatrixType sparse;
 
     KOKKOS_FUNCTION
     void operator()(member_type member) const {
-        const auto i = member.league_rank();
-        const auto num_nodes = static_cast<int>(num_nodes_per_element(i));
+        const auto element = member.league_rank();
+        const auto num_nodes = static_cast<int>(num_nodes_per_element(element));
         constexpr auto is_sorted = true;
         constexpr auto force_atomic =
             !std::is_same_v<typename DeviceType::execution_space, Kokkos::Serial>;
@@ -38,13 +43,13 @@ struct ContributeBeamsToSparseMatrix {
                     static_cast<typename CrsMatrixType::ordinal_type>(node_2 * num_dofs);
 
                 const auto first_column = static_cast<typename CrsMatrixType::ordinal_type>(
-                    element_freedom_table(i, node_2, 0)
+                    element_freedom_table(element, node_2, 0)
                 );
                 const auto local_dense =
-                    Kokkos::subview(dense, i, node_1, node_2, Kokkos::ALL, Kokkos::ALL);
+                    Kokkos::subview(dense, element, node_1, node_2, Kokkos::ALL, Kokkos::ALL);
                 for (auto component_1 = 0; component_1 < num_dofs; ++component_1) {
                     const auto row_num =
-                        static_cast<int>(element_freedom_table(i, node_1, component_1));
+                        static_cast<int>(element_freedom_table(element, node_1, component_1));
                     auto row = sparse.row(row_num);
                     auto offset = KokkosSparse::findRelOffset(
                         &(row.colidx(0)), row.length, first_column, hint, is_sorted

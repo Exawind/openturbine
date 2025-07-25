@@ -18,9 +18,12 @@ inline double CalculateConvergenceError(
     const State<DeviceType>& state, const Constraints<DeviceType>& constraints
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Calculate Convergence Error");
+
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+
     auto sum_error_squared_system = 0.;
     Kokkos::parallel_reduce(
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, solver.num_system_nodes),
+        RangePolicy(0, solver.num_system_nodes),
         CalculateSystemErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
@@ -34,7 +37,7 @@ inline double CalculateConvergenceError(
     );
     auto sum_error_squared_constraints = 0.;
     Kokkos::parallel_reduce(
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints),
+        RangePolicy(0, constraints.num_constraints),
         CalculateConstraintsErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,

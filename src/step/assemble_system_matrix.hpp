@@ -18,20 +18,17 @@ inline void AssembleSystemMatrix(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Assemble System Matrix");
 
-    const auto num_nodes = elements.beams.max_elem_nodes;
-    const auto vector_length = std::min(
-        static_cast<int>(num_nodes),
-        Kokkos::TeamPolicy<typename DeviceType::execution_space>::vector_length_max()
-    );
-    auto beams_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(elements.beams.num_elems), Kokkos::AUTO(), vector_length
-    );
-    auto masses_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(elements.masses.num_elems), Kokkos::AUTO()
-    );
-    auto springs_sparse_matrix_policy = Kokkos::TeamPolicy<typename DeviceType::execution_space>(
-        static_cast<int>(elements.springs.num_elems), Kokkos::AUTO()
-    );
+    using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+
+    const auto num_nodes = static_cast<int>(elements.beams.max_elem_nodes);
+    const auto num_beams = static_cast<int>(elements.beams.num_elems);
+    const auto num_masses = static_cast<int>(elements.masses.num_elems);
+    const auto num_springs = static_cast<int>(elements.springs.num_elems);
+
+    const auto vector_length = std::min(num_nodes, TeamPolicy::vector_length_max());
+    auto beams_sparse_matrix_policy = TeamPolicy(num_beams, Kokkos::AUTO(), vector_length);
+    auto masses_sparse_matrix_policy = TeamPolicy(num_masses, Kokkos::AUTO());
+    auto springs_sparse_matrix_policy = TeamPolicy(num_springs, Kokkos::AUTO());
 
     Kokkos::parallel_for(
         "ContributeBeamsToSparseMatrix", beams_sparse_matrix_policy,
