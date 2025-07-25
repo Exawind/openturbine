@@ -10,6 +10,7 @@ elements, constraints, and other relevant topics.
 
    overview
    gen-alpha
+   rigid
    gebt
    lsfe
    quadrature
