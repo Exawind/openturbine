@@ -11,7 +11,7 @@ extensions = [
     'sphinxcontrib.bibtex',     # BibTeX bibliography
     'sphinxcontrib.doxylink',   # Doxygen links
     'sphinxcontrib.mermaid',    # Mermaid diagrams
-    'sphinxcontrib.spelling'    # Spelling checker
+    'sphinxcontrib.spelling'   # Spelling checker
 ]
 
 bibtex_bibfiles = []
