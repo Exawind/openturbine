@@ -6,13 +6,10 @@ elements, constraints, and other relevant topics.
 
 .. toctree::
    :glob:
-   :maxdepth: 2
+   :maxdepth: 3
 
    overview
    gen-alpha
    rigid
-   gebt
-   lsfe
-   quadrature
-   lsfit
-   constraints
+   beam
+   configs

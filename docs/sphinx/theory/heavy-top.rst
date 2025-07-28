@@ -1,0 +1,92 @@
+Heavy Top Constrained-Rigid-Body Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We provide here a simple application of the OpenTurbine formulation for
+the the heavy-top problem, which is a rotating body fixed to the ground
+by a spherical joint. It is a common benchmark problem for
+constrained-rigid-body dynamics and for testing Lie-group time
+integrators like that used in OpenTurbine. We follow the problem
+description found in [@Bruls-etal:2012], but with the key difference
+that we formulate the problem in inertial coordinates rather than
+material coordinates. We assume the heavy top is a thin disk with mass
+:math:`m=15` kg. The :math:`6\times6` mass matrix in material
+coordinates is
+
+.. math::
+
+   \underline{\underline{M}}^* = \begin{bmatrix}
+   15 \mathrm{~kg}& 0 & 0 & 0 & 0 & 0\\
+   0 & 15 \mathrm{~kg} & 0 & 0 & 0 & 0\\
+   0 & 0 & 15 \mathrm{~kg} & 0 & 0 & 0\\
+   0 & 0 & 0 & 0.234375 \mathrm{~kg~m}^2 & 0 & 0\\
+   0 & 0 & 0 & 0 & 0.234375 \mathrm{~kg~m}^2 & 0\\
+   0 & 0 & 0 & 0 & 0 &  0.46875 \mathrm{~kg~m}^2 \\
+   \end{bmatrix}
+
+The heavy-top center of mass reference position and orientation (see
+Eq. :eq:`rigid-ref`) are given by
+
+.. math::
+
+   \underline{x}^0 = ( 0, 0 , -1 )^T\,, \quad
+   \underline{\underline{R}}^0 = \underline{\underline{I}} \,, \\
+
+respectively. The only component of external force (see
+Eq. :eq:`rbresid`) is gravity:
+
+.. math:: \underline{f} = [0,0,-g,0,0,0]^T
+
+where :math:`g=9.81` m/s\ :math:`^2`. The problem is constrained such
+that the center of mass is located 1 m from the origin, which can be
+written as three constraint equations as
+
+.. math:: \underline{\Phi} = \underline{\underline{R}}\, \underline{x}^0 - \underline{x}^c \in  \mathbb{R}^3
+
+where :math:`\underline{x}^c` is the current center-of-mass position,
+and for which the constraint gradient matrix is
+
+.. math:: \underline{\underline{B}}  = \begin{bmatrix}
+   -\underline{\underline{I}} & \widetilde{- \underline{\underline{R}}\, \underline{x}^0}
+   \end{bmatrix}
+
+:math:`\underline{\underline{B}} \in \mathbb{R}^{3 \times 6}`. The
+stiffness matrix associated with linearization of the contraint forces (see Eq. :eq:`variation`) is
+
+.. math:: \underline{\underline{K}}^\Phi = \begin{bmatrix} 
+   \underline{\underline{0}} & \underline{\underline{0}}\\
+   \underline{\underline{0}} & \underline{\underline{0}}
+   \end{bmatrix}
+
+The OpenTurbine regression test suite includes the spinning, heavy top
+problem with the following initial conditions:
+
+.. math::
+
+   \begin{aligned}
+   \underline{u}^i &= \left[ 0, 1, 1 \right]^T \, \mathrm{m}\\
+   \underline{\underline{R}}^i &= \begin{bmatrix}
+   1 & 0 & 0 \\
+   0 & \cos(\theta) & - \sin(\theta) \\
+   0 & \sin(\theta) & \cos(\theta)
+   \end{bmatrix}\,, 
+   \end{aligned}
+
+where :math:`\theta = \pi/2`,
+
+.. math::
+
+   \begin{aligned}
+   \omega^i &= (-4.61538,-150,0)^T \, \mathrm{rad/s}\\
+   \dot{\underline{u}}^i &= \widetilde{\omega^i}\left(\underline{x}^0+\underline{u}^i\right)\, \mathrm{m/s}
+   \end{aligned}
+
+.. container:: references csl-bib-body hanging-indent
+   :name: refs
+
+   .. container:: csl-entry
+      :name: ref-Bruls-etal:2012
+
+      Brüls, O., A. Cardona, and M. Arnold. 2012. “Lie Group
+      Generalized-:math:`\alpha` Time Integration Fo Constrained
+      Flexible Multibody Systems.” *Mechanism and Machine Theory*,
+      121–37.

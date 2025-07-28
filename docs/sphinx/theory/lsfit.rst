@@ -1,5 +1,5 @@
 Beam reference lines and reference configuration
-------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The use of LSFEs as our beam spatial discretization presents
 opportunities and challenges for the geometric representation of slender

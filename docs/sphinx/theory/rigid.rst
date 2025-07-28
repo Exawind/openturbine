@@ -1,4 +1,4 @@
-Rigid bodies
+Rigid Bodies
 ------------
 
 In this section we describe the terms required to calculate the residual
@@ -6,14 +6,11 @@ vector and iteration matrix in Algorithm 1 for simulation of the
 dynamics of a rigid body with six degrees of freedom. An OpenTurbine
 rigid body has reference position and orientation given as
 
-.. math::
-
-   \begin{aligned}
-    \underline{q}^0 = \begin{bmatrix} 
+.. math:: \underline{q}^0 = \begin{bmatrix} 
      \underline{x}^0 \\
      \underline{\underline{R}}^0 \\
     \end{bmatrix} 
-   \end{aligned}
+    :label: rigid-ref
 
 where :math:`\underline{q}^0 \in \mathbb{R}^3\times \mathrm{SO(3)}`. The
 generalized degrees of freedom (displacement and rotation) are given by
@@ -126,3 +123,8 @@ Eq. :eq:`residual`, and matrices
 and :math:`\underline{\underline{K}}` are assembled, via direct
 stiffness summation, into their global counterparts in the iteration
 matrix, Eq. :eq:`iteration`.
+
+.. toctree::
+   
+   heavy-top
+
