@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometrically Exact Beam Theory &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Legendre spectral finite elements" href="lsfe.html" />
+    <link rel="prev" title="Rigid bodies" href="rigid.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Geometrically Exact Beam Theory</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/gebt.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="geometrically-exact-beam-theory">
+<h1>Geometrically Exact Beam Theory<a class="headerlink" href="#geometrically-exact-beam-theory" title="Permalink to this heading"></a></h1>
+<p>OpenTurbine beam finite elements are based on geometrically exact beam
+theory (GEBT) [&#64;Reissner:1973 &#64;Simo:1985; &#64;Simo-VuQuoc:1986]. Our
+formulation largely follows that described in [&#64;Bauchau:2011] and as
+implemented in Dymore [&#64;Dymore:2013] and the BeamDyn [&#64;Wang-etal:2017]
+module of OpenFAST. A key difference is that OpenTurbine uses
+quaternions to store and track rotations rather than Wiener-Milenkovic
+parameters, thereby removing the challenges associated rescaling
+operations to avoid singularities.</p>
+<p>In our description of GEBT, we focus on a single beam and assume it is
+defined in its reference configuration by a smooth curve, called the
+beam reference line, <span class="math notranslate nohighlight">\(\underline{x}^0(s)\in\mathbb{R}^3\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^0(s) \in \mathrm{SO(3)}\)</span> parameterized
+by <span class="math notranslate nohighlight">\(s \in [0, L]\)</span>, where <span class="math notranslate nohighlight">\(L\)</span> is the arclength of the
+reference line. We denote reference position as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ \underline{q}^\mathrm{0} = \begin{bmatrix}
+  \underline{x}^\mathrm{0} \\
+  \underline{\underline{R}}^\mathrm{0} \\
+ \end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{q}^0(s) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>.
+Generalized displacements are denoted</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ \underline{q} = \begin{bmatrix}
+  \underline{u} \\
+  \underline{\underline{R}}\\
+ \end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{q}(s,t) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}\)</span> is the
+relative-rotation tensor, and <span class="math notranslate nohighlight">\(\underline{u}(s,t)\in \mathbb{R}^3\)</span>
+is the displacement. The beam current (deformed) configuration at time
+<span class="math notranslate nohighlight">\(t\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{x}^\mathrm{c} &amp;= \underline{x}^0 + \underline{u}\\
+\underline{\underline{R}}^\mathrm{c} &amp;= \underline{\underline{R}}\,\underline{\underline{R}}^0
+\end{aligned}\end{split}\]</div>
+<p>The GEBT equations are motion are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\dot{\underline{h}} - \underline{\mathcal{F}}^\prime &amp;= \underline{f}\\
+\dot{\underline{g}} + \widetilde{u}\, \underline{h} - \underline{\mathcal{M}}^\prime - \left(\widetilde{x}^{0\prime} + \widetilde{u}^\prime \right) \underline{\mathcal{F}}&amp;= \underline{m}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{h}(s,t),\underline{g}(s,t) \in \mathbb{R}^3\)</span> are
+linear and angular momenta, respectively, resolved in the inertial
+coordinate system,
+<span class="math notranslate nohighlight">\(\underline{\mathcal{F}}(s,t),\underline{\mathcal{M}}(s,t) \in \mathbb{R}^3\)</span>
+are section force and moments, respectively,
+<span class="math notranslate nohighlight">\(\underline{f}(s,t),\underline{m}(s,t)\in \mathbb{R}^3\)</span> are
+externally applied forces and moments, respectively, a prime denotes a
+spatial derivate along the beam reference line, and an overdot denotes a
+time derivative. The constitutive equations are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{bmatrix}  \underline{h} \\ \underline{g} \end{bmatrix}
+&amp;= \underline{\underline{M}}
+\begin{bmatrix}  \dot{\underline{u}} \\ \underline{\omega} \end{bmatrix} \\
+\begin{bmatrix}  \underline{\mathcal{F}} \\ \underline{\mathcal{M}} \end{bmatrix}
+&amp;= \underline{\underline{C}}
+\begin{bmatrix}  \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}
+ \label{eq:constitutive}
+\end{aligned}\end{split}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{\underline{M}}(s,t), \underline{\underline{C}}(s,t) \in \mathbb{R}^{6\times6}\)</span>
+are the sectional mass and stiffness matrices in inertial coordinates,
+and
+<span class="math notranslate nohighlight">\(\underline{\epsilon}(s,t),\underline{\kappa}(s,t) \in \mathbb{R}^3\)</span>
+are the sectional strain and curvature defined in inertial coordinates,
+which are defined as</p>
+<div class="math notranslate nohighlight" id="equation-strain">
+<span class="eqno">(6)<a class="headerlink" href="#equation-strain" title="Permalink to this equation"></a></span>\[\underline{\epsilon} = \underline{x}^{0\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \hat{i}_1\]</div>
+<div class="math notranslate nohighlight">
+\[\underline{\kappa} = \mathrm{axial}\left({ \underline{\underline{R}}^\prime \underline{\underline{R}} }\right)\]</div>
+<p>respectively. In the reference configuration, i.e.,
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}=\underline{\underline{I}}\)</span> and
+<span class="math notranslate nohighlight">\(\underline{u}=0\)</span>, zero strain requires that</p>
+<div class="math notranslate nohighlight" id="equation-zerostrain">
+<span class="eqno">(7)<a class="headerlink" href="#equation-zerostrain" title="Permalink to this equation"></a></span>\[\underline{x}^{0\prime} = \underline{\underline{R}}^0 \hat{i}_1.\]</div>
+<p>In our finite-element implementation of
+Eq. <a class="reference internal" href="#equation-strain">(6)</a>, <span class="math notranslate nohighlight">\(\underline{x}^{0\prime}\)</span> will
+be interpolated from nodal values and
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^0\)</span> will be constructed from quaternions
+interpolated from nodal values. However, in general, at non-node
+locations, Eq. <a class="reference internal" href="#equation-zerostrain">(7)</a> is not guaranteed
+in the reference configuation due to interpolation differences. Hence,
+we use the equivalent definition of strain, which guarantees zero strain
+in the reference configuration at nodal and interpolated locations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \underline{\epsilon} &amp;= \underline{x}^{0\prime}+\underline{u}^\prime-\underline{\underline{R}}\,\underline{x}^{0\prime}
+\label{eq:newstrain}
+\end{aligned}\]</div>
+<p>Sectional stiffness and mass matrices are typically defined in material
+coordinates (denoted by a <span class="math notranslate nohighlight">\(*\)</span> superscript), from which the
+inertial coordinate section matrices can be calculated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{C}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
+\underline{\underline{M}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{M}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
+\end{aligned}\end{split}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{\underline{C}}^*(s), \underline{\underline{M}}^*(s) \in \mathbb{R}^{6\times6}\)</span>.
+As described below, sectional mass and stiffness matrices in material
+coordinates, and twist about the reference line, are user-defined
+quantities in <span class="math notranslate nohighlight">\(s\in[0,L]\)</span>.</p>
+<p>The governing equations can be written as a residual expression in
+strong form as</p>
+<div class="math notranslate nohighlight" id="equation-stronggoverning">
+<span class="eqno">(8)<a class="headerlink" href="#equation-stronggoverning" title="Permalink to this equation"></a></span>\[\underline{\mathcal{R}} =
+\underline{\mathcal{F}}^I -
+\underline{\mathcal{F}}^{C\prime} +
+\underline{\mathcal{F}}^D -
+\underline{\mathcal{F}}^\mathrm{ext}\]</div>
+<p>where each term is in <span class="math notranslate nohighlight">\(\mathbb{R}^6\)</span>;
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^I(s,t)\)</span> is the interial
+force, <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^C(s,t)\)</span> and
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^D(s,t)\)</span> are elastic forces,
+and <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{ext}\)</span> are the
+external forces and moments. The inertial force in the inertial frame is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\mathcal{F}}^I =
+\begin{bmatrix}
+\dot{\underline{h}} \\ \dot{\underline{g}} + \dot{\widetilde{u}} \underline{g}
+\end{bmatrix}
+= \begin{bmatrix}
+m \ddot{\underline{u}} +
+\left( \dot{\widetilde{\omega}}+ \widetilde{\omega} \widetilde{\omega} \right) m \underline{\eta}\\
+m \widetilde{\eta} \ddot{\underline{u}} + \underline{\underline{\rho}} \dot{\underline{\omega}}
+ + \widetilde{\omega} \underline{\underline{\rho}} \underline{\omega}
+\end{bmatrix}
+= \underline{\underline{M}}(\underline{q}) \dot{\underline{v}} + \begin{bmatrix}
+ m \widetilde{\omega}\widetilde{\omega} \underline{\eta} \\
+\widetilde{\omega} \underline{\underline{\rho}} \underline{\omega}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span>, <span class="math notranslate nohighlight">\(\underline{\eta}\)</span>, and
+<span class="math notranslate nohighlight">\(\underline{\underline{\rho}}\)</span> are readily extracted from the
+section mass matrix in inertial coordinates as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{M}} =
+\begin{bmatrix}
+m \underline{\underline{I}}_3 &amp; m \tilde{\eta}^T\\
+m \tilde{\eta} &amp; \underline{\underline{\rho}}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>The elastic forces are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\mathcal{F}}^C &amp;= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
+\underline{\mathcal{F}}^D &amp;=
+\begin{bmatrix} \underline{0} \\
+\left(\tilde{x}'^0+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon}
++ \underline{\underline{C}}_{12} \underline{\kappa}\right)  \end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{\underline{C}}_{11},\underline{\underline{C}}_{12}\in \mathbb{R}^{3\times 3}\)</span>
+are the submatrices of the full sectional stiffness matrix in intertial
+coordinates, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{C}} = \begin{bmatrix}
+\underline{\underline{{C}}}_{11} &amp; \underline{\underline{{C}}}_{12} \\
+\underline{\underline{{C}}}_{21} &amp; \underline{\underline{{C}}}_{22} \end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>We describe the variation of the residual,
+Eq. <a class="reference internal" href="overview.html#equation-residual1">(2)</a>, in parts. Variation of the
+inerial forces can be written</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\delta \underline{\mathcal{F}}^I =
+\underline{\underline{\mathcal{M}}}^I \delta \ddot{\underline{q}}
++ \underline{\underline{\mathcal{G}}}^I \delta \dot{\underline{q}}
++ \underline{\underline{\mathcal{K}}}^I \delta \underline{q}
+\end{aligned}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{\mathcal{G}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
+         + \widetilde{\omega} m \widetilde{\eta}^T\\
+\underline{\underline{0}} &amp; \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{\mathcal{K}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
+        \right) m \widetilde{\eta}^T\\
+\underline{\underline{0}} &amp; \ddot{\widetilde{u}} m \widetilde{\eta}
+         + \left(\underline{\underline{\rho}}\dot{\widetilde{\omega}}
+                 -\widetilde{\underline{\underline{\rho}} \dot{\underline{\omega}}} \right)
+         + \widetilde{\omega} \left( \underline{\underline{\rho}} \widetilde{\omega}
+         - \widetilde{ \underline{\underline{\rho}}\underline{\omega}} \right)
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>Variation of the elastic forces are as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\delta \underline{\mathcal{F}}^C =
+\underline{\underline{\mathcal{C}}} \delta \underline{q}' + \underline{\underline{\mathcal{O}}} \delta \underline{q}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{\mathcal{O}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp;  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)   \\
+\underline{\underline{0}} &amp;  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\delta \underline{\mathcal{F}}^D =
+\underline{\underline{\mathcal{P}}} \delta \underline{q}' + \underline{\underline{\mathcal{Q}}} \delta \underline{q}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{\mathcal{P}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+ \widetilde{N} + \left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)^T
+\underline{\underline{\mathcal{C}}}_{11} &amp;
+\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+\underline{\underline{\mathcal{C}}}_{12}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{\mathcal{Q}}} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+ \underline{\underline{0}} &amp;
+\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+\left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{0 \prime} + \tilde{u}' \right) \right]
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="references csl-bib-body hanging-indent docutils container" id="refs">
+<div class="csl-entry docutils container" id="ref-bauchau-2011">
+<p>Bauchau, O. A. 2011. <em>Flexible Multibody Dynamics</em>. Springer.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-dymore-2013">
+<p>———. 2013. “Dymore User’s Manual.”</p>
+</div>
+<div class="csl-entry docutils container" id="ref-reissner-1973">
+<p>Reissner, E. 1973. “On One-Dimensional Large-Displacement
+Finite-Strain Beam Theory.” <em>Studies in Applied Mathematics LII</em>,
+87–95.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-simo-1985">
+<p>Simo, J. C. 1985. “A Finite Strain Beam Formulation. The
+Three-Dimensional Dynamic Problem. Part I.” <em>Computer Methods in
+Applied Mechanics and Engineering</em> 49: 55–70.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-simo-vuquoc-1986">
+<p>Simo, J. C., and L. Vu-Quoc. 1986. “A Three-Dimensional
+Finite-Strain Rod Model. Part II.” <em>Computer Methods in Applied
+Mechanics and Engineering</em> 58: 79–116.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-wang-etal-2017">
+<p>Wang, Q., M. A. Sprague, J. Jonkman, N. Johnson, and B. Jonkman.
+2017. “BeamDyn: A High-Fidelity Wind Turbine Blade Solver in the
+FAST Modular Framework.” <em>Wind Energy</em>.
+<a class="reference external" href="https://doi.org/10.1002/we.2101">https://doi.org/10.1002/we.2101</a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rigid.html" class="btn btn-neutral float-left" title="Rigid bodies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lsfe.html" class="btn btn-neutral float-right" title="Legendre spectral finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

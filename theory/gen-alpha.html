@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time integration &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rigid bodies" href="rigid.html" />
+    <link rel="prev" title="Formulation Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Time integration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/gen-alpha.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="time-integration">
+<h1>Time integration<a class="headerlink" href="#time-integration" title="Permalink to this heading"></a></h1>
+<p>OpenTurbine time-integration is achieved with a Lie-group
+generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> algorithm, described in detail by
+[&#64;Bruls-etal:2012]. This algorithm is second-order time accurate and
+summarized here for completeness. For a system represented as
+Eq. <a class="reference internal" href="overview.html#equation-residual">(1)</a> and with linearized form shown in
+Eq. <a class="reference internal" href="overview.html#equation-variation">(3)</a>, the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span>
+algorithm can be written as in
+Algorithm <a class="reference external" href="#algorithm:genalpha">[algorithm:genalpha]</a>, where an
+<span class="math notranslate nohighlight">\(n\)</span> superscript denotes evaluation at the <span class="math notranslate nohighlight">\(n\)</span>th time step,
+and <span class="math notranslate nohighlight">\(\rho_\infty \in[0,1]\)</span> is the numerical damping with
+<span class="math notranslate nohighlight">\(\rho_\infty = 1\)</span> being no damping and <span class="math notranslate nohighlight">\(\rho_\infty=0\)</span> being
+maximum damping. The term <span class="math notranslate nohighlight">\(\underline{a}^{n} \in \mathbb{R}^k\)</span> is
+an auxiliary variable [&#64;Arnold-Bruls:2007] for computation and is
+initialized as <span class="math notranslate nohighlight">\(\underline{a}^{0}= \dot{\underline{v}}^0\)</span>. The
+algorithm includes the left and right preconditioning matrices described
+in [&#64;Bottasso-etal:2008],</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{D}}_L\left( \beta \Delta t^2\right) =
+\begin{bmatrix}
+\beta \Delta t^2 \underline{\underline{I}}_k &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \underline{\underline{I}}_m
+\end{bmatrix}
+\quad
+\underline{\underline{D}}_R\left( \beta \Delta t^2\right) =
+\begin{bmatrix}
+\underline{\underline{I}}_k &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \frac{1}{\beta \Delta t^2} \underline{\underline{I}}_m
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>respectively, where
+<span class="math notranslate nohighlight">\(\underline{\underline{D}}_L,\underline{\underline{D}}_R \in \mathbb{R}^{k\times k}\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\underline{I}}_p\)</span> is the <span class="math notranslate nohighlight">\(p \times p\)</span> identity
+matrix.</p>
+<p>Important to the time-integration scheme is the exponential map, which
+can be written for <span class="math notranslate nohighlight">\(k_n\)</span> nodes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\exp_{\mathbb{R}^3\times\mathrm{SO(3)}}
+\begin{bmatrix}
+\underline{u}_1 \\
+\underline{\psi}_1 \\
+\vdots \\
+\underline{u}_{k_n} \\
+\underline{\psi}_{k_n}
+\end{bmatrix}
+= \begin{bmatrix}
+\underline{u}_1 \\
+\exp_\mathrm{SO(3)} \left(\widetilde{\psi}_1\right) \\
+\vdots \\
+\underline{u}_{k_n} \\
+\exp_\mathrm{SO(3)} \left(\widetilde{\psi}_{k_n}\right) \\
+\end{bmatrix}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\exp_\mathrm{SO(3)}\left(\widetilde{\psi}\right)  = \underline{\underline{I}} + \frac{\sin \phi}{\phi} \widetilde{\psi} + \frac{1-\cos \phi}{\phi^2} \widetilde{\psi}\widetilde{\psi}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\underline{I}} \in \mathbb{R}^{3 \times 3}\)</span> is the
+identity matrix, <span class="math notranslate nohighlight">\(\underline{\psi}\)</span> is the Cartesian rotation
+vector, <span class="math notranslate nohighlight">\(\phi = || \underline{\psi} ||\)</span>, and the tilde operator is
+defined for a vector <span class="math notranslate nohighlight">\(\underline{a}\in \mathbb{R}^3\)</span> with entries
+<span class="math notranslate nohighlight">\(a_i\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\widetilde{a} =
+\begin{bmatrix}
+0 &amp; -a_3 &amp; a_2 \\
+a_3 &amp; 0 &amp; -a_1 \\
+-a_2 &amp; a_1 &amp; 0
+\end{bmatrix}\end{split}\]</div>
+<div class="algorithm docutils container">
+<div class="algorithmic docutils container">
+<p><span class="math notranslate nohighlight">\(\underline{q}^n\)</span>, <span class="math notranslate nohighlight">\(\underline{v}^n\)</span>,
+<span class="math notranslate nohighlight">\(\dot{\underline{v}}^n\)</span>, <span class="math notranslate nohighlight">\(\underline{a}^n\)</span>,
+<span class="math notranslate nohighlight">\(t^n\)</span>, <span class="math notranslate nohighlight">\(\Delta t\)</span>, <span class="math notranslate nohighlight">\(\rho_\infty\)</span>, atol, rtol,
+<span class="math notranslate nohighlight">\(i_\mathrm{max}\)</span>, <span class="math notranslate nohighlight">\(k\)</span>, <span class="math notranslate nohighlight">\(m\)</span>
+<span class="math notranslate nohighlight">\(\alpha_m = \frac{2 \rho_\infty - 1}{\rho_\infty+1}\)</span>
+<span class="math notranslate nohighlight">\(\alpha_f = \frac{\rho_\infty}{\rho_\infty+1}\)</span>
+<span class="math notranslate nohighlight">\(\gamma = 0.5 + \alpha_f - \alpha_m\)</span>
+<span class="math notranslate nohighlight">\(\beta = 0.25 \left( \gamma + 0.5\right)^2\)</span>
+<span class="math notranslate nohighlight">\(\beta^\prime = \frac{1-\alpha_m}{\Delta t^2 \beta (1-\alpha_f)}\)</span>
+<span class="math notranslate nohighlight">\(\gamma^\prime = \frac{\gamma}{\Delta t \beta}\)</span>
+<span class="math notranslate nohighlight">\(t^{n+1} := t^n + \Delta t\)</span>
+<span class="math notranslate nohighlight">\(\dot{\underline{v}}^{n+1} := \underline{0}\)</span>
+<span class="math notranslate nohighlight">\(\underline{\lambda}^{n+1} := \underline{0}\)</span>
+<span class="math notranslate nohighlight">\(\underline{a}^{n+1} := (\alpha_f \dot{\underline{v}}^{n} - \alpha_m \underline{a}^n)/(1-\alpha_m)\)</span>
+<span class="math notranslate nohighlight">\(\underline{v}^{n+1} := \underline{v}^n + \Delta t (1-\gamma) \underline{a}^n + \gamma \Delta t \underline{a}^{n+1}\)</span>
+<span class="math notranslate nohighlight">\(\Delta \underline{q}^n := \underline{v}^n+(0.5-\beta) \Delta t \underline{a}^n + \beta \Delta t \underline{a}^{n+1}\)</span>
+<span class="math notranslate nohighlight">\(\mathrm{err} := 2.0\)</span> Initialize with any
+<span class="math notranslate nohighlight">\(\mathrm{err} &gt; 1.0\)</span> <span class="math notranslate nohighlight">\(i := 0\)</span> <span class="math notranslate nohighlight">\(i := i+1\)</span>
+<span class="math notranslate nohighlight">\(\underline{q}^{n+1} := \exp_{\underline{\underline{R}}^3\times \mathrm{SO(3)}} ( \Delta t \Delta \underline{q}^n ) \circ \underline{q}^n\)</span>
+Calculate <span class="math notranslate nohighlight">\(\underline{r}^{n+1}\)</span> See
+Eq. <a class="reference internal" href="overview.html#equation-residual1">(2)</a> Calculate
+<span class="math notranslate nohighlight">\(\underline{\underline{S}}_t^{n+1}\)</span> See
+Eq. <a class="reference internal" href="#equation-iteration">(4)</a>  Solve
+<span class="math notranslate nohighlight">\(\underline{\underline{D}}_L(\beta \Delta t^2) \underline{\underline{S}}_t^{n+1} \underline{\underline{D}}_R(\beta \Delta t^2) \begin{bmatrix} \Delta \underline{x}\\ \Delta \underline{\lambda}
+\end{bmatrix}= -\underline{\underline{D}}_L(\beta \Delta t^2) \underline{r}^{n+1}\)</span>
+<span class="math notranslate nohighlight">\(\begin{bmatrix} \Delta \underline{x}\\ \Delta \underline{\lambda} \end{bmatrix}
+:= \underline{\underline{D}}_R(\beta \Delta t^2) \begin{bmatrix} \Delta \underline{x}\\ \Delta \underline{\lambda} \end{bmatrix}\)</span>
+<span class="math notranslate nohighlight">\(\Delta \underline{q}^n := \Delta \underline{q}^n + \Delta \underline{x}/\Delta t^n\)</span>
+<span class="math notranslate nohighlight">\(\underline{v}^{n+1} := \underline{v}^{n+1} + \gamma^\prime \Delta \underline{x}\)</span>
+<span class="math notranslate nohighlight">\(\dot{\underline{v}}^{n+1} := \dot{\underline{v}}^{n+1} + \beta^\prime \Delta \underline{x}\)</span>
+<span class="math notranslate nohighlight">\(\underline{\lambda}^{n+1} := \underline{\lambda}^{n+1} + \Delta \underline{\lambda}\)</span>
+<span class="math notranslate nohighlight">\(\mathrm{err} := \sqrt{ \frac{1}{k + m} \left( \sum_{i=1}^{k} \left( \frac{ \Delta x_i }{  \mathrm{atol} + \mathrm{rtol} \left| \Delta t \Delta q_i^n \right| } \right)^2 + \sum_{i=1}^{m} \left( \frac{ \Delta \lambda_i }{  \mathrm{atol} + \mathrm{rtol} \left| \lambda_i^{n + 1} \right| } \right)^2 \right) }\)</span>
+See [&#64;Arnold-Hante:2017]
+<span class="math notranslate nohighlight">\(\underline{a}^{n+1} := \underline{a}^{n+1} + \dot{\underline{v}}^{n+1}\left( 1 - \alpha_f\right) / \left( 1 - \alpha_m\right)\)</span>
+<strong>Return:</strong> <span class="math notranslate nohighlight">\(t^{n+1}\)</span>, <span class="math notranslate nohighlight">\(\underline{q}^{n+1}\)</span>,
+<span class="math notranslate nohighlight">\(\underline{v}^{n+1}\)</span>, <span class="math notranslate nohighlight">\(\dot{\underline{v}}^{n+1}\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\lambda}^{n+1}\)</span>, <span class="math notranslate nohighlight">\(\underline{a}^{n+1}\)</span></p>
+</div>
+</div>
+<p>The so-called iteration matrix,
+<span class="math notranslate nohighlight">\(\underline{\underline{S}}_t \in \mathbb{R}^{(k+m)\times (k+m)}\)</span>,
+for Eqs. <a class="reference internal" href="overview.html#equation-residual">(1)</a> and <a class="reference internal" href="overview.html#equation-variation">(3)</a> can be written</p>
+<div class="math notranslate nohighlight" id="equation-iteration">
+<span class="eqno">(4)<a class="headerlink" href="#equation-iteration" title="Permalink to this equation"></a></span>\[\begin{split}\underline{\underline{S}}_t = \begin{bmatrix}
+\underline{\underline{M}} \beta'+\underline{\underline{G}} \gamma' + \left(\underline{\underline{K}} + \underline{\underline{K}}^\Phi\right)\, \underline{\underline{T}}_{\mathbb{R}^3\times \mathrm{SO(3)}}^T(\Delta t \Delta q) &amp; \underline{\underline{B}}^T \\
+\underline{\underline{B}}\,\underline{\underline{T}}_{\mathbb{R}^3\times \mathrm{SO(3)}}^T(\Delta t \Delta q)                     &amp; \underline{\underline{0}}
+\end{bmatrix}\end{split}\]</div>
+<p>where the tangent matrix,
+<span class="math notranslate nohighlight">\(\underline{\underline{T}}_{\mathbb{R}^3\times \mathrm{SO(3)}}(\underline{\psi}) \in \mathbb{R}^{k\times k}\)</span>,
+is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{T}}_{\mathbb{R}^3\times \mathrm{SO(3)}}(\underline{\psi})  =
+\begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}}                            &amp;        &amp; \cdots &amp;  \underline{\underline{0}}\\
+\underline{\underline{0}} &amp; \underline{\underline{T}}_{\mathrm{SO(3)}}(\underline{\psi}_1) &amp;        &amp;        &amp; \\
+       &amp;                                   &amp;\ddots  &amp;        &amp; \\
+       &amp;                                   &amp;        &amp; \underline{\underline{I}} &amp; \underline{\underline{0}} \\
+ \underline{\underline{0}}&amp;   \cdots                          &amp;        &amp; \underline{\underline{0}} &amp; \underline{\underline{T}}_{\mathrm{SO(3)}}(\underline{\psi}_{k_n})
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>and the variation of the virtual rotation is related to the variation of
+the Cartesian rotation vector as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\delta \underline{\theta} = \underline{\underline{T}}_{\mathrm{SO(3)}}^T(\underline{\psi}) \delta \underline{\psi}
+\end{aligned}\]</div>
+<p>with [&#64;Geradin-Cardona:2001]</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{\underline{T}}_{\mathrm{SO(3)}}(\underline{\psi}) = \underline{\underline{I}}
++ \left(\frac{\cos ||\underline{\psi}|| -1}{||\underline{\psi}||^2} \right) \widetilde{\psi}
++\left(1- \frac{\sin ||\underline{\psi}||}{||\underline{\psi}||}\right)
+\frac{\widetilde{\psi} \widetilde{\psi}}{||\underline{\psi}||^2}
+\end{aligned}\]</div>
+<div class="references csl-bib-body hanging-indent docutils container" id="refs">
+<div class="csl-entry docutils container" id="ref-arnold-bruls-2007">
+<p>Arnold, M., and O. Brüls. 2007. “Convergence of the
+Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Scheme for Constrained Mechanical
+Systems.” <em>Multibody System Dynamics</em> 18: 185–202.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-arnold-hante-2017">
+<p>Arnold, M., and S. Hante. 2017. “Implementation Details of a
+Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Differential-Algebraic Equation Lie
+Group Method.” <em>Journal of Computational and Nonlinear Dynamics</em>
+2: 021002.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-bottasso-etal-2008">
+<p>Bottasso, C. L., D. Dopico, and L. Trainelli. 2008. “On the
+Optimal Scaling of Index Three DAEs in Multibody Dynamics.”
+<em>Multibody System Dynamics</em> 19: 3–20.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-bruls-etal-2012">
+<p>Brüls, O., A. Cardona, and M. Arnold. 2012. “Lie Group
+Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Time Integration Fo Constrained
+Flexible Multibody Systems.” <em>Mechanism and Machine Theory</em>,
+121–37.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-geradin-cardona-2001">
+<p>Géradin, M., and A. Cardona. 2001. <em>Flexible Multibody Dynamics: A
+Finite Element Approach</em>. Chichester: John Wiley &amp; Sons.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Formulation Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rigid.html" class="btn btn-neutral float-right" title="Rigid bodies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

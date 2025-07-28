@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legendre spectral finite elements &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes on quadrature" href="quadrature.html" />
+    <link rel="prev" title="Geometrically Exact Beam Theory" href="gebt.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Legendre spectral finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Legendre spectral finite elements</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/lsfe.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="legendre-spectral-finite-elements">
+<h1>Legendre spectral finite elements<a class="headerlink" href="#legendre-spectral-finite-elements" title="Permalink to this heading"></a></h1>
+<p>The GEBT equations are discretized with Legendre spectral finite
+elements (LSFEs), which are defined by <span class="math notranslate nohighlight">\(P\)</span> nodes and
+<span class="math notranslate nohighlight">\((P-1)\)</span>th order Lagrangian-interpolant basis functions. Nodes
+are located at the <span class="math notranslate nohighlight">\(P\)</span> Gauss-Legendre-Lobatto (GLL) points (in the
+element reference domain), <span class="math notranslate nohighlight">\(\xi_i\)</span> for
+<span class="math notranslate nohighlight">\(i\in\{1,2, \ldots,P\}\)</span>, which are the solutions to the equation</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \left( 1-\xi^2\right) \frac{\partial L_{P-1}}{\partial \xi} = 0
+\end{aligned}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\xi \in[-1,1]\)</span>, where <span class="math notranslate nohighlight">\(L_{P-1}(\xi)\)</span> is the Legendre
+polynomial of degree <span class="math notranslate nohighlight">\((P-1)\)</span> [&#64;Deville-etal:2002]. The beam
+reference line is approximated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{x}^{0,h}(\xi) =  \sum_{\ell=1}^{P} \phi_\ell(\xi) \underline{x}^0_\ell
+\end{aligned}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\phi_\ell(\xi)\)</span> is the Lagrangian-interpolant of the
+<span class="math notranslate nohighlight">\(\ell^{th}\)</span> node. For LSFEs, those can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\phi_\ell(\xi) = \frac{-1}{P (P-1)}
+\frac{\left(1-\xi^2\right) \frac{\partial L_{P-1}}{\partial \xi}}{(\xi - \xi_\ell) L_{P-1}(\xi_\ell)}
+\end{aligned}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\xi \in [-1,1]\)</span>. The weak form of the residual of the
+governing equations Eq. <a class="reference internal" href="gebt.html#equation-stronggoverning">(8)</a>,
+for the <span class="math notranslate nohighlight">\(i^\mathrm{th}\)</span>-node, can be written (after integration by
+parts) as</p>
+<div class="math notranslate nohighlight" id="equation-weakresidual">
+<span class="eqno">(9)<a class="headerlink" href="#equation-weakresidual" title="Permalink to this equation"></a></span>\[\underline{R}_i =
+\int_{-1}^{1} \phi_i \underline{\mathcal{R}}\, J d\xi =
+\int_{-1}^{1} \left(
+\phi_i \underline{\mathcal{F}}^I +
+\frac{\partial \phi_i}{\partial \xi} \underline{\mathcal{F}}^{C} J^{-1} +
+\phi_i \underline{\mathcal{F}}^D  -
+\phi_i\underline{\mathcal{F}}^\mathrm{ext}\right)
+ J d\xi\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{R}\in\mathbb{R}^6\)</span>, for all
+<span class="math notranslate nohighlight">\(i\in\{1,\ldots,P\}\)</span>, where we have mapped the domain
+<span class="math notranslate nohighlight">\(s\in[0,L]\)</span> to <span class="math notranslate nohighlight">\(\xi \in[-1,1]\)</span>,
+<span class="math notranslate nohighlight">\(J(\xi) \in \mathbb{R}\)</span> is the Jacobian of the mapping,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+J(\xi) = \sqrt{\frac{\partial \underline{x}^{0,h}}{\partial \xi}^T \frac{\partial \underline{x}^{0,h}}{\partial \xi} }
+\end{aligned}\]</div>
+<p>We remark that standard linear (i.e., 2-node) and quadratic (i.e.,
+3-node) elements are a subset of LSFEs.</p>
+<p>As described above, the generalized displacement, <span class="math notranslate nohighlight">\(\underline{q}\)</span>
+is in <span class="math notranslate nohighlight">\(\mathbb{R}^3 \times \mathrm{SO(3)}\)</span>. However, rotations are
+represented as quaternions for storage and interpolation, and are stored
+at nodes. In this form, nodal degrees of freedom are denoted, for the
+<span class="math notranslate nohighlight">\(i^\mathrm{th}\)</span> node,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ \underline{q}_i = \begin{bmatrix}
+  \underline{u}_i \\
+  \hat{q}_i \\
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{u}_i \in \mathbb{R}^3\)</span> and
+<span class="math notranslate nohighlight">\(\hat{q}_i \in \mathbb{R}^4\)</span>. The generalized displacement in
+<span class="math notranslate nohighlight">\(\mathbb{R}^3\times\mathrm{SO(3)}\)</span> along the beam reference line
+is then given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ \underline{q}(s,t) = \begin{bmatrix} \underline{u}^h \\ \underline{\underline{R}} \left( \widehat{q}^h \right)
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where displacement is interpolated in the normal manner, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{u}^h =  \sum_{j=1}^{p} \phi_j\underline{u}_j
+\end{aligned}\]</div>
+<p>but quaternion interpolation requires normaliation, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\widehat{q}^h = \frac{ \sum_{j=1}^{p} \phi_j \hat{q}_j }
+{|| \sum_{j=1}^{p} \phi_j \hat{q}_j ||}
+\end{aligned}\]</div>
+<p>For a given quaternion, the associated rotation matrix is calculated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{\underline{R}}\left(\hat{q}\right) = \underline{\underline{I}} + q \widetilde{q} + 2 \widetilde{q} \widetilde{q}
+\end{aligned}\]</div>
+<p>Introducing a quadrature scheme with <span class="math notranslate nohighlight">\(n^Q\)</span> points with locations
+and weights, <span class="math notranslate nohighlight">\(\xi_j^Q\)</span>, <span class="math notranslate nohighlight">\(w_j^Q\)</span>,
+<span class="math notranslate nohighlight">\(j\in \{1, \ldots, n^Q\}\)</span>, respectively, the approximate form of
+the residual, Eq. <a class="reference internal" href="#equation-weakresidual">(9)</a>, can be
+written</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{R} = \begin{bmatrix}
+\underline{F}^I_1 + \underline{F}^E_1 - \underline{F}^\mathrm{ext}_1 \\
+\underline{F}^I_2 + \underline{F}^E_2 - \underline{F}^\mathrm{ext}_2 \\
+\vdots \\
+\underline{F}^I_P + \underline{F}^E_P - \underline{F}^\mathrm{ext}_P
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{R} \in \mathbb{R}^{6 P}\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{F}_i^{I} &amp;=
+\sum_{j=0}^{n^Q}
+J(\xi^Q_j) \phi_i(\xi^Q_j) \underline{\mathcal{F}}^I(\xi^Q_j) w^Q_j\, \\
+\underline{F}_i^E &amp;=
+\sum_{j=0}^{n^Q}
+\left[ \left .\frac{\partial \phi_i}{\partial \xi}\right |_{\xi=\xi^Q_j}
+{\underline{\mathcal{F}}^{C}}(\xi^Q_j)+ J(\xi^Q_j) \phi_i(\xi^Q_j) \underline{\mathcal{F}}^D(\xi^Q_j) \right] w^Q_j\, \\
+\underline{F}_i^{ext} &amp;=
+\sum_{j=0}^{n^Q} \phi_i (\xi^Q_j)
+\underline{F}^{ext}(\xi^Q_j) J(\xi^Q_j) w^Q_j
+\end{aligned}\end{split}\]</div>
+<p>The matrices required for the time-integration iteration matrix in
+Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a> are constructed from the
+following:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{M}}_{ij} =
+\sum_{k=1}^{n^Q} &amp;
+\phi_i(\xi^Q_k) \underline{\underline{\mathcal{M}}}(\xi^Q_k) \phi_j(\xi^Q_k) J(\xi^Q_k) w^Q_k \\
+%
+\underline{\underline{G}}_{ij} =
+\sum_{k=1}^{n^Q} &amp;
+\phi_i(\xi^Q_k) \underline{\underline{\mathcal{G}}}(\xi^Q_k) \phi_j(\xi^Q_k) J(\xi^Q_k) w^Q_k \\
+%
+\underline{\underline{K}}_{ij} =
+\sum_{k=1}^{n^Q}
+\Big\{ &amp; \phi_i(\xi^Q_k) \underline{\underline{\mathcal{P}}}(\xi^Q_k) \phi'_j(\xi^Q_k) +
+\phi_i(\xi^Q_k) \left[\underline{\underline{\mathcal{K}}}(\xi^Q_k)+\underline{\underline{\mathcal{Q}}}(\xi^Q_k) \right]\phi_j(\xi^Q_k) J(\xi^Q_k)+ \\
+&amp;
+\phi'_i(\xi^Q_k) \underline{\underline{\mathcal{C}}}(\xi^Q_k) \phi'_j(\xi^Q_k) \frac{1}{J(\xi^Q_k)}+
+\phi'_i(\xi^Q_k) \underline{\underline{\mathcal{O}}}(\xi^Q_k) \phi_j(\xi^Q_k)
+\Big\} w^Q_k \\
+\end{aligned}\end{split}\]</div>
+<p>for all <span class="math notranslate nohighlight">\(i,j \in\{1,2, \ldots, P\}\)</span> and
+<span class="math notranslate nohighlight">\(\underline{\underline{M}}_{ij},\underline{\underline{G}}_{ij},\underline{\underline{K}}_{ij} \in \mathbb{R}^{6 \times 6}\)</span>.
+These matrices define the full matrices for a single beam LSFE. For
+example, the mass matrix is assembled as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{M}} =
+\begin{bmatrix}
+\underline{\underline{M}}_{00}&amp;
+\underline{\underline{M}}_{01}&amp; \ldots &amp;
+\underline{\underline{M}}_{0P}\\
+\underline{\underline{M}}_{10} &amp;
+\underline{\underline{M}}_{11}&amp;
+\ldots &amp;
+\underline{\underline{M}}_{1P}\\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+\underline{\underline{M}}_{P0}&amp;
+\underline{\underline{M}}_{P1}&amp; \ldots &amp;
+\underline{\underline{M}}_{PP}\\
+\end{bmatrix}\end{split}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{\underline{M}} \in \mathbb{R}^{6 (P+1) \times 6 (P+1)}\)</span>;
+similarly for
+<span class="math notranslate nohighlight">\(\underline{\underline{G}}, \underline{\underline{K}} \in \mathbb{R}^{6 (P+1) \times 6 (P+1)}\)</span>.</p>
+<div class="references csl-bib-body hanging-indent docutils container" id="refs">
+<div class="csl-entry docutils container" id="ref-deville-etal-2002">
+<p>Deville, M. O., P. F. Fischer, and E. H. Mund. 2002. <em>High-Order
+Methods for Incompressible Fluid Flow</em>. Cambridge University
+Press.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gebt.html" class="btn btn-neutral float-left" title="Geometrically Exact Beam Theory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quadrature.html" class="btn btn-neutral float-right" title="Notes on quadrature" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

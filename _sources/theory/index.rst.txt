@@ -8,6 +8,11 @@ elements, constraints, and other relevant topics.
    :glob:
    :maxdepth: 2
 
-   flexible_beam
-   rigid_body
-   nonlinear_spring
+   overview
+   gen-alpha
+   rigid
+   gebt
+   lsfe
+   quadrature
+   lsfit
+   constraints

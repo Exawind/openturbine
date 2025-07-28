@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Theory Manual &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Notes on quadrature &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -21,11 +21,12 @@
         <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Formulation Overview" href="overview.html" />
-    <link rel="prev" title="Capabilities and Roadmap" href="../user/features.html" /> 
+    <link rel="next" title="Beam reference lines and reference configuration" href="lsfit.html" />
+    <link rel="prev" title="Legendre spectral finite elements" href="lsfe.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,13 +55,13 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory Manual</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Notes on quadrature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
 </ul>
@@ -82,9 +83,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Theory Manual</li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Notes on quadrature</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/theory/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/theory/quadrature.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -92,30 +94,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="theory-manual">
-<h1>Theory Manual<a class="headerlink" href="#theory-manual" title="Permalink to this heading"></a></h1>
-<p>This section describes the theoretical background of OpenTurbine such as formulation of
-elements, constraints, and other relevant topics.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
-</ul>
-</div>
+  <div class="section" id="notes-on-quadrature">
+<h1>Notes on quadrature<a class="headerlink" href="#notes-on-quadrature" title="Permalink to this heading"></a></h1>
+<p>In OpenTurbine, we represent beams that can have highly variable
+properties along the length and we use a single high-order element for
+the whole beam. Material properties, including the sectional mass matrix
+<span class="math notranslate nohighlight">\(\underline{\underline{M}}^*\)</span>, stiffness matrix
+<span class="math notranslate nohighlight">\(\underline{\underline{C}}^*\)</span>, and twist <span class="math notranslate nohighlight">\(\tau\)</span>, are defined
+by the user at stations located along the beam reference line. In
+typical finite-element beam implementations, <span class="math notranslate nohighlight">\(P\)</span>-point
+Gauss-Legendre quadrature is common. While that is often sufficient for
+uniform or linearly varying properties, it can be inadequate for highly
+variable material properties. OpenTurbine provides users the option of
+Guass-Legendre or trapezoid-rule quadrature, with the former being
+suitable for constant-material-property beams and the latter for
+variable-property beams. Trapezoid-quadrature locations at each
+user-defined material point, and additional points are added between
+points in a user-defined manner that divides sections between
+user-defined propery points in an equidistant fashion.</p>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../user/features.html" class="btn btn-neutral float-left" title="Capabilities and Roadmap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="overview.html" class="btn btn-neutral float-right" title="Formulation Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="lsfe.html" class="btn btn-neutral float-left" title="Legendre spectral finite elements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lsfit.html" class="btn btn-neutral float-right" title="Beam reference lines and reference configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beam reference lines and reference configuration &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Bodies/Elements and Constraints for a HAWT" href="constraints.html" />
+    <link rel="prev" title="Notes on quadrature" href="quadrature.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Beam reference lines and reference configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/lsfit.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="beam-reference-lines-and-reference-configuration">
+<h1>Beam reference lines and reference configuration<a class="headerlink" href="#beam-reference-lines-and-reference-configuration" title="Permalink to this heading"></a></h1>
+<p>The use of LSFEs as our beam spatial discretization presents
+opportunities and challenges for the geometric representation of slender
+structures like turbine blades. Turbine blades can be curved, swept,
+and/or twisted along their length. In this section we describe how beams
+are user defined and how the beams are discretized in the reference
+configuration.</p>
+<p>We assume that OpenTurbine beams are defined as a set of points in the
+global coordinate system (
+<span class="math notranslate nohighlight">\((\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g}i)\)</span>
+with the blade root located at the origin and oriented such that the
+pitch axis, or its primary-length direction, is pointing in the
+<span class="math notranslate nohighlight">\(x\)</span> direction. For turbine blades, the <span class="math notranslate nohighlight">\(y\)</span> direction is the
+direction of the trailing edge and defines a zero pitch/twist. Note that
+this differs from the standard turbine-blade definition, which can be
+easily rotated into our system.</p>
+<p>The user must provide <span class="math notranslate nohighlight">\(n^\mathrm{geom}\)</span> points defining the
+reference line with the data
+<span class="math notranslate nohighlight">\((\eta_i^\mathrm{geom},\underline{x}_i^\mathrm{geom},\tau_i^\mathrm{geom})\)</span>,
+<span class="math notranslate nohighlight">\(i \in \{ 1, 2, \ldots, n^\mathrm{geom}\}\)</span>, where
+<span class="math notranslate nohighlight">\(\eta_i^\mathrm{geom}\in[0,1]\)</span> defines the nondimensional position
+along the beam reference line where the associated reference line
+position is <span class="math notranslate nohighlight">\(\underline{x}_i^\mathrm{geom} \in \mathbb{R}^3\)</span> and
+twist about the reference line is <span class="math notranslate nohighlight">\(\tau_i^\mathrm{geom}\)</span>. The user
+must also provide the <span class="math notranslate nohighlight">\(n^Q\)</span> quadrature locations
+<span class="math notranslate nohighlight">\(\xi_k^Q \in [-1,1]\)</span> along the reference axis. Finally, teh user
+must provide the translation and rotation,
+<span class="math notranslate nohighlight">\(\underline{u}^\mathrm{init}\)</span> and
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{init}\)</span>, respectively, of the
+beam that defines the intial/refence position and orientation. In other
+words, each beam is defined in the global system with its root at the
+origin and it is then translated and rotated into its reference
+position.</p>
+<p>Our approach is to represent the geometry with a single spectral element
+with relatively few points, which we describe here. Given
+<span class="math notranslate nohighlight">\(n^\mathrm{geom}\)</span> points describing the beam as above, we wish to
+represent that beam with a <span class="math notranslate nohighlight">\(P\)</span>-point Legendre spectral finite
+element, where <span class="math notranslate nohighlight">\(P\)</span> is a user input. We first perform a
+least-squares fit to the data using a LSFE polynomial with
+<span class="math notranslate nohighlight">\(\mathrm{min}(P,n^\mathrm{geom})\)</span> points, where the endpoints of
+the fitting polynomial are constrained to coincide with the reference
+data at <span class="math notranslate nohighlight">\(\eta_1^\mathrm{geom}\)</span> and
+<span class="math notranslate nohighlight">\(\eta^\mathrm{geom}_{n^\mathrm{geom}}\)</span>. If
+<span class="math notranslate nohighlight">\(P \le n^\mathrm{geom}\)</span>, that fit defines the <span class="math notranslate nohighlight">\(P\)</span> nodal
+locations of the LSFE. If <span class="math notranslate nohighlight">\(P &gt; n^\mathrm{geom}\)</span>, then the a new
+LSFE is constructed with <span class="math notranslate nohighlight">\(P\)</span>-nodes that lie on the lower-order
+<span class="math notranslate nohighlight">\(n^\mathrm{geom}\)</span>-point least-squares fit. The result are nodal
+values <span class="math notranslate nohighlight">\(\underline{x}^\mathrm{fit}_\ell \in \mathbb{R}^3\)</span>, for
+<span class="math notranslate nohighlight">\(\ell \in \{1, \ldots, P\}\)</span>. The geometry of the reference line
+(in the local coordinate system) is given (in the element natural
+coordinates) as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \underline{x}^\mathrm{geom}(\xi) = \sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell \phi_\ell(\xi)
+\end{aligned}\]</div>
+<p>for <span class="math notranslate nohighlight">\(\xi\in[-1,1]\)</span>.</p>
+<p>Figure <a class="reference external" href="#fig:lsfit-example">1</a> shows the results of the fitting
+process for the IEA 15-MW reference turbine, which is defined by 50
+points. Shown are LSFE fits with 3, 7, and 10 nodes. Clearly the 10-node
+fit provides an excellent geometric approximation of the discrete data.
+For reference, also shown is 10-node representation with linear
+segments, which emphasizes the advantage of the LSFE representation for
+a given number of nodes.</p>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/doc-lsfit.png"><img alt="A plot of data" src="../_images/doc-lsfit.png" style="width: 80%;" /></a>
+<p class="caption"><span class="caption-number">1 </span><span class="caption-text">This is the caption of the figure.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</div>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/doc-lsfit-zoom.png"><img alt="A plot of data" src="../_images/doc-lsfit-zoom.png" style="width: 80%;" /></a>
+<p class="caption"><span class="caption-number">2 </span><span class="caption-text">This is the caption of the figure.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</div>
+<p>A beam’s reference line also requires the definition of its orientation.
+We construct the orientation from the LSFE line as follows:</p>
+<ol class="arabic">
+<li><p>Calculate the unit tangent at each LSFE node:</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \overline{t}^{\mathrm{fit}}_i =
+\sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell
+\left .  \frac{\partial \phi_\ell}{\partial \xi}\right|_{\xi=\xi_i} /
+\left \Vert\sum_{i=1}^P \underline{x}^\mathrm{fit}_i
+\left .  \frac{\partial \phi_i}{\partial \xi}\right|_{\xi=\xi_i}
+\right\Vert
+, \quad \forall i \in {1, \ldots, P}
+\end{aligned}\]</div>
+</li>
+<li><p>At each LSFE node, calculate a unit vector,
+<span class="math notranslate nohighlight">\(\overline{n}^\mathrm{fit}_i\)</span>, normal to
+<span class="math notranslate nohighlight">\(\overline{t}^\mathrm{fit}_i\)</span> with the additional requirement
+that it lies in the local
+<span class="math notranslate nohighlight">\(\overline{x}^\mathrm{g}-\overline{y}^\mathrm{g}\)</span> plane, i.e.,
+<span class="math notranslate nohighlight">\(\overline{n}^\mathrm{fit}_i = (n_1^\mathrm{fit},n_2^\mathrm{fit}, 0 )\)</span>
+with the requirements
+<span class="math notranslate nohighlight">\(\left|\overline{n}^\mathrm{fit}_i \right | = 1\)</span> and
+<span class="math notranslate nohighlight">\(\overline{n}^\mathrm{fit}_i \cdot \overline{t}^\mathrm{fit}_i = 0\)</span>.</p></li>
+<li><p>The binormal vector is then given by
+<span class="math notranslate nohighlight">\(\underline{b}^\mathrm{fit}_i = \widetilde{t^\mathrm{fit}_i} \underline{n}^\mathrm{fit}_i\)</span>.</p></li>
+<li><p>The orientation at node <span class="math notranslate nohighlight">\(i\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{\underline{R}}^\mathrm{fit}_i =
+\begin{bmatrix}
+\overline{t}^\mathrm{fit}_i \,\,
+\overline{n}^\mathrm{fit}_i \,\,
+\overline{b}^\mathrm{fit}_i
+\end{bmatrix}
+,\, \forall i \in {1, \ldots, P}
+\end{aligned}\]</div>
+<p>which have the associated quaternions
+<span class="math notranslate nohighlight">\(\widehat{q}_i^\mathrm{fit}\)</span>.</p>
+</li>
+<li><p>Nodal positions in the reference position, given
+<span class="math notranslate nohighlight">\(\underline{u}^\mathrm{init}\)</span> and
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{init}\)</span>, are calculated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{x}^0_i = \underline{x}^\mathrm{fit}_i + \underline{u}^\mathrm{init} + \underline{\underline{R}}^\mathrm{init}\underline{x}^\mathrm{fit}_i,\quad \forall i \in  1, 2, \ldots, P
+\end{aligned}\]</div>
+</li>
+<li><p>Nodal orientations are calculated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{\underline{R}}^0_i = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_i^\mathrm{fit},\tau^\mathrm{geom} \right) \underline{R}^\mathrm{fit}_i
+,\quad \forall i \in  1, 2, \ldots, P
+\end{aligned}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}\left(\overline{t}_i^\mathrm{fit},-\tau^\mathrm{geom} \right)\)</span>
+denotes a rotation of <span class="math notranslate nohighlight">\(-\tau^\mathrm{geom}\)</span> about the vector
+<span class="math notranslate nohighlight">\(\overline{t}_i^\mathrm{fit}\)</span>, where <span class="math notranslate nohighlight">\(\tau^\mathrm{geom}\)</span>
+is linearly interpolated from user-defined twist at nearest neighbors
+to <span class="math notranslate nohighlight">\(\xi_i\)</span>.</p>
+</li>
+<li><p>We also require the reference orientations at quadrature points,
+<span class="math notranslate nohighlight">\(\xi^\mathrm{Q}_k\)</span>, which are calculated as</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{\underline{R}}^{0,\mathrm{Q}}_k = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_k^\mathrm{Q},-\tau^\mathrm{geom,Q} \right) \underline{\underline{R}}\left(\widehat{q}^\mathrm{fit,Q}_k\right)
+,\quad \forall k \in  1, 2, \ldots, n^\mathrm{Q}
+\end{aligned}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+ \overline{t}^{\mathrm{Q}}_k =
+\sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell
+\left .  \frac{\partial \phi_\ell}{\partial \xi}\right|_{\xi=\xi_k^\mathrm{Q}} /
+\left \Vert\sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell
+\left .  \frac{\partial \phi_\ell}{\partial \xi}\right|_{\xi=\xi_k^\mathrm{Q}}
+\right\Vert
+, \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\widehat{q}^{\mathrm{fit,Q}}_k =
+\sum_{\ell=1}^P \widehat{q}^\mathrm{fit}_\ell
+ \phi_\ell\left(\xi_k^\mathrm{Q}\right) /
+\left \Vert\sum_{\ell=1}^P \widehat{q}^\mathrm{fit}_\ell
+ \phi_\ell\left(\xi_k^\mathrm{Q} \right)
+\right \Vert
+, \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+\end{aligned}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\tau^\mathrm{geom,Q}\)</span> is the twist at
+<span class="math notranslate nohighlight">\(\xi_k^\mathrm{Q}\)</span> linearly interpolated from nearest
+neighbors.</p>
+</li>
+</ol>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quadrature.html" class="btn btn-neutral float-left" title="Notes on quadrature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="constraints.html" class="btn btn-neutral float-right" title="Model Bodies/Elements and Constraints for a HAWT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
