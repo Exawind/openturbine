@@ -13,3 +13,5 @@ elements, constraints, and other relevant topics.
    rigid
    beam
    configs
+   fsi
+   blade-element
