@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1CopyConstraintsResidualToVector-members.html">List of all members</a>  </div>
@@ -176,39 +177,106 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="copy__constraints__residual__to__vector_8hpp_source.html">copy_constraints_residual_to_vector.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ac064902e5aaf964c6897ffc5d8edb954" id="r_ac064902e5aaf964c6897ffc5d8edb954"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ac064902e5aaf964c6897ffc5d8edb954"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:ac064902e5aaf964c6897ffc5d8edb954"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6391628add75f36b4f2fa89538d5d34" id="r_ae6391628add75f36b4f2fa89538d5d34"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ae6391628add75f36b4f2fa89538d5d34"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae6391628add75f36b4f2fa89538d5d34">ConstView</a> = <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">::const_type</a></td></tr>
+<tr class="separator:ae6391628add75f36b4f2fa89538d5d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b6e388bb1d4f016409824abf86bc6a6" id="r_a2b6e388bb1d4f016409824abf86bc6a6"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a2b6e388bb1d4f016409824abf86bc6a6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a2b6e388bb1d4f016409824abf86bc6a6">LeftView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a2b6e388bb1d4f016409824abf86bc6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8b39dff209b3d6b6a9fd04adde24b149" id="r_a8b39dff209b3d6b6a9fd04adde24b149"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a8b39dff209b3d6b6a9fd04adde24b149">operator()</a> (size_t i_constraint) const</td></tr>
-<tr class="separator:a8b39dff209b3d6b6a9fd04adde24b149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a616a04038b760f9023717abe33b0a6b6" id="r_a616a04038b760f9023717abe33b0a6b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a616a04038b760f9023717abe33b0a6b6">operator()</a> (<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a> constraint) <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">const</a></td></tr>
+<tr class="separator:a616a04038b760f9023717abe33b0a6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8c471e69c96a30bb815a8b6b6adf9382" id="r_a8c471e69c96a30bb815a8b6b6adf9382"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a8c471e69c96a30bb815a8b6b6adf9382">start_row</a></td></tr>
+<tr class="memitem:a8c471e69c96a30bb815a8b6b6adf9382" id="r_a8c471e69c96a30bb815a8b6b6adf9382"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a8c471e69c96a30bb815a8b6b6adf9382">start_row</a></td></tr>
 <tr class="separator:a8c471e69c96a30bb815a8b6b6adf9382"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75b408165bfda327cb8481fc3838f552" id="r_a75b408165bfda327cb8481fc3838f552"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; Kokkos::pair&lt; size_t, size_t &gt; *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a75b408165bfda327cb8481fc3838f552">row_range</a></td></tr>
-<tr class="separator:a75b408165bfda327cb8481fc3838f552"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1b6e38eab02d7b1d547d07a63af4262" id="r_ae1b6e38eab02d7b1d547d07a63af4262"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae1b6e38eab02d7b1d547d07a63af4262">constraint_residual_terms</a></td></tr>
-<tr class="separator:ae1b6e38eab02d7b1d547d07a63af4262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a721886a59838bba683040da6c925773c" id="r_a721886a59838bba683040da6c925773c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a721886a59838bba683040da6c925773c">residual</a></td></tr>
-<tr class="separator:a721886a59838bba683040da6c925773c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afef5bbccb9651a0ac9df5588fa6ed50b" id="r_afef5bbccb9651a0ac9df5588fa6ed50b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae6391628add75f36b4f2fa89538d5d34">ConstView</a>&lt; Kokkos::pair&lt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a>, <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a> &gt; * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#afef5bbccb9651a0ac9df5588fa6ed50b">row_range</a></td></tr>
+<tr class="separator:afef5bbccb9651a0ac9df5588fa6ed50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0205cc6fddef6f69119cb19315e0a486" id="r_a0205cc6fddef6f69119cb19315e0a486"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae6391628add75f36b4f2fa89538d5d34">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a0205cc6fddef6f69119cb19315e0a486">constraint_residual_terms</a></td></tr>
+<tr class="separator:a0205cc6fddef6f69119cb19315e0a486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a296ad6241831de1f260ea40e5ef390ce" id="r_a296ad6241831de1f260ea40e5ef390ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a2b6e388bb1d4f016409824abf86bc6a6">LeftView</a>&lt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">double</a> *[1]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a296ad6241831de1f260ea40e5ef390ce">residual</a></td></tr>
+<tr class="separator:a296ad6241831de1f260ea40e5ef390ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8b39dff209b3d6b6a9fd04adde24b149" name="a8b39dff209b3d6b6a9fd04adde24b149"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b39dff209b3d6b6a9fd04adde24b149">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ae6391628add75f36b4f2fa89538d5d34" name="ae6391628add75f36b4f2fa89538d5d34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6391628add75f36b4f2fa89538d5d34">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b6e388bb1d4f016409824abf86bc6a6" name="a2b6e388bb1d4f016409824abf86bc6a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b6e388bb1d4f016409824abf86bc6a6">&#9670;&#160;</a></span>LeftView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::LeftView =  Kokkos::View&lt;ValueType, Kokkos::LayoutLeft, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac064902e5aaf964c6897ffc5d8edb954" name="ac064902e5aaf964c6897ffc5d8edb954"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac064902e5aaf964c6897ffc5d8edb954">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">using</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a616a04038b760f9023717abe33b0a6b6" name="a616a04038b760f9023717abe33b0a6b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a616a04038b760f9023717abe33b0a6b6">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">void</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>i_constraint</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -222,48 +290,48 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae1b6e38eab02d7b1d547d07a63af4262" name="ae1b6e38eab02d7b1d547d07a63af4262"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1b6e38eab02d7b1d547d07a63af4262">&#9670;&#160;</a></span>constraint_residual_terms</h2>
+<a id="a0205cc6fddef6f69119cb19315e0a486" name="a0205cc6fddef6f69119cb19315e0a486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0205cc6fddef6f69119cb19315e0a486">&#9670;&#160;</a></span>constraint_residual_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::constraint_residual_terms</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae6391628add75f36b4f2fa89538d5d34">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::constraint_residual_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a721886a59838bba683040da6c925773c" name="a721886a59838bba683040da6c925773c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a721886a59838bba683040da6c925773c">&#9670;&#160;</a></span>residual</h2>
+<a id="a296ad6241831de1f260ea40e5ef390ce" name="a296ad6241831de1f260ea40e5ef390ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a296ad6241831de1f260ea40e5ef390ce">&#9670;&#160;</a></span>residual</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::residual</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#a2b6e388bb1d4f016409824abf86bc6a6">LeftView</a>&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">double</a>* [1]&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::residual</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a75b408165bfda327cb8481fc3838f552" name="a75b408165bfda327cb8481fc3838f552"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75b408165bfda327cb8481fc3838f552">&#9670;&#160;</a></span>row_range</h2>
+<a id="afef5bbccb9651a0ac9df5588fa6ed50b" name="afef5bbccb9651a0ac9df5588fa6ed50b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afef5bbccb9651a0ac9df5588fa6ed50b">&#9670;&#160;</a></span>row_range</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;Kokkos::pair&lt;size_t,size_t&gt;*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::row_range</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ae6391628add75f36b4f2fa89538d5d34">ConstView</a>&lt;Kokkos::pair&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a>, <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a>&gt;*&gt; <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::row_range</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -276,10 +344,10 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::start_row</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html#ac064902e5aaf964c6897ffc5d8edb954">size_t</a> <a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">openturbine::CopyConstraintsResidualToVector</a>&lt; DeviceType &gt;::start_row</td>
         </tr>
       </table>
 </div><div class="memdoc">

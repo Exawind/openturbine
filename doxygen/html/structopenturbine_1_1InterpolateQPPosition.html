@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1InterpolateQPPosition-members.html">List of all members</a>  </div>
@@ -179,49 +180,95 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="interpolate__QP__position_8hpp_source.html">interpolate_QP_position.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a85d39e9159d4ff76fc6cb1c2c200210a" id="r_a85d39e9159d4ff76fc6cb1c2c200210a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a85d39e9159d4ff76fc6cb1c2c200210a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:a85d39e9159d4ff76fc6cb1c2c200210a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7028cd1cde2cb0b568b88596f7a07746" id="r_a7028cd1cde2cb0b568b88596f7a07746"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a7028cd1cde2cb0b568b88596f7a07746"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a> = <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">::const_type</a></td></tr>
+<tr class="separator:a7028cd1cde2cb0b568b88596f7a07746"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a21dbe4ac34a3bbc2eb5246c4cb48ef12" id="r_a21dbe4ac34a3bbc2eb5246c4cb48ef12"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a21dbe4ac34a3bbc2eb5246c4cb48ef12">operator()</a> (const int i_elem) const</td></tr>
-<tr class="separator:a21dbe4ac34a3bbc2eb5246c4cb48ef12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197c44a0e2237be7c9b1c58e4bbb2260" id="r_a197c44a0e2237be7c9b1c58e4bbb2260"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a197c44a0e2237be7c9b1c58e4bbb2260">operator()</a> (<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">int</a> element) <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">const</a></td></tr>
+<tr class="separator:a197c44a0e2237be7c9b1c58e4bbb2260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af903802f19652a04eb161cd7882e20d4" id="r_af903802f19652a04eb161cd7882e20d4"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#af903802f19652a04eb161cd7882e20d4">num_nodes_per_element</a></td></tr>
-<tr class="separator:af903802f19652a04eb161cd7882e20d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90962321e87d0fc16d06823aabcaa4c8" id="r_a90962321e87d0fc16d06823aabcaa4c8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a90962321e87d0fc16d06823aabcaa4c8">num_qps_per_element</a></td></tr>
-<tr class="separator:a90962321e87d0fc16d06823aabcaa4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abea02bbd75017a20789475e50c641525" id="r_abea02bbd75017a20789475e50c641525"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#abea02bbd75017a20789475e50c641525">shape_interpolation</a></td></tr>
-<tr class="separator:abea02bbd75017a20789475e50c641525"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d2049b31e83e9b8051cb617bcc427e0" id="r_a7d2049b31e83e9b8051cb617bcc427e0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[7], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7d2049b31e83e9b8051cb617bcc427e0">node_position_rotation</a></td></tr>
-<tr class="separator:a7d2049b31e83e9b8051cb617bcc427e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a5c69cfc84ee87ffb47ef606cef11a8" id="r_a5a5c69cfc84ee87ffb47ef606cef11a8"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a5a5c69cfc84ee87ffb47ef606cef11a8">qp_position</a></td></tr>
-<tr class="separator:a5a5c69cfc84ee87ffb47ef606cef11a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9cd9fa34c3e81fd4a7bbdeb83937669" id="r_af9cd9fa34c3e81fd4a7bbdeb83937669"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#af9cd9fa34c3e81fd4a7bbdeb83937669">num_nodes_per_element</a></td></tr>
+<tr class="separator:af9cd9fa34c3e81fd4a7bbdeb83937669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a9b5871da92b2696aea4fda738e026f" id="r_a8a9b5871da92b2696aea4fda738e026f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a8a9b5871da92b2696aea4fda738e026f">num_qps_per_element</a></td></tr>
+<tr class="separator:a8a9b5871da92b2696aea4fda738e026f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e7d5ac27b5996e0795e311f5b1595c4" id="r_a7e7d5ac27b5996e0795e311f5b1595c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a> *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7e7d5ac27b5996e0795e311f5b1595c4">shape_interpolation</a></td></tr>
+<tr class="separator:a7e7d5ac27b5996e0795e311f5b1595c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a638a2e7855a3da8f47adbb60dad4eca8" id="r_a638a2e7855a3da8f47adbb60dad4eca8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a> **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a638a2e7855a3da8f47adbb60dad4eca8">node_position_rotation</a></td></tr>
+<tr class="separator:a638a2e7855a3da8f47adbb60dad4eca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a786a08489bc40b920687e514841ed9ab" id="r_a786a08489bc40b920687e514841ed9ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">View</a>&lt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a> **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a786a08489bc40b920687e514841ed9ab">qp_position</a></td></tr>
+<tr class="separator:a786a08489bc40b920687e514841ed9ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename DeviceType&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType&gt;<br />
 struct openturbine::InterpolateQPPosition&lt; DeviceType &gt;</div><p>Interpolates quadrature point positions from nodal positions using shape functions. </p>
 <p>This functor computes the global positions of quadrature points by interpolating from the nodal positions using shape functions:</p><ul>
 <li>Takes nodal positions and rotations for each element</li>
 <li>Uses pre-computed shape function weights for interpolation</li>
 <li>Computes the position vector (x,y,z) for each quadrature point </li>
 </ul>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a21dbe4ac34a3bbc2eb5246c4cb48ef12" name="a21dbe4ac34a3bbc2eb5246c4cb48ef12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21dbe4ac34a3bbc2eb5246c4cb48ef12">&#9670;&#160;</a></span>operator()()</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a7028cd1cde2cb0b568b88596f7a07746" name="a7028cd1cde2cb0b568b88596f7a07746"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7028cd1cde2cb0b568b88596f7a07746">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">using</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a85d39e9159d4ff76fc6cb1c2c200210a" name="a85d39e9159d4ff76fc6cb1c2c200210a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85d39e9159d4ff76fc6cb1c2c200210a">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">using</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a197c44a0e2237be7c9b1c58e4bbb2260" name="a197c44a0e2237be7c9b1c58e4bbb2260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a197c44a0e2237be7c9b1c58e4bbb2260">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">void</a> <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>i_elem</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">int</a>&#160;</td>
+          <td class="paramname"><em>element</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -235,80 +282,80 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a7d2049b31e83e9b8051cb617bcc427e0" name="a7d2049b31e83e9b8051cb617bcc427e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d2049b31e83e9b8051cb617bcc427e0">&#9670;&#160;</a></span>node_position_rotation</h2>
+<a id="a638a2e7855a3da8f47adbb60dad4eca8" name="a638a2e7855a3da8f47adbb60dad4eca8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a638a2e7855a3da8f47adbb60dad4eca8">&#9670;&#160;</a></span>node_position_rotation</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double**[7],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::node_position_rotation</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a>** [7]&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::node_position_rotation</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af903802f19652a04eb161cd7882e20d4" name="af903802f19652a04eb161cd7882e20d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af903802f19652a04eb161cd7882e20d4">&#9670;&#160;</a></span>num_nodes_per_element</h2>
+<a id="af9cd9fa34c3e81fd4a7bbdeb83937669" name="af9cd9fa34c3e81fd4a7bbdeb83937669"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9cd9fa34c3e81fd4a7bbdeb83937669">&#9670;&#160;</a></span>num_nodes_per_element</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::num_nodes_per_element</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::num_nodes_per_element</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a90962321e87d0fc16d06823aabcaa4c8" name="a90962321e87d0fc16d06823aabcaa4c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90962321e87d0fc16d06823aabcaa4c8">&#9670;&#160;</a></span>num_qps_per_element</h2>
+<a id="a8a9b5871da92b2696aea4fda738e026f" name="a8a9b5871da92b2696aea4fda738e026f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a9b5871da92b2696aea4fda738e026f">&#9670;&#160;</a></span>num_qps_per_element</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::num_qps_per_element</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::num_qps_per_element</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a5a5c69cfc84ee87ffb47ef606cef11a8" name="a5a5c69cfc84ee87ffb47ef606cef11a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a5c69cfc84ee87ffb47ef606cef11a8">&#9670;&#160;</a></span>qp_position</h2>
+<a id="a786a08489bc40b920687e514841ed9ab" name="a786a08489bc40b920687e514841ed9ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a786a08489bc40b920687e514841ed9ab">&#9670;&#160;</a></span>qp_position</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double** [3], DeviceType&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::qp_position</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">View</a>&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a>** [3]&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::qp_position</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="abea02bbd75017a20789475e50c641525" name="abea02bbd75017a20789475e50c641525"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abea02bbd75017a20789475e50c641525">&#9670;&#160;</a></span>shape_interpolation</h2>
+<a id="a7e7d5ac27b5996e0795e311f5b1595c4" name="a7e7d5ac27b5996e0795e311f5b1595c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e7d5ac27b5996e0795e311f5b1595c4">&#9670;&#160;</a></span>shape_interpolation</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double***,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::shape_interpolation</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a7028cd1cde2cb0b568b88596f7a07746">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1InterpolateQPPosition.html#a85d39e9159d4ff76fc6cb1c2c200210a">double</a>***&gt; <a class="el" href="structopenturbine_1_1InterpolateQPPosition.html">openturbine::InterpolateQPPosition</a>&lt; DeviceType &gt;::shape_interpolation</td>
         </tr>
       </table>
 </div><div class="memdoc">

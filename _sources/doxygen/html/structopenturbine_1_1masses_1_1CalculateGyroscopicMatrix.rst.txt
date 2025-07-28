@@ -1,0 +1,14 @@
+.. meta::447a4ffac96a48ac7c3d48bbfa068888595eab7832007e5c62aa3c7f617dc7585c5e42b795b6a585ba1e100c3a3349479f3e185f903ed2bbe55443eefffbd707
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::masses::CalculateGyroscopicMatrix&lt; DeviceType &gt; Struct Template Reference
+
+CalculateGyroscopicMatrix&lt; DeviceType &gt; Struct Template Reference
+=======================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1masses_1_1CalculateGyroscopicMatrix.html

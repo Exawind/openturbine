@@ -1,0 +1,14 @@
+.. meta::b681e740fedb2e2eb15eef6cf33c0cdf6d0af64f54ce46a6fbe3e10bbacd1a8db5cba3aa096fb008d2fee5e28f68c4a1550170d56c1e45dacc10613ba0866744
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateFixedBC3DOFConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateFixedBC3DOFConstraint&lt; DeviceType &gt; Struct Template Reference
+============================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateFixedBC3DOFConstraint.html

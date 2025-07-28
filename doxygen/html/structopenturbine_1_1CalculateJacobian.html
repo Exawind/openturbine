@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1CalculateJacobian-members.html">List of all members</a>  </div>
@@ -179,51 +180,97 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="calculate__jacobian_8hpp_source.html">calculate_jacobian.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af72c15b4bba40d6242830a78b5ecfca8" id="r_af72c15b4bba40d6242830a78b5ecfca8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:af72c15b4bba40d6242830a78b5ecfca8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:af72c15b4bba40d6242830a78b5ecfca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa69e07fd378c69c9ab12c4451de3ffee" id="r_aa69e07fd378c69c9ab12c4451de3ffee"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:aa69e07fd378c69c9ab12c4451de3ffee"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a> = <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">::const_type</a></td></tr>
+<tr class="separator:aa69e07fd378c69c9ab12c4451de3ffee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a41ef9c88d4ef2ea4d13b12b0a6f93757" id="r_a41ef9c88d4ef2ea4d13b12b0a6f93757"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a41ef9c88d4ef2ea4d13b12b0a6f93757">operator()</a> (const int i_elem) const</td></tr>
-<tr class="separator:a41ef9c88d4ef2ea4d13b12b0a6f93757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed1524aac1698d8b9cfd6f77d1cb1a72" id="r_aed1524aac1698d8b9cfd6f77d1cb1a72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aed1524aac1698d8b9cfd6f77d1cb1a72">operator()</a> (<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">int</a> element) <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">const</a></td></tr>
+<tr class="separator:aed1524aac1698d8b9cfd6f77d1cb1a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a58df412f0d2059b9d220fc5e6fc6ae29" id="r_a58df412f0d2059b9d220fc5e6fc6ae29"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a58df412f0d2059b9d220fc5e6fc6ae29">num_nodes_per_element</a></td></tr>
-<tr class="separator:a58df412f0d2059b9d220fc5e6fc6ae29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa15c4db12e7dfbee7849ed76a19ff498" id="r_aa15c4db12e7dfbee7849ed76a19ff498"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa15c4db12e7dfbee7849ed76a19ff498">num_qps_per_element</a></td></tr>
-<tr class="separator:aa15c4db12e7dfbee7849ed76a19ff498"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf5965367c7e814f8da050eb572e3bc9" id="r_aaf5965367c7e814f8da050eb572e3bc9"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double ***, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aaf5965367c7e814f8da050eb572e3bc9">shape_derivative</a></td></tr>
-<tr class="separator:aaf5965367c7e814f8da050eb572e3bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a6a3c33d25399f16bb51d1a43157b6c" id="r_a8a6a3c33d25399f16bb51d1a43157b6c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[7], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a8a6a3c33d25399f16bb51d1a43157b6c">node_position_rotation</a></td></tr>
-<tr class="separator:a8a6a3c33d25399f16bb51d1a43157b6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a950ad2043e431595d8a1ea259e3ce78f" id="r_a950ad2043e431595d8a1ea259e3ce78f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **[3], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a950ad2043e431595d8a1ea259e3ce78f">qp_position_derivative</a></td></tr>
-<tr class="separator:a950ad2043e431595d8a1ea259e3ce78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a134e5d4b7a0c13f8acd09afdab3efe68" id="r_a134e5d4b7a0c13f8acd09afdab3efe68"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double **, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a134e5d4b7a0c13f8acd09afdab3efe68">qp_jacobian</a></td></tr>
-<tr class="separator:a134e5d4b7a0c13f8acd09afdab3efe68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa4c721a7558a39e8915e346fd68cce5" id="r_aaa4c721a7558a39e8915e346fd68cce5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aaa4c721a7558a39e8915e346fd68cce5">num_nodes_per_element</a></td></tr>
+<tr class="separator:aaa4c721a7558a39e8915e346fd68cce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6858330349d38749c0c69d53d18e7ad3" id="r_a6858330349d38749c0c69d53d18e7ad3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a6858330349d38749c0c69d53d18e7ad3">num_qps_per_element</a></td></tr>
+<tr class="separator:a6858330349d38749c0c69d53d18e7ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a672c5493ebd565ea6ba198b9bbb30cba" id="r_a672c5493ebd565ea6ba198b9bbb30cba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a> *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#a672c5493ebd565ea6ba198b9bbb30cba">shape_derivative</a></td></tr>
+<tr class="separator:a672c5493ebd565ea6ba198b9bbb30cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca54c06bc6e9350ee698e7157ecc5e0e" id="r_aca54c06bc6e9350ee698e7157ecc5e0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a> **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aca54c06bc6e9350ee698e7157ecc5e0e">node_position_rotation</a></td></tr>
+<tr class="separator:aca54c06bc6e9350ee698e7157ecc5e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae43d8a8369bd65028008d3b036be3c81" id="r_ae43d8a8369bd65028008d3b036be3c81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a> **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#ae43d8a8369bd65028008d3b036be3c81">qp_position_derivative</a></td></tr>
+<tr class="separator:ae43d8a8369bd65028008d3b036be3c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf32ca1866e2f73b5cf617115e1614ca" id="r_acf32ca1866e2f73b5cf617115e1614ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a> ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#acf32ca1866e2f73b5cf617115e1614ca">qp_jacobian</a></td></tr>
+<tr class="separator:acf32ca1866e2f73b5cf617115e1614ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename DeviceType&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType&gt;<br />
 struct openturbine::CalculateJacobian&lt; DeviceType &gt;</div><p>Functor to calculate Jacobians and unit tangent vectors at quadrature points for beam elements. </p>
 <p>This functor performs two main operations for a provided element:</p><ul>
 <li>Calculates the Jacobian (J = |dx/dξ|) at each quadrature point, which represents the mapping between parametric (ξ) and physical (x) space</li>
 <li>Computes normalized position derivatives to obtain unit tangent vectors</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>The functor modifies qp_position_derivative in place, normalizing it to create unit tangent vectors </dd></dl>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a41ef9c88d4ef2ea4d13b12b0a6f93757" name="a41ef9c88d4ef2ea4d13b12b0a6f93757"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41ef9c88d4ef2ea4d13b12b0a6f93757">&#9670;&#160;</a></span>operator()()</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="aa69e07fd378c69c9ab12c4451de3ffee" name="aa69e07fd378c69c9ab12c4451de3ffee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa69e07fd378c69c9ab12c4451de3ffee">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">using</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af72c15b4bba40d6242830a78b5ecfca8" name="af72c15b4bba40d6242830a78b5ecfca8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af72c15b4bba40d6242830a78b5ecfca8">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">using</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aed1524aac1698d8b9cfd6f77d1cb1a72" name="aed1524aac1698d8b9cfd6f77d1cb1a72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed1524aac1698d8b9cfd6f77d1cb1a72">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">void</a> <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>i_elem</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">int</a>&#160;</td>
+          <td class="paramname"><em>element</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -237,96 +284,96 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a8a6a3c33d25399f16bb51d1a43157b6c" name="a8a6a3c33d25399f16bb51d1a43157b6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a6a3c33d25399f16bb51d1a43157b6c">&#9670;&#160;</a></span>node_position_rotation</h2>
+<a id="aca54c06bc6e9350ee698e7157ecc5e0e" name="aca54c06bc6e9350ee698e7157ecc5e0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca54c06bc6e9350ee698e7157ecc5e0e">&#9670;&#160;</a></span>node_position_rotation</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double**[7],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::node_position_rotation</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a>** [7]&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::node_position_rotation</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a58df412f0d2059b9d220fc5e6fc6ae29" name="a58df412f0d2059b9d220fc5e6fc6ae29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58df412f0d2059b9d220fc5e6fc6ae29">&#9670;&#160;</a></span>num_nodes_per_element</h2>
+<a id="aaa4c721a7558a39e8915e346fd68cce5" name="aaa4c721a7558a39e8915e346fd68cce5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa4c721a7558a39e8915e346fd68cce5">&#9670;&#160;</a></span>num_nodes_per_element</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::num_nodes_per_element</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::num_nodes_per_element</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa15c4db12e7dfbee7849ed76a19ff498" name="aa15c4db12e7dfbee7849ed76a19ff498"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa15c4db12e7dfbee7849ed76a19ff498">&#9670;&#160;</a></span>num_qps_per_element</h2>
+<a id="a6858330349d38749c0c69d53d18e7ad3" name="a6858330349d38749c0c69d53d18e7ad3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6858330349d38749c0c69d53d18e7ad3">&#9670;&#160;</a></span>num_qps_per_element</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::num_qps_per_element</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::num_qps_per_element</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a134e5d4b7a0c13f8acd09afdab3efe68" name="a134e5d4b7a0c13f8acd09afdab3efe68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a134e5d4b7a0c13f8acd09afdab3efe68">&#9670;&#160;</a></span>qp_jacobian</h2>
+<a id="acf32ca1866e2f73b5cf617115e1614ca" name="acf32ca1866e2f73b5cf617115e1614ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf32ca1866e2f73b5cf617115e1614ca">&#9670;&#160;</a></span>qp_jacobian</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double**, DeviceType&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::qp_jacobian</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a>**&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::qp_jacobian</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a950ad2043e431595d8a1ea259e3ce78f" name="a950ad2043e431595d8a1ea259e3ce78f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a950ad2043e431595d8a1ea259e3ce78f">&#9670;&#160;</a></span>qp_position_derivative</h2>
+<a id="ae43d8a8369bd65028008d3b036be3c81" name="ae43d8a8369bd65028008d3b036be3c81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae43d8a8369bd65028008d3b036be3c81">&#9670;&#160;</a></span>qp_position_derivative</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double** [3], DeviceType&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::qp_position_derivative</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">View</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a>** [3]&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::qp_position_derivative</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aaf5965367c7e814f8da050eb572e3bc9" name="aaf5965367c7e814f8da050eb572e3bc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf5965367c7e814f8da050eb572e3bc9">&#9670;&#160;</a></span>shape_derivative</h2>
+<a id="a672c5493ebd565ea6ba198b9bbb30cba" name="a672c5493ebd565ea6ba198b9bbb30cba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a672c5493ebd565ea6ba198b9bbb30cba">&#9670;&#160;</a></span>shape_derivative</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double***,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::shape_derivative</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateJacobian.html#aa69e07fd378c69c9ab12c4451de3ffee">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateJacobian.html#af72c15b4bba40d6242830a78b5ecfca8">double</a>***&gt; <a class="el" href="structopenturbine_1_1CalculateJacobian.html">openturbine::CalculateJacobian</a>&lt; DeviceType &gt;::shape_derivative</td>
         </tr>
       </table>
 </div><div class="memdoc">

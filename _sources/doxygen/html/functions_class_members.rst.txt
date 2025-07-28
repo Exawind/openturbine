@@ -15,7 +15,7 @@ Class Members
       All <functions_all>
       Functions <functions_func_functions>
       Variables <functions_vars_variables>
-      Typedefs <functions_type>
+      Typedefs <functions_type_typedefs>
       Enumerations <functions_enum>
 
    .. raw:: html

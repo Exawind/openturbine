@@ -11,6 +11,5 @@ var searchData=
   ['turbine_5finput_2ehpp_8',['turbine_input.hpp',['../cfd_2turbine__input_8hpp.html',1,'(Global Namespace)'],['../components_2turbine__input_8hpp.html',1,'(Global Namespace)']]],
   ['turbine_5finterface_2ecpp_9',['turbine_interface.cpp',['../turbine__interface_8cpp.html',1,'']]],
   ['turbine_5finterface_2ehpp_10',['turbine_interface.hpp',['../turbine__interface_8hpp.html',1,'']]],
-  ['turbine_5finterface_5fbuilder_2ehpp_11',['turbine_interface_builder.hpp',['../turbine__interface__builder_8hpp.html',1,'']]],
-  ['types_2ehpp_12',['types.hpp',['../types_8hpp.html',1,'']]]
+  ['turbine_5finterface_5fbuilder_2ehpp_11',['turbine_interface_builder.hpp',['../turbine__interface__builder_8hpp.html',1,'']]]
 ];

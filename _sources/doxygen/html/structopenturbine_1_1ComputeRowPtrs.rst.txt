@@ -1,0 +1,14 @@
+.. meta::8dd2a111b830d89cc4a44dfa56b2266da68c9d0a7a5fa5ef4a5880628e4f76ac4ffa9efe7c185a232418ae0e7b47e9c8fa176beb0e99ab6ef11921eab5c9d0f9
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::ComputeRowPtrs&lt; RowPtrType &gt; Struct Template Reference
+
+ComputeRowPtrs&lt; RowPtrType &gt; Struct Template Reference
+============================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1ComputeRowPtrs.html

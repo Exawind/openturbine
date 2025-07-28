@@ -234,12 +234,12 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Pre-compute (x - xs[m]) terms to avoid repeated calculations</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    std::vector&lt;double&gt; x_minus_xm(n);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> m = 0; m &lt; n; ++m) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> m = 0U; m &lt; n; ++m) {</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        x_minus_xm[m] = x - xs[m];</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    }</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; n; ++j) {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> m = 0; m &lt; n; ++m) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; n; ++j) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> m = 0U; m &lt; n; ++m) {</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keywordflow">if</span> (j != m) {</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                weights[j] *= x_minus_xm[m] / (xs[j] - xs[m]);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            }</div>
@@ -257,25 +257,25 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="comment">// Pre-compute (x - xs[k]) terms to avoid repeated calculations</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::vector&lt;double&gt; x_minus_xk(n);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> k = 0; k &lt; n; ++k) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; n; ++k) {</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        x_minus_xk[k] = x - xs[k];</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    }</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="comment">// Pre-compute denominators (xs[i] - xs[k]) to avoid repeated calculations</span></div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    std::vector&lt;std::vector&lt;double&gt;&gt; denom(n, std::vector&lt;double&gt;(n));</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; n; ++i) {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> k = 0; k &lt; n; ++k) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; n; ++i) {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; n; ++k) {</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keywordflow">if</span> (k != i) {</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                denom[i][k] = xs[i] - xs[k];</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            }</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        }</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; n; ++i) {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; n; ++j) {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; n; ++i) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; n; ++j) {</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                <span class="keywordtype">double</span> prod = 1.;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> k = 0; k &lt; n; ++k) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; n; ++k) {</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                    <span class="keywordflow">if</span> (k != i &amp;&amp; k != j) {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                        prod *= x_minus_xk[k] / denom[i][k];</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                    }</div>
@@ -301,7 +301,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">double</span> p_n_minus_2{1.};  <span class="comment">// P_{n-2}(x)</span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keywordtype">double</span> p_n_minus_1{x};   <span class="comment">// P_{n-1}(x)</span></div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">double</span> p_n{0.};          <span class="comment">// P_n(x)</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 2; i &lt;= n; ++i) {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 2U; i &lt;= n; ++i) {</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keyword">const</span> <span class="keyword">auto</span> i_double = <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(i);</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        p_n = ((2. * i_double - 1.) * x * p_n_minus_1 - (i_double - 1.) * p_n_minus_2) / i_double;</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        p_n_minus_2 = p_n_minus_1;</div>
@@ -331,16 +331,16 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="comment">// Find interior GLL points (1, ..., order - 1) using Newton-Raphson iteration</span></div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    std::vector&lt;double&gt; legendre_poly(n_nodes, 0.);</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 1; i &lt; order; ++i) {</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 1U; i &lt; order; ++i) {</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="comment">// Initial guess using Chebyshev-Gauss-Lobatto nodes</span></div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keyword">auto</span> x_it = -std::cos(<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(i) * M_PI / <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(order));</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordtype">bool</span> converged{<span class="keyword">false</span>};</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> it = 0; it &lt; <a class="code hl_variable" href="namespaceopenturbine.html#a48906c8285184b9678d6334ad3458ef3">kMaxIterations</a>; ++it) {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = 0U; it &lt; <a class="code hl_variable" href="namespaceopenturbine.html#a48906c8285184b9678d6334ad3458ef3">kMaxIterations</a>; ++it) {</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="keyword">const</span> <span class="keyword">auto</span> x_old = x_it;</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="comment">// Compute Legendre polynomials up to order n</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> k = 0; k &lt; n_nodes; ++k) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; n_nodes; ++k) {</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                legendre_poly[k] = <a class="code hl_function" href="namespaceopenturbine.html#a2500bd75d55b14e075f84f7d639ad79c">LegendrePolynomial</a>(k, x_it);</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            }</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>

@@ -174,7 +174,6 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
-<code>#include &quot;<a class="el" href="types_8hpp_source.html">types.hpp</a>&quot;</code><br />
 </div>
 <p><a href="generate__sectional__properties_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -185,12 +184,12 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae34497c1adc8912f2decacdfba95fbde" id="r_ae34497c1adc8912f2decacdfba95fbde"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ae34497c1adc8912f2decacdfba95fbde">openturbine::GenerateStiffnessMatrix</a> (double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C, double y_C, double theta_p, double x_S, double y_S, double theta_s)</td></tr>
-<tr class="memdesc:ae34497c1adc8912f2decacdfba95fbde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional stiffness matrix for use in beam elements.  <br /></td></tr>
-<tr class="separator:ae34497c1adc8912f2decacdfba95fbde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51b13fdf62fb27c122c8ff68a5a20c91" id="r_a51b13fdf62fb27c122c8ff68a5a20c91"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a51b13fdf62fb27c122c8ff68a5a20c91">openturbine::GenerateMassMatrix</a> (double m, double I_x, double I_y, double I_p, double x_G=0., double y_G=0., double theta_i=0.)</td></tr>
-<tr class="memdesc:a51b13fdf62fb27c122c8ff68a5a20c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional mass matrix for use in beam elements.  <br /></td></tr>
-<tr class="separator:a51b13fdf62fb27c122c8ff68a5a20c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8826904598850172d0f547e9ec05c38" id="r_ac8826904598850172d0f547e9ec05c38"><td class="memItemLeft" align="right" valign="top">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac8826904598850172d0f547e9ec05c38">openturbine::GenerateStiffnessMatrix</a> (double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C, double y_C, double theta_p, double x_S, double y_S, double theta_s)</td></tr>
+<tr class="memdesc:ac8826904598850172d0f547e9ec05c38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional stiffness matrix for use in beam elements.  <br /></td></tr>
+<tr class="separator:ac8826904598850172d0f547e9ec05c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c12adbb0f9038c2bdd440d524ea57f6" id="r_a2c12adbb0f9038c2bdd440d524ea57f6"><td class="memItemLeft" align="right" valign="top">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2c12adbb0f9038c2bdd440d524ea57f6">openturbine::GenerateMassMatrix</a> (double m, double I_x, double I_y, double I_p, double x_G=0., double y_G=0., double theta_i=0.)</td></tr>
+<tr class="memdesc:a2c12adbb0f9038c2bdd440d524ea57f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a 6x6 cross-sectional mass matrix for use in beam elements.  <br /></td></tr>
+<tr class="separator:a2c12adbb0f9038c2bdd440d524ea57f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

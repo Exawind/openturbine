@@ -1,0 +1,14 @@
+.. meta::5d386c859ecf798403df918e48dbc207f59a802d7e9903005cb2c7de64bc8cdf51c3433e8dcc4299bbe5cb781dabcf6115bf89e53794799dea8c9ee9d7910e8e
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateStrain&lt; DeviceType &gt; Struct Template Reference
+
+CalculateStrain&lt; DeviceType &gt; Struct Template Reference
+=============================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateStrain.html

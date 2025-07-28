@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1CalculateConstraintOutput-members.html">List of all members</a>  </div>
@@ -176,47 +177,93 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="calculate__constraint__output_8hpp_source.html">calculate_constraint_output.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aea064fe4975aa63661db2513cbd2dd12" id="r_aea064fe4975aa63661db2513cbd2dd12"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:aea064fe4975aa63661db2513cbd2dd12"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:aea064fe4975aa63661db2513cbd2dd12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8fdf663585ca0bb74553c0d650b334c" id="r_ab8fdf663585ca0bb74553c0d650b334c"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ab8fdf663585ca0bb74553c0d650b334c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a> = <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">::const_type</a></td></tr>
+<tr class="separator:ab8fdf663585ca0bb74553c0d650b334c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4a419624a399f97ed016b7535e4e4d8d" id="r_a4a419624a399f97ed016b7535e4e4d8d"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a4a419624a399f97ed016b7535e4e4d8d">operator()</a> (const int i_constraint) const</td></tr>
-<tr class="separator:a4a419624a399f97ed016b7535e4e4d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81921e28ad0c789848bc04e922961798" id="r_a81921e28ad0c789848bc04e922961798"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a81921e28ad0c789848bc04e922961798">operator()</a> (<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">int</a> constraint) <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">const</a></td></tr>
+<tr class="separator:a81921e28ad0c789848bc04e922961798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a6acf4426d40c86f5a7a356c2f5692a6b" id="r_a6acf4426d40c86f5a7a356c2f5692a6b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a6acf4426d40c86f5a7a356c2f5692a6b">type</a></td></tr>
-<tr class="separator:a6acf4426d40c86f5a7a356c2f5692a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ab9709b1fe2eb5d54749064061cb424" id="r_a9ab9709b1fe2eb5d54749064061cb424"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a9ab9709b1fe2eb5d54749064061cb424">target_node_index</a></td></tr>
-<tr class="separator:a9ab9709b1fe2eb5d54749064061cb424"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2f34a4f85782787c865e5ddb39cf725" id="r_ab2f34a4f85782787c865e5ddb39cf725"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3][3], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab2f34a4f85782787c865e5ddb39cf725">axes</a></td></tr>
-<tr class="separator:ab2f34a4f85782787c865e5ddb39cf725"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c43c9bed6211465e38e0824b6a72a12" id="r_a4c43c9bed6211465e38e0824b6a72a12"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a4c43c9bed6211465e38e0824b6a72a12">node_x0</a></td></tr>
-<tr class="separator:a4c43c9bed6211465e38e0824b6a72a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6c30faa16e04203905b0926d74e35ab" id="r_af6c30faa16e04203905b0926d74e35ab"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#af6c30faa16e04203905b0926d74e35ab">node_u</a></td></tr>
-<tr class="separator:af6c30faa16e04203905b0926d74e35ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2550b92a65559fbf405a78b9d3a4c79c" id="r_a2550b92a65559fbf405a78b9d3a4c79c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a2550b92a65559fbf405a78b9d3a4c79c">node_udot</a></td></tr>
-<tr class="separator:a2550b92a65559fbf405a78b9d3a4c79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa6704b6588be4eaa9c4b7a03c7bf51a" id="r_afa6704b6588be4eaa9c4b7a03c7bf51a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#afa6704b6588be4eaa9c4b7a03c7bf51a">node_uddot</a></td></tr>
-<tr class="separator:afa6704b6588be4eaa9c4b7a03c7bf51a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cc3a1ad4553b519505dd9d8aa0c8753" id="r_a9cc3a1ad4553b519505dd9d8aa0c8753"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[3], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a9cc3a1ad4553b519505dd9d8aa0c8753">outputs</a></td></tr>
-<tr class="separator:a9cc3a1ad4553b519505dd9d8aa0c8753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a286dc9f5ff8a04ec73b22482594ef37e" id="r_a286dc9f5ff8a04ec73b22482594ef37e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a286dc9f5ff8a04ec73b22482594ef37e">type</a></td></tr>
+<tr class="separator:a286dc9f5ff8a04ec73b22482594ef37e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02e77d529b30bf941c2cd3de1f6c5598" id="r_a02e77d529b30bf941c2cd3de1f6c5598"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a02e77d529b30bf941c2cd3de1f6c5598">target_node_index</a></td></tr>
+<tr class="separator:a02e77d529b30bf941c2cd3de1f6c5598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6c908dab1322aeca9d704843c9479bd" id="r_ab6c908dab1322aeca9d704843c9479bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab6c908dab1322aeca9d704843c9479bd">axes</a></td></tr>
+<tr class="separator:ab6c908dab1322aeca9d704843c9479bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03c30e0854d56b82df7313d1994d0675" id="r_a03c30e0854d56b82df7313d1994d0675"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a03c30e0854d56b82df7313d1994d0675">node_x0</a></td></tr>
+<tr class="separator:a03c30e0854d56b82df7313d1994d0675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9097125728b7118414d2cda914d4c26" id="r_aa9097125728b7118414d2cda914d4c26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aa9097125728b7118414d2cda914d4c26">node_u</a></td></tr>
+<tr class="separator:aa9097125728b7118414d2cda914d4c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3303b57f8e34fc2599a93ea7dee1ebf4" id="r_a3303b57f8e34fc2599a93ea7dee1ebf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a3303b57f8e34fc2599a93ea7dee1ebf4">node_udot</a></td></tr>
+<tr class="separator:a3303b57f8e34fc2599a93ea7dee1ebf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacdae7a8809492df32f44d2f910d78e7" id="r_aacdae7a8809492df32f44d2f910d78e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aacdae7a8809492df32f44d2f910d78e7">node_uddot</a></td></tr>
+<tr class="separator:aacdae7a8809492df32f44d2f910d78e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81a8583791596a2e8fc701c5c61e2386" id="r_a81a8583791596a2e8fc701c5c61e2386"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">View</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a> *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#a81a8583791596a2e8fc701c5c61e2386">outputs</a></td></tr>
+<tr class="separator:a81a8583791596a2e8fc701c5c61e2386"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4a419624a399f97ed016b7535e4e4d8d" name="a4a419624a399f97ed016b7535e4e4d8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a419624a399f97ed016b7535e4e4d8d">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ab8fdf663585ca0bb74553c0d650b334c" name="ab8fdf663585ca0bb74553c0d650b334c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8fdf663585ca0bb74553c0d650b334c">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">using</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea064fe4975aa63661db2513cbd2dd12" name="aea064fe4975aa63661db2513cbd2dd12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea064fe4975aa63661db2513cbd2dd12">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">using</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a81921e28ad0c789848bc04e922961798" name="a81921e28ad0c789848bc04e922961798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81921e28ad0c789848bc04e922961798">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">void</a> <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
-          <td class="paramname"><em>i_constraint</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">int</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -230,128 +277,128 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ab2f34a4f85782787c865e5ddb39cf725" name="ab2f34a4f85782787c865e5ddb39cf725"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2f34a4f85782787c865e5ddb39cf725">&#9670;&#160;</a></span>axes</h2>
+<a id="ab6c908dab1322aeca9d704843c9479bd" name="ab6c908dab1322aeca9d704843c9479bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6c908dab1322aeca9d704843c9479bd">&#9670;&#160;</a></span>axes</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[3][3],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::axes</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [3][3]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::axes</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af6c30faa16e04203905b0926d74e35ab" name="af6c30faa16e04203905b0926d74e35ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6c30faa16e04203905b0926d74e35ab">&#9670;&#160;</a></span>node_u</h2>
+<a id="aa9097125728b7118414d2cda914d4c26" name="aa9097125728b7118414d2cda914d4c26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9097125728b7118414d2cda914d4c26">&#9670;&#160;</a></span>node_u</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[7],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_u</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_u</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="afa6704b6588be4eaa9c4b7a03c7bf51a" name="afa6704b6588be4eaa9c4b7a03c7bf51a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa6704b6588be4eaa9c4b7a03c7bf51a">&#9670;&#160;</a></span>node_uddot</h2>
+<a id="aacdae7a8809492df32f44d2f910d78e7" name="aacdae7a8809492df32f44d2f910d78e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacdae7a8809492df32f44d2f910d78e7">&#9670;&#160;</a></span>node_uddot</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_uddot</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_uddot</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2550b92a65559fbf405a78b9d3a4c79c" name="a2550b92a65559fbf405a78b9d3a4c79c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2550b92a65559fbf405a78b9d3a4c79c">&#9670;&#160;</a></span>node_udot</h2>
+<a id="a3303b57f8e34fc2599a93ea7dee1ebf4" name="a3303b57f8e34fc2599a93ea7dee1ebf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3303b57f8e34fc2599a93ea7dee1ebf4">&#9670;&#160;</a></span>node_udot</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_udot</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_udot</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a4c43c9bed6211465e38e0824b6a72a12" name="a4c43c9bed6211465e38e0824b6a72a12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c43c9bed6211465e38e0824b6a72a12">&#9670;&#160;</a></span>node_x0</h2>
+<a id="a03c30e0854d56b82df7313d1994d0675" name="a03c30e0854d56b82df7313d1994d0675"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03c30e0854d56b82df7313d1994d0675">&#9670;&#160;</a></span>node_x0</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[7],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_x0</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::node_x0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a9cc3a1ad4553b519505dd9d8aa0c8753" name="a9cc3a1ad4553b519505dd9d8aa0c8753"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cc3a1ad4553b519505dd9d8aa0c8753">&#9670;&#160;</a></span>outputs</h2>
+<a id="a81a8583791596a2e8fc701c5c61e2386" name="a81a8583791596a2e8fc701c5c61e2386"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81a8583791596a2e8fc701c5c61e2386">&#9670;&#160;</a></span>outputs</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [3], DeviceType&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::outputs</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">View</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">double</a>* [3]&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::outputs</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a9ab9709b1fe2eb5d54749064061cb424" name="a9ab9709b1fe2eb5d54749064061cb424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ab9709b1fe2eb5d54749064061cb424">&#9670;&#160;</a></span>target_node_index</h2>
+<a id="a02e77d529b30bf941c2cd3de1f6c5598" name="a02e77d529b30bf941c2cd3de1f6c5598"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02e77d529b30bf941c2cd3de1f6c5598">&#9670;&#160;</a></span>target_node_index</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::target_node_index</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::target_node_index</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6acf4426d40c86f5a7a356c2f5692a6b" name="a6acf4426d40c86f5a7a356c2f5692a6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6acf4426d40c86f5a7a356c2f5692a6b">&#9670;&#160;</a></span>type</h2>
+<a id="a286dc9f5ff8a04ec73b22482594ef37e" name="a286dc9f5ff8a04ec73b22482594ef37e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a286dc9f5ff8a04ec73b22482594ef37e">&#9670;&#160;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#aea064fe4975aa63661db2513cbd2dd12">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::type</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html#ab8fdf663585ca0bb74553c0d650b334c">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>*&gt; <a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">openturbine::CalculateConstraintOutput</a>&lt; DeviceType &gt;::type</td>
         </tr>
       </table>
 </div><div class="memdoc">

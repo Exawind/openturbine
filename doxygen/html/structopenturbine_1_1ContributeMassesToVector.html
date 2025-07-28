@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1ContributeMassesToVector-members.html">List of all members</a>  </div>
@@ -176,37 +177,104 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="contribute__masses__to__vector_8hpp_source.html">contribute_masses_to_vector.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a40836d43697c35e0406bcc8f59b3f2f7" id="r_a40836d43697c35e0406bcc8f59b3f2f7"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a40836d43697c35e0406bcc8f59b3f2f7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:a40836d43697c35e0406bcc8f59b3f2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2dc8f4cfc5fc179200950c82dfedec5" id="r_ad2dc8f4cfc5fc179200950c82dfedec5"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ad2dc8f4cfc5fc179200950c82dfedec5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#ad2dc8f4cfc5fc179200950c82dfedec5">ConstView</a> = <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">::const_type</a></td></tr>
+<tr class="separator:ad2dc8f4cfc5fc179200950c82dfedec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1589f878815a23ac8ef04b90c979726e" id="r_a1589f878815a23ac8ef04b90c979726e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a1589f878815a23ac8ef04b90c979726e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a1589f878815a23ac8ef04b90c979726e">LeftView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a1589f878815a23ac8ef04b90c979726e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4b1758e5f90a5aff62731979ff9e8ed1" id="r_a4b1758e5f90a5aff62731979ff9e8ed1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a4b1758e5f90a5aff62731979ff9e8ed1">operator()</a> (<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">size_t</a> i_elem) <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">const</a></td></tr>
-<tr class="separator:a4b1758e5f90a5aff62731979ff9e8ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af82c0b2a5486ee09a007702242188cef" id="r_af82c0b2a5486ee09a007702242188cef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af82c0b2a5486ee09a007702242188cef">operator()</a> (<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">size_t</a> element) <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">const</a></td></tr>
+<tr class="separator:af82c0b2a5486ee09a007702242188cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:abc40875040d9038f7f6a1678890809df" id="r_abc40875040d9038f7f6a1678890809df"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">size_t</a> *[6], DeviceType &gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">::const_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#abc40875040d9038f7f6a1678890809df">element_freedom_table</a></td></tr>
-<tr class="separator:abc40875040d9038f7f6a1678890809df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37e96d0877fe2d0fc1f09b63a6a51454" id="r_a37e96d0877fe2d0fc1f09b63a6a51454"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">double</a> *[6], DeviceType &gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">::const_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a37e96d0877fe2d0fc1f09b63a6a51454">elements</a></td></tr>
-<tr class="separator:a37e96d0877fe2d0fc1f09b63a6a51454"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44c57c0d03b3a3b1b9e416432d7226c" id="r_af44c57c0d03b3a3b1b9e416432d7226c"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">vector</a></td></tr>
-<tr class="separator:af44c57c0d03b3a3b1b9e416432d7226c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd37a85e1ea53a04ee369ca0a0171f01" id="r_acd37a85e1ea53a04ee369ca0a0171f01"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#ad2dc8f4cfc5fc179200950c82dfedec5">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">size_t</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#acd37a85e1ea53a04ee369ca0a0171f01">element_freedom_table</a></td></tr>
+<tr class="separator:acd37a85e1ea53a04ee369ca0a0171f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e5e63765ee4d51fa602b0ebe88f2601" id="r_a8e5e63765ee4d51fa602b0ebe88f2601"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#ad2dc8f4cfc5fc179200950c82dfedec5">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a8e5e63765ee4d51fa602b0ebe88f2601">elements</a></td></tr>
+<tr class="separator:a8e5e63765ee4d51fa602b0ebe88f2601"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bb785be674610f34ab100183ba435c7" id="r_a9bb785be674610f34ab100183ba435c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a1589f878815a23ac8ef04b90c979726e">LeftView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">double</a> *[1]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a9bb785be674610f34ab100183ba435c7">vector</a></td></tr>
+<tr class="separator:a9bb785be674610f34ab100183ba435c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4b1758e5f90a5aff62731979ff9e8ed1" name="a4b1758e5f90a5aff62731979ff9e8ed1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b1758e5f90a5aff62731979ff9e8ed1">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ad2dc8f4cfc5fc179200950c82dfedec5" name="ad2dc8f4cfc5fc179200950c82dfedec5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2dc8f4cfc5fc179200950c82dfedec5">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">typename</a> DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1589f878815a23ac8ef04b90c979726e" name="a1589f878815a23ac8ef04b90c979726e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1589f878815a23ac8ef04b90c979726e">&#9670;&#160;</a></span>LeftView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::LeftView =  Kokkos::View&lt;ValueType, Kokkos::LayoutLeft, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40836d43697c35e0406bcc8f59b3f2f7" name="a40836d43697c35e0406bcc8f59b3f2f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40836d43697c35e0406bcc8f59b3f2f7">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">using</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af82c0b2a5486ee09a007702242188cef" name="af82c0b2a5486ee09a007702242188cef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af82c0b2a5486ee09a007702242188cef">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">void</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">::operator</a>() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">void</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">size_t</a>&#160;</td>
-          <td class="paramname"><em>i_elem</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">size_t</a>&#160;</td>
+          <td class="paramname"><em>element</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -220,48 +288,48 @@ template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.ht
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="abc40875040d9038f7f6a1678890809df" name="abc40875040d9038f7f6a1678890809df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc40875040d9038f7f6a1678890809df">&#9670;&#160;</a></span>element_freedom_table</h2>
+<a id="acd37a85e1ea53a04ee369ca0a0171f01" name="acd37a85e1ea53a04ee369ca0a0171f01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd37a85e1ea53a04ee369ca0a0171f01">&#9670;&#160;</a></span>element_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">typename</a> DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">size_t</a>*[6],DeviceType&gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">::const_type</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::element_freedom_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#ad2dc8f4cfc5fc179200950c82dfedec5">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">size_t</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::element_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a37e96d0877fe2d0fc1f09b63a6a51454" name="a37e96d0877fe2d0fc1f09b63a6a51454"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37e96d0877fe2d0fc1f09b63a6a51454">&#9670;&#160;</a></span>elements</h2>
+<a id="a8e5e63765ee4d51fa602b0ebe88f2601" name="a8e5e63765ee4d51fa602b0ebe88f2601"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e5e63765ee4d51fa602b0ebe88f2601">&#9670;&#160;</a></span>elements</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">typename</a> DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">double</a>*[6],DeviceType&gt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#af44c57c0d03b3a3b1b9e416432d7226c">::const_type</a> <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::elements</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#ad2dc8f4cfc5fc179200950c82dfedec5">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::elements</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="af44c57c0d03b3a3b1b9e416432d7226c" name="af44c57c0d03b3a3b1b9e416432d7226c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44c57c0d03b3a3b1b9e416432d7226c">&#9670;&#160;</a></span>vector</h2>
+<a id="a9bb785be674610f34ab100183ba435c7" name="a9bb785be674610f34ab100183ba435c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bb785be674610f34ab100183ba435c7">&#9670;&#160;</a></span>vector</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::vector</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a1589f878815a23ac8ef04b90c979726e">LeftView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeMassesToVector.html#a40836d43697c35e0406bcc8f59b3f2f7">double</a>* [1]&gt; <a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">openturbine::ContributeMassesToVector</a>&lt; DeviceType &gt;::vector</td>
         </tr>
       </table>
 </div><div class="memdoc">

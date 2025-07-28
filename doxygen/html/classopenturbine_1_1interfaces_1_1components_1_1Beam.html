@@ -211,13 +211,13 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a5002aa04d62c2b5b1e5b0cd190ec2fb6" id="r_a5002aa04d62c2b5b1e5b0cd190ec2fb6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="memitem:a5002aa04d62c2b5b1e5b0cd190ec2fb6" id="r_a5002aa04d62c2b5b1e5b0cd190ec2fb6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a5002aa04d62c2b5b1e5b0cd190ec2fb6">beam_element_id</a> {<a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a05315d8dc6ac801dabb1744bc29978d1">invalid_id</a>}</td></tr>
 <tr class="memdesc:a5002aa04d62c2b5b1e5b0cd190ec2fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> element ID.  <br /></td></tr>
 <tr class="separator:a5002aa04d62c2b5b1e5b0cd190ec2fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fabf8f7bd7e295d918c466f4827f5ae" id="r_a9fabf8f7bd7e295d918c466f4827f5ae"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structopenturbine_1_1interfaces_1_1NodeData.html">NodeData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a9fabf8f7bd7e295d918c466f4827f5ae">nodes</a></td></tr>
 <tr class="memdesc:a9fabf8f7bd7e295d918c466f4827f5ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blade node data.  <br /></td></tr>
 <tr class="separator:a9fabf8f7bd7e295d918c466f4827f5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7263570d80ab0bee18093930ee7397e" id="r_ad7263570d80ab0bee18093930ee7397e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">prescribed_root_constraint_id</a> {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td></tr>
+<tr class="memitem:ad7263570d80ab0bee18093930ee7397e" id="r_ad7263570d80ab0bee18093930ee7397e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#ad7263570d80ab0bee18093930ee7397e">prescribed_root_constraint_id</a> {<a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a05315d8dc6ac801dabb1744bc29978d1">invalid_id</a>}</td></tr>
 <tr class="memdesc:ad7263570d80ab0bee18093930ee7397e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1Constraint.html" title="Defines a constraint between two nodes or enforces a boundary condition at a single node.">Constraint</a> ID of prescribed root displacement.  <br /></td></tr>
 <tr class="separator:ad7263570d80ab0bee18093930ee7397e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78600b3d4567ed0a8f1e97bb124c6fca" id="r_a78600b3d4567ed0a8f1e97bb124c6fca"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a78600b3d4567ed0a8f1e97bb124c6fca">node_xi</a></td></tr>
@@ -226,6 +226,9 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
+<tr class="memitem:a05315d8dc6ac801dabb1744bc29978d1" id="r_a05315d8dc6ac801dabb1744bc29978d1"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a05315d8dc6ac801dabb1744bc29978d1">invalid_id</a> {9999999}</td></tr>
+<tr class="memdesc:a05315d8dc6ac801dabb1744bc29978d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder node ID value for uninitialized components.  <br /></td></tr>
+<tr class="separator:a05315d8dc6ac801dabb1744bc29978d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc81598422cdea806934ce9ef33be416" id="r_afc81598422cdea806934ce9ef33be416"><td class="memItemLeft" align="right" valign="top">static constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416">kMaxGeometryPoints</a> {10}</td></tr>
 <tr class="memdesc:afc81598422cdea806934ce9ef33be416"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of points allowed in blade geometry definition.  <br /></td></tr>
 <tr class="separator:afc81598422cdea806934ce9ef33be416"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -467,12 +470,36 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t openturbine::interfaces::components::Beam::beam_element_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+          <td class="memname">size_t openturbine::interfaces::components::Beam::beam_element_id {<a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a05315d8dc6ac801dabb1744bc29978d1">invalid_id</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> element ID. </p>
+
+</div>
+</div>
+<a id="a05315d8dc6ac801dabb1744bc29978d1" name="a05315d8dc6ac801dabb1744bc29978d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05315d8dc6ac801dabb1744bc29978d1">&#9670;&#160;</a></span>invalid_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr size_t openturbine::interfaces::components::Beam::invalid_id {9999999}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Placeholder node ID value for uninitialized components. </p>
 
 </div>
 </div>
@@ -539,7 +566,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t openturbine::interfaces::components::Beam::prescribed_root_constraint_id {<a class="el" href="namespaceopenturbine.html#a3e67abffe51377e6892666229beae505">kInvalidID</a>}</td>
+          <td class="memname">size_t openturbine::interfaces::components::Beam::prescribed_root_constraint_id {<a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#a05315d8dc6ac801dabb1744bc29978d1">invalid_id</a>}</td>
         </tr>
       </table>
 </div><div class="memdoc">

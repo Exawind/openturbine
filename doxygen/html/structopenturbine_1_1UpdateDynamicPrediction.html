@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1UpdateDynamicPrediction-members.html">List of all members</a>  </div>
@@ -176,49 +177,137 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="update__dynamic__prediction_8hpp_source.html">update_dynamic_prediction.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a9756aab88dc5ce05c0779f14ceaa2634" id="r_a9756aab88dc5ce05c0779f14ceaa2634"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a9756aab88dc5ce05c0779f14ceaa2634"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:a9756aab88dc5ce05c0779f14ceaa2634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c0d51322fcabd3eab0683034456aa12" id="r_a0c0d51322fcabd3eab0683034456aa12"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a0c0d51322fcabd3eab0683034456aa12"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a0c0d51322fcabd3eab0683034456aa12">ConstView</a> = <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">::const_type</a></td></tr>
+<tr class="separator:a0c0d51322fcabd3eab0683034456aa12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57a221b3355c9155b8b4c36e20e53730" id="r_a57a221b3355c9155b8b4c36e20e53730"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a57a221b3355c9155b8b4c36e20e53730"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a57a221b3355c9155b8b4c36e20e53730">LeftView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a57a221b3355c9155b8b4c36e20e53730"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79015d74784c66a752605085b554882d" id="r_a79015d74784c66a752605085b554882d"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a79015d74784c66a752605085b554882d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a79015d74784c66a752605085b554882d">ConstLeftView</a> = <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a57a221b3355c9155b8b4c36e20e53730">LeftView</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">::const_type</a></td></tr>
+<tr class="separator:a79015d74784c66a752605085b554882d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae4a34a4787e22fb763663bfcf3a61b0c" id="r_ae4a34a4787e22fb763663bfcf3a61b0c"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#ae4a34a4787e22fb763663bfcf3a61b0c">operator()</a> (const size_t i_node) const</td></tr>
-<tr class="separator:ae4a34a4787e22fb763663bfcf3a61b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b71639385e5520a04d2f318f906a084" id="r_a9b71639385e5520a04d2f318f906a084"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9b71639385e5520a04d2f318f906a084">operator()</a> (<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">size_t</a> node) <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">const</a></td></tr>
+<tr class="separator:a9b71639385e5520a04d2f318f906a084"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:afda5e1cc5222ce68afa765bb9c0af1f5" id="r_afda5e1cc5222ce68afa765bb9c0af1f5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#afda5e1cc5222ce68afa765bb9c0af1f5">h</a></td></tr>
+<tr class="memitem:afda5e1cc5222ce68afa765bb9c0af1f5" id="r_afda5e1cc5222ce68afa765bb9c0af1f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#afda5e1cc5222ce68afa765bb9c0af1f5">h</a></td></tr>
 <tr class="separator:afda5e1cc5222ce68afa765bb9c0af1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84d7f2d834a73baec4cb54e7a18a3efa" id="r_a84d7f2d834a73baec4cb54e7a18a3efa"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a84d7f2d834a73baec4cb54e7a18a3efa">beta_prime</a></td></tr>
+<tr class="memitem:a84d7f2d834a73baec4cb54e7a18a3efa" id="r_a84d7f2d834a73baec4cb54e7a18a3efa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a84d7f2d834a73baec4cb54e7a18a3efa">beta_prime</a></td></tr>
 <tr class="separator:a84d7f2d834a73baec4cb54e7a18a3efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd8bbd40737cd25b0c242bbcb9e88ad8" id="r_abd8bbd40737cd25b0c242bbcb9e88ad8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#abd8bbd40737cd25b0c242bbcb9e88ad8">gamma_prime</a></td></tr>
+<tr class="memitem:abd8bbd40737cd25b0c242bbcb9e88ad8" id="r_abd8bbd40737cd25b0c242bbcb9e88ad8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#abd8bbd40737cd25b0c242bbcb9e88ad8">gamma_prime</a></td></tr>
 <tr class="separator:abd8bbd40737cd25b0c242bbcb9e88ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3a4c8bf157ff7be1ecc56c3dc42d17a" id="r_aa3a4c8bf157ff7be1ecc56c3dc42d17a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#aa3a4c8bf157ff7be1ecc56c3dc42d17a">node_freedom_allocation_table</a></td></tr>
-<tr class="separator:aa3a4c8bf157ff7be1ecc56c3dc42d17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf2968e66cba7687352855b0a40b0451" id="r_aaf2968e66cba7687352855b0a40b0451"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#aaf2968e66cba7687352855b0a40b0451">node_freedom_map_table</a></td></tr>
-<tr class="separator:aaf2968e66cba7687352855b0a40b0451"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a139b0908086ba1d899a1f1bb5922f1ef" id="r_a139b0908086ba1d899a1f1bb5922f1ef"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a139b0908086ba1d899a1f1bb5922f1ef">x_delta</a></td></tr>
-<tr class="separator:a139b0908086ba1d899a1f1bb5922f1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6082e07da9cb539f786558207aa59cc7" id="r_a6082e07da9cb539f786558207aa59cc7"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a6082e07da9cb539f786558207aa59cc7">q_delta</a></td></tr>
-<tr class="separator:a6082e07da9cb539f786558207aa59cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa49d70aaf98304308927c5b0ed8f0c28" id="r_aa49d70aaf98304308927c5b0ed8f0c28"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#aa49d70aaf98304308927c5b0ed8f0c28">v</a></td></tr>
-<tr class="separator:aa49d70aaf98304308927c5b0ed8f0c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac32870414400b65706f91a2ee4ca3f05" id="r_ac32870414400b65706f91a2ee4ca3f05"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#ac32870414400b65706f91a2ee4ca3f05">vd</a></td></tr>
-<tr class="separator:ac32870414400b65706f91a2ee4ca3f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaf64d75fac8afcd5ae60d6ec5af1b36" id="r_abaf64d75fac8afcd5ae60d6ec5af1b36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a0c0d51322fcabd3eab0683034456aa12">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#abaf64d75fac8afcd5ae60d6ec5af1b36">node_freedom_allocation_table</a></td></tr>
+<tr class="separator:abaf64d75fac8afcd5ae60d6ec5af1b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ce89f66fe89b489cf6bc068adb24d97" id="r_a7ce89f66fe89b489cf6bc068adb24d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a0c0d51322fcabd3eab0683034456aa12">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a7ce89f66fe89b489cf6bc068adb24d97">node_freedom_map_table</a></td></tr>
+<tr class="separator:a7ce89f66fe89b489cf6bc068adb24d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c2296d214d6c0b3ff0598a9316f0dc0" id="r_a5c2296d214d6c0b3ff0598a9316f0dc0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a79015d74784c66a752605085b554882d">ConstLeftView</a>&lt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> *[1]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a5c2296d214d6c0b3ff0598a9316f0dc0">x_delta</a></td></tr>
+<tr class="separator:a5c2296d214d6c0b3ff0598a9316f0dc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4fa15bd5c2492997648b5b3248d7485" id="r_ac4fa15bd5c2492997648b5b3248d7485"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#ac4fa15bd5c2492997648b5b3248d7485">q_delta</a></td></tr>
+<tr class="separator:ac4fa15bd5c2492997648b5b3248d7485"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa95dd11f2833fe7622c54c5ccf7157e" id="r_afa95dd11f2833fe7622c54c5ccf7157e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#afa95dd11f2833fe7622c54c5ccf7157e">v</a></td></tr>
+<tr class="separator:afa95dd11f2833fe7622c54c5ccf7157e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70b4393332d53ff996d32b3c947caba2" id="r_a70b4393332d53ff996d32b3c947caba2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a70b4393332d53ff996d32b3c947caba2">vd</a></td></tr>
+<tr class="separator:a70b4393332d53ff996d32b3c947caba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae4a34a4787e22fb763663bfcf3a61b0c" name="ae4a34a4787e22fb763663bfcf3a61b0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4a34a4787e22fb763663bfcf3a61b0c">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a79015d74784c66a752605085b554882d" name="a79015d74784c66a752605085b554882d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79015d74784c66a752605085b554882d">&#9670;&#160;</a></span>ConstLeftView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::ConstLeftView =  <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a57a221b3355c9155b8b4c36e20e53730">LeftView</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0c0d51322fcabd3eab0683034456aa12" name="a0c0d51322fcabd3eab0683034456aa12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c0d51322fcabd3eab0683034456aa12">&#9670;&#160;</a></span>ConstView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a57a221b3355c9155b8b4c36e20e53730" name="a57a221b3355c9155b8b4c36e20e53730"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57a221b3355c9155b8b4c36e20e53730">&#9670;&#160;</a></span>LeftView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::LeftView =  Kokkos::View&lt;ValueType, Kokkos::LayoutLeft, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9756aab88dc5ce05c0779f14ceaa2634" name="a9756aab88dc5ce05c0779f14ceaa2634"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9756aab88dc5ce05c0779f14ceaa2634">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">using</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9b71639385e5520a04d2f318f906a084" name="a9b71639385e5520a04d2f318f906a084"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b71639385e5520a04d2f318f906a084">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">void</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">const size_t&#160;</td>
-          <td class="paramname"><em>i_node</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">size_t</a>&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -238,10 +327,10 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::beta_prime</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::beta_prime</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -254,10 +343,10 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::gamma_prime</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::gamma_prime</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -270,106 +359,106 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">double <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::h</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a> <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::h</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa3a4c8bf157ff7be1ecc56c3dc42d17a" name="aa3a4c8bf157ff7be1ecc56c3dc42d17a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3a4c8bf157ff7be1ecc56c3dc42d17a">&#9670;&#160;</a></span>node_freedom_allocation_table</h2>
+<a id="abaf64d75fac8afcd5ae60d6ec5af1b36" name="abaf64d75fac8afcd5ae60d6ec5af1b36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaf64d75fac8afcd5ae60d6ec5af1b36">&#9670;&#160;</a></span>node_freedom_allocation_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::node_freedom_allocation_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a0c0d51322fcabd3eab0683034456aa12">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::node_freedom_allocation_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aaf2968e66cba7687352855b0a40b0451" name="aaf2968e66cba7687352855b0a40b0451"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf2968e66cba7687352855b0a40b0451">&#9670;&#160;</a></span>node_freedom_map_table</h2>
+<a id="a7ce89f66fe89b489cf6bc068adb24d97" name="a7ce89f66fe89b489cf6bc068adb24d97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ce89f66fe89b489cf6bc068adb24d97">&#9670;&#160;</a></span>node_freedom_map_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::node_freedom_map_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a0c0d51322fcabd3eab0683034456aa12">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::node_freedom_map_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6082e07da9cb539f786558207aa59cc7" name="a6082e07da9cb539f786558207aa59cc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6082e07da9cb539f786558207aa59cc7">&#9670;&#160;</a></span>q_delta</h2>
+<a id="ac4fa15bd5c2492997648b5b3248d7485" name="ac4fa15bd5c2492997648b5b3248d7485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4fa15bd5c2492997648b5b3248d7485">&#9670;&#160;</a></span>q_delta</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::q_delta</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::q_delta</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aa49d70aaf98304308927c5b0ed8f0c28" name="aa49d70aaf98304308927c5b0ed8f0c28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa49d70aaf98304308927c5b0ed8f0c28">&#9670;&#160;</a></span>v</h2>
+<a id="afa95dd11f2833fe7622c54c5ccf7157e" name="afa95dd11f2833fe7622c54c5ccf7157e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa95dd11f2833fe7622c54c5ccf7157e">&#9670;&#160;</a></span>v</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::v</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::v</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac32870414400b65706f91a2ee4ca3f05" name="ac32870414400b65706f91a2ee4ca3f05"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac32870414400b65706f91a2ee4ca3f05">&#9670;&#160;</a></span>vd</h2>
+<a id="a70b4393332d53ff996d32b3c947caba2" name="a70b4393332d53ff996d32b3c947caba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70b4393332d53ff996d32b3c947caba2">&#9670;&#160;</a></span>vd</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::vd</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">View</a>&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::vd</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a139b0908086ba1d899a1f1bb5922f1ef" name="a139b0908086ba1d899a1f1bb5922f1ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a139b0908086ba1d899a1f1bb5922f1ef">&#9670;&#160;</a></span>x_delta</h2>
+<a id="a5c2296d214d6c0b3ff0598a9316f0dc0" name="a5c2296d214d6c0b3ff0598a9316f0dc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c2296d214d6c0b3ff0598a9316f0dc0">&#9670;&#160;</a></span>x_delta</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[1],Kokkos::LayoutLeft,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::x_delta</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a79015d74784c66a752605085b554882d">ConstLeftView</a>&lt;<a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html#a9756aab88dc5ce05c0779f14ceaa2634">double</a>* [1]&gt; <a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">openturbine::UpdateDynamicPrediction</a>&lt; DeviceType &gt;::x_delta</td>
         </tr>
       </table>
 </div><div class="memdoc">

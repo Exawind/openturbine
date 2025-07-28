@@ -1,0 +1,14 @@
+.. meta::004db72cb77e137219457e1e71b613eca4bb7aee12ad4c109e6bd10a7259d64b0a6fa2b7acc2b5d3252a74026eb3168d2bcc4c2c49f7cfa5daed7528fe70d837
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::springs::CalculateForceVectors&lt; DeviceType &gt; Struct Template Reference
+
+CalculateForceVectors&lt; DeviceType &gt; Struct Template Reference
+===================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1springs_1_1CalculateForceVectors.html

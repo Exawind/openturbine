@@ -176,90 +176,89 @@ $(document).ready(function() { init_codefold(0); });
 <div class="contents">
 <a href="matrix__operations_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;array&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="types_8hpp.html">types.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Matrix&gt;</div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="}">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">   17</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">AX_Matrix</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a>&amp; A, <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a>&amp; AX_A) {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">double</span> trace{0.};</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; A.extent_int(0); ++i) {</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        trace += A(i, i);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    }</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    trace /= 2.;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; A.extent_int(0); ++i) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; A.extent_int(1); ++j) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            AX_A(i, j) = -A(i, j) / 2.;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        }</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        AX_A(i, i) += trace;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="quaternion__operations_8hpp.html">math/quaternion_operations.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Matrix&gt;</div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">   18</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">AX_Matrix</a>(<span class="keyword">const</span> Matrix&amp; A, <span class="keyword">const</span> Matrix&amp; AX_A) {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">double</span> trace{0.};</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0; i &lt; A.extent_int(0); ++i) {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        trace += A(i, i);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    }</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    trace /= 2.;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0; i &lt; A.extent_int(0); ++i) {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0; j &lt; A.extent_int(1); ++j) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>            AX_A(i, j) = -A(i, j) / 2.;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        AX_A(i, i) += trace;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
 </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Matrix, <span class="keyword">typename</span> Vector&gt;</div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">   45</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">AxialVectorOfMatrix</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">Matrix</a>&amp; m, <span class="keyword">const</span> Vector&amp; v) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    v(0) = (m(2, 1) - m(1, 2)) / 2.;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    v(1) = (m(0, 2) - m(2, 0)) / 2.;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    v(2) = (m(1, 0) - m(0, 1)) / 2.;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Matrix, <span class="keyword">typename</span> Vector&gt;</div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">   46</a></span>KOKKOS_INLINE_FUNCTION <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">AxialVectorOfMatrix</a>(<span class="keyword">const</span> Matrix&amp; m, <span class="keyword">const</span> Vector&amp; v) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    v(0) = (m(2, 1) - m(1, 2)) / 2.;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    v(1) = (m(0, 2) - m(2, 0)) / 2.;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    v(2) = (m(1, 0) - m(0, 1)) / 2.;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">   51</a></span><span class="keyword">inline</span> <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> <a class="code hl_function" href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">RotateMatrix6</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a>&amp; m, <span class="keyword">const</span> <a class="code hl_typedef" href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">Array_4</a>&amp; q) {</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">const</span> <span class="keyword">auto</span> rm = <a class="code hl_function" href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">QuaternionToRotationMatrix</a>(q);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> r{{</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        {rm[0][0], rm[0][1], rm[0][2], 0., 0., 0.},</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        {rm[1][0], rm[1][1], rm[1][2], 0., 0., 0.},</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        {rm[2][0], rm[2][1], rm[2][2], 0., 0., 0.},</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        {0., 0., 0., rm[0][0], rm[0][1], rm[0][2]},</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        {0., 0., 0., rm[1][0], rm[1][1], rm[1][2]},</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {0., 0., 0., rm[2][0], rm[2][1], rm[2][2]},</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    }};</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="comment">// matmul(r,m)</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> mt;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 6; ++i) {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; 6; ++j) {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            mt[i][j] = 0.;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 6; ++k) {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                mt[i][j] += r[i][k] * m[k][j];</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        }</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    }</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="comment">// matmul(matmul(r,m),r^T)</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_typedef" href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">Array_6x6</a> mo;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 6; ++i) {</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; 6; ++j) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>            mo[i][j] = 0.;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 6; ++k) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>                mo[i][j] += mt[i][k] * r[j][k];</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            }</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">return</span> mo;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
-</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="foldopen" id="foldopen00052" data-start="{" data-end="}">
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a13cc33bc27f5f5b4f66cf4f33ed1db98">   52</a></span><span class="keyword">inline</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt; <a class="code hl_function" href="namespaceopenturbine.html#a13cc33bc27f5f5b4f66cf4f33ed1db98">RotateMatrix6</a>(</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">const</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt;&amp; m, <span class="keyword">const</span> std::array&lt;double, 4&gt;&amp; q</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">const</span> <span class="keyword">auto</span> rm = <a class="code hl_function" href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">QuaternionToRotationMatrix</a>(q);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    std::array&lt;std::array&lt;double, 6&gt;, 6&gt; r{{</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        {rm[0][0], rm[0][1], rm[0][2], 0., 0., 0.},</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        {rm[1][0], rm[1][1], rm[1][2], 0., 0., 0.},</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {rm[2][0], rm[2][1], rm[2][2], 0., 0., 0.},</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        {0., 0., 0., rm[0][0], rm[0][1], rm[0][2]},</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        {0., 0., 0., rm[1][0], rm[1][1], rm[1][2]},</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        {0., 0., 0., rm[2][0], rm[2][1], rm[2][2]},</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }};</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// matmul(r,m)</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    std::array&lt;std::array&lt;double, 6&gt;, 6&gt; mt{};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 6; ++i) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; 6; ++j) {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>            mt[i][j] = 0.;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 6; ++k) {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>                mt[i][j] += r[i][k] * m[k][j];</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            }</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        }</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// matmul(matmul(r,m),r^T)</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    std::array&lt;std::array&lt;double, 6&gt;, 6&gt; mo{};</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = 0U; i &lt; 6; ++i) {</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = 0U; j &lt; 6; ++j) {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            mo[i][j] = 0.;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> k = 0U; k &lt; 6; ++k) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                mo[i][j] += mt[i][k] * r[j][k];</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordflow">return</span> mo;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}</div>
+</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a498f87995034d11d49febc2ade533d52"><div class="ttname"><a href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">openturbine::AX_Matrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AX_Matrix(const Matrix &amp;A, const Matrix &amp;AX_A)</div><div class="ttdoc">Computes AX(A) of a square matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:17</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a6031a1228dd8c9d2d5340a579a2b7c8c"><div class="ttname"><a href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">openturbine::QuaternionToRotationMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(const Quaternion &amp;q, const RotationMatrix &amp;R)</div><div class="ttdoc">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:17</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a6add52579dfe9e78b0da9c842b2ed4f0"><div class="ttname"><a href="namespaceopenturbine.html#a6add52579dfe9e78b0da9c842b2ed4f0">openturbine::Array_6x6</a></div><div class="ttdeci">std::array&lt; Array_6, 6 &gt; Array_6x6</div><div class="ttdef"><b>Definition</b> types.hpp:45</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_aad19d7b7244cc18f631e0cd4d7a5e4fc"><div class="ttname"><a href="namespaceopenturbine.html#aad19d7b7244cc18f631e0cd4d7a5e4fc">openturbine::RotateMatrix6</a></div><div class="ttdeci">Array_6x6 RotateMatrix6(const Array_6x6 &amp;m, const Array_4 &amp;q)</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:51</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_acdb38d2cae9f133089ae4e7e2ad71a19"><div class="ttname"><a href="namespaceopenturbine.html#acdb38d2cae9f133089ae4e7e2ad71a19">openturbine::Array_4</a></div><div class="ttdeci">std::array&lt; double, 4 &gt; Array_4</div><div class="ttdef"><b>Definition</b> types.hpp:39</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_af11ae3045eb70cfa713334bbfdb9221b"><div class="ttname"><a href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">openturbine::AxialVectorOfMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(const Matrix &amp;m, const Vector &amp;v)</div><div class="ttdoc">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:45</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_afc4eb55fdc2ade4087eeb28b84a443b1"><div class="ttname"><a href="namespaceopenturbine.html#afc4eb55fdc2ade4087eeb28b84a443b1">openturbine::Matrix</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; double &gt; &gt; Matrix</div><div class="ttdef"><b>Definition</b> least_squares_fit.hpp:17</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a13cc33bc27f5f5b4f66cf4f33ed1db98"><div class="ttname"><a href="namespaceopenturbine.html#a13cc33bc27f5f5b4f66cf4f33ed1db98">openturbine::RotateMatrix6</a></div><div class="ttdeci">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; RotateMatrix6(const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;m, const std::array&lt; double, 4 &gt; &amp;q)</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:52</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a498f87995034d11d49febc2ade533d52"><div class="ttname"><a href="namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52">openturbine::AX_Matrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AX_Matrix(const Matrix &amp;A, const Matrix &amp;AX_A)</div><div class="ttdoc">Computes AX(A) of a square matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:18</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a6031a1228dd8c9d2d5340a579a2b7c8c"><div class="ttname"><a href="namespaceopenturbine.html#a6031a1228dd8c9d2d5340a579a2b7c8c">openturbine::QuaternionToRotationMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void QuaternionToRotationMatrix(const Quaternion &amp;q, const RotationMatrix &amp;R)</div><div class="ttdoc">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.</div><div class="ttdef"><b>Definition</b> quaternion_operations.hpp:16</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_af11ae3045eb70cfa713334bbfdb9221b"><div class="ttname"><a href="namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b">openturbine::AxialVectorOfMatrix</a></div><div class="ttdeci">KOKKOS_INLINE_FUNCTION void AxialVectorOfMatrix(const Matrix &amp;m, const Vector &amp;v)</div><div class="ttdoc">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.</div><div class="ttdef"><b>Definition</b> matrix_operations.hpp:46</div></div>
 <div class="ttc" id="aquaternion__operations_8hpp_html"><div class="ttname"><a href="quaternion__operations_8hpp.html">quaternion_operations.hpp</a></div></div>
-<div class="ttc" id="atypes_8hpp_html"><div class="ttname"><a href="types_8hpp.html">types.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

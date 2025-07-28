@@ -1,0 +1,14 @@
+.. meta::6bc359c48083a0ad622386b4a1eb46f8c68947e98314b0f32cecd38f9496f98425b3c568ab95c9b1a29c505f68184e8885d2adfbc7bebc206ca56f80d58b1cd2
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateRotationControlConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRotationControlConstraint&lt; DeviceType &gt; Struct Template Reference
+================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateRotationControlConstraint.html

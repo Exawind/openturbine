@@ -172,8 +172,8 @@ $(function() {
   <div class="headertitle"><div class="title">vector_operations.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="types_8hpp_source.html">types.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;array&gt;</code><br />
+<code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
 </div>
 <p><a href="vector__operations_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -188,29 +188,26 @@ Functions</h2></td></tr>
 <tr class="memitem:a27b4aa8d797ea86827404834f2a0173d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a27b4aa8d797ea86827404834f2a0173d">openturbine::VecTilde</a> (const VectorType &amp;vector, const MatrixType &amp;matrix)</td></tr>
 <tr class="memdesc:a27b4aa8d797ea86827404834f2a0173d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result.  <br /></td></tr>
 <tr class="separator:a27b4aa8d797ea86827404834f2a0173d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2caaa558848ac351cba29b309d6eab06" id="r_a2caaa558848ac351cba29b309d6eab06"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
-<tr class="memitem:a2caaa558848ac351cba29b309d6eab06"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2caaa558848ac351cba29b309d6eab06">openturbine::DotProduct</a> (const VectorType &amp;a, const VectorType &amp;b)</td></tr>
-<tr class="memdesc:a2caaa558848ac351cba29b309d6eab06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
-<tr class="separator:a2caaa558848ac351cba29b309d6eab06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e3a77da53a35dd754a76fd26d564d7c" id="r_a1e3a77da53a35dd754a76fd26d564d7c"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a1e3a77da53a35dd754a76fd26d564d7c">openturbine::DotProduct</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;a, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;b)</td></tr>
-<tr class="memdesc:a1e3a77da53a35dd754a76fd26d564d7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
-<tr class="separator:a1e3a77da53a35dd754a76fd26d564d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb204ad9bcd513584bec614a7f8bad51" id="r_acb204ad9bcd513584bec614a7f8bad51"><td class="memTemplParams" colspan="2">template&lt;typename AVectorType , typename BVectorType &gt; </td></tr>
+<tr class="memitem:acb204ad9bcd513584bec614a7f8bad51"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#acb204ad9bcd513584bec614a7f8bad51">openturbine::DotProduct</a> (const AVectorType &amp;a, const BVectorType &amp;b)</td></tr>
+<tr class="memdesc:acb204ad9bcd513584bec614a7f8bad51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
+<tr class="separator:acb204ad9bcd513584bec614a7f8bad51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93fd260429a217254a1f7fefd06f1d0c" id="r_a93fd260429a217254a1f7fefd06f1d0c"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a93fd260429a217254a1f7fefd06f1d0c">openturbine::DotProduct</a> (const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)</td></tr>
+<tr class="memdesc:a93fd260429a217254a1f7fefd06f1d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
+<tr class="separator:a93fd260429a217254a1f7fefd06f1d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11e9b029e366a7f2939f8e4b6368e6f1" id="r_a11e9b029e366a7f2939f8e4b6368e6f1"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
 <tr class="memitem:a11e9b029e366a7f2939f8e4b6368e6f1"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1">openturbine::CrossProduct</a> (const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)</td></tr>
 <tr class="memdesc:a11e9b029e366a7f2939f8e4b6368e6f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cross product between two vector views.  <br /></td></tr>
 <tr class="separator:a11e9b029e366a7f2939f8e4b6368e6f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bfd501aea850989cf0b595ef1f1ff43" id="r_a2bfd501aea850989cf0b595ef1f1ff43"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a2bfd501aea850989cf0b595ef1f1ff43">openturbine::CrossProduct</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;a, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;b)</td></tr>
-<tr class="memdesc:a2bfd501aea850989cf0b595ef1f1ff43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cross product between two vectors.  <br /></td></tr>
-<tr class="separator:a2bfd501aea850989cf0b595ef1f1ff43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01e338b1d66dc436c24b099e9a784008" id="r_a01e338b1d66dc436c24b099e9a784008"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a01e338b1d66dc436c24b099e9a784008">openturbine::Norm</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v)</td></tr>
-<tr class="memdesc:a01e338b1d66dc436c24b099e9a784008"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the norm of a given vector.  <br /></td></tr>
-<tr class="separator:a01e338b1d66dc436c24b099e9a784008"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a882372f9350709eaede157fb1441a073" id="r_a882372f9350709eaede157fb1441a073"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a882372f9350709eaede157fb1441a073">openturbine::UnitVector</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v)</td></tr>
-<tr class="memdesc:a882372f9350709eaede157fb1441a073"><td class="mdescLeft">&#160;</td><td class="mdescRight">UnitVector returns the unit vector of the given vector.  <br /></td></tr>
-<tr class="separator:a882372f9350709eaede157fb1441a073"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03248d8626d6620e7d60419ca409e6c6" id="r_a03248d8626d6620e7d60419ca409e6c6"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a03248d8626d6620e7d60419ca409e6c6">openturbine::Dot3</a> (const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v1, const <a class="el" href="namespaceopenturbine.html#aa5b7baa4e7231c7eb99f37677a5ec433">Array_3</a> &amp;v2)</td></tr>
-<tr class="memdesc:a03248d8626d6620e7d60419ca409e6c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dot3 returns the dot product of two 3-component vectors.  <br /></td></tr>
-<tr class="separator:a03248d8626d6620e7d60419ca409e6c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85674de16e16e900744aea882cd70c77" id="r_a85674de16e16e900744aea882cd70c77"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a85674de16e16e900744aea882cd70c77">openturbine::CrossProduct</a> (const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)</td></tr>
+<tr class="memdesc:a85674de16e16e900744aea882cd70c77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cross product between two vectors.  <br /></td></tr>
+<tr class="separator:a85674de16e16e900744aea882cd70c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ad27565ccfd45b311fc65fd9a78790b" id="r_a3ad27565ccfd45b311fc65fd9a78790b"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a3ad27565ccfd45b311fc65fd9a78790b">openturbine::Norm</a> (const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:a3ad27565ccfd45b311fc65fd9a78790b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the norm of a given vector.  <br /></td></tr>
+<tr class="separator:a3ad27565ccfd45b311fc65fd9a78790b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee5cd7f43dea8ac0f9a706cca255e62" id="r_adee5cd7f43dea8ac0f9a706cca255e62"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#adee5cd7f43dea8ac0f9a706cca255e62">openturbine::UnitVector</a> (const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:adee5cd7f43dea8ac0f9a706cca255e62"><td class="mdescLeft">&#160;</td><td class="mdescRight">UnitVector returns the unit vector of the given vector.  <br /></td></tr>
+<tr class="separator:adee5cd7f43dea8ac0f9a706cca255e62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

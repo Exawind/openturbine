@@ -1,0 +1,14 @@
+.. meta::11781bef478583116febdcd1856df3fed8f2d7e50c29c0db74d76705ee3ca45594fedb5e2d9d11b0dde326d5bfc72a811e32b7458cd04d398ed619c5f1df2740
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateForceFD&lt; DeviceType &gt; Struct Template Reference
+
+CalculateForceFD&lt; DeviceType &gt; Struct Template Reference
+==============================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateForceFD.html

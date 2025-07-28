@@ -1,0 +1,14 @@
+.. meta::798eba64590fbf921397ad95300c3064c7bbc0edd4726fb91942a84e0f125a7d3876bb5ad903836543b93d6cf62e16cb1f7b60e75d5fc9d7275082ddfdf33c69
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateTemporaryVariables&lt; DeviceType &gt; Struct Template Reference
+
+CalculateTemporaryVariables&lt; DeviceType &gt; Struct Template Reference
+=========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateTemporaryVariables.html

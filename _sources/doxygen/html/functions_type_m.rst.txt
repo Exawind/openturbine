@@ -1,0 +1,14 @@
+.. meta::d4c92023a8c24a1d23b7453b959e50e8da3c962948430ecc8c385d5ed57ff83f862ab08c21fe972b93c972ad992b914d3216903c833fd2e80fa1ca73ddb73f1e
+
+:orphan:
+
+.. title:: OpenTurbine API: Class Members - Typedefs
+
+Class Members - Typedefs
+========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: functions_type_m.html

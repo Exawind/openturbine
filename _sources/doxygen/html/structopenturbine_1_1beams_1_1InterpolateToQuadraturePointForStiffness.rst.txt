@@ -1,0 +1,14 @@
+.. meta::c3d770299b49c2e63c642dd2cdb4e5ed491c079b206fb5b3839eafd98340e7aa68044c01a7f752961e60220febeb8d4b942d68b287f47ba3e2836621fb11fc3a
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::InterpolateToQuadraturePointForStiffness&lt; DeviceType &gt; Struct Template Reference
+
+InterpolateToQuadraturePointForStiffness&lt; DeviceType &gt; Struct Template Reference
+======================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1InterpolateToQuadraturePointForStiffness.html

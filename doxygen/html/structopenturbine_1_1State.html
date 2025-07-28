@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1State-members.html">List of all members</a>  </div>
@@ -176,46 +177,71 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="state_8hpp_source.html">state.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a593016bd3fac97df211bfc3be9540670" id="r_a593016bd3fac97df211bfc3be9540670"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a593016bd3fac97df211bfc3be9540670"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:a593016bd3fac97df211bfc3be9540670"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad36ff6d3fff69ecb2f4a11fa220df60e" id="r_ad36ff6d3fff69ecb2f4a11fa220df60e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad36ff6d3fff69ecb2f4a11fa220df60e">State</a> (size_t num_system_nodes_)</td></tr>
+<tr class="memitem:ad36ff6d3fff69ecb2f4a11fa220df60e" id="r_ad36ff6d3fff69ecb2f4a11fa220df60e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad36ff6d3fff69ecb2f4a11fa220df60e">State</a> (<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">num_system_nodes_</a>)</td></tr>
 <tr class="separator:ad36ff6d3fff69ecb2f4a11fa220df60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ad50eb2faf759091dcb57c96d6fef81fa" id="r_ad50eb2faf759091dcb57c96d6fef81fa"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad50eb2faf759091dcb57c96d6fef81fa">time_step</a> {0}</td></tr>
+<tr class="memitem:ad50eb2faf759091dcb57c96d6fef81fa" id="r_ad50eb2faf759091dcb57c96d6fef81fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad50eb2faf759091dcb57c96d6fef81fa">time_step</a> {0}</td></tr>
 <tr class="separator:ad50eb2faf759091dcb57c96d6fef81fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a604bf52063fa2e7380b3a38d190aa3" id="r_a6a604bf52063fa2e7380b3a38d190aa3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a></td></tr>
+<tr class="memitem:a6a604bf52063fa2e7380b3a38d190aa3" id="r_a6a604bf52063fa2e7380b3a38d190aa3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a></td></tr>
 <tr class="separator:a6a604bf52063fa2e7380b3a38d190aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57821ca1acd3150201e1ae8028c61800" id="r_a57821ca1acd3150201e1ae8028c61800"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a57821ca1acd3150201e1ae8028c61800">ID</a></td></tr>
-<tr class="separator:a57821ca1acd3150201e1ae8028c61800"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e3c39d364ae1cefea8d23659eb6019a" id="r_a0e3c39d364ae1cefea8d23659eb6019a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a0e3c39d364ae1cefea8d23659eb6019a">node_freedom_allocation_table</a></td></tr>
-<tr class="separator:a0e3c39d364ae1cefea8d23659eb6019a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d2b3044fa25d40ee0fa15d9b2a7855b" id="r_a4d2b3044fa25d40ee0fa15d9b2a7855b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a4d2b3044fa25d40ee0fa15d9b2a7855b">active_dofs</a></td></tr>
-<tr class="separator:a4d2b3044fa25d40ee0fa15d9b2a7855b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a450d471e034ff554a450709f780cf61e" id="r_a450d471e034ff554a450709f780cf61e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a450d471e034ff554a450709f780cf61e">node_freedom_map_table</a></td></tr>
-<tr class="separator:a450d471e034ff554a450709f780cf61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b36fc6286ccdf83194dd70291b9b39e" id="r_a6b36fc6286ccdf83194dd70291b9b39e"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a6b36fc6286ccdf83194dd70291b9b39e">x0</a></td></tr>
-<tr class="separator:a6b36fc6286ccdf83194dd70291b9b39e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f72df82a98523faca3946fb6824aeb4" id="r_a0f72df82a98523faca3946fb6824aeb4"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a0f72df82a98523faca3946fb6824aeb4">x</a></td></tr>
-<tr class="separator:a0f72df82a98523faca3946fb6824aeb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3d835dda167659a175da8bcc5c3e26a" id="r_ad3d835dda167659a175da8bcc5c3e26a"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad3d835dda167659a175da8bcc5c3e26a">q_delta</a></td></tr>
-<tr class="separator:ad3d835dda167659a175da8bcc5c3e26a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18673e6b6bce143ef7f5235020fe0666" id="r_a18673e6b6bce143ef7f5235020fe0666"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a18673e6b6bce143ef7f5235020fe0666">q_prev</a></td></tr>
-<tr class="separator:a18673e6b6bce143ef7f5235020fe0666"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d757ded49db00a7ad8483297139bf12" id="r_a0d757ded49db00a7ad8483297139bf12"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a0d757ded49db00a7ad8483297139bf12">q</a></td></tr>
-<tr class="separator:a0d757ded49db00a7ad8483297139bf12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0956ac07695638983c8b5b9c88dabc0" id="r_ac0956ac07695638983c8b5b9c88dabc0"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ac0956ac07695638983c8b5b9c88dabc0">v</a></td></tr>
-<tr class="separator:ac0956ac07695638983c8b5b9c88dabc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55f9a6e0ad4f9838318922325d173fa" id="r_ab55f9a6e0ad4f9838318922325d173fa"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ab55f9a6e0ad4f9838318922325d173fa">vd</a></td></tr>
-<tr class="separator:ab55f9a6e0ad4f9838318922325d173fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a76e74f0dad0af2734e236219214ae1" id="r_a9a76e74f0dad0af2734e236219214ae1"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a9a76e74f0dad0af2734e236219214ae1">a</a></td></tr>
-<tr class="separator:a9a76e74f0dad0af2734e236219214ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09a624d5448156d80a107c827be4e82d" id="r_a09a624d5448156d80a107c827be4e82d"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a09a624d5448156d80a107c827be4e82d">f</a></td></tr>
-<tr class="separator:a09a624d5448156d80a107c827be4e82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bae9f2ec254baeb565f3d6365f6a7d5" id="r_a4bae9f2ec254baeb565f3d6365f6a7d5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6][6], DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a4bae9f2ec254baeb565f3d6365f6a7d5">tangent</a></td></tr>
-<tr class="separator:a4bae9f2ec254baeb565f3d6365f6a7d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad35c78fe2fb49feb50b7b9c380829add" id="r_ad35c78fe2fb49feb50b7b9c380829add"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad35c78fe2fb49feb50b7b9c380829add">ID</a></td></tr>
+<tr class="separator:ad35c78fe2fb49feb50b7b9c380829add"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac45f021ebcba008f6c911c156de42643" id="r_ac45f021ebcba008f6c911c156de42643"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ac45f021ebcba008f6c911c156de42643">node_freedom_allocation_table</a></td></tr>
+<tr class="separator:ac45f021ebcba008f6c911c156de42643"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5301cb2ac50b6a98a56f60b3150ef238" id="r_a5301cb2ac50b6a98a56f60b3150ef238"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a5301cb2ac50b6a98a56f60b3150ef238">active_dofs</a></td></tr>
+<tr class="separator:a5301cb2ac50b6a98a56f60b3150ef238"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8c4388b89e267501f57291af35a47f8" id="r_ad8c4388b89e267501f57291af35a47f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ad8c4388b89e267501f57291af35a47f8">node_freedom_map_table</a></td></tr>
+<tr class="separator:ad8c4388b89e267501f57291af35a47f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93a623049ca75b7bac74ae7bb5ed40b7" id="r_a93a623049ca75b7bac74ae7bb5ed40b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a93a623049ca75b7bac74ae7bb5ed40b7">x0</a></td></tr>
+<tr class="separator:a93a623049ca75b7bac74ae7bb5ed40b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3885cdb847974754b83accf38a163b0c" id="r_a3885cdb847974754b83accf38a163b0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a3885cdb847974754b83accf38a163b0c">x</a></td></tr>
+<tr class="separator:a3885cdb847974754b83accf38a163b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae488ee3523805e8dd1a17bb2933f4c4d" id="r_ae488ee3523805e8dd1a17bb2933f4c4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#ae488ee3523805e8dd1a17bb2933f4c4d">q_delta</a></td></tr>
+<tr class="separator:ae488ee3523805e8dd1a17bb2933f4c4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6373b5d27b559eac52fe14ac4b90a850" id="r_a6373b5d27b559eac52fe14ac4b90a850"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a6373b5d27b559eac52fe14ac4b90a850">q_prev</a></td></tr>
+<tr class="separator:a6373b5d27b559eac52fe14ac4b90a850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78cb90a16cce37463eecc53f0d874bbc" id="r_a78cb90a16cce37463eecc53f0d874bbc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a78cb90a16cce37463eecc53f0d874bbc">q</a></td></tr>
+<tr class="separator:a78cb90a16cce37463eecc53f0d874bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d73a8cb4853d80f03f3a03c7f9b0ef" id="r_a10d73a8cb4853d80f03f3a03c7f9b0ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a10d73a8cb4853d80f03f3a03c7f9b0ef">v</a></td></tr>
+<tr class="separator:a10d73a8cb4853d80f03f3a03c7f9b0ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dc7455202c2391a576a90c6b71af038" id="r_a2dc7455202c2391a576a90c6b71af038"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a2dc7455202c2391a576a90c6b71af038">vd</a></td></tr>
+<tr class="separator:a2dc7455202c2391a576a90c6b71af038"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa809d9654f6a1771d013369efb3a4300" id="r_aa809d9654f6a1771d013369efb3a4300"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#aa809d9654f6a1771d013369efb3a4300">a</a></td></tr>
+<tr class="separator:aa809d9654f6a1771d013369efb3a4300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d825681d3c5403ee63b91185abffd58" id="r_a4d825681d3c5403ee63b91185abffd58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a4d825681d3c5403ee63b91185abffd58">f</a></td></tr>
+<tr class="separator:a4d825681d3c5403ee63b91185abffd58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69a81bcf3c32ff55ae4dd7e10de7edb1" id="r_a69a81bcf3c32ff55ae4dd7e10de7edb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a69a81bcf3c32ff55ae4dd7e10de7edb1">tangent</a></td></tr>
+<tr class="separator:a69a81bcf3c32ff55ae4dd7e10de7edb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a593016bd3fac97df211bfc3be9540670" name="a593016bd3fac97df211bfc3be9540670"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a593016bd3fac97df211bfc3be9540670">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">using</a> <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad36ff6d3fff69ecb2f4a11fa220df60e" name="ad36ff6d3fff69ecb2f4a11fa220df60e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad36ff6d3fff69ecb2f4a11fa220df60e">&#9670;&#160;</a></span>State()</h2>
@@ -223,7 +249,7 @@ Public Attributes</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -231,7 +257,7 @@ template&lt;typename DeviceType &gt; </div>
         <tr>
           <td class="memname"><a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::State </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>&#160;</td>
           <td class="paramname"><em>num_system_nodes_</em></td><td>)</td>
           <td></td>
         </tr>
@@ -246,96 +272,96 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a9a76e74f0dad0af2734e236219214ae1" name="a9a76e74f0dad0af2734e236219214ae1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a76e74f0dad0af2734e236219214ae1">&#9670;&#160;</a></span>a</h2>
+<a id="aa809d9654f6a1771d013369efb3a4300" name="aa809d9654f6a1771d013369efb3a4300"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa809d9654f6a1771d013369efb3a4300">&#9670;&#160;</a></span>a</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::a</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::a</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a4d2b3044fa25d40ee0fa15d9b2a7855b" name="a4d2b3044fa25d40ee0fa15d9b2a7855b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d2b3044fa25d40ee0fa15d9b2a7855b">&#9670;&#160;</a></span>active_dofs</h2>
+<a id="a5301cb2ac50b6a98a56f60b3150ef238" name="a5301cb2ac50b6a98a56f60b3150ef238"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5301cb2ac50b6a98a56f60b3150ef238">&#9670;&#160;</a></span>active_dofs</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*, DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::active_dofs</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::active_dofs</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a09a624d5448156d80a107c827be4e82d" name="a09a624d5448156d80a107c827be4e82d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09a624d5448156d80a107c827be4e82d">&#9670;&#160;</a></span>f</h2>
+<a id="a4d825681d3c5403ee63b91185abffd58" name="a4d825681d3c5403ee63b91185abffd58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d825681d3c5403ee63b91185abffd58">&#9670;&#160;</a></span>f</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::f</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::f</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a57821ca1acd3150201e1ae8028c61800" name="a57821ca1acd3150201e1ae8028c61800"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57821ca1acd3150201e1ae8028c61800">&#9670;&#160;</a></span>ID</h2>
+<a id="ad35c78fe2fb49feb50b7b9c380829add" name="ad35c78fe2fb49feb50b7b9c380829add"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad35c78fe2fb49feb50b7b9c380829add">&#9670;&#160;</a></span>ID</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*, DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::ID</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::ID</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0e3c39d364ae1cefea8d23659eb6019a" name="a0e3c39d364ae1cefea8d23659eb6019a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e3c39d364ae1cefea8d23659eb6019a">&#9670;&#160;</a></span>node_freedom_allocation_table</h2>
+<a id="ac45f021ebcba008f6c911c156de42643" name="ac45f021ebcba008f6c911c156de42643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac45f021ebcba008f6c911c156de42643">&#9670;&#160;</a></span>node_freedom_allocation_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*, DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::node_freedom_allocation_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::node_freedom_allocation_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a450d471e034ff554a450709f780cf61e" name="a450d471e034ff554a450709f780cf61e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a450d471e034ff554a450709f780cf61e">&#9670;&#160;</a></span>node_freedom_map_table</h2>
+<a id="ad8c4388b89e267501f57291af35a47f8" name="ad8c4388b89e267501f57291af35a47f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8c4388b89e267501f57291af35a47f8">&#9670;&#160;</a></span>node_freedom_map_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*, DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::node_freedom_map_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::node_freedom_map_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -348,74 +374,74 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::num_system_nodes</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::num_system_nodes</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0d757ded49db00a7ad8483297139bf12" name="a0d757ded49db00a7ad8483297139bf12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d757ded49db00a7ad8483297139bf12">&#9670;&#160;</a></span>q</h2>
+<a id="a78cb90a16cce37463eecc53f0d874bbc" name="a78cb90a16cce37463eecc53f0d874bbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78cb90a16cce37463eecc53f0d874bbc">&#9670;&#160;</a></span>q</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [7], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ad3d835dda167659a175da8bcc5c3e26a" name="ad3d835dda167659a175da8bcc5c3e26a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3d835dda167659a175da8bcc5c3e26a">&#9670;&#160;</a></span>q_delta</h2>
+<a id="ae488ee3523805e8dd1a17bb2933f4c4d" name="ae488ee3523805e8dd1a17bb2933f4c4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae488ee3523805e8dd1a17bb2933f4c4d">&#9670;&#160;</a></span>q_delta</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q_delta</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q_delta</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a18673e6b6bce143ef7f5235020fe0666" name="a18673e6b6bce143ef7f5235020fe0666"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18673e6b6bce143ef7f5235020fe0666">&#9670;&#160;</a></span>q_prev</h2>
+<a id="a6373b5d27b559eac52fe14ac4b90a850" name="a6373b5d27b559eac52fe14ac4b90a850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6373b5d27b559eac52fe14ac4b90a850">&#9670;&#160;</a></span>q_prev</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [7], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q_prev</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::q_prev</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a4bae9f2ec254baeb565f3d6365f6a7d5" name="a4bae9f2ec254baeb565f3d6365f6a7d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bae9f2ec254baeb565f3d6365f6a7d5">&#9670;&#160;</a></span>tangent</h2>
+<a id="a69a81bcf3c32ff55ae4dd7e10de7edb1" name="a69a81bcf3c32ff55ae4dd7e10de7edb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69a81bcf3c32ff55ae4dd7e10de7edb1">&#9670;&#160;</a></span>tangent</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6][6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::tangent</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::tangent</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -428,74 +454,74 @@ template&lt;typename DeviceType &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::time_step {0}</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">size_t</a> <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::time_step {0}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ac0956ac07695638983c8b5b9c88dabc0" name="ac0956ac07695638983c8b5b9c88dabc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0956ac07695638983c8b5b9c88dabc0">&#9670;&#160;</a></span>v</h2>
+<a id="a10d73a8cb4853d80f03f3a03c7f9b0ef" name="a10d73a8cb4853d80f03f3a03c7f9b0ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d73a8cb4853d80f03f3a03c7f9b0ef">&#9670;&#160;</a></span>v</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::v</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::v</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ab55f9a6e0ad4f9838318922325d173fa" name="ab55f9a6e0ad4f9838318922325d173fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab55f9a6e0ad4f9838318922325d173fa">&#9670;&#160;</a></span>vd</h2>
+<a id="a2dc7455202c2391a576a90c6b71af038" name="a2dc7455202c2391a576a90c6b71af038"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dc7455202c2391a576a90c6b71af038">&#9670;&#160;</a></span>vd</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [6], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::vd</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::vd</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a0f72df82a98523faca3946fb6824aeb4" name="a0f72df82a98523faca3946fb6824aeb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f72df82a98523faca3946fb6824aeb4">&#9670;&#160;</a></span>x</h2>
+<a id="a3885cdb847974754b83accf38a163b0c" name="a3885cdb847974754b83accf38a163b0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3885cdb847974754b83accf38a163b0c">&#9670;&#160;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [7], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::x</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::x</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a6b36fc6286ccdf83194dd70291b9b39e" name="a6b36fc6286ccdf83194dd70291b9b39e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b36fc6286ccdf83194dd70291b9b39e">&#9670;&#160;</a></span>x0</h2>
+<a id="a93a623049ca75b7bac74ae7bb5ed40b7" name="a93a623049ca75b7bac74ae7bb5ed40b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93a623049ca75b7bac74ae7bb5ed40b7">&#9670;&#160;</a></span>x0</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [7], DeviceType&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::x0</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1State.html">openturbine::State</a>&lt; DeviceType &gt;::x0</td>
         </tr>
       </table>
 </div><div class="memdoc">

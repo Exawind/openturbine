@@ -1,0 +1,14 @@
+.. meta::d93f8977cbe668fed6288a03c637c5425c77b8eaafd4e24b23a9a580f58eb1eb2a53eb88a84a5fd57a0c8d6e0bf9c2ef1b3fe46c6fda004478a5c43a14d2417f
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::springs::CalculateStiffnessMatrix&lt; DeviceType &gt; Struct Template Reference
+
+CalculateStiffnessMatrix&lt; DeviceType &gt; Struct Template Reference
+======================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1springs_1_1CalculateStiffnessMatrix.html

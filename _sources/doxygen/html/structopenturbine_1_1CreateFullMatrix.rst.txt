@@ -1,0 +1,14 @@
+.. meta::d0306567bc152652880c1a5c59d554ba9b388b724d5c5556ce64ed748c83d454097f10d2bf59b4667b0583e9e6675baa9b74821f1009aee8cb809d72ff172649
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CreateFullMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+
+CreateFullMatrix&lt; CrsMatrixType &gt; Struct Template Reference
+=================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CreateFullMatrix.html

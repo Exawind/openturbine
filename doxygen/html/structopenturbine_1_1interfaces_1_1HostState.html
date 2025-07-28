@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1interfaces_1_1HostState-members.html">List of all members</a>  </div>
@@ -179,6 +180,12 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="host__state_8hpp_source.html">host_state.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a3d61448949054defeb700d258fff53e0" id="r_a3d61448949054defeb700d258fff53e0"><td class="memTemplParams" colspan="2">template&lt;typename ValueType &gt; </td></tr>
+<tr class="memitem:a3d61448949054defeb700d258fff53e0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a> = typename Kokkos::View&lt; ValueType, DeviceType &gt;::HostMirror</td></tr>
+<tr class="separator:a3d61448949054defeb700d258fff53e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a64b6ec8ab9e7755641e486f10321bbae" id="r_a64b6ec8ab9e7755641e486f10321bbae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a64b6ec8ab9e7755641e486f10321bbae">HostState</a> (const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
@@ -190,21 +197,21 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a33ee180dd673c9da141aca0fa941a067" id="r_a33ee180dd673c9da141aca0fa941a067"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a33ee180dd673c9da141aca0fa941a067">x</a></td></tr>
-<tr class="memdesc:a33ee180dd673c9da141aca0fa941a067"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current position.  <br /></td></tr>
-<tr class="separator:a33ee180dd673c9da141aca0fa941a067"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fb4c4b735132660d9f276934d364c4f" id="r_a1fb4c4b735132660d9f276934d364c4f"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[7], DeviceType &gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a1fb4c4b735132660d9f276934d364c4f">q</a></td></tr>
-<tr class="memdesc:a1fb4c4b735132660d9f276934d364c4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current displacement.  <br /></td></tr>
-<tr class="separator:a1fb4c4b735132660d9f276934d364c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a149a59db30357c01e7ace8bf01ef2580" id="r_a149a59db30357c01e7ace8bf01ef2580"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a149a59db30357c01e7ace8bf01ef2580">v</a></td></tr>
-<tr class="memdesc:a149a59db30357c01e7ace8bf01ef2580"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current velocity.  <br /></td></tr>
-<tr class="separator:a149a59db30357c01e7ace8bf01ef2580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64fda752dc2ecbec7468cf25c0da5c44" id="r_a64fda752dc2ecbec7468cf25c0da5c44"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a64fda752dc2ecbec7468cf25c0da5c44">vd</a></td></tr>
-<tr class="memdesc:a64fda752dc2ecbec7468cf25c0da5c44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current acceleration.  <br /></td></tr>
-<tr class="separator:a64fda752dc2ecbec7468cf25c0da5c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae87ddae5cdff44072c40ac742ded604b" id="r_ae87ddae5cdff44072c40ac742ded604b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::HostMirror&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#ae87ddae5cdff44072c40ac742ded604b">f</a></td></tr>
-<tr class="memdesc:ae87ddae5cdff44072c40ac742ded604b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of external forces.  <br /></td></tr>
-<tr class="separator:ae87ddae5cdff44072c40ac742ded604b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89f5d46030c66ff7545375abe0303ee4" id="r_a89f5d46030c66ff7545375abe0303ee4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt; double *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a89f5d46030c66ff7545375abe0303ee4">x</a></td></tr>
+<tr class="memdesc:a89f5d46030c66ff7545375abe0303ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current position.  <br /></td></tr>
+<tr class="separator:a89f5d46030c66ff7545375abe0303ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6c8058ee94a9ee84b368d5addcd61e" id="r_a1d6c8058ee94a9ee84b368d5addcd61e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt; double *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a1d6c8058ee94a9ee84b368d5addcd61e">q</a></td></tr>
+<tr class="memdesc:a1d6c8058ee94a9ee84b368d5addcd61e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current displacement.  <br /></td></tr>
+<tr class="separator:a1d6c8058ee94a9ee84b368d5addcd61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab009209276ec22f04ef7681d165d4ef3" id="r_ab009209276ec22f04ef7681d165d4ef3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#ab009209276ec22f04ef7681d165d4ef3">v</a></td></tr>
+<tr class="memdesc:ab009209276ec22f04ef7681d165d4ef3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current velocity.  <br /></td></tr>
+<tr class="separator:ab009209276ec22f04ef7681d165d4ef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e543403b336c734467c1f1a733b406" id="r_a11e543403b336c734467c1f1a733b406"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a11e543403b336c734467c1f1a733b406">vd</a></td></tr>
+<tr class="memdesc:a11e543403b336c734467c1f1a733b406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of current acceleration.  <br /></td></tr>
+<tr class="separator:a11e543403b336c734467c1f1a733b406"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa425759ae2d8bfe1730138e59faf872b" id="r_aa425759ae2d8bfe1730138e59faf872b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt; double *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#aa425759ae2d8bfe1730138e59faf872b">f</a></td></tr>
+<tr class="memdesc:aa425759ae2d8bfe1730138e59faf872b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Host local copy of external forces.  <br /></td></tr>
+<tr class="separator:aa425759ae2d8bfe1730138e59faf872b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename DeviceType&gt;<br />
@@ -216,7 +223,26 @@ struct openturbine::interfaces::HostState&lt; DeviceType &gt;</div><p>Host-side 
 <li>Acceleration: Current linear and angular accelerations [ax, ay, az, αx, αy, αz] -&gt; 6 x 1</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>This struct serves as a host-side mirror of the device state, allowing for efficient data transfer between device and host memory. It's primarily used for the interfaces, I/O operations etc. </dd></dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a3d61448949054defeb700d258fff53e0" name="a3d61448949054defeb700d258fff53e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d61448949054defeb700d258fff53e0">&#9670;&#160;</a></span>HostView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;typename ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::HostView =  typename Kokkos::View&lt;ValueType, DeviceType&gt;::HostMirror</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a64b6ec8ab9e7755641e486f10321bbae" name="a64b6ec8ab9e7755641e486f10321bbae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a64b6ec8ab9e7755641e486f10321bbae">&#9670;&#160;</a></span>HostState()</h2>
 
@@ -279,8 +305,8 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae87ddae5cdff44072c40ac742ded604b" name="ae87ddae5cdff44072c40ac742ded604b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae87ddae5cdff44072c40ac742ded604b">&#9670;&#160;</a></span>f</h2>
+<a id="aa425759ae2d8bfe1730138e59faf872b" name="aa425759ae2d8bfe1730138e59faf872b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa425759ae2d8bfe1730138e59faf872b">&#9670;&#160;</a></span>f</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,7 +314,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::HostMirror <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::f</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt;double* [6]&gt; <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::f</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -297,8 +323,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a1fb4c4b735132660d9f276934d364c4f" name="a1fb4c4b735132660d9f276934d364c4f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fb4c4b735132660d9f276934d364c4f">&#9670;&#160;</a></span>q</h2>
+<a id="a1d6c8058ee94a9ee84b368d5addcd61e" name="a1d6c8058ee94a9ee84b368d5addcd61e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d6c8058ee94a9ee84b368d5addcd61e">&#9670;&#160;</a></span>q</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -306,7 +332,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[7],DeviceType&gt;::HostMirror <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::q</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt;double* [7]&gt; <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::q</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -315,8 +341,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a149a59db30357c01e7ace8bf01ef2580" name="a149a59db30357c01e7ace8bf01ef2580"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a149a59db30357c01e7ace8bf01ef2580">&#9670;&#160;</a></span>v</h2>
+<a id="ab009209276ec22f04ef7681d165d4ef3" name="ab009209276ec22f04ef7681d165d4ef3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab009209276ec22f04ef7681d165d4ef3">&#9670;&#160;</a></span>v</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,7 +350,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::HostMirror <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::v</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt;double* [6]&gt; <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::v</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -333,8 +359,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a64fda752dc2ecbec7468cf25c0da5c44" name="a64fda752dc2ecbec7468cf25c0da5c44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64fda752dc2ecbec7468cf25c0da5c44">&#9670;&#160;</a></span>vd</h2>
+<a id="a11e543403b336c734467c1f1a733b406" name="a11e543403b336c734467c1f1a733b406"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11e543403b336c734467c1f1a733b406">&#9670;&#160;</a></span>vd</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -342,7 +368,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::HostMirror <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::vd</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt;double* [6]&gt; <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::vd</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -351,8 +377,8 @@ template&lt;typename DeviceType &gt; </div>
 
 </div>
 </div>
-<a id="a33ee180dd673c9da141aca0fa941a067" name="a33ee180dd673c9da141aca0fa941a067"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33ee180dd673c9da141aca0fa941a067">&#9670;&#160;</a></span>x</h2>
+<a id="a89f5d46030c66ff7545375abe0303ee4" name="a89f5d46030c66ff7545375abe0303ee4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89f5d46030c66ff7545375abe0303ee4">&#9670;&#160;</a></span>x</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -360,7 +386,7 @@ template&lt;typename DeviceType &gt; </div>
 template&lt;typename DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[7],DeviceType&gt;::HostMirror <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::x</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html#a3d61448949054defeb700d258fff53e0">HostView</a>&lt;double* [7]&gt; <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">openturbine::interfaces::HostState</a>&lt; DeviceType &gt;::x</td>
         </tr>
       </table>
 </div><div class="memdoc">

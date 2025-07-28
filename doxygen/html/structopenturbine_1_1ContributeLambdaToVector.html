@@ -167,6 +167,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structopenturbine_1_1ContributeLambdaToVector-members.html">List of all members</a>  </div>
@@ -176,45 +177,112 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="contribute__lambda__to__vector_8hpp_source.html">contribute_lambda_to_vector.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ae567d2459b6c1e1aa4bdd1ae42927d81" id="r_ae567d2459b6c1e1aa4bdd1ae42927d81"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ae567d2459b6c1e1aa4bdd1ae42927d81"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:ae567d2459b6c1e1aa4bdd1ae42927d81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac43f80eda6d8f6d58a9917938d35215b" id="r_ac43f80eda6d8f6d58a9917938d35215b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ac43f80eda6d8f6d58a9917938d35215b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a> = <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">::const_type</a></td></tr>
+<tr class="separator:ac43f80eda6d8f6d58a9917938d35215b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eaf214e97f0b417ff89ef96e7e76a3e" id="r_a6eaf214e97f0b417ff89ef96e7e76a3e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a6eaf214e97f0b417ff89ef96e7e76a3e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a6eaf214e97f0b417ff89ef96e7e76a3e">LeftView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a6eaf214e97f0b417ff89ef96e7e76a3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4ee5d9e342e7b76f2dcff98a68afaf0b" id="r_a4ee5d9e342e7b76f2dcff98a68afaf0b"><td class="memItemLeft" align="right" valign="top">KOKKOS_FUNCTION void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a4ee5d9e342e7b76f2dcff98a68afaf0b">operator()</a> (size_t i_constraint) const</td></tr>
-<tr class="separator:a4ee5d9e342e7b76f2dcff98a68afaf0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e642403f3b7366d024ed3fd596ab494" id="r_a9e642403f3b7366d024ed3fd596ab494"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a9e642403f3b7366d024ed3fd596ab494">operator()</a> (<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a> constraint) <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">const</a></td></tr>
+<tr class="separator:a9e642403f3b7366d024ed3fd596ab494"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a73f447d30b6a41931f107964b6b0355b" id="r_a73f447d30b6a41931f107964b6b0355b"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a73f447d30b6a41931f107964b6b0355b">base_node_freedom_signature</a></td></tr>
-<tr class="separator:a73f447d30b6a41931f107964b6b0355b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47ba07b8a33f5aa41deafcc6a8db58c5" id="r_a47ba07b8a33f5aa41deafcc6a8db58c5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> *, DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a47ba07b8a33f5aa41deafcc6a8db58c5">target_node_freedom_signature</a></td></tr>
-<tr class="separator:a47ba07b8a33f5aa41deafcc6a8db58c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43e98af831e5a5f074be59933b85c504" id="r_a43e98af831e5a5f074be59933b85c504"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a43e98af831e5a5f074be59933b85c504">base_node_freedom_table</a></td></tr>
-<tr class="separator:a43e98af831e5a5f074be59933b85c504"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3d614ff4f2e1ff6b86ca9cf88500b30" id="r_ae3d614ff4f2e1ff6b86ca9cf88500b30"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; size_t *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae3d614ff4f2e1ff6b86ca9cf88500b30">target_node_freedom_table</a></td></tr>
-<tr class="separator:ae3d614ff4f2e1ff6b86ca9cf88500b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03df177c40d04fcab5714dde369d2a74" id="r_a03df177c40d04fcab5714dde369d2a74"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a03df177c40d04fcab5714dde369d2a74">base_lambda_residual_terms</a></td></tr>
-<tr class="separator:a03df177c40d04fcab5714dde369d2a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96b4859546fdf2ff68a6344734f321a5" id="r_a96b4859546fdf2ff68a6344734f321a5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[6], DeviceType &gt;::const_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a96b4859546fdf2ff68a6344734f321a5">target_lambda_residual_terms</a></td></tr>
-<tr class="separator:a96b4859546fdf2ff68a6344734f321a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d9ea6d4fa90b16a99121207ddd74de5" id="r_a2d9ea6d4fa90b16a99121207ddd74de5"><td class="memItemLeft" align="right" valign="top">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a2d9ea6d4fa90b16a99121207ddd74de5">R</a></td></tr>
-<tr class="separator:a2d9ea6d4fa90b16a99121207ddd74de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49a5372617e5eb5f13503767e50ec4c5" id="r_a49a5372617e5eb5f13503767e50ec4c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a49a5372617e5eb5f13503767e50ec4c5">base_node_freedom_signature</a></td></tr>
+<tr class="separator:a49a5372617e5eb5f13503767e50ec4c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d87fde6b56da49f17f4b886c4f520d8" id="r_a0d87fde6b56da49f17f4b886c4f520d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a0d87fde6b56da49f17f4b886c4f520d8">target_node_freedom_signature</a></td></tr>
+<tr class="separator:a0d87fde6b56da49f17f4b886c4f520d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52e6d6dcf8573159f44c54c50a9889dc" id="r_a52e6d6dcf8573159f44c54c50a9889dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a52e6d6dcf8573159f44c54c50a9889dc">base_node_freedom_table</a></td></tr>
+<tr class="separator:a52e6d6dcf8573159f44c54c50a9889dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa80d1df4c06601bf43101c7e6f9c52b6" id="r_aa80d1df4c06601bf43101c7e6f9c52b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#aa80d1df4c06601bf43101c7e6f9c52b6">target_node_freedom_table</a></td></tr>
+<tr class="separator:aa80d1df4c06601bf43101c7e6f9c52b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab301815071573d8a3f334b173916e317" id="r_ab301815071573d8a3f334b173916e317"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ab301815071573d8a3f334b173916e317">base_lambda_residual_terms</a></td></tr>
+<tr class="separator:ab301815071573d8a3f334b173916e317"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a706c249dbf35a914732ed3e204777cc8" id="r_a706c249dbf35a914732ed3e204777cc8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a706c249dbf35a914732ed3e204777cc8">target_lambda_residual_terms</a></td></tr>
+<tr class="separator:a706c249dbf35a914732ed3e204777cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a600aed150b2e315597a4a22a83e7d135" id="r_a600aed150b2e315597a4a22a83e7d135"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a6eaf214e97f0b417ff89ef96e7e76a3e">LeftView</a>&lt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a> *[1]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a600aed150b2e315597a4a22a83e7d135">R</a></td></tr>
+<tr class="separator:a600aed150b2e315597a4a22a83e7d135"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4ee5d9e342e7b76f2dcff98a68afaf0b" name="a4ee5d9e342e7b76f2dcff98a68afaf0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ee5d9e342e7b76f2dcff98a68afaf0b">&#9670;&#160;</a></span>operator()()</h2>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ac43f80eda6d8f6d58a9917938d35215b" name="ac43f80eda6d8f6d58a9917938d35215b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac43f80eda6d8f6d58a9917938d35215b">&#9670;&#160;</a></span>ConstView</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6eaf214e97f0b417ff89ef96e7e76a3e" name="a6eaf214e97f0b417ff89ef96e7e76a3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eaf214e97f0b417ff89ef96e7e76a3e">&#9670;&#160;</a></span>LeftView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::LeftView =  Kokkos::View&lt;ValueType, Kokkos::LayoutLeft, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae567d2459b6c1e1aa4bdd1ae42927d81" name="ae567d2459b6c1e1aa4bdd1ae42927d81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae567d2459b6c1e1aa4bdd1ae42927d81">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">using</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a9e642403f3b7366d024ed3fd596ab494" name="a9e642403f3b7366d024ed3fd596ab494"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e642403f3b7366d024ed3fd596ab494">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">KOKKOS_FUNCTION void <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::operator() </td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">void</a> <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">::operator</a>() </td>
           <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>i_constraint</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -228,112 +296,112 @@ template&lt;typename DeviceType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a03df177c40d04fcab5714dde369d2a74" name="a03df177c40d04fcab5714dde369d2a74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03df177c40d04fcab5714dde369d2a74">&#9670;&#160;</a></span>base_lambda_residual_terms</h2>
+<a id="ab301815071573d8a3f334b173916e317" name="ab301815071573d8a3f334b173916e317"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab301815071573d8a3f334b173916e317">&#9670;&#160;</a></span>base_lambda_residual_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_lambda_residual_terms</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_lambda_residual_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a73f447d30b6a41931f107964b6b0355b" name="a73f447d30b6a41931f107964b6b0355b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73f447d30b6a41931f107964b6b0355b">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
+<a id="a49a5372617e5eb5f13503767e50ec4c5" name="a49a5372617e5eb5f13503767e50ec4c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49a5372617e5eb5f13503767e50ec4c5">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_signature</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a43e98af831e5a5f074be59933b85c504" name="a43e98af831e5a5f074be59933b85c504"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43e98af831e5a5f074be59933b85c504">&#9670;&#160;</a></span>base_node_freedom_table</h2>
+<a id="a52e6d6dcf8573159f44c54c50a9889dc" name="a52e6d6dcf8573159f44c54c50a9889dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52e6d6dcf8573159f44c54c50a9889dc">&#9670;&#160;</a></span>base_node_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2d9ea6d4fa90b16a99121207ddd74de5" name="a2d9ea6d4fa90b16a99121207ddd74de5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d9ea6d4fa90b16a99121207ddd74de5">&#9670;&#160;</a></span>R</h2>
+<a id="a600aed150b2e315597a4a22a83e7d135" name="a600aed150b2e315597a4a22a83e7d135"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a600aed150b2e315597a4a22a83e7d135">&#9670;&#160;</a></span>R</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::R</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#a6eaf214e97f0b417ff89ef96e7e76a3e">LeftView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a>* [1]&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::R</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a96b4859546fdf2ff68a6344734f321a5" name="a96b4859546fdf2ff68a6344734f321a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96b4859546fdf2ff68a6344734f321a5">&#9670;&#160;</a></span>target_lambda_residual_terms</h2>
+<a id="a706c249dbf35a914732ed3e204777cc8" name="a706c249dbf35a914732ed3e204777cc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a706c249dbf35a914732ed3e204777cc8">&#9670;&#160;</a></span>target_lambda_residual_terms</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;double*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_lambda_residual_terms</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_lambda_residual_terms</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a47ba07b8a33f5aa41deafcc6a8db58c5" name="a47ba07b8a33f5aa41deafcc6a8db58c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47ba07b8a33f5aa41deafcc6a8db58c5">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
+<a id="a0d87fde6b56da49f17f4b886c4f520d8" name="a0d87fde6b56da49f17f4b886c4f520d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d87fde6b56da49f17f4b886c4f520d8">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*,DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_signature</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_signature</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ae3d614ff4f2e1ff6b86ca9cf88500b30" name="ae3d614ff4f2e1ff6b86ca9cf88500b30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3d614ff4f2e1ff6b86ca9cf88500b30">&#9670;&#160;</a></span>target_node_freedom_table</h2>
+<a id="aa80d1df4c06601bf43101c7e6f9c52b6" name="aa80d1df4c06601bf43101c7e6f9c52b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa80d1df4c06601bf43101c7e6f9c52b6">&#9670;&#160;</a></span>target_node_freedom_table</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
+template&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">typename</a> DeviceType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Kokkos::View&lt;size_t*[6],DeviceType&gt;::const_type <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_table</td>
+          <td class="memname"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ac43f80eda6d8f6d58a9917938d35215b">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html#ae567d2459b6c1e1aa4bdd1ae42927d81">size_t</a>* [6]&gt; <a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">openturbine::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_table</td>
         </tr>
       </table>
 </div><div class="memdoc">

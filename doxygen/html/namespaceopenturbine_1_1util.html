@@ -223,9 +223,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a456fb3428a4f2020b284f01b349fa954" id="r_a456fb3428a4f2020b284f01b349fa954"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a456fb3428a4f2020b284f01b349fa954">SetPositionAndOrientation</a> (const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;data, std::array&lt; float, 3 &gt; &amp;position, <a class="el" href="namespaceopenturbine.html#a36f1ece5621a9d5e0c6d48383ee5c81c">Array_3x3</a> &amp;orientation)</td></tr>
-<tr class="memdesc:a456fb3428a4f2020b284f01b349fa954"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 7-element array of position and quaternion to separate position and orientation arrays.  <br /></td></tr>
-<tr class="separator:a456fb3428a4f2020b284f01b349fa954"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63ba76ef05aa75c99cddca174422cd27" id="r_a63ba76ef05aa75c99cddca174422cd27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a63ba76ef05aa75c99cddca174422cd27">SetPositionAndOrientation</a> (const std::array&lt; double, 7 &gt; &amp;data, std::array&lt; float, 3 &gt; &amp;position, std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; &amp;orientation)</td></tr>
+<tr class="memdesc:a63ba76ef05aa75c99cddca174422cd27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 7-element array of position and quaternion to separate position and orientation arrays.  <br /></td></tr>
+<tr class="separator:a63ba76ef05aa75c99cddca174422cd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cdcece2e4381d07795c5d0c7fe758f0" id="r_a4cdcece2e4381d07795c5d0c7fe758f0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a4cdcece2e4381d07795c5d0c7fe758f0">SetupFirstCall</a> (const <a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html">ControllerIO</a> &amp;swap, <a class="el" href="structopenturbine_1_1util_1_1InternalState.html">InternalState</a> &amp;state, char *const avcMSG)</td></tr>
 <tr class="separator:a4cdcece2e4381d07795c5d0c7fe758f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05ef5f55c6b4b4a88d5fe04873c4318a" id="r_a05ef5f55c6b4b4a88d5fe04873c4318a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a05ef5f55c6b4b4a88d5fe04873c4318a">FilterGeneratorSpeed</a> (const <a class="el" href="structopenturbine_1_1util_1_1ControllerIO.html">ControllerIO</a> &amp;swap, <a class="el" href="structopenturbine_1_1util_1_1InternalState.html">InternalState</a> &amp;state)</td></tr>
@@ -248,9 +248,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5b67cf7db95841968d62a2f98ebde2b4" id="r_a5b67cf7db95841968d62a2f98ebde2b4"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:a5b67cf7db95841968d62a2f98ebde2b4"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a5b67cf7db95841968d62a2f98ebde2b4">NetCDFFile::AddVariable&lt; std::string &gt;</a> (const std::string &amp;name, const std::vector&lt; int &gt; &amp;dim_ids) const</td></tr>
 <tr class="separator:a5b67cf7db95841968d62a2f98ebde2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61dcf061b09f78b1870316d0e2b27d62" id="r_a61dcf061b09f78b1870316d0e2b27d62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a61dcf061b09f78b1870316d0e2b27d62">check_netCDF_error</a> (int status, const std::string &amp;message=&quot;&quot;)</td></tr>
-<tr class="memdesc:a61dcf061b09f78b1870316d0e2b27d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the result of a NetCDF operation and throws an exception if it fails.  <br /></td></tr>
-<tr class="separator:a61dcf061b09f78b1870316d0e2b27d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -315,44 +312,6 @@ Variables</h2></td></tr>
 <tr class="separator:a246e7dd9b5fcc1491bd5488604007d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a61dcf061b09f78b1870316d0e2b27d62" name="a61dcf061b09f78b1870316d0e2b27d62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61dcf061b09f78b1870316d0e2b27d62">&#9670;&#160;</a></span>check_netCDF_error()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::util::check_netCDF_error </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>status</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>message</em> = <code>&quot;&quot;</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Checks the result of a NetCDF operation and throws an exception if it fails. </p>
-
-</div>
-</div>
 <a id="a998d6cd1116edd9c05a538cf9f1fed61" name="a998d6cd1116edd9c05a538cf9f1fed61"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a998d6cd1116edd9c05a538cf9f1fed61">&#9670;&#160;</a></span>ComputeControl()</h2>
 
@@ -638,8 +597,8 @@ template&lt;&gt; </div>
 
 </div>
 </div>
-<a id="a456fb3428a4f2020b284f01b349fa954" name="a456fb3428a4f2020b284f01b349fa954"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a456fb3428a4f2020b284f01b349fa954">&#9670;&#160;</a></span>SetPositionAndOrientation()</h2>
+<a id="a63ba76ef05aa75c99cddca174422cd27" name="a63ba76ef05aa75c99cddca174422cd27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63ba76ef05aa75c99cddca174422cd27">&#9670;&#160;</a></span>SetPositionAndOrientation()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -650,7 +609,7 @@ template&lt;&gt; </div>
         <tr>
           <td class="memname">void openturbine::util::SetPositionAndOrientation </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;&#160;</td>
+          <td class="paramtype">const std::array&lt; double, 7 &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -662,7 +621,7 @@ template&lt;&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#a36f1ece5621a9d5e0c6d48383ee5c81c">Array_3x3</a> &amp;&#160;</td>
+          <td class="paramtype">std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; &amp;&#160;</td>
           <td class="paramname"><em>orientation</em>&#160;</td>
         </tr>
         <tr>

@@ -1,0 +1,14 @@
+.. meta::25e8a21526f0e2d646e10a2260f840f9fbd0a42ed61107b658ef642d3838a7c9452d336261fb21bc5f07ac0500f8e3ddcce8912989655f27c800301650046ce2
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateRevoluteJointForce&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRevoluteJointForce&lt; DeviceType &gt; Struct Template Reference
+=========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateRevoluteJointForce.html

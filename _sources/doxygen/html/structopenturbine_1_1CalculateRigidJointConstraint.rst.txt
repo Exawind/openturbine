@@ -1,0 +1,14 @@
+.. meta::7590aad7cc99cff8b77b13e7da29875da46ee7d11a983899e6673d612d00b21845acccc4cb5681ef78fd505931cb1c39d7d375bbfb88776c2bda4e8af906287c
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::CalculateRigidJointConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRigidJointConstraint&lt; DeviceType &gt; Struct Template Reference
+===========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1CalculateRigidJointConstraint.html

@@ -14,5 +14,7 @@ var searchData=
   ['interpolateqpstate_5fu_11',['InterpolateQPState_u',['../structopenturbine_1_1InterpolateQPState__u.html',1,'openturbine']]],
   ['interpolateqpstate_5fuprime_12',['InterpolateQPState_uprime',['../structopenturbine_1_1InterpolateQPState__uprime.html',1,'openturbine']]],
   ['interpolateqpvector_13',['InterpolateQPVector',['../structopenturbine_1_1InterpolateQPVector.html',1,'openturbine']]],
-  ['interpolatetoquadraturepoints_14',['InterpolateToQuadraturePoints',['../structopenturbine_1_1InterpolateToQuadraturePoints.html',1,'openturbine']]]
+  ['interpolatetoquadraturepointforinertia_14',['InterpolateToQuadraturePointForInertia',['../structopenturbine_1_1beams_1_1InterpolateToQuadraturePointForInertia.html',1,'openturbine::beams']]],
+  ['interpolatetoquadraturepointforstiffness_15',['InterpolateToQuadraturePointForStiffness',['../structopenturbine_1_1beams_1_1InterpolateToQuadraturePointForStiffness.html',1,'openturbine::beams']]],
+  ['interpolatetoquadraturepoints_16',['InterpolateToQuadraturePoints',['../structopenturbine_1_1InterpolateToQuadraturePoints.html',1,'openturbine']]]
 ];

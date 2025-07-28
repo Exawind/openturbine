@@ -1,0 +1,14 @@
+.. meta::95a27d3d64f64eeecccf6155e9ed458e330293d560de87cae0d515a2aabfd6e9b8de0ba43f8e7fdc42aed49f290fece60d16d98266292f7b297f69c5e445a290
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::CalculateQuu&lt; DeviceType &gt; Struct Template Reference
+
+CalculateQuu&lt; DeviceType &gt; Struct Template Reference
+==========================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1CalculateQuu.html

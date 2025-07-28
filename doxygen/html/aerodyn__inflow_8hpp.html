@@ -174,12 +174,12 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="quaternion__operations_8hpp_source.html">math/quaternion_operations.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="types_8hpp_source.html">types.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="dylib_8hpp_source.html">vendor/dylib/dylib.hpp</a>&quot;</code><br />
 </div>
 <p><a href="aerodyn__inflow_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -226,9 +226,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a456fb3428a4f2020b284f01b349fa954" id="r_a456fb3428a4f2020b284f01b349fa954"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a456fb3428a4f2020b284f01b349fa954">openturbine::util::SetPositionAndOrientation</a> (const <a class="el" href="namespaceopenturbine.html#a3569dec229d5ec2f06cf4fc8f989ddc7">Array_7</a> &amp;data, std::array&lt; float, 3 &gt; &amp;position, <a class="el" href="namespaceopenturbine.html#a36f1ece5621a9d5e0c6d48383ee5c81c">Array_3x3</a> &amp;orientation)</td></tr>
-<tr class="memdesc:a456fb3428a4f2020b284f01b349fa954"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 7-element array of position and quaternion to separate position and orientation arrays.  <br /></td></tr>
-<tr class="separator:a456fb3428a4f2020b284f01b349fa954"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63ba76ef05aa75c99cddca174422cd27" id="r_a63ba76ef05aa75c99cddca174422cd27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1util.html#a63ba76ef05aa75c99cddca174422cd27">openturbine::util::SetPositionAndOrientation</a> (const std::array&lt; double, 7 &gt; &amp;data, std::array&lt; float, 3 &gt; &amp;position, std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; &amp;orientation)</td></tr>
+<tr class="memdesc:a63ba76ef05aa75c99cddca174422cd27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 7-element array of position and quaternion to separate position and orientation arrays.  <br /></td></tr>
+<tr class="separator:a63ba76ef05aa75c99cddca174422cd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
