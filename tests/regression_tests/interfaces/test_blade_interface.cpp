@@ -12,6 +12,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
     const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
     const auto& wio_blade = wio["components"]["blade"];
+    const auto write_output{true};
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
@@ -24,8 +25,11 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetOutputFile("BladeInterfaceTest.BladeWindIO");
+        .SetRelativeErrorTolerance(1e-4);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO");
+    }
 
     // Set blade parameters
     // Use prescribed root motion to fix root rotation
@@ -125,6 +129,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     const auto omega = std::array{0., 0., 1.};
     const auto x0_root = std::array{2., 0., 0.};
     const auto root_vel = CrossProduct(omega, x0_root);
+    const auto write_output{false};
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
@@ -136,8 +141,12 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetOutputFile("BladeInterfaceTest.RotatingBeam");
+        .SetRelativeErrorTolerance(1e-4);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam");
+    }
+
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{
         0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
@@ -375,6 +384,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
 TEST(BladeInterfaceTest, StaticCurledBeam) {
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
+    const auto write_output{false};
 
     builder.Solution()
         .EnableStaticSolve()
@@ -382,8 +392,11 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetDampingFactor(1.)
         .SetMaximumNonlinearIterations(10)
         .SetAbsoluteErrorTolerance(1e-5)
-        .SetRelativeErrorTolerance(1e-3)
-        .SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
+        .SetRelativeErrorTolerance(1e-3);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
+    }
 
     // Node locations
     const std::vector<double> kp_s{0., 1.};
