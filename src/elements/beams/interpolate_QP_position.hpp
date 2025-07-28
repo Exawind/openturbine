@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Kokkos_Core.hpp>
-#include <types.hpp>
 
 namespace openturbine {
 
@@ -16,29 +15,35 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct InterpolateQPPosition {
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_nodes_per_element;
-    typename Kokkos::View<size_t*, DeviceType>::const_type num_qps_per_element;
-    typename Kokkos::View<double***, DeviceType>::const_type
-        shape_interpolation;  //< num_elem x num_nodes x num_qps
-    typename Kokkos::View<double** [7], DeviceType>::const_type
-        node_position_rotation;  //< node position vector/generalized coordinates in global csys
-    Kokkos::View<double** [3], DeviceType>
-        qp_position;  //< quadrature point position - x, y, z (computed)
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+
+    ConstView<size_t*> num_nodes_per_element;
+    ConstView<size_t*> num_qps_per_element;
+    ConstView<double***> shape_interpolation;  //< num_elem x num_nodes x num_qps
+    ConstView<double** [7]>
+        node_position_rotation;      //< node position vector/generalized coordinates in global csys
+    View<double** [3]> qp_position;  //< quadrature point position - x, y, z (computed)
 
     KOKKOS_FUNCTION
-    void operator()(const int i_elem) const {
-        const auto num_nodes = num_nodes_per_element(i_elem);
-        const auto num_qps = num_qps_per_element(i_elem);
-        for (auto j = 0U; j < num_qps; ++j) {
-            auto local_result = Kokkos::Array<double, 3>{};
-            for (auto i = 0U; i < num_nodes; ++i) {
-                const auto phi = shape_interpolation(i_elem, i, j);
-                for (auto k = 0U; k < kVectorComponents; ++k) {
-                    local_result[k] += node_position_rotation(i_elem, i, k) * phi;
+    void operator()(int element) const {
+        using Kokkos::Array;
+
+        const auto num_nodes = num_nodes_per_element(element);
+        const auto num_qps = num_qps_per_element(element);
+        for (auto qp = 0U; qp < num_qps; ++qp) {
+            auto local_result = Array<double, 3>{};
+            for (auto node = 0U; node < num_nodes; ++node) {
+                const auto phi = shape_interpolation(element, node, qp);
+                for (auto component = 0U; component < 3U; ++component) {
+                    local_result[component] +=
+                        node_position_rotation(element, node, component) * phi;
                 }
             }
-            for (auto k = 0U; k < 3U; ++k) {
-                qp_position(i_elem, j, k) = local_result[k];
+            for (auto component = 0U; component < 3U; ++component) {
+                qp_position(element, qp, component) = local_result[component];
             }
         }
     }

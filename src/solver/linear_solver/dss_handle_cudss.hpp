@@ -2,6 +2,8 @@
 
 #include <cudss.h>
 
+#include "dss_algorithm.hpp"
+
 namespace openturbine {
 template <>
 class DSSHandle<DSSAlgorithm::CUDSS> {

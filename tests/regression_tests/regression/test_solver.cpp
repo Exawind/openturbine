@@ -1,17 +1,17 @@
+#include <array>
 #include <initializer_list>
+#include <vector>
 
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
 #include "solver/solver.hpp"
-#include "state/state.hpp"
 #include "step/predict_next_state.hpp"
 #include "step/reset_constraints.hpp"
 #include "step/step.hpp"
 #include "step/step_parameters.hpp"
 #include "step/update_constraint_variables.hpp"
 #include "test_utilities.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -39,7 +39,7 @@ inline void SetUpSolverAndAssemble() {
     // Gravity vector
     model.SetGravity(0., 0., 0.);
 
-    const Array_3 x0_root{2., 0., 0.};
+    const auto x0_root = std::array{2., 0., 0.};
 
     // Node locations (GLL quadrature)
     constexpr auto node_s = std::array{
@@ -70,14 +70,14 @@ inline void SetUpSolverAndAssemble() {
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        BeamQuadrature{
-            {-0.9491079123427585, 0.1294849661688697},
-            {-0.7415311855993943, 0.27970539148927664},
-            {-0.40584515137739696, 0.3818300505051189},
-            {6.123233995736766e-17, 0.4179591836734694},
-            {0.4058451513773971, 0.3818300505051189},
-            {0.7415311855993945, 0.27970539148927664},
-            {0.9491079123427585, 0.1294849661688697},
+        std::vector{
+            std::array{-0.9491079123427585, 0.1294849661688697},
+            std::array{-0.7415311855993943, 0.27970539148927664},
+            std::array{-0.40584515137739696, 0.3818300505051189},
+            std::array{6.123233995736766e-17, 0.4179591836734694},
+            std::array{0.4058451513773971, 0.3818300505051189},
+            std::array{0.7415311855993945, 0.27970539148927664},
+            std::array{0.9491079123427585, 0.1294849661688697},
         }
     );
 
@@ -97,7 +97,8 @@ inline void SetUpSolverAndAssemble() {
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
-    Array_3 u_trans{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
+    auto u_trans =
+        std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
     constraints.UpdateDisplacement(
         0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
     );
@@ -279,7 +280,7 @@ inline void SetupAndTakeNoSteps() {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
-    const Array_3 x0_root{2., 0., 0.};
+    const auto x0_root = std::array{2., 0., 0.};
     std::vector<size_t> beam_node_ids;
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
@@ -300,14 +301,14 @@ inline void SetupAndTakeNoSteps() {
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        BeamQuadrature{
-            {-0.9491079123427585, 0.1294849661688697},
-            {-0.7415311855993943, 0.27970539148927664},
-            {-0.40584515137739696, 0.3818300505051189},
-            {6.123233995736766e-17, 0.4179591836734694},
-            {0.4058451513773971, 0.3818300505051189},
-            {0.7415311855993945, 0.27970539148927664},
-            {0.9491079123427585, 0.1294849661688697},
+        std::vector{
+            std::array{-0.9491079123427585, 0.1294849661688697},
+            std::array{-0.7415311855993943, 0.27970539148927664},
+            std::array{-0.40584515137739696, 0.3818300505051189},
+            std::array{6.123233995736766e-17, 0.4179591836734694},
+            std::array{0.4058451513773971, 0.3818300505051189},
+            std::array{0.7415311855993945, 0.27970539148927664},
+            std::array{0.9491079123427585, 0.1294849661688697},
         }
     );
 
@@ -327,7 +328,8 @@ inline void SetupAndTakeNoSteps() {
 
     auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
     auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
-    Array_3 u_trans{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
+    auto u_trans =
+        std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
     constraints.UpdateDisplacement(
         0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
     );
@@ -498,14 +500,14 @@ inline auto SetupAndTakeTwoSteps() {
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        BeamQuadrature{
-            {-0.9491079123427585, 0.1294849661688697},
-            {-0.7415311855993943, 0.27970539148927664},
-            {-0.40584515137739696, 0.3818300505051189},
-            {6.123233995736766e-17, 0.4179591836734694},
-            {0.4058451513773971, 0.3818300505051189},
-            {0.7415311855993945, 0.27970539148927664},
-            {0.9491079123427585, 0.1294849661688697},
+        std::vector{
+            std::array{-0.9491079123427585, 0.1294849661688697},
+            std::array{-0.7415311855993943, 0.27970539148927664},
+            std::array{-0.40584515137739696, 0.3818300505051189},
+            std::array{6.123233995736766e-17, 0.4179591836734694},
+            std::array{0.4058451513773971, 0.3818300505051189},
+            std::array{0.7415311855993945, 0.27970539148927664},
+            std::array{0.9491079123427585, 0.1294849661688697},
         }
     );
 

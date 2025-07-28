@@ -16,7 +16,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_PositiveRange) {
     const auto result = openturbine::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < result.size(); ++i) {
+    for (auto i = 0U; i < result.size(); ++i) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -28,7 +28,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_NegativeRange) {
     const auto result = openturbine::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < result.size(); ++i) {
+    for (auto i = 0U; i < result.size(); ++i) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -40,7 +40,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
     auto result = openturbine::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (size_t i = 0; i < result.size(); ++i) {
+    for (auto i = 0U; i < result.size(); ++i) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -55,7 +55,9 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
     const size_t n{3};                               // Number of pts to fit
     const size_t p{2};                               // Polynomial order + 1
     const std::vector<double> xi_g = {-1., 0., 1.};  // Evaluation points
-    const auto [phi_g, dphi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
+    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto phi_g = ComputeShapeFunctionValues(xi_g, gll_pts);
+    const auto dphi_g = ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
     // Check GLL points (2 at -1 and 1)
     ASSERT_EQ(gll_pts.size(), p);
@@ -73,8 +75,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
         {0., 0.5, 1.}   // row 2
     };
 
-    for (size_t i = 0; i < phi_g.size(); ++i) {
-        for (size_t j = 0; j < phi_g[i].size(); ++j) {
+    for (auto i = 0U; i < phi_g.size(); ++i) {
+        for (auto j = 0U; j < phi_g[i].size(); ++j) {
             EXPECT_NEAR(phi_g[i][j], expected[i][j], 1.e-15);
         }
     }
@@ -90,18 +92,19 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
         {0.5, 0.5, 0.5}      // row 2
     };
 
-    for (size_t i = 0; i < dphi_g.size(); ++i) {
-        for (size_t j = 0; j < dphi_g[i].size(); ++j) {
+    for (auto i = 0U; i < dphi_g.size(); ++i) {
+        for (auto j = 0U; j < dphi_g[i].size(); ++j) {
             EXPECT_NEAR(dphi_g[i][j], expected_dphi_g[i][j], 1.e-15);
         }
     }
 }
 
 TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
-    const size_t n{5};                                          // Number of pts to fit
     const size_t p{3};                                          // Polynomial order + 1
     const std::vector<double> xi_g = {-1., -0.5, 0., 0.5, 1.};  // Evaluation points
-    const auto [phi_g, dphi_g, gll_pts] = openturbine::ShapeFunctionMatrices(n, p, xi_g);
+    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto phi_g = ComputeShapeFunctionValues(xi_g, gll_pts);
+    const auto dphi_g = ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
     // Check GLL points (3 at -1, 0, and 1)
     ASSERT_EQ(gll_pts.size(), 3);
@@ -122,8 +125,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
         {0., -0.125, 0., 0.375, 1.}   // row 3
     };
 
-    for (size_t i = 0; i < phi_g.size(); ++i) {
-        for (size_t j = 0; j < phi_g[i].size(); ++j) {
+    for (auto i = 0U; i < phi_g.size(); ++i) {
+        for (auto j = 0U; j < phi_g[i].size(); ++j) {
             EXPECT_NEAR(phi_g[i][j], expected[i][j], 1.e-15);
         }
     }
@@ -141,8 +144,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
         {-0.5, 0., 0.5, 1., 1.5}     // row 3
     };
 
-    for (size_t i = 0; i < dphi_g.size(); ++i) {
-        for (size_t j = 0; j < dphi_g[i].size(); ++j) {
+    for (auto i = 0U; i < dphi_g.size(); ++i) {
+        for (auto j = 0U; j < dphi_g[i].size(); ++j) {
             EXPECT_NEAR(dphi_g[i][j], expected_dphi_g[i][j], 1.e-15);
         }
     }
@@ -163,9 +166,10 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     auto mapped_locations = MapGeometricLocations(geom_locations);
 
     // Step 2: Generate shape function matrices (using p = 4 i.e. cubic interpolation)
-    const size_t n = input_points.size();
     const size_t p = 4;
-    const auto [phi_g, dphi_g, gll_points] = ShapeFunctionMatrices(n, p, mapped_locations);
+    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto phi_g = ComputeShapeFunctionValues(mapped_locations, gll_pts);
+    const auto dphi_g = ComputeShapeFunctionDerivatives(mapped_locations, gll_pts);
 
     // Step 3: Perform least squares fitting
     const auto X = PerformLeastSquaresFitting(p, phi_g, input_points);
@@ -179,8 +183,8 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     };
 
     ASSERT_EQ(X.size(), expected_coefficients.size());
-    for (size_t i = 0; i < X.size(); ++i) {
-        for (size_t j = 0; j < 3; ++j) {
+    for (auto i = 0U; i < X.size(); ++i) {
+        for (auto j = 0U; j < 3U; ++j) {
             EXPECT_NEAR(X[i][j], expected_coefficients[i][j], 1e-3)
                 << "Mismatch at coefficient [" << i << "][" << j << "]";
         }

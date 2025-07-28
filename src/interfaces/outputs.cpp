@@ -51,7 +51,7 @@ void Outputs::WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state
     }
 
     // Position data
-    for (size_t node = 0; node < num_nodes_; ++node) {
+    for (auto node = 0U; node < num_nodes_; ++node) {
         this->x_data_[node] = host_state.x(node, 0);
         this->y_data_[node] = host_state.x(node, 1);
         this->z_data_[node] = host_state.x(node, 2);
@@ -66,7 +66,7 @@ void Outputs::WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state
     );
 
     // Displacement data
-    for (size_t node = 0; node < num_nodes_; ++node) {
+    for (auto node = 0U; node < num_nodes_; ++node) {
         this->x_data_[node] = host_state.q(node, 0);
         this->y_data_[node] = host_state.q(node, 1);
         this->z_data_[node] = host_state.q(node, 2);
@@ -81,7 +81,7 @@ void Outputs::WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state
     );
 
     // Velocity data
-    for (size_t node = 0; node < num_nodes_; ++node) {
+    for (auto node = 0U; node < num_nodes_; ++node) {
         this->x_data_[node] = host_state.v(node, 0);
         this->y_data_[node] = host_state.v(node, 1);
         this->z_data_[node] = host_state.v(node, 2);
@@ -95,7 +95,7 @@ void Outputs::WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state
     );
 
     // Acceleration data
-    for (size_t node = 0; node < num_nodes_; ++node) {
+    for (auto node = 0U; node < num_nodes_; ++node) {
         this->x_data_[node] = host_state.vd(node, 0);
         this->y_data_[node] = host_state.vd(node, 1);
         this->z_data_[node] = host_state.vd(node, 2);

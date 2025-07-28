@@ -1,4 +1,3 @@
-#include <cstddef>
 #include <utility>
 #include <vector>
 
@@ -23,7 +22,7 @@ TEST(InterpolationTest, LinearInterpWeight) {
     for (const auto& [x, expected] : test_cases) {
         LinearInterpWeights(x, xs, weights);
         ASSERT_EQ(weights.size(), expected.size()) << "Failed at x = " << x;
-        for (size_t i = 0; i < weights.size(); ++i) {
+        for (auto i = 0U; i < weights.size(); ++i) {
             EXPECT_NEAR(weights[i], expected[i], tol)
                 << "Mismatch at x = " << x << ", index = " << i;
         }
@@ -318,7 +317,7 @@ TEST(InterpolationTest, GenerateGLLPoints_FirstOrderElement) {
     std::vector<double> expected = {-1., 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
-    for (size_t i = 0; i < gll_points.size(); ++i) {
+    for (auto i = 0U; i < gll_points.size(); ++i) {
         EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
@@ -328,7 +327,7 @@ TEST(InterpolationTest, GenerateGLLPoints_SecondOrderElement) {
     std::vector<double> expected = {-1., 0., 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
-    for (size_t i = 0; i < gll_points.size(); ++i) {
+    for (auto i = 0U; i < gll_points.size(); ++i) {
         EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
@@ -338,7 +337,7 @@ TEST(InterpolationTest, GenerateGLLPoints_FourthOrderElement) {
     std::vector<double> expected = {-1., -0.6546536707079771437983, 0., 0.654653670707977143798, 1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
-    for (size_t i = 0; i < gll_points.size(); ++i) {
+    for (auto i = 0U; i < gll_points.size(); ++i) {
         EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }
@@ -350,7 +349,7 @@ TEST(InterpolationTest, GenerateGLLPoints_SixthOrderElement) {
                                     1.};
 
     EXPECT_EQ(gll_points.size(), expected.size());
-    for (size_t i = 0; i < gll_points.size(); ++i) {
+    for (auto i = 0U; i < gll_points.size(); ++i) {
         EXPECT_NEAR(gll_points[i], expected[i], 1e-15);
     }
 }

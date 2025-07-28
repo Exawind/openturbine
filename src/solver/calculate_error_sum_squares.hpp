@@ -7,23 +7,32 @@ namespace openturbine {
 template <typename DeviceType>
 struct CalculateSystemErrorSumSquares {
     using value_type = double;
-    using member_type =
-        typename Kokkos::TeamPolicy<typename DeviceType::execution_space>::member_type;
+    using TeamPolicy = typename Kokkos::TeamPolicy<typename DeviceType::execution_space>;
+    using member_type = typename TeamPolicy::member_type;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
+
     double atol;
     double rtol;
     double h;
-    typename Kokkos::View<size_t*, DeviceType>::const_type active_dofs;
-    typename Kokkos::View<size_t*, DeviceType>::const_type node_freedom_map_table;
-    typename Kokkos::View<double* [6], DeviceType>::const_type q_delta;
-    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x;
+    ConstView<size_t*> active_dofs;
+    ConstView<size_t*> node_freedom_map_table;
+    ConstView<double* [6]> q_delta;
+    ConstLeftView<double* [1]> x;
 
     KOKKOS_INLINE_FUNCTION
-    void operator()(const size_t i_node, double& err) const {
-        const auto n_node_dofs = active_dofs(i_node);
-        const auto node_first_dof = node_freedom_map_table(i_node);
-        for (auto j = 0U; j < n_node_dofs; ++j) {
-            const auto pi = x(node_first_dof + j, 0);
-            const auto xi = q_delta(i_node, j) * h;
+    void operator()(size_t node, double& err) const {
+        const auto n_node_dofs = active_dofs(node);
+        const auto node_first_dof = node_freedom_map_table(node);
+        for (auto component = 0U; component < n_node_dofs; ++component) {
+            const auto pi = x(node_first_dof + component, 0);
+            const auto xi = q_delta(node, component) * h;
             const auto err_sqrt = pi / (atol + rtol * Kokkos::abs(xi));
             err += err_sqrt * err_sqrt;
         }
@@ -33,20 +42,29 @@ struct CalculateSystemErrorSumSquares {
 template <typename DeviceType>
 struct CalculateConstraintsErrorSumSquares {
     using value_type = double;
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
+    template <typename ValueType>
+    using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
+    template <typename ValueType>
+    using ConstLeftView = typename LeftView<ValueType>::const_type;
+
     double atol;
     double rtol;
     size_t num_system_dofs;
-    typename Kokkos::View<Kokkos::pair<size_t, size_t>*, DeviceType>::const_type row_range;
-    typename Kokkos::View<double* [6], DeviceType>::const_type lambda;
-    typename Kokkos::View<double* [1], Kokkos::LayoutLeft, DeviceType>::const_type x;
+    ConstView<Kokkos::pair<size_t, size_t>*> row_range;
+    ConstView<double* [6]> lambda;
+    ConstLeftView<double* [1]> x;
 
     KOKKOS_INLINE_FUNCTION
-    void operator()(const size_t i_constraint, double& err) const {
-        const auto first_index = row_range(i_constraint).first;
-        const auto max_index = row_range(i_constraint).second;
+    void operator()(size_t constraint, double& err) const {
+        const auto first_index = row_range(constraint).first;
+        const auto max_index = row_range(constraint).second;
         for (auto row = first_index; row < max_index; ++row) {
             const auto pi = x(num_system_dofs + row, 0);
-            const auto xi = lambda(i_constraint, row - first_index);
+            const auto xi = lambda(constraint, row - first_index);
             const auto err_sqrt = pi / (atol + rtol * Kokkos::abs(xi));
             err += err_sqrt * err_sqrt;
         }

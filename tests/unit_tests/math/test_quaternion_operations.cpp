@@ -78,8 +78,8 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxi
 TEST(QuaternionTest, ConvertRotationMatrixToQuaternion) {
     const auto n = 25U;
     const auto dtheta = M_PI / static_cast<double>(n);
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (auto i = 0U; i < n; ++i) {
+        for (auto j = 0U; j < n; ++j) {
             auto q_ref = RotationVectorToQuaternion(
                 {static_cast<double>(i) * dtheta, static_cast<double>(j) * dtheta, 0.}
             );
@@ -347,8 +347,8 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
 void test_quaternion_to_rotation_vector_2() {
     const auto n = 100U;
     const auto dtheta = M_PI / static_cast<double>(n);
-    for (size_t i = 0; i < n; ++i) {
-        Array_3 rot_vec{static_cast<double>(i) * dtheta, 0., 0.};
+    for (auto i = 0U; i < n; ++i) {
+        auto rot_vec = std::array{static_cast<double>(i) * dtheta, 0., 0.};
         auto phi = Create1DView<3>(rot_vec);
         auto phi2 = Create1DView<3>({0., 0., 0.});
         auto q = Create1DView<4>({0., 0., 0., 0.});
@@ -375,8 +375,8 @@ TEST(QuaternionTest, QuaternionToRotationVector_1) {
 TEST(QuaternionTest, QuaternionToRotationVector_2) {
     const auto n = 100U;
     const auto dtheta = M_PI / static_cast<double>(n);
-    for (size_t i = 0; i < n; ++i) {
-        Array_3 rot_vec{static_cast<double>(i) * dtheta, 0., 0.};
+    for (auto i = 0U; i < n; ++i) {
+        auto rot_vec = std::array{static_cast<double>(i) * dtheta, 0., 0.};
         auto q = RotationVectorToQuaternion(rot_vec);
         auto rot_vec2 = QuaternionToRotationVector(q);
         ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-14);
@@ -388,8 +388,8 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
 TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
     struct TestData {
         double twist;
-        Array_3 tan;
-        Array_4 q_exp;
+        std::array<double, 3> tan;
+        std::array<double, 4> q_exp;
     };
     for (const auto& td : std::vector<TestData>{
              {
@@ -418,43 +418,43 @@ TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_ExactIdentity) {
-    const Array_4 identity_q{1., 0., 0., 0.};
+    const auto identity_q = std::array{1., 0., 0., 0.};
     EXPECT_TRUE(IsIdentityQuaternion(identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_WithinDefaultTolerance) {
     // 1e-13 is within default tolerance
-    const Array_4 near_identity_q{1. + 1e-13, 1e-13, -1e-13, 1e-13};
+    const auto near_identity_q = std::array{1. + 1e-13, 1e-13, -1e-13, 1e-13};
     EXPECT_TRUE(IsIdentityQuaternion(near_identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_OutsideDefaultTolerance) {
     // 1e-11 is outside default tolerance
-    const Array_4 not_identity_q{1. + 1e-11, 0., 0., 0.};
+    const auto not_identity_q = std::array{1. + 1e-11, 0., 0., 0.};
     EXPECT_FALSE(IsIdentityQuaternion(not_identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_WithCustomTolerance) {
     // 1e-10 is within custom tolerance
-    const Array_4 near_identity_q{1. + 1e-10, 1e-10, 0., 0.};
+    const auto near_identity_q = std::array{1. + 1e-10, 1e-10, 0., 0.};
     EXPECT_TRUE(IsIdentityQuaternion(near_identity_q, 1e-9));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_NonIdentityQuaternions) {
     // 90 degree rotation about X axis
-    const Array_4 rotation_x = RotationVectorToQuaternion({M_PI / 2., 0., 0.});
+    const auto rotation_x = RotationVectorToQuaternion({M_PI / 2., 0., 0.});
     EXPECT_FALSE(IsIdentityQuaternion(rotation_x));
 
     // 90 degree rotation about Y axis
-    const Array_4 rotation_y = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+    const auto rotation_y = RotationVectorToQuaternion({0., M_PI / 2., 0.});
     EXPECT_FALSE(IsIdentityQuaternion(rotation_y));
 
     // 90 degree rotation about Z axis
-    const Array_4 rotation_z = RotationVectorToQuaternion({0., 0., M_PI / 2.});
+    const auto rotation_z = RotationVectorToQuaternion({0., 0., M_PI / 2.});
     EXPECT_FALSE(IsIdentityQuaternion(rotation_z));
 
     // Arbitrary quaternion
-    const Array_4 arbitrary{0.5, 0.5, 0.5, 0.5};
+    const auto arbitrary = std::array{0.5, 0.5, 0.5, 0.5};
     EXPECT_FALSE(IsIdentityQuaternion(arbitrary));
 }
 

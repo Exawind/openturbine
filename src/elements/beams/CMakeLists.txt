@@ -7,7 +7,6 @@ install(FILES
         beams.hpp
         beams_input.hpp
         calculate_jacobian.hpp
-        calculate_QP_deformation.hpp
         calculate_QP_position.hpp
         create_beams.hpp
         generate_sectional_properties.hpp

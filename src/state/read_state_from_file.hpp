@@ -18,13 +18,13 @@ inline void ReadStateFromFile(std::istream& input, State<DeviceType>& state) {
         throw std::length_error("Number of system nodes in file is not the same as in model");
     }
 
-    auto mirror_7 = Kokkos::View<double* [7]>::HostMirror("mirror_7", num_system_nodes);
-    auto out_7 = Kokkos::View<double* [7], Kokkos::HostSpace>("out_7", num_system_nodes);
+    const auto mirror_7 = Kokkos::View<double* [7]>::HostMirror("mirror_7", num_system_nodes);
+    const auto out_7 = Kokkos::View<double* [7], Kokkos::HostSpace>("out_7", num_system_nodes);
 
-    auto mirror_6 = Kokkos::View<double* [6]>::HostMirror("mirror_6", num_system_nodes);
-    auto out_6 = Kokkos::View<double* [6], Kokkos::HostSpace>("out_6", num_system_nodes);
+    const auto mirror_6 = Kokkos::View<double* [6]>::HostMirror("mirror_6", num_system_nodes);
+    const auto out_6 = Kokkos::View<double* [6], Kokkos::HostSpace>("out_6", num_system_nodes);
 
-    auto read_7 = [&](const Kokkos::View<double* [7]>& data) {
+    const auto read_7 = [&](const Kokkos::View<double* [7]>& data) {
         const auto stream_size = static_cast<long>(7U * num_system_nodes * sizeof(double));
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
         input.read(reinterpret_cast<char*>(out_7.data()), stream_size);
@@ -33,7 +33,7 @@ inline void ReadStateFromFile(std::istream& input, State<DeviceType>& state) {
         Kokkos::deep_copy(data, mirror_7);
     };
 
-    auto read_6 = [&](const Kokkos::View<double* [6]>& data) {
+    const auto read_6 = [&](const Kokkos::View<double* [6]>& data) {
         const auto stream_size = static_cast<long>(6U * num_system_nodes * sizeof(double));
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
         input.read(reinterpret_cast<char*>(out_6.data()), stream_size);

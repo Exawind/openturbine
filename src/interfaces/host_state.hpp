@@ -20,20 +20,23 @@ namespace openturbine::interfaces {
  */
 template <typename DeviceType>
 struct HostState {
+    template <typename ValueType>
+    using HostView = typename Kokkos::View<ValueType, DeviceType>::HostMirror;
+
     /// @brief Host local copy of current position
-    typename Kokkos::View<double* [7], DeviceType>::HostMirror x;
+    HostView<double* [7]> x;
 
     /// @brief Host local copy of current displacement
-    typename Kokkos::View<double* [7], DeviceType>::HostMirror q;
+    HostView<double* [7]> q;
 
     /// @brief Host local copy of current velocity
-    typename Kokkos::View<double* [6], DeviceType>::HostMirror v;
+    HostView<double* [6]> v;
 
     /// @brief Host local copy of current acceleration
-    typename Kokkos::View<double* [6], DeviceType>::HostMirror vd;
+    HostView<double* [6]> vd;
 
     /// @brief Host local copy of external forces
-    typename Kokkos::View<double* [6], DeviceType>::HostMirror f;
+    HostView<double* [6]> f;
 
     /// @brief  Construct host state from state
     explicit HostState(const State<DeviceType>& state)

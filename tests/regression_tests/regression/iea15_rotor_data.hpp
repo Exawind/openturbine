@@ -2,7 +2,6 @@
 
 #include "elements/beams/beam_quadrature.hpp"
 #include "elements/beams/beam_section.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -58,7 +57,7 @@ static constexpr auto node_rotation = std::array{
 };
 
 // Element quadrature
-static const BeamQuadrature trapz_quadrature{
+static const auto trapz_quadrature = std::vector<std::array<double, 2>>{
     {-1.0, 0.005},  {-0.99, 0.01},   {-0.98, 0.01},  {-0.97, 0.01}, {-0.96, 0.01},  {-0.95, 0.01},
     {-0.94, 0.01},  {-0.93, 0.01},   {-0.92, 0.01},  {-0.91, 0.01}, {-0.9, 0.0175}, {-0.875, 0.025},
     {-0.85, 0.025}, {-0.825, 0.025}, {-0.8, 0.0375}, {-0.75, 0.05}, {-0.7, 0.05},   {-0.65, 0.05},
@@ -70,7 +69,7 @@ static const BeamQuadrature trapz_quadrature{
     {0.9, 0.05},    {0.95, 0.05},    {1.0, 0.025},
 };
 
-static const std::vector<BeamSection> material_sections = {
+static const auto material_sections = std::vector{
     BeamSection{
         0.0,
         {{

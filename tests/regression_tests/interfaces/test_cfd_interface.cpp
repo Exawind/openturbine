@@ -2,7 +2,6 @@
 
 #include "interfaces/cfd/interface.hpp"
 #include "interfaces/cfd/interface_builder.hpp"
-#include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
@@ -28,7 +27,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     auto& platform_node = interface.turbine.floating_platform.node;
 
     // Run simulation for 500 steps
-    for (size_t i = 0; i < 500; ++i) {
+    for (auto i = 0; i < 500; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -74,7 +73,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     interface.SaveState();
 
     // Run simulation for an additional 100 steps
-    for (size_t i = 500; i < 600; ++i) {
+    for (auto i = 500; i < 600; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -100,7 +99,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Run simulation from 500 to 600 steps
-    for (size_t i = 500; i < 600; ++i) {
+    for (auto i = 500; i < 600; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -123,17 +122,17 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     const auto n_steps{static_cast<size_t>(ceil(t_end / time_step)) + 1};
 
     // Construct platform mass matrix
-    constexpr auto platform_mass{1.419625E+7};                           // kg
-    constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
-    constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_6x6 platform_mass_matrix{{
-        {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
-        {0., platform_mass, 0., 0., 0., 0.},    // Row 2
-        {0., 0., platform_mass, 0., 0., 0.},    // Row 3
-        {0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
-        {0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
-        {0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
-    }};
+    constexpr auto platform_mass{1.419625E+7};                                     // kg
+    constexpr auto gravity = std::array{0., 0., -9.8124};                          // m/s/s
+    constexpr auto platform_moi = std::array{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
+    constexpr auto platform_mass_matrix = std::array{
+        std::array{platform_mass, 0., 0., 0., 0., 0.},    // Row 1
+        std::array{0., platform_mass, 0., 0., 0., 0.},    // Row 2
+        std::array{0., 0., platform_mass, 0., 0., 0.},    // Row 3
+        std::array{0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
+        std::array{0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
+        std::array{0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
+    };
 
     // Mooring line properties
     constexpr auto mooring_line_stiffness{48.9e3};       // N
@@ -170,7 +169,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
     // Iterate through time steps
-    for (size_t i = 0U; i < n_steps; ++i) {
+    for (auto i = 0U; i < n_steps; ++i) {
         // Calculate current time
         const auto t = static_cast<double>(i) * time_step;
 
@@ -211,17 +210,17 @@ TEST(CFDInterfaceTest, Restart) {
     constexpr auto max_iter = 5;
 
     // Construct platform mass matrix
-    constexpr auto platform_mass{1.419625E+7};                           // kg
-    constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
-    constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_6x6 platform_mass_matrix{{
-        {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
-        {0., platform_mass, 0., 0., 0., 0.},    // Row 2
-        {0., 0., platform_mass, 0., 0., 0.},    // Row 3
-        {0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
-        {0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
-        {0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
-    }};
+    constexpr auto platform_mass{1.419625E+7};                                     // kg
+    constexpr auto gravity = std::array{0., 0., -9.8124};                          // m/s/s
+    constexpr auto platform_moi = std::array{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
+    constexpr auto platform_mass_matrix = std::array{
+        std::array{platform_mass, 0., 0., 0., 0., 0.},    // Row 1
+        std::array{0., platform_mass, 0., 0., 0., 0.},    // Row 2
+        std::array{0., 0., platform_mass, 0., 0., 0.},    // Row 3
+        std::array{0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
+        std::array{0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
+        std::array{0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
+    };
 
     // Mooring line properties
     constexpr auto mooring_line_stiffness{48.9e3};       // N

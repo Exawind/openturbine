@@ -1,22 +1,23 @@
 #pragma once
 
-#include <KokkosBlas.hpp>
 #include <Kokkos_Core.hpp>
-
-#include "math/vector_operations.hpp"
 
 namespace openturbine::springs {
 
 template <typename DeviceType>
-KOKKOS_INLINE_FUNCTION void CalculateDistanceComponents(
-    const typename Kokkos::View<double[3], DeviceType>::const_type& x0,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& u1,
-    const typename Kokkos::View<double[3], DeviceType>::const_type& u2,
-    const Kokkos::View<double[3], DeviceType>& r
-) {
-    for (auto i = 0U; i < 3U; ++i) {
-        r(i) = x0(i) + u2(i) - u1(i);
-    }
-}
+struct CalculateDistanceComponents {
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
+    template <typename ValueType>
+    using ConstView = typename View<ValueType>::const_type;
 
+    KOKKOS_FUNCTION static void invoke(
+        const ConstView<double[3]>& x0, const ConstView<double[3]>& u1,
+        const ConstView<double[3]>& u2, const View<double[3]>& r
+    ) {
+        for (auto component = 0; component < 3; ++component) {
+            r(component) = x0(component) + u2(component) - u1(component);
+        }
+    }
+};
 }  // namespace openturbine::springs

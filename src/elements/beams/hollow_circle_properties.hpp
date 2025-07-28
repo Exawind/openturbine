@@ -5,7 +5,6 @@
 
 #include "beam_section.hpp"
 #include "generate_sectional_properties.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 

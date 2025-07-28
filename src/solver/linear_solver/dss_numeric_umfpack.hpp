@@ -1,6 +1,10 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
 #include <umfpack.h>
+
+#include "dss_algorithm.hpp"
+#include "dss_handle_umfpack.hpp"
 
 namespace openturbine {
 template <typename CrsMatrixType>

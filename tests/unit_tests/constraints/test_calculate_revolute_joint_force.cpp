@@ -14,7 +14,7 @@ struct ExecuteCalculateRevoluteJointForce {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRevoluteJointForce<Kokkos::DefaultExecutionSpace>(
+        CalculateRevoluteJointForce<Kokkos::DefaultExecutionSpace>::invoke(
             axes, constraint_inputs, node_u, residual_terms
         );
     }
