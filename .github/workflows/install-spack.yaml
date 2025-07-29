@@ -30,6 +30,8 @@ jobs:
         spack install
     - name: Floating Platform Test
       run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
         cd openturbine/tests/documentation_tests/floating_platform
         mkdir build
         cd build
@@ -39,6 +41,8 @@ jobs:
         ./floating_platform
     - name: Turbine Test
       run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
         cd openturbine/tests/documentation_tests/iea15mw_turbine
         mkdir build
         cd build
