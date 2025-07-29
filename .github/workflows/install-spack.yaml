@@ -49,4 +49,5 @@ jobs:
         spack build-env openturbine -- bash
         cmake ../
         make -j 2
+        cp ../IEA-15-240-RWT.yaml ./
         ./iea15mw_turbine
