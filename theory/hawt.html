@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model bodies and constraints for a HAWT &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Fluid-Structure-Interaction (FSI) inteface" href="fsi.html" />
+    <link rel="prev" title="Model Configurations" href="configs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v1.jpeg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beam.html">Beam Elements</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model Configurations</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Model bodies and constraints for a HAWT</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#constraints">Constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constraint-gradient">Constraint Gradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-iteration-matrix-terms-due-to-constraints">Additional iteration matrix terms due to constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-layout">Data layout</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-Structure-Interaction (FSI) inteface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+          <li class="breadcrumb-item"><a href="configs.html">Model Configurations</a></li>
+      <li class="breadcrumb-item active">Model bodies and constraints for a HAWT</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/hawt.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="model-bodies-and-constraints-for-a-hawt">
+<h1>Model bodies and constraints for a HAWT<a class="headerlink" href="#model-bodies-and-constraints-for-a-hawt" title="Permalink to this heading"></a></h1>
+<p>In this section we describe out approach to modeling a HAWT, including
+the specific “bodies” that include massless nodes with six DOF (position
+and orientation), 6-DOF rigid bodies, rigid connections, and flexible
+beams. In the model descirbed here, the tower and blades are flexible
+beams, with all other components being rigid.
+Table <a class="reference external" href="#table:hawt-cs">1</a> defines the subscripts associated with
+coordinate systems used to define the model, which are illustrated in
+Figure <a class="reference external" href="#fig:geom">1</a>. For example, the tower top is defined by
+<span class="math notranslate nohighlight">\(\underline{x}^0_\mathrm{tt}\)</span>, <span class="math notranslate nohighlight">\(\underline{u}_\mathrm{tt}\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^0_\mathrm{tt}\)</span>, and
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}_\mathrm{tt}\)</span>, which is the reference
+position, displacement, reference orientation, and relative rotation,
+respectively. The current orientation, denoted by a c-superscript, is
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{c}_\mathrm{tt} = \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}^0_\mathrm{tt}\)</span>.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>subscript</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>g</p></td>
+<td><p>global/inertial</p></td>
+</tr>
+<tr class="row-odd"><td><p>tb</p></td>
+<td><p>tower base; first node in tower finite element</p></td>
+</tr>
+<tr class="row-even"><td><p>tt</p></td>
+<td><p>tower top; last node in tower finite element</p></td>
+</tr>
+<tr class="row-odd"><td><p>yb</p></td>
+<td><p>yaw-base; bearing center of mass</p></td>
+</tr>
+<tr class="row-even"><td><p>sb</p></td>
+<td><p>shaft base (does not rotate with rotor)</p></td>
+</tr>
+<tr class="row-odd"><td><p>a</p></td>
+<td><p>azimuth (rotates with rotor)</p></td>
+</tr>
+<tr class="row-even"><td><p>h</p></td>
+<td><p>hub center of mass (rotates with rotor)</p></td>
+</tr>
+<tr class="row-odd"><td><p>c<span class="math notranslate nohighlight">\(i\)</span></p></td>
+<td><p>coned CS for blade <span class="math notranslate nohighlight">\(i\)</span> (rotates with rotor;
+does not pitch)</p></td>
+</tr>
+<tr class="row-even"><td><p>b<span class="math notranslate nohighlight">\(i\)</span></p></td>
+<td><p>blade CS for blade <span class="math notranslate nohighlight">\(i\)</span> (rotates with rotor;
+pitches)</p></td>
+</tr>
+<tr class="row-odd"><td><p>nm</p></td>
+<td><p>Nacelle center of mass</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="figure align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/hawt.png"><img alt="A plot of data" src="../_images/hawt.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-number">3 </span><span class="caption-text">Schematic showing the coordinate systems and elements for a horizontal axis wind turbine.  Only one blade is shown.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</div>
+<div class="section" id="constraints">
+<h2>Constraints<a class="headerlink" href="#constraints" title="Permalink to this heading"></a></h2>
+<p>In this section we define the constraints for our HAWT model. We start
+at the base and move up through the connections. We assume the tower
+base is fixed, for which the constraints can be written</p>
+<div class="math notranslate nohighlight" id="equation-constr-tb">
+<span class="eqno">(11)<a class="headerlink" href="#equation-constr-tb" title="Permalink to this equation"></a></span>\[\begin{split}\underline{\Phi}_\mathrm{tb} =
+\begin{bmatrix}
+\underline{u}_\mathrm{tb}
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{tb} }\right)
+\end{bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{tb} \in \mathbb{R}^6\)</span>, where we have
+used the axial vector to enforce zero rotation following
+[&#64;Sonneville-Bruls:2012]. The tower is represented by a flexible beam.
+The constraint between the tower top and the yaw base is complicated by
+the yaw controller and the motion of the beam model for the tower top.
+We apply the yaw controller to the yaw base plate in the reference
+configuration, resulting in the total rotation for the yaw:</p>
+<div class="math notranslate nohighlight">
+\[\underline{\underline{R}}^\mathrm{c}_\mathrm{yb} =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^0\]</div>
+<p>which can be written</p>
+<div class="math notranslate nohighlight">
+\[\underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{yb}^0 =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^0\]</div>
+<p>and simplified to</p>
+<div class="math notranslate nohighlight">
+\[\underline{\underline{R}}_\mathrm{yb} =  \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc},\]</div>
+<p>Keeping the yaw displacement tied to tower top displacement, the
+constraints between the tower-top and yaw baseplate are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_\mathrm{yb-tt} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{yb}
+-\underline{u}_\mathrm{tt}
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{yb}  \underline{\underline{R}}_\mathrm{yc}^T \underline{\underline{R}}_\mathrm{tt}^T }\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{yb-tt} \in \mathbb{R}^6\)</span>.</p>
+<p>The shaft base and yaw CS’s are assumed to be rigidly connected. Here,
+shaft-base relative rotation is the same as the yaw relative rotation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_\mathrm{sb-yb} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{sb} + \underline{x}^0_\mathrm{sb} -\underline{u}_\mathrm{yb} -\underline{x}^0_\mathrm{yb}
+-  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^0_\mathrm{sb}-\underline{x}^0_\mathrm{yb}\right)
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{sb}  \underline{\underline{R}}_\mathrm{yb}^T}\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{sb-yb} \in \mathbb{R}^6\)</span>.</p>
+<p>The azimuth CS is free to rotate about the
+<span class="math notranslate nohighlight">\(\widehat{x}_\mathrm{sb}\)</span> axis and is tied to the location of the
+shaft-base CS.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_\mathrm{a-sb} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{a}-\underline{u}_\mathrm{sb}
+\\ \widehat{z}_\mathrm{a}^T \widehat{x}_\mathrm{sb} \\
+\widehat{y}_\mathrm{a}^T \widehat{x}_\mathrm{sb}
+\end{Bmatrix} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{a}-\underline{u}_\mathrm{sb}
+\\ \widehat{z}_\mathrm{a}^{0T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^0 \\
+\widehat{y}_\mathrm{a}^{0T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^0
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{a-sb} \in \mathbb{R}^5\)</span>.</p>
+<p>The hub coordinate system (for a rigid shaft) has the same relative
+rotation as the azimuth CS</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_\mathrm{h-a} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{h}+\underline{x}^0_\mathrm{h} -\underline{u}_\mathrm{a} - \underline{x}^0_\mathrm{a}-
+ \underline{\underline{R}}_\mathrm{a} \left(\underline{x}^0_\mathrm{h}-\underline{x}^0_\mathrm{a}\right)
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{h}  \underline{\underline{R}}_\mathrm{a}^T}\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{h-a} \in \mathbb{R}^6\)</span>.</p>
+<p>The cone CS for blade <span class="math notranslate nohighlight">\(i\)</span> rotates with the hub and the cone CS
+displacement is equal to that of the hub, but does not pitch.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_{\mathrm{c}i\mathrm{-h}} =
+\begin{Bmatrix}
+\underline{u}_{\mathrm{c}i}-\underline{u}_\mathrm{h}
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_{\mathrm{c}i}  \underline{\underline{R}}_\mathrm{h}^T}\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_{\mathrm{c}i-h} \in \mathbb{R}^6\)</span>.</p>
+<p>The blade-root CS for blade <span class="math notranslate nohighlight">\(i\)</span> is offset from the cone CS and it
+pitches.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_{\mathrm{b}i-\mathrm{c}i} =
+\begin{Bmatrix}
+\underline{u}_{\mathrm{b}i} + \underline{x}^0_{\mathrm{b}i}-\underline{u}_{\mathrm{c}i}
+- \underline{x}^0_{\mathrm{c}i}
+- \underline{\underline{R}}_{\mathrm{c}i}\left(\underline{x}^0_{\mathrm{b}i} - \underline{x}^0_{\mathrm{c}i}\right)
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_{\mathrm{b}i}  \underline{\underline{R}}_{\mathrm{pc}i}^T \underline{\underline{R}}_{\mathrm{c}i}^T }\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_{\mathrm{b}i-h} \in \mathbb{R}^6\)</span>.</p>
+<p>The nacelle-mass and yaw-base CS’s are assumed to be rigidly connected.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi}_\mathrm{nm-yb} =
+\begin{Bmatrix}
+\underline{u}_\mathrm{nm} + \underline{x}^0_\mathrm{nm} -\underline{u}_\mathrm{yb} -\underline{x}^0_\mathrm{yb}
+-  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^0_\mathrm{nm}-\underline{x}^0_\mathrm{yb}\right)
+\\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{nm}  \underline{\underline{R}}_\mathrm{yb}^T}\right)
+\end{Bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{\Phi}_\mathrm{nb-sb} \in \mathbb{R}^6\)</span>.</p>
+</div>
+<div class="section" id="constraint-gradient">
+<h2>Constraint Gradient<a class="headerlink" href="#constraint-gradient" title="Permalink to this heading"></a></h2>
+<p>In this section we derive the constraint gradient matrices associated
+with each of the constraints defined in the previous section. Consider
+the constraint given by Eq. <a class="reference internal" href="#equation-constr-tb">(11)</a>, which
+after taking the variation can be written</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{tb}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{tb}\\
+\underline{\delta \theta}_\mathrm{tb}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{tb} \right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{tb}\\
+\underline{\delta \theta}_\mathrm{tb}
+\end{Bmatrix}\end{split}\]</div>
+<p>where we leveraged the following identity</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{axial}\left({ \underline{\underline{A}} \widetilde{a}}\right) =  \frac{1}{2} \left(\mathrm{tr} \left( \underline{\underline{A^T}} \right) \underline{\underline{I}} -  \underline{\underline{A}}^T \right) \underline{a}\]</div>
+<p>and we introduced the operator</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{AX}\left( \underline{\underline{A}} \right) =  \frac{1}{2} \left(\mathrm{tr} \left( \underline{\underline{A}} \right) \underline{\underline{I}} -  \underline{\underline{A}} \right)\]</div>
+<p>Proceeding in a similar fashion for the remaining contraints, we find
+the following contraint gradient matrices:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{yb-tt}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}\\
+\delta \underline{u}_\mathrm{tt}\\
+\underline{\delta \theta}_\mathrm{tt}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{yb}
+                  \underline{\underline{R}}_\mathrm{yc}^T
+                  \underline{\underline{R}}_\mathrm{tt}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{tt}
+                  \underline{\underline{R}}_\mathrm{yc}
+                  \underline{\underline{R}}_\mathrm{yb}^T\right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}\\
+\delta \underline{u}_\mathrm{tt}\\
+\underline{\delta \theta}_\mathrm{tt}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{sb-yb}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{sb}\\
+\underline{\delta \theta}_\mathrm{sb}\\
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp; \widetilde{\underline{\underline{R}}_\mathrm{yb}
+\left( \underline{x}_\mathrm{sb}^0-\underline{x}_\mathrm{yb}^0 \right)}  \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{sb} \underline{\underline{R}}_\mathrm{yb}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{sb}^T \right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{sb}\\
+\underline{\delta \theta}_\mathrm{sb}\\
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{a-sb}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{a}\\
+\underline{\delta \theta}_\mathrm{a}\\
+\delta \underline{u}_\mathrm{sb}\\
+\underline{\delta \theta}_\mathrm{sb}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp; \underline{\underline{0}} \\
+\underline{0}^T &amp; \widehat{z}_\mathrm{a}^T \widetilde{x}_\mathrm{sb}       &amp;
+\underline{0}^T &amp; -\widehat{z}_\mathrm{a}^T \widetilde{x}_\mathrm{sb} \\
+\underline{0}^T &amp; \widehat{yb}_\mathrm{a}^T \widetilde{x}_\mathrm{sb}       &amp;
+\underline{0}^T &amp; -\widehat{yb}_\mathrm{a}^T \widetilde{x}_\mathrm{sb}
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{a}\\
+\underline{\delta \theta}_\mathrm{a}\\
+\delta \underline{u}_\mathrm{sb}\\
+\underline{\delta \theta}_\mathrm{sb}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{h-a}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{h}\\
+\underline{\delta \theta}_\mathrm{h}\\
+\delta \underline{u}_\mathrm{a}\\
+\underline{\delta \theta}_\mathrm{a}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp;
+\widetilde{\underline{\underline{R}}_\mathrm{a}
+\left( \underline{x}_\mathrm{h}^0-\underline{x}_\mathrm{a}^0 \right)}  \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_\mathrm{a}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{a} \underline{\underline{R}}_\mathrm{h}^T \right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{h}\\
+\underline{\delta \theta}_\mathrm{h}\\
+\delta \underline{u}_\mathrm{a}\\
+\underline{\delta \theta}_\mathrm{a}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_{\mathrm{c}i-\mathrm{h}}
+\begin{Bmatrix}
+\delta \underline{u}_{\mathrm{c}i}\\
+\underline{\delta \theta}_{\mathrm{c}i}\\
+\delta \underline{u}_\mathrm{h}\\
+\underline{\delta \theta}_\mathrm{h}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp; \underline{\underline{0}}  \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_{\mathrm{c}i} \underline{\underline{R}}_\mathrm{h}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_{\mathrm{c}i}^T \right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_{\mathrm{c}i}\\
+\underline{\delta \theta}_{\mathrm{c}i}\\
+\delta \underline{u}_\mathrm{h}\\
+\underline{\delta \theta}_\mathrm{h}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_{\mathrm{b}i-\mathrm{c}i}
+\begin{Bmatrix}
+\delta \underline{u}_{\mathrm{b}i}\\
+\underline{\delta \theta}_{\mathrm{b}i}\\
+\delta \underline{u}_{\mathrm{c}i}\\
+\underline{\delta \theta}_{\mathrm{c}i}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp;
+\widetilde{\underline{\underline{R}}_{\mathrm{c}i}
+\left( \underline{x}_{\mathrm{b}i}^0-\underline{x}_{\mathrm{c}i}^0 \right)}  \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_{\mathrm{b}i}
+                  \underline{\underline{R}}_{\mathrm{pc}i}^T
+                  \underline{\underline{R}}_{\mathrm{c}i}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_{\mathrm{c}i}
+                  \underline{\underline{R}}_{\mathrm{pc}i}
+                  \underline{\underline{R}}_{\mathrm{b}i}^T\right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_{\mathrm{b}i}\\
+\underline{\delta \theta}_{\mathrm{b}i}\\
+\delta \underline{u}_{\mathrm{c}i}\\
+\underline{\delta \theta}_{\mathrm{c}i}
+\end{Bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{B}}_\mathrm{nm-yb}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{nm}\\
+\underline{\delta \theta}_\mathrm{nm}\\
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}
+\end{Bmatrix}
+= \begin{bmatrix}
+\underline{\underline{I}} &amp; \underline{\underline{0}} &amp; -\underline{\underline{I}} &amp; \widetilde{\underline{\underline{R}}_\mathrm{yb}
+\left( \underline{x}_\mathrm{nm}^0-\underline{x}_\mathrm{yb}^0 \right)}  \\
+\underline{\underline{0}} &amp; \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{nm} \underline{\underline{R}}_\mathrm{yb}^T \right) &amp;
+\underline{\underline{0}} &amp; -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{nm}^T \right)
+\end{bmatrix}
+\begin{Bmatrix}
+\delta \underline{u}_\mathrm{nm}\\
+\underline{\delta \theta}_\mathrm{nm}\\
+\delta \underline{u}_\mathrm{yb}\\
+\underline{\delta \theta}_\mathrm{yb}
+\end{Bmatrix}\end{split}\]</div>
+</div>
+<div class="section" id="additional-iteration-matrix-terms-due-to-constraints">
+<h2>Additional iteration matrix terms due to constraints<a class="headerlink" href="#additional-iteration-matrix-terms-due-to-constraints" title="Permalink to this heading"></a></h2>
+<p>For a residual expressed as in Eq. <a class="reference internal" href="overview.html#equation-residual">(1)</a>,
+there may be additional terms that arise in the
+<span class="math notranslate nohighlight">\(\underline{\underline{K}}\)</span> term in
+Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a> if the constraint-gradient
+matrix is not constant with respect to the depdendent variables, e.g.,
+<span class="math notranslate nohighlight">\(\underline{\underline{B}}=\underline{\underline{B}}(\underline{q})\)</span>.
+Consider, for example, <span class="math notranslate nohighlight">\(\underline{\underline{B}}_\mathrm{tb}\)</span>,
+for which the associated residual force can be written</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{F}_\mathrm{tb}=\underline{\underline{B}}_\mathrm{tb}^T \underline{\lambda}_\mathrm{tb}
+\end{aligned}\]</div>
+<p>where
+<span class="math notranslate nohighlight">\(\underline{F}_\mathrm{tb}\,,\underline{\lambda}_\mathrm{tb} \in \mathbb{R}^6\)</span>.
+Taking the variation we obtain</p>
+<div class="math notranslate nohighlight" id="equation-xtra-constr-force">
+<span class="eqno">(12)<a class="headerlink" href="#equation-xtra-constr-force" title="Permalink to this equation"></a></span>\[\begin{split}\delta \underline{F}_\mathrm{tb}=
+\underline{\underline{K}}_\mathrm{tb,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{tb} \\
+\delta \underline{\theta}_\mathrm{tb}
+\end{bmatrix}
++ \underline{\underline{B}}_\mathrm{tb}^T \delta \underline{\lambda}_\mathrm{tb}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{tb,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{tb} \\
+\delta \underline{\theta}_\mathrm{tb}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} \\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left( - \underline{\underline{R}}_\mathrm{tb} \widetilde{ \lambda_{\mathrm{tb},2} } \right)
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{tb} \\
+\delta \underline{\theta}_\mathrm{tb}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\lambda}_\mathrm{tb} =
+\begin{bmatrix}
+\underline{\lambda}_{\mathrm{tb},1}\\
+\underline{\lambda}_{\mathrm{tb},2}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(\underline{\underline{B}}^T_\mathrm{tb}\)</span> term in
+Eq. <a class="reference internal" href="#equation-xtra-constr-force">(12)</a> goes in the
+appropriate location in the upper right quadrant of
+Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a> and the
+<span class="math notranslate nohighlight">\(\underline{\underline{K}}_\mathrm{tb,c}\)</span> term is added to the
+<span class="math notranslate nohighlight">\(\underline{\underline{K}}\)</span> matrix in the upper left quadrant.</p>
+<p>Proceeding in a similar fashion for the remaining constraint forces, we
+find:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{yb-tt,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}\\
+\delta \underline{u}_\mathrm{tt} \\
+\delta \underline{\theta}_\mathrm{tt}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{yc}^T \underline{\underline{R}}_\mathrm{tt}^T \widetilde{\lambda}_{\mathrm{yb-tt},2}  \right) &amp;
+\underline{\underline{0}} &amp; \mathrm{AX2}\left( \underline{\lambda}_{\mathrm{yb-tt},2}, \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{yb-tt},2}, \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{yc}^T \underline{\underline{R}}_\mathrm{tt}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^T  \widetilde{\lambda}_{\mathrm{yb-tt},2} \right) &amp;
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}\\
+\delta \underline{u}_\mathrm{tt} \\
+\delta \underline{\theta}_\mathrm{tt}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathrm{AX2}\left(\underline{a},\underline{\underline{A}}\right) = \frac{1}{2}
+\begin{bmatrix}
+a_1 (A_{23}- A_{32}) &amp; -a_1 A_{13}-a_2 A_{32}-a_3 A_{33} &amp; a_1 A_{12}+a_2 A_{22} + a_3 A_{23} \\
+a_2 A_{23} + a_1 A_{31} + a_3 A_{33} &amp; a_2 (A_{31}-A_{13}) &amp; -a_1 A_{11}-a_2 A_{21} - a_3 A_{13} \\
+-a_1 A_{21}-a_2 A_{22}-a_3 A_{32} &amp; a_1 A_{11}+a_2 A_{12}+a_3 A_{31} &amp; a_3 (A_{12}-A_{21})
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{sb-yb,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{sb} \\
+\delta \underline{\theta}_\mathrm{sb}\\
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_\mathrm{sb} \underline{\underline{R}}_\mathrm{yb}^T \widetilde{\lambda}_{\mathrm{sb-yb},2}  \right) &amp;
+\underline{\underline{0}} &amp; \mathrm{AX2}\left( \underline{\lambda}_{\mathrm{sb-yb},2}, \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{sb}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{sb-yb},2}, \underline{\underline{R}}_\mathrm{sb} \underline{\underline{R}}_\mathrm{yb}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{sb}^T  \widetilde{\lambda}_{\mathrm{sb-yb},2} \right)
+-\widetilde{\lambda}_\mathrm{sb-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^0_\mathrm{sb}-\underline{x}^0_\mathrm{yb} \right)  }
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{sb} \\
+\delta \underline{\theta}_\mathrm{sb}\\
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{a-sb,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{a} \\
+\delta \underline{\theta}_\mathrm{a}\\
+\delta \underline{u}_\mathrm{sb} \\
+\delta \underline{\theta}_\mathrm{sb}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \lambda_\mathrm{a-sb,2} \widetilde{x}_\mathrm{sb} \widetilde{z}_\mathrm{a}
+        + \lambda_\mathrm{a-sb,3} \widetilde{x}_\mathrm{sb} \widetilde{y}_\mathrm{a}
+       &amp; \underline{\underline{0}} &amp;
+         -\lambda_\mathrm{a-sb,2} \widetilde{z}_\mathrm{a} \widetilde{x}_\mathrm{sb}
+        - \lambda_\mathrm{a-sb,3} \widetilde{y}_\mathrm{a} \widetilde{x}_\mathrm{sb}
+       \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\lambda_\mathrm{a-sb,2} \widetilde{x}_\mathrm{sb} \widetilde{z}_\mathrm{a}
+        - \lambda_\mathrm{a-sb,3} \widetilde{x}_\mathrm{sb} \widetilde{y}_\mathrm{a}
+      &amp;    \underline{\underline{0}} &amp;
+         \lambda_\mathrm{a-sb,2} \widetilde{z}_\mathrm{a} \widetilde{x}_\mathrm{sb}
+        + \lambda_\mathrm{a-sb,3} \widetilde{y}_\mathrm{a} \widetilde{x}_\mathrm{sb}
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{a} \\
+\delta \underline{\theta}_\mathrm{a}\\
+\delta \underline{u}_\mathrm{sb} \\
+\delta \underline{\theta}_\mathrm{sb}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\lambda_\mathrm{a-sb} =
+\begin{bmatrix}
+\underline{\lambda}_\mathrm{a-sb,1} \\
+\lambda_\mathrm{a-sb,2} \\
+\lambda_\mathrm{a-sb,3} \\
+\end{bmatrix}  \in \mathbb{R}^5
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{h-a,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{h} \\
+\delta \underline{\theta}_\mathrm{h}\\
+\delta \underline{u}_\mathrm{a} \\
+\delta \underline{\theta}_\mathrm{a}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_\mathrm{a}^T \widetilde{\lambda}_{\mathrm{h-a},2}  \right) &amp;
+\underline{\underline{0}} &amp; \mathrm{AX2}\left( \underline{\lambda}_{\mathrm{h-a},2}, \underline{\underline{R}}_\mathrm{a} \underline{\underline{R}}_\mathrm{h}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{h-a},2}, \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_\mathrm{a}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{a} \underline{\underline{R}}_\mathrm{h}^T  \widetilde{\lambda}_{\mathrm{h-a},2}  \right)
+-\widetilde{\lambda}_\mathrm{h-a,1} \widetilde{ \underline{\underline{R}}_\mathrm{a} \left( \underline{x}^0_\mathrm{h}-\underline{x}^0_\mathrm{a} \right)  }
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{h} \\
+\delta \underline{\theta}_\mathrm{h}\\
+\delta \underline{u}_\mathrm{a} \\
+\delta \underline{\theta}_\mathrm{a}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_{\mathrm{c}i\mathrm{-h,c}}
+\begin{bmatrix}
+\delta \underline{u}_{\mathrm{c}i} \\
+\delta \underline{\theta}_{\mathrm{c}i}\\
+\delta \underline{u}_\mathrm{h} \\
+\delta \underline{\theta}_\mathrm{h}
+\end{bmatrix}
+=
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_{\mathrm{c}i} \underline{\underline{R}}_\mathrm{h}^T \widetilde{\lambda}_{\mathrm{c}i\mathrm{-h,2}} \right) &amp;
+ \underline{\underline{0}} &amp; \mathrm{AX2}\left(\underline{\lambda}_{\mathrm{c}i\mathrm{-h,2}}, \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_{\mathrm{c}i}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{c}i\mathrm{-h,2}}, \underline{\underline{R}}_{\mathrm{c}i} \underline{\underline{R}}_\mathrm{h}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_{\mathrm{c}i}^T  \widetilde{\lambda}_{\mathrm{c}i\mathrm{-h,2}} \right)
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_{\mathrm{c}i} \\
+\delta \underline{\theta}_{\mathrm{c}i}\\
+\delta \underline{u}_\mathrm{h} \\
+\delta \underline{\theta}_\mathrm{h}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_{\mathrm{b}i-\mathrm{c}i\mathrm{,c}}
+\begin{bmatrix}
+\delta \underline{u}_{\mathrm{b}i} \\
+\delta \underline{\theta}_{\mathrm{b}i}\\
+\delta \underline{u}_{\mathrm{c}i} \\
+\delta \underline{\theta}_{\mathrm{c}i}
+\end{bmatrix}
+= \nonumber \\
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_\mathrm{bi} \underline{\underline{R}}_\mathrm{pci}^T \underline{\underline{R}}_\mathrm{ci}^T \widetilde{\lambda}_{\mathrm{bi-ci},2}  \right) &amp;
+\underline{\underline{0}} &amp; \mathrm{AX2}\left( \underline{\lambda}_{\mathrm{bi-ci},2}, \underline{\underline{R}}_\mathrm{ci} \underline{\underline{R}}_\mathrm{pci} \underline{\underline{R}}_\mathrm{bi}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{bi-ci},2}, \underline{\underline{R}}_\mathrm{bi} \underline{\underline{R}}_\mathrm{pci}^T \underline{\underline{R}}_\mathrm{ci}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{ci} \underline{\underline{R}}_\mathrm{pci} \underline{\underline{R}}_\mathrm{bi}^T  \widetilde{\lambda}_{\mathrm{bi-ci},2} \right)
+-\widetilde{\lambda}_\mathrm{ci-bi,1} \widetilde{ \underline{\underline{R}}_\mathrm{ci} \left( \underline{x}^0_\mathrm{bi}-\underline{x}^0_\mathrm{ci} \right)  }
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{bi} \\
+\delta \underline{\theta}_\mathrm{bi}\\
+\delta \underline{u}_\mathrm{ci} \\
+\delta \underline{\theta}_\mathrm{ci}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{K}}_\mathrm{nm-yb,c}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{nm} \\
+\delta \underline{\theta}_\mathrm{nm}\\
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}
+\end{bmatrix}
+= \nonumber \\
+\begin{bmatrix}
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; \mathrm{AX} \left(\underline{\underline{R}}_\mathrm{nm} \underline{\underline{R}}_\mathrm{yb}^T \widetilde{\lambda}_{\mathrm{nm-yb},2}  \right) &amp;
+\underline{\underline{0}} &amp; \mathrm{AX2}\left( \underline{\lambda}_{\mathrm{nm-yb},2}, \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{nm}^T\right) \\
+ \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}} &amp; \underline{\underline{0}}\\
+ \underline{\underline{0}} &amp; -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{nm-yb},2}, \underline{\underline{R}}_\mathrm{nm} \underline{\underline{R}}_\mathrm{yb}^T\right)
+&amp; \underline{\underline{0}} &amp; -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{nm}^T  \widetilde{\lambda}_{\mathrm{nm-yb},2} \right)
+-\widetilde{\lambda}_\mathrm{nm-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^0_\mathrm{nm}-\underline{x}^0_\mathrm{yb} \right)  }
+\end{bmatrix}
+\begin{bmatrix}
+\delta \underline{u}_\mathrm{nm} \\
+\delta \underline{\theta}_\mathrm{nm}\\
+\delta \underline{u}_\mathrm{yb} \\
+\delta \underline{\theta}_\mathrm{yb}
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+</div>
+<div class="section" id="data-layout">
+<h2>Data layout<a class="headerlink" href="#data-layout" title="Permalink to this heading"></a></h2>
+<p>Tangent stiffness matrix</p>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/tangent.png"><img alt="A plot of data layout" src="../_images/tangent.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-number">4 </span><span class="caption-text">Schematic illustrating the nonzero entries of the tangent stiffness matriix.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</div>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/constraint-grad.png"><img alt="A plot of data layout" src="../_images/constraint-grad.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-number">5 </span><span class="caption-text">Schematic illustrating the nonzero entries of the constraint-gradient matriix.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</div>
+<div class="references csl-bib-body hanging-indent docutils container" id="refs">
+<div class="csl-entry docutils container" id="ref-sonneville-bruls-2012">
+<p>Sonneville, V., and O. Brüls. 2012. “Formulation of Kinematic
+Joints and Rigidity Constraints in Multibody Dynamics Using a Lie
+Group Approach.” In <em>Proceedings of the 2nd Joint International
+Conference on Multibody System Dynamics</em>. Stuttgart, Germany.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configs.html" class="btn btn-neutral float-left" title="Model Configurations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fsi.html" class="btn btn-neutral float-right" title="Fluid-Structure-Interaction (FSI) inteface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

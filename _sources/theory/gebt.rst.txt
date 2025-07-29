@@ -1,5 +1,5 @@
 Geometrically Exact Beam Theory
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 OpenTurbine beam finite elements are based on geometrically exact beam
 theory (GEBT) [@Reissner:1973 @Simo:1985; @Simo-VuQuoc:1986]. Our

@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Legendre spectral finite elements" href="lsfe.html" />
-    <link rel="prev" title="Rigid bodies" href="rigid.html" /> 
+    <link rel="prev" title="Beam Elements" href="beam.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,12 +58,17 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Geometrically Exact Beam Theory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="beam.html">Beam Elements</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-Structure-Interaction (FSI) inteface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
@@ -84,6 +89,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+          <li class="breadcrumb-item"><a href="beam.html">Beam Elements</a></li>
       <li class="breadcrumb-item active">Geometrically Exact Beam Theory</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/gebt.rst.txt" rel="nofollow"> View page source</a>
@@ -169,20 +175,20 @@ and
 are the sectional strain and curvature defined in inertial coordinates,
 which are defined as</p>
 <div class="math notranslate nohighlight" id="equation-strain">
-<span class="eqno">(6)<a class="headerlink" href="#equation-strain" title="Permalink to this equation"></a></span>\[\underline{\epsilon} = \underline{x}^{0\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \hat{i}_1\]</div>
+<span class="eqno">(7)<a class="headerlink" href="#equation-strain" title="Permalink to this equation"></a></span>\[\underline{\epsilon} = \underline{x}^{0\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \hat{i}_1\]</div>
 <div class="math notranslate nohighlight">
 \[\underline{\kappa} = \mathrm{axial}\left({ \underline{\underline{R}}^\prime \underline{\underline{R}} }\right)\]</div>
 <p>respectively. In the reference configuration, i.e.,
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}=\underline{\underline{I}}\)</span> and
 <span class="math notranslate nohighlight">\(\underline{u}=0\)</span>, zero strain requires that</p>
 <div class="math notranslate nohighlight" id="equation-zerostrain">
-<span class="eqno">(7)<a class="headerlink" href="#equation-zerostrain" title="Permalink to this equation"></a></span>\[\underline{x}^{0\prime} = \underline{\underline{R}}^0 \hat{i}_1.\]</div>
+<span class="eqno">(8)<a class="headerlink" href="#equation-zerostrain" title="Permalink to this equation"></a></span>\[\underline{x}^{0\prime} = \underline{\underline{R}}^0 \hat{i}_1.\]</div>
 <p>In our finite-element implementation of
-Eq. <a class="reference internal" href="#equation-strain">(6)</a>, <span class="math notranslate nohighlight">\(\underline{x}^{0\prime}\)</span> will
+Eq. <a class="reference internal" href="#equation-strain">(7)</a>, <span class="math notranslate nohighlight">\(\underline{x}^{0\prime}\)</span> will
 be interpolated from nodal values and
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}^0\)</span> will be constructed from quaternions
 interpolated from nodal values. However, in general, at non-node
-locations, Eq. <a class="reference internal" href="#equation-zerostrain">(7)</a> is not guaranteed
+locations, Eq. <a class="reference internal" href="#equation-zerostrain">(8)</a> is not guaranteed
 in the reference configuation due to interpolation differences. Hence,
 we use the equivalent definition of strain, which guarantees zero strain
 in the reference configuration at nodal and interpolated locations:</p>
@@ -207,7 +213,7 @@ quantities in <span class="math notranslate nohighlight">\(s\in[0,L]\)</span>.</
 <p>The governing equations can be written as a residual expression in
 strong form as</p>
 <div class="math notranslate nohighlight" id="equation-stronggoverning">
-<span class="eqno">(8)<a class="headerlink" href="#equation-stronggoverning" title="Permalink to this equation"></a></span>\[\underline{\mathcal{R}} =
+<span class="eqno">(9)<a class="headerlink" href="#equation-stronggoverning" title="Permalink to this equation"></a></span>\[\underline{\mathcal{R}} =
 \underline{\mathcal{F}}^I -
 \underline{\mathcal{F}}^{C\prime} +
 \underline{\mathcal{F}}^D -
@@ -373,7 +379,7 @@ FAST Modular Framework.” <em>Wind Energy</em>.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rigid.html" class="btn btn-neutral float-left" title="Rigid bodies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beam.html" class="btn btn-neutral float-left" title="Beam Elements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lsfe.html" class="btn btn-neutral float-right" title="Legendre spectral finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

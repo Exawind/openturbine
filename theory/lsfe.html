@@ -58,12 +58,17 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Legendre spectral finite elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constraints.html">Model Bodies/Elements and Constraints for a HAWT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="beam.html">Beam Elements</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Legendre spectral finite elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fsi.html">Fluid-Structure-Interaction (FSI) inteface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
@@ -84,6 +89,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+          <li class="breadcrumb-item"><a href="beam.html">Beam Elements</a></li>
       <li class="breadcrumb-item active">Legendre spectral finite elements</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/lsfe.rst.txt" rel="nofollow"> View page source</a>
@@ -121,11 +127,11 @@ reference line is approximated as</p>
 \frac{\left(1-\xi^2\right) \frac{\partial L_{P-1}}{\partial \xi}}{(\xi - \xi_\ell) L_{P-1}(\xi_\ell)}
 \end{aligned}\]</div>
 <p>for <span class="math notranslate nohighlight">\(\xi \in [-1,1]\)</span>. The weak form of the residual of the
-governing equations Eq. <a class="reference internal" href="gebt.html#equation-stronggoverning">(8)</a>,
+governing equations Eq. <a class="reference internal" href="gebt.html#equation-stronggoverning">(9)</a>,
 for the <span class="math notranslate nohighlight">\(i^\mathrm{th}\)</span>-node, can be written (after integration by
 parts) as</p>
 <div class="math notranslate nohighlight" id="equation-weakresidual">
-<span class="eqno">(9)<a class="headerlink" href="#equation-weakresidual" title="Permalink to this equation"></a></span>\[\underline{R}_i =
+<span class="eqno">(10)<a class="headerlink" href="#equation-weakresidual" title="Permalink to this equation"></a></span>\[\underline{R}_i =
 \int_{-1}^{1} \phi_i \underline{\mathcal{R}}\, J d\xi =
 \int_{-1}^{1} \left(
 \phi_i \underline{\mathcal{F}}^I +
@@ -183,7 +189,7 @@ is then given as</p>
 <p>Introducing a quadrature scheme with <span class="math notranslate nohighlight">\(n^Q\)</span> points with locations
 and weights, <span class="math notranslate nohighlight">\(\xi_j^Q\)</span>, <span class="math notranslate nohighlight">\(w_j^Q\)</span>,
 <span class="math notranslate nohighlight">\(j\in \{1, \ldots, n^Q\}\)</span>, respectively, the approximate form of
-the residual, Eq. <a class="reference internal" href="#equation-weakresidual">(9)</a>, can be
+the residual, Eq. <a class="reference internal" href="#equation-weakresidual">(10)</a>, can be
 written</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
