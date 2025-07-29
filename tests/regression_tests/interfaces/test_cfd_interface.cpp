@@ -2,7 +2,6 @@
 
 #include "interfaces/cfd/interface.hpp"
 #include "interfaces/cfd/interface_builder.hpp"
-#include "regression/test_utilities.hpp"
 
 namespace openturbine::tests {
 
@@ -14,21 +13,27 @@ TEST(CFDInterfaceTest, PrecessionTest) {
         std::array{std::array{1., 0., 0., 0., 0., 0.}, std::array{0., 1., 0., 0., 0., 0.},
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., .5}};
-    auto interface = InterfaceBuilder{}
-                         .SetTimeStep(0.01)
-                         .SetDampingFactor(1.)
-                         .SetMaximumNonlinearIterations(5U)
-                         .EnableFloatingPlatform(true)
-                         .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
-                         .SetFloatingPlatformMassMatrix(mass_matrix)
-                         .SetOutputFile("CFDInterfaceTest.PrecessionTest")
-                         .Build();
+    const auto write_output{true};
+
+    auto builder = InterfaceBuilder{}
+                       .SetTimeStep(0.01)
+                       .SetDampingFactor(1.)
+                       .SetMaximumNonlinearIterations(5U)
+                       .EnableFloatingPlatform(true)
+                       .SetFloatingPlatformVelocity({0., 0., 0., 0.5, 0.5, 1.})
+                       .SetFloatingPlatformMassMatrix(mass_matrix);
+
+    if (write_output) {
+        builder.SetOutputFile("CFDInterfaceTest.PrecessionTest");
+    }
+
+    auto interface = builder.Build();
 
     // Create reference to platform node in interface
     auto& platform_node = interface.turbine.floating_platform.node;
 
     // Run simulation for 500 steps
-    for (size_t i = 0; i < 500; ++i) {
+    for (auto i = 0; i < 500; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -41,40 +46,42 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[5], -0.30157681970585326, 1.e-12);
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
-    // Read and verify data from NetCDF file
-    const util::NetCDFFile file("CFDInterfaceTest.PrecessionTest/cfd_interface.nc", false);
-    std::vector<double> displacements(1);
+    if (write_output) {
+        // Read and verify data from NetCDF file
+        const util::NetCDFFile file("CFDInterfaceTest.PrecessionTest/cfd_interface.nc", false);
+        std::vector<double> displacements(1);
 
-    // Check displacement at step 500, platform node
-    const std::vector<size_t> start = {499, platform_node.id};
-    const std::vector<size_t> count = {1, 1};
+        // Check displacement at step 500, platform node
+        const std::vector<size_t> start = {499, platform_node.id};
+        const std::vector<size_t> count = {1, 1};
 
-    file.ReadVariableAt("u_x", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_x", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_y", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_y", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_z", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0., 1.e-12);
+        file.ReadVariableAt("u_z", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0., 1.e-12);
 
-    file.ReadVariableAt("u_w", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.63053045128590757, 1.e-12);
+        file.ReadVariableAt("u_w", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.63053045128590757, 1.e-12);
 
-    file.ReadVariableAt("u_i", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], 0.60556039120583116, 1.e-12);
+        file.ReadVariableAt("u_i", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], 0.60556039120583116, 1.e-12);
 
-    file.ReadVariableAt("u_j", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.30157681970585326, 1.e-12);
+        file.ReadVariableAt("u_j", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.30157681970585326, 1.e-12);
 
-    file.ReadVariableAt("u_k", start, count, displacements.data());
-    EXPECT_NEAR(displacements[0], -0.38049886257377241, 1.e-12);
+        file.ReadVariableAt("u_k", start, count, displacements.data());
+        EXPECT_NEAR(displacements[0], -0.38049886257377241, 1.e-12);
+    }
 
     // Save the current state
     interface.SaveState();
 
     // Run simulation for an additional 100 steps
-    for (size_t i = 500; i < 600; ++i) {
+    for (auto i = 500; i < 600; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -100,7 +107,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Run simulation from 500 to 600 steps
-    for (size_t i = 500; i < 600; ++i) {
+    for (auto i = 500; i < 600; ++i) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -121,48 +128,52 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     constexpr auto rho_inf = 0.0;
     constexpr auto max_iter = 5;
     const auto n_steps{static_cast<size_t>(ceil(t_end / time_step)) + 1};
+    const auto write_output{false};
 
     // Construct platform mass matrix
-    constexpr auto platform_mass{1.419625E+7};                           // kg
-    constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
-    constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_6x6 platform_mass_matrix{{
-        {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
-        {0., platform_mass, 0., 0., 0., 0.},    // Row 2
-        {0., 0., platform_mass, 0., 0., 0.},    // Row 3
-        {0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
-        {0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
-        {0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
-    }};
+    constexpr auto platform_mass{1.419625E+7};                                     // kg
+    constexpr auto gravity = std::array{0., 0., -9.8124};                          // m/s/s
+    constexpr auto platform_moi = std::array{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
+    constexpr auto platform_mass_matrix = std::array{
+        std::array{platform_mass, 0., 0., 0., 0., 0.},    // Row 1
+        std::array{0., platform_mass, 0., 0., 0., 0.},    // Row 2
+        std::array{0., 0., platform_mass, 0., 0., 0.},    // Row 3
+        std::array{0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
+        std::array{0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
+        std::array{0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
+    };
 
     // Mooring line properties
     constexpr auto mooring_line_stiffness{48.9e3};       // N
     constexpr auto mooring_line_initial_length{55.432};  // m
 
     // Create cfd interface
-    auto interface = InterfaceBuilder{}
-                         .SetGravity(gravity)
-                         .SetTimeStep(time_step)
-                         .SetDampingFactor(rho_inf)
-                         .SetMaximumNonlinearIterations(max_iter)
-                         .EnableFloatingPlatform(true)
-                         .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
-                         .SetFloatingPlatformMassMatrix(platform_mass_matrix)
-                         .SetNumberOfMooringLines(3)
-                         .SetMooringLineStiffness(0, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
-                         .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
-                         .SetMooringLineStiffness(1, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
-                         .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
-                         .SetMooringLineStiffness(2, mooring_line_stiffness)
-                         .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
-                         .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
-                         .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4})
-                         .SetOutputFile("CFDInterfaceTest.FloatingPlatform")
-                         .Build();
+    auto builder = InterfaceBuilder{}
+                       .SetGravity(gravity)
+                       .SetTimeStep(time_step)
+                       .SetDampingFactor(rho_inf)
+                       .SetMaximumNonlinearIterations(max_iter)
+                       .EnableFloatingPlatform(true)
+                       .SetFloatingPlatformPosition({0., 0., -7.53, 1., 0., 0., 0.})
+                       .SetFloatingPlatformMassMatrix(platform_mass_matrix)
+                       .SetNumberOfMooringLines(3)
+                       .SetMooringLineStiffness(0, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(0, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(0, {-40.87, 0.0, -14.})
+                       .SetMooringLineAnchorPosition(0, {-105.47, 0.0, -58.4})
+                       .SetMooringLineStiffness(1, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(1, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(1, {20.43, -35.39, -14.})
+                       .SetMooringLineAnchorPosition(1, {52.73, -91.34, -58.4})
+                       .SetMooringLineStiffness(2, mooring_line_stiffness)
+                       .SetMooringLineUndeformedLength(2, mooring_line_initial_length)
+                       .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
+                       .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
+    if (write_output) {
+        builder.SetOutputFile("CFDInterfaceTest.FloatingPlatform");
+    }
+
+    auto interface = builder.Build();
 
     // Calculate buoyancy force as percentage of gravitational force plus spring forces times
     const auto initial_spring_force = 1907514.4912628897;
@@ -170,7 +181,7 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
     // Iterate through time steps
-    for (size_t i = 0U; i < n_steps; ++i) {
+    for (auto i = 0U; i < n_steps; ++i) {
         // Calculate current time
         const auto t = static_cast<double>(i) * time_step;
 
@@ -211,17 +222,17 @@ TEST(CFDInterfaceTest, Restart) {
     constexpr auto max_iter = 5;
 
     // Construct platform mass matrix
-    constexpr auto platform_mass{1.419625E+7};                           // kg
-    constexpr Array_3 gravity{0., 0., -9.8124};                          // m/s/s
-    constexpr Array_3 platform_moi{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
-    constexpr Array_6x6 platform_mass_matrix{{
-        {platform_mass, 0., 0., 0., 0., 0.},    // Row 1
-        {0., platform_mass, 0., 0., 0., 0.},    // Row 2
-        {0., 0., platform_mass, 0., 0., 0.},    // Row 3
-        {0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
-        {0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
-        {0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
-    }};
+    constexpr auto platform_mass{1.419625E+7};                                     // kg
+    constexpr auto gravity = std::array{0., 0., -9.8124};                          // m/s/s
+    constexpr auto platform_moi = std::array{1.2898E+10, 1.2851E+10, 1.4189E+10};  // kg*m*m
+    constexpr auto platform_mass_matrix = std::array{
+        std::array{platform_mass, 0., 0., 0., 0., 0.},    // Row 1
+        std::array{0., platform_mass, 0., 0., 0., 0.},    // Row 2
+        std::array{0., 0., platform_mass, 0., 0., 0.},    // Row 3
+        std::array{0., 0., 0., platform_moi[0], 0., 0.},  // Row 4
+        std::array{0., 0., 0., 0., platform_moi[1], 0.},  // Row 5
+        std::array{0., 0., 0., 0., 0., platform_moi[2]},  // Row 6
+    };
 
     // Mooring line properties
     constexpr auto mooring_line_stiffness{48.9e3};       // N

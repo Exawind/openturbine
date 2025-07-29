@@ -5,6 +5,8 @@
 
 #include <mkl_dss.h>
 
+#include "dss_algorithm.hpp"
+
 namespace openturbine {
 
 template <>

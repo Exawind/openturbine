@@ -1,21 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "dof_management/assemble_node_freedom_allocation_table.hpp"
-#include "dof_management/compute_node_freedom_map_table.hpp"
-#include "dof_management/create_constraint_freedom_table.hpp"
-#include "dof_management/create_element_freedom_table.hpp"
-#include "elements/beams/create_beams.hpp"
-#include "elements/elements.hpp"
-#include "elements/masses/create_masses.hpp"
-#include "elements/springs/create_springs.hpp"
-#include "math/quaternion_operations.hpp"
 #include "model/model.hpp"
-#include "solver/solver.hpp"
-#include "state/state.hpp"
 #include "step/step.hpp"
-#include "step/update_system_variables.hpp"
-#include "test_utilities.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -49,7 +35,7 @@ inline auto SetUpPrecessionTest() {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Run simulation for 500 steps
-    for (size_t i = 0; i < 500; ++i) {
+    for (auto i = 0; i < 500; ++i) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }

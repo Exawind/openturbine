@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dss_handle.hpp"
+#include "OpenTurbine_config.h"
 
 namespace openturbine {
 

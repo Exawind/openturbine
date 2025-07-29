@@ -75,12 +75,12 @@ inline void LagrangePolynomialInterpWeights(
 
     // Pre-compute (x - xs[m]) terms to avoid repeated calculations
     std::vector<double> x_minus_xm(n);
-    for (size_t m = 0; m < n; ++m) {
+    for (auto m = 0U; m < n; ++m) {
         x_minus_xm[m] = x - xs[m];
     }
 
-    for (size_t j = 0; j < n; ++j) {
-        for (size_t m = 0; m < n; ++m) {
+    for (auto j = 0U; j < n; ++j) {
+        for (auto m = 0U; m < n; ++m) {
             if (j != m) {
                 weights[j] *= x_minus_xm[m] / (xs[j] - xs[m]);
             }
@@ -103,25 +103,25 @@ inline void LagrangePolynomialDerivWeights(
 
     // Pre-compute (x - xs[k]) terms to avoid repeated calculations
     std::vector<double> x_minus_xk(n);
-    for (size_t k = 0; k < n; ++k) {
+    for (auto k = 0U; k < n; ++k) {
         x_minus_xk[k] = x - xs[k];
     }
 
     // Pre-compute denominators (xs[i] - xs[k]) to avoid repeated calculations
     std::vector<std::vector<double>> denom(n, std::vector<double>(n));
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t k = 0; k < n; ++k) {
+    for (auto i = 0U; i < n; ++i) {
+        for (auto k = 0U; k < n; ++k) {
             if (k != i) {
                 denom[i][k] = xs[i] - xs[k];
             }
         }
     }
 
-    for (size_t i = 0; i < n; ++i) {
-        for (size_t j = 0; j < n; ++j) {
+    for (auto i = 0U; i < n; ++i) {
+        for (auto j = 0U; j < n; ++j) {
             if (j != i) {
                 double prod = 1.;
-                for (size_t k = 0; k < n; ++k) {
+                for (auto k = 0U; k < n; ++k) {
                     if (k != i && k != j) {
                         prod *= x_minus_xk[k] / denom[i][k];
                     }
@@ -156,7 +156,7 @@ inline double LegendrePolynomial(const size_t n, const double x) {
     double p_n_minus_2{1.};  // P_{n-2}(x)
     double p_n_minus_1{x};   // P_{n-1}(x)
     double p_n{0.};          // P_n(x)
-    for (size_t i = 2; i <= n; ++i) {
+    for (auto i = 2U; i <= n; ++i) {
         const auto i_double = static_cast<double>(i);
         p_n = ((2. * i_double - 1.) * x * p_n_minus_1 - (i_double - 1.) * p_n_minus_2) / i_double;
         p_n_minus_2 = p_n_minus_1;
@@ -197,16 +197,16 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
 
     // Find interior GLL points (1, ..., order - 1) using Newton-Raphson iteration
     std::vector<double> legendre_poly(n_nodes, 0.);
-    for (size_t i = 1; i < order; ++i) {
+    for (auto i = 1U; i < order; ++i) {
         // Initial guess using Chebyshev-Gauss-Lobatto nodes
         auto x_it = -std::cos(static_cast<double>(i) * M_PI / static_cast<double>(order));
 
         bool converged{false};
-        for (size_t it = 0; it < kMaxIterations; ++it) {
+        for (auto it = 0U; it < kMaxIterations; ++it) {
             const auto x_old = x_it;
 
             // Compute Legendre polynomials up to order n
-            for (size_t k = 0; k < n_nodes; ++k) {
+            for (auto k = 0U; k < n_nodes; ++k) {
                 legendre_poly[k] = LegendrePolynomial(k, x_it);
             }
 

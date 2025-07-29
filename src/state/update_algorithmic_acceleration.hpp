@@ -12,9 +12,9 @@ struct UpdateAlgorithmicAcceleration {
     double alpha_m;
 
     KOKKOS_FUNCTION
-    void operator()(int i) const {
-        for (int j = 0; j < 6; ++j) {
-            acceleration(i, j) += (1. - alpha_f) / (1. - alpha_m) * vd(i, j);
+    void operator()(int node) const {
+        for (auto component = 0; component < 6; ++component) {
+            acceleration(node, component) += (1. - alpha_f) / (1. - alpha_m) * vd(node, component);
         }
     }
 };

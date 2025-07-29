@@ -1,20 +1,11 @@
 #pragma once
 
-#include <algorithm>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include <netcdf.h>
 
 namespace openturbine::util {
-
-/// @brief Checks the result of a NetCDF operation and throws an exception if it fails
-inline void check_netCDF_error(int status, const std::string& message = "") {
-    if (status != NC_NOERR) {
-        throw std::runtime_error(message + ": " + nc_strerror(status));
-    }
-}
 
 /// @brief Class for managing NetCDF files for writing outputs
 class NetCDFFile {
@@ -127,7 +118,7 @@ public:
     ) const;
 
     /// @brief Synchronizes (flushes) the NetCDF file to disk
-    void Sync() const { check_netCDF_error(nc_sync(netcdf_id_), "Failed to sync NetCDF file"); }
+    void Sync() const;
 
     //--------------------------------------------------------------------------
     // Getter/Read methods

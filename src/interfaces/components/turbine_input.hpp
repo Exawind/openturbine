@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
+#include <vector>
+
 #include "interfaces/components/beam_input.hpp"
-#include "types.hpp"
 
 namespace openturbine::interfaces::components {
 
@@ -38,13 +40,13 @@ struct TurbineInput {
      * @brief Yaw bearing inertia matrix (6x6)
      * @details Includes yaw bearing and nacelle mass with inertia about yaw bearing
      */
-    std::array<std::array<double, 6>, 6> yaw_bearing_inertia_matrix{{{}, {}, {}, {}, {}, {}}};
+    std::array<std::array<double, 6>, 6> yaw_bearing_inertia_matrix{};
 
     /**
      * @brief Hub inertia matrix (6x6)
      * @details Includes hub assembly mass and inertia properties
      */
-    std::array<std::array<double, 6>, 6> hub_inertia_matrix{{{}, {}, {}, {}, {}, {}}};
+    std::array<std::array<double, 6>, 6> hub_inertia_matrix{};
 
     //--------------------------------------------------------------------------
     // Geometric configuration inputs

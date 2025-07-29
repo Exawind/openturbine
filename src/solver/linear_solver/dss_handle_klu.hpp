@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+
+#include "dss_algorithm.hpp"
 #include "klu.h"
 
 namespace openturbine {

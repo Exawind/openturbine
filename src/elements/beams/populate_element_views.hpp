@@ -13,9 +13,9 @@ inline void PopulateNodeX0(
     const BeamElement& elem, const std::vector<Node>& nodes,
     const Kokkos::View<double* [7], Kokkos::LayoutStride, Kokkos::HostSpace>& node_x0
 ) {
-    for (size_t j = 0; j < elem.node_ids.size(); ++j) {
-        for (size_t k = 0U; k < 7U; ++k) {
-            node_x0(j, k) = nodes[elem.node_ids[j]].x0[k];
+    for (auto node = 0U; node < elem.node_ids.size(); ++node) {
+        for (auto component = 0U; component < 7U; ++component) {
+            node_x0(node, component) = nodes[elem.node_ids[node]].x0[component];
         }
     }
 }
@@ -25,8 +25,8 @@ inline void PopulateQPWeight(
     const BeamElement& elem,
     const Kokkos::View<double*, Kokkos::LayoutStride, Kokkos::HostSpace>& qp_weight
 ) {
-    for (size_t j = 0; j < elem.quadrature.size(); ++j) {
-        qp_weight(j) = elem.quadrature[j][1];
+    for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
+        qp_weight(qp) = elem.quadrature[qp][1];
     }
 }
 
@@ -35,8 +35,8 @@ inline std::vector<double> MapNodePositions(
     const BeamElement& elem, const std::vector<Node>& nodes
 ) {
     std::vector<double> node_xi(elem.node_ids.size());
-    for (size_t i = 0; i < elem.node_ids.size(); ++i) {
-        node_xi[i] = 2 * nodes[elem.node_ids[i]].s - 1;
+    for (auto node = 0U; node < elem.node_ids.size(); ++node) {
+        node_xi[node] = 2 * nodes[elem.node_ids[node]].s - 1;
     }
     return node_xi;
 }
@@ -49,12 +49,12 @@ inline void PopulateShapeFunctionValues(
     const auto node_xi = MapNodePositions(elem, nodes);
 
     std::vector<double> weights;
-    for (size_t j = 0; j < elem.quadrature.size(); ++j) {
-        auto qp_xi = elem.quadrature[j][0];
+    for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
+        auto qp_xi = elem.quadrature[qp][0];
 
         LagrangePolynomialInterpWeights(qp_xi, node_xi, weights);
-        for (size_t k = 0; k < node_xi.size(); ++k) {
-            shape_interp(k, j) = weights[k];
+        for (auto node = 0U; node < node_xi.size(); ++node) {
+            shape_interp(node, qp) = weights[node];
         }
     }
 }
@@ -67,12 +67,12 @@ inline void PopulateShapeFunctionDerivatives(
     const auto node_xi = MapNodePositions(elem, nodes);
 
     std::vector<double> weights;
-    for (size_t j = 0; j < elem.quadrature.size(); ++j) {
-        auto qp_xi = elem.quadrature[j][0];
+    for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
+        auto qp_xi = elem.quadrature[qp][0];
 
         LagrangePolynomialDerivWeights(qp_xi, node_xi, weights);
-        for (size_t k = 0; k < node_xi.size(); ++k) {
-            shape_deriv(k, j) = weights[k];
+        for (auto node = 0U; node < node_xi.size(); ++node) {
+            shape_deriv(node, qp) = weights[node];
         }
     }
 }
@@ -80,8 +80,8 @@ inline void PopulateShapeFunctionDerivatives(
 /// @brief Map section positions from [0,1] to [-1,1]
 inline std::vector<double> MapSectionPositions(const BeamElement& elem) {
     std::vector<double> section_xi(elem.sections.size());
-    for (size_t i = 0; i < elem.sections.size(); ++i) {
-        section_xi[i] = 2 * elem.sections[i].position - 1;
+    for (auto section = 0U; section < elem.sections.size(); ++section) {
+        section_xi[section] = 2 * elem.sections[section].position - 1;
     }
     return section_xi;
 }
@@ -94,18 +94,19 @@ inline void PopulateQPMstar(
     const auto section_xi = MapSectionPositions(elem);
     std::vector<double> weights(elem.sections.size());
 
-    for (size_t i = 0; i < elem.quadrature.size(); ++i) {
-        auto qp_xi = elem.quadrature[i][0];
+    for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
+        auto qp_xi = elem.quadrature[qp][0];
         LinearInterpWeights(qp_xi, section_xi, weights);
-        for (size_t m = 0; m < 6; ++m) {
-            for (size_t n = 0; n < 6; ++n) {
-                qp_Mstar(i, m, n) = 0.;
+        for (auto component_1 = 0; component_1 < 6; ++component_1) {
+            for (auto component_2 = 0; component_2 < 6; ++component_2) {
+                qp_Mstar(qp, component_1, component_2) = 0.;
             }
         }
-        for (size_t j = 0; j < section_xi.size(); ++j) {
-            for (size_t m = 0; m < 6; ++m) {
-                for (size_t n = 0; n < 6; ++n) {
-                    qp_Mstar(i, m, n) += elem.sections[j].M_star[m][n] * weights[j];
+        for (auto section = 0U; section < section_xi.size(); ++section) {
+            for (auto component_1 = 0U; component_1 < 6U; ++component_1) {
+                for (auto component_2 = 0U; component_2 < 6U; ++component_2) {
+                    qp_Mstar(qp, component_1, component_2) +=
+                        elem.sections[section].M_star[component_1][component_2] * weights[section];
                 }
             }
         }
@@ -120,18 +121,19 @@ inline void PopulateQPCstar(
     const auto section_xi = MapSectionPositions(elem);
     std::vector<double> weights(elem.sections.size());
 
-    for (size_t i = 0; i < elem.quadrature.size(); ++i) {
-        auto qp_xi = elem.quadrature[i][0];
+    for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
+        auto qp_xi = elem.quadrature[qp][0];
         LinearInterpWeights(qp_xi, section_xi, weights);
-        for (size_t m = 0; m < 6; ++m) {
-            for (size_t n = 0; n < 6; ++n) {
-                qp_Cstar(i, m, n) = 0.;
+        for (auto component_1 = 0; component_1 < 6; ++component_1) {
+            for (auto component_2 = 0; component_2 < 6; ++component_2) {
+                qp_Cstar(qp, component_1, component_2) = 0.;
             }
         }
-        for (size_t j = 0; j < section_xi.size(); ++j) {
-            for (size_t m = 0; m < 6; ++m) {
-                for (size_t n = 0; n < 6; ++n) {
-                    qp_Cstar(i, m, n) += elem.sections[j].C_star[m][n] * weights[j];
+        for (auto section = 0U; section < section_xi.size(); ++section) {
+            for (auto component_1 = 0U; component_1 < 6U; ++component_1) {
+                for (auto component_2 = 0U; component_2 < 6U; ++component_2) {
+                    qp_Cstar(qp, component_1, component_2) +=
+                        elem.sections[section].C_star[component_1][component_2] * weights[section];
                 }
             }
         }

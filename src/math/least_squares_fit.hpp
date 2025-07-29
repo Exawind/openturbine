@@ -14,8 +14,6 @@ namespace lapack {
 
 namespace openturbine {
 
-using Matrix = std::vector<std::vector<double>>;
-
 /**
  * @brief Maps input geometric locations -> normalized domain using linear mapping
  *
@@ -36,81 +34,72 @@ inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom
     // Map each point from domain -> [-1, 1]
     std::vector<double> mapped_locations(geom_locations.size());
     const auto domain_span = domain_end - domain_start;
-    for (size_t i = 0; i < geom_locations.size(); ++i) {
+    for (auto i = 0U; i < geom_locations.size(); ++i) {
         mapped_locations[i] = 2. * (geom_locations[i] - domain_start) / domain_span - 1.;
     }
     return mapped_locations;
 }
 
 /**
- * @brief Computes shape function matrices ϕg and their derivatives dϕg at points ξg
- *
- * @param n Number of geometric points to fit (>=2)
- * @param p Number of points representing the polynomial of order p-1 (2 <= p <= n)
- * @param evaluation_pts Evaluation points in [-1, 1]
- * @return Tuple containing shape function matrix, derivative matrix, and GLL points
- */
-inline std::tuple<Matrix, Matrix, std::vector<double>> ShapeFunctionMatrices(
-    size_t n, size_t p, const std::vector<double>& evaluation_pts
-) {
-    // Compute GLL points which will act as the nodes for the shape functions
-    auto gll_pts = GenerateGLLPoints(p - 1);
-
-    // Compute weights for the shape functions and its derivatives at the evaluation points
-    std::vector<double> weights(p, 0.);
-    Matrix shape_functions(p, std::vector<double>(n, 0.));
-    Matrix derivative_functions(p, std::vector<double>(n, 0.));
-    for (size_t j = 0; j < n; ++j) {
-        LagrangePolynomialInterpWeights(evaluation_pts[j], gll_pts, weights);
-        for (size_t k = 0; k < p; ++k) {
-            shape_functions[k][j] = weights[k];
-        }
-
-        LagrangePolynomialDerivWeights(evaluation_pts[j], gll_pts, weights);
-        for (size_t k = 0; k < p; ++k) {
-            derivative_functions[k][j] = weights[k];
-        }
-    }
-
-    return {shape_functions, derivative_functions, gll_pts};
-}
-
-/**
- * @brief Computes shape function matrices ϕg and their derivatives dϕg relating points ξb to ξg
+ * @brief Computes shape function matrices ϕg relating points ξb to ξg
  *
  * @param input_pts Input points, ξb, in [-1, 1] (2 <= input_pts.size() <= output_pts.size())
  * @param output_pts Output points, ξg, in [-1, 1]
- * @return Tuple containing shape function matrix and shape derivative matrix
+ * @return Shape function matrix
  */
-inline std::tuple<Matrix, Matrix> ShapeFunctionMatrices(
-    const std::vector<double>& input_pts, const std::vector<double>& output_pts
+inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
+    const std::vector<double>& input_points, const std::vector<double>& output_points
 ) {
     // Number of points in input and output arrays
-    const auto n_input = input_pts.size();
-    const auto n_output = output_pts.size();
+    const auto num_input_points = input_points.size();
+    const auto num_output_points = output_points.size();
 
     // Compute weights for the shape functions and its derivatives at the evaluation points
-    std::vector<double> weights(n_output, 0.);
+    std::vector<double> weights(num_output_points, 0.);
 
     // Create shape function interpolation matrix
-    Matrix shape_functions(n_output, std::vector<double>(n_input, 0.));
-    for (size_t j = 0; j < n_input; ++j) {
-        LagrangePolynomialInterpWeights(input_pts[j], output_pts, weights);
-        for (size_t k = 0; k < n_output; ++k) {
-            shape_functions[k][j] = weights[k];
+    auto shape_functions = std::vector<std::vector<double>>(
+        num_output_points, std::vector<double>(num_input_points, 0.)
+    );
+    for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
+        LagrangePolynomialInterpWeights(input_points[input_point], output_points, weights);
+        for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
+            shape_functions[output_point][input_point] = weights[output_point];
         }
     }
+
+    return shape_functions;
+}
+
+/**
+ * @brief Computes shape function derivatives dϕg relating points ξb to ξg
+ *
+ * @param input_pts Input points, ξb, in [-1, 1] (2 <= input_pts.size() <= output_pts.size())
+ * @param output_pts Output points, ξg, in [-1, 1]
+ * @return Shape function derivative matrix
+ */
+inline std::vector<std::vector<double>> ComputeShapeFunctionDerivatives(
+    const std::vector<double>& input_points, const std::vector<double>& output_points
+) {
+    // Number of points in input and output arrays
+    const auto num_input_points = input_points.size();
+    const auto num_output_points = output_points.size();
+
+    // Compute weights for the shape functions and its derivatives at the evaluation points
+    std::vector<double> weights(num_output_points, 0.);
 
     // Create shape function derivative matrix
-    Matrix derivative_functions(n_output, std::vector<double>(n_input, 0.));
-    for (size_t j = 0; j < n_input; ++j) {
-        LagrangePolynomialDerivWeights(input_pts[j], output_pts, weights);
-        for (size_t k = 0; k < n_output; ++k) {
-            derivative_functions[k][j] = weights[k];
+    auto derivative_functions = std::vector<std::vector<double>>(
+        num_output_points, std::vector<double>(num_input_points, 0.)
+    );
+    for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
+        LagrangePolynomialDerivWeights(input_points[input_point], output_points, weights);
+        for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
+            derivative_functions[output_point][input_point] = weights[output_point];
         }
     }
 
-    return {shape_functions, derivative_functions};
+    return derivative_functions;
 }
 
 /**
@@ -126,7 +115,8 @@ inline std::tuple<Matrix, Matrix> ShapeFunctionMatrices(
  * @return Interpolation coefficients (p x 3)
  */
 inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
-    size_t p, const Matrix& shape_functions, const std::vector<std::array<double, 3>>& points_to_fit
+    size_t p, const std::vector<std::vector<double>>& shape_functions,
+    const std::vector<std::array<double, 3>>& points_to_fit
 ) {
     if (shape_functions.size() != p) {
         throw std::invalid_argument("shape_functions rows do not match order p.");

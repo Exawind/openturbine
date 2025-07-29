@@ -4,7 +4,6 @@
 #include <gtest/gtest.h>
 
 #include "elements/beams/generate_sectional_properties.hpp"
-#include "types.hpp"
 
 namespace openturbine::tests {
 
@@ -42,20 +41,23 @@ protected:
 
     TestParameters tp_;
 
-    [[nodiscard]] Array_6x6 GenerateStiffnessMatrixWithParams() const {
+    [[nodiscard]] std::array<std::array<double, 6>, 6> GenerateStiffnessMatrixWithParams() const {
         return GenerateStiffnessMatrix(
             tp_.EA, tp_.EI_x, tp_.EI_y, tp_.GKt, tp_.GA, tp_.kxs, tp_.kys, tp_.x_C, tp_.y_C,
             tp_.theta_p, tp_.x_S, tp_.y_S, tp_.theta_s
         );
     }
 
-    [[nodiscard]] Array_6x6 GenerateMassMatrixWithParams() const {
+    [[nodiscard]] std::array<std::array<double, 6>, 6> GenerateMassMatrixWithParams() const {
         return GenerateMassMatrix(tp_.m, tp_.I_x, tp_.I_y, tp_.I_p, tp_.x_G, tp_.y_G, tp_.theta_i);
     }
 
-    static void ExpectMatrixEqual(const Array_6x6& actual, const Array_6x6& expected) {
-        for (size_t i = 0; i < 6; ++i) {
-            for (size_t j = 0; j < 6; ++j) {
+    static void ExpectMatrixEqual(
+        const std::array<std::array<double, 6>, 6>& actual,
+        const std::array<std::array<double, 6>, 6>& expected
+    ) {
+        for (auto i = 0U; i < 6U; ++i) {
+            for (auto j = 0U; j < 6U; ++j) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)
                     << "Matrix element [" << i << "][" << j << "] differs";
             }
@@ -67,7 +69,7 @@ TEST_F(GenerateSectionalMatricesTest, StiffnessMatrix_Uncoupled) {
     // Test with no coupling (all offsets zero, principal angles zero)
     auto result = GenerateStiffnessMatrixWithParams();
 
-    Array_6x6 expected = {};
+    auto expected = std::array<std::array<double, 6>, 6>{};
     expected[0][0] = tp_.GA;    // Shear stiffness in x
     expected[1][1] = tp_.GA;    // Shear stiffness in y
     expected[2][2] = tp_.EA;    // Axial stiffness
@@ -86,7 +88,7 @@ TEST_F(GenerateSectionalMatricesTest, StiffnessMatrix_CentroidOffsetCoupling) {
     auto result = GenerateStiffnessMatrixWithParams();
 
     // Expected stiffness matrix
-    Array_6x6 expected = {};
+    auto expected = std::array<std::array<double, 6>, 6>{};
 
     // Shear stiffness
     expected[0][0] = tp_.GA;
@@ -117,7 +119,7 @@ TEST_F(GenerateSectionalMatricesTest, MassMatrix_Uncoupled) {
     // Test basic mass matrix with no coupling (CG at origin, no principal axis rotation)
     auto result = GenerateMassMatrixWithParams();
 
-    Array_6x6 expected = {};
+    auto expected = std::array<std::array<double, 6>, 6>{};
 
     // Translational mass
     expected[0][0] = tp_.m;
@@ -139,7 +141,7 @@ TEST_F(GenerateSectionalMatricesTest, MassMatrix_CGOffsetCoupling) {
 
     auto result = GenerateMassMatrixWithParams();
 
-    Array_6x6 expected = {};
+    auto expected = std::array<std::array<double, 6>, 6>{};
 
     // Translational mass
     expected[0][0] = tp_.m;

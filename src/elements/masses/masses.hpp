@@ -3,7 +3,6 @@
 #include <Kokkos_Core.hpp>
 
 #include "dof_management/freedom_signature.hpp"
-#include "types.hpp"
 
 namespace openturbine {
 
@@ -16,20 +15,19 @@ namespace openturbine {
  */
 template <typename DeviceType>
 struct Masses {
-    size_t num_elems;  //< Total number of elements
+    template <typename ValueType>
+    using View = Kokkos::View<ValueType, DeviceType>;
 
-    Kokkos::View<size_t*, DeviceType> num_nodes_per_element;  //< This is always 1 for masses
-    Kokkos::View<size_t*, DeviceType> state_indices;
-    Kokkos::View<FreedomSignature*, DeviceType> element_freedom_signature;
-    Kokkos::View<size_t* [6], DeviceType> element_freedom_table;
-
-    Kokkos::View<double[3], DeviceType> gravity;
-
-    Kokkos::View<double* [7], DeviceType> node_x0;      //< Initial position/rotation
-    Kokkos::View<double* [6][6], DeviceType> qp_Mstar;  //< Mass matrix in material frame
-
-    Kokkos::View<double* [6], DeviceType> residual_vector_terms;
-    Kokkos::View<double* [6][6], DeviceType> system_matrix_terms;
+    size_t num_elems;                     //< Total number of elements
+    View<size_t*> num_nodes_per_element;  //< This is always 1 for masses
+    View<size_t*> state_indices;
+    View<FreedomSignature*> element_freedom_signature;
+    View<size_t* [6]> element_freedom_table;
+    View<double[3]> gravity;
+    View<double* [7]> node_x0;      //< Initial position/rotation
+    View<double* [6][6]> qp_Mstar;  //< Mass matrix in material frame
+    View<double* [6]> residual_vector_terms;
+    View<double* [6][6]> system_matrix_terms;
 
     explicit Masses(const size_t n_mass_elems)
         : num_elems(n_mass_elems),

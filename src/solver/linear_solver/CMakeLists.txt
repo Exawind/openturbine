@@ -1,6 +1,7 @@
 target_sources(openturbine_library PRIVATE)
 
 install(FILES
+	dss_algorithm.hpp
         dss_handle.hpp
         dss_handle_cusolversp.hpp
         dss_handle_cudss.hpp
