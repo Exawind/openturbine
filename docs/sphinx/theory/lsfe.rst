@@ -1,5 +1,5 @@
 Legendre spectral finite elements
----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The GEBT equations are discretized with Legendre spectral finite
 elements (LSFEs), which are defined by :math:`P` nodes and

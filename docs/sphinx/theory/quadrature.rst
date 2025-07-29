@@ -1,5 +1,5 @@
 Notes on quadrature
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 In OpenTurbine, we represent beams that can have highly variable
 properties along the length and we use a single high-order element for
