@@ -22,7 +22,7 @@ jobs:
         spack compiler find
         spack env create -d .
         spack env activate .
-        spack add openturbine
+        spack add openturbine ^netcdf-c~mpi ^hdf5~mpi ^cmake~ncurses
         spack develop openturbine@main
         spack concretize -f
         cd openturbine
