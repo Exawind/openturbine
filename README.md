@@ -29,6 +29,18 @@ and AI.
 - OpenTurbine is written in modern C++ and leverages [Kokkos](https://github.com/kokkos/kokkos)
 as its performance-portability library with inspiration from the ExaWind stack.
 
+## Contributing
+OpenTurbine is an open-source project and we welcome contributions from external developers.
+To do so, open an issue describing your contribution and make a pull request against OpenTurbine's main branch.
+Smaller contributions are always preferred - 10 self-contained 200 line changes are easier to review and coordinate with others than one 2000 line change.
+
+When adding a feature, make sure that it is comprehensively covered by unit tests and regression tests.
+Bug fixes should be accompanied by at least one test (but possibly more) which fails without the fix but now passes.
+
+OpenTurbine's CI process targets a number of different configurations for MacOS and Linux, but is not fully comprehensive of the platforms we support.
+In your PR, please indicate on which platforms you've tested your contribution (i.e. Linux x86 and CUDA v12).
+This will let us know what other platforms we may have to test against in the review process.
+
 ## Development support
 
 OpenTurbine is primarily developed with the support of the U.S. Department of Energy (DOE) and is part of the [WETO Software Stack](https://nrel.github.io/WETOStack). For more information and other integrated modeling software, see:
