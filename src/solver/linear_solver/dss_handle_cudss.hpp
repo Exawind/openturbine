@@ -11,7 +11,7 @@ class DSSHandle<DSSAlgorithm::CUDSS> {
         cudssHandle_t handle;
         cudssConfig_t solverConfig;
         cudssData_t solverData;
-	bool is_first_factorization;
+        bool is_first_factorization;
 
         cudssDssHandleType() : is_first_factorization{true} {
             cudssCreate(&handle);

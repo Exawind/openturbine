@@ -39,7 +39,7 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {
         );
 
         cudssExecute(handle, CUDSS_PHASE_ANALYSIS, config, data, A_cudss, x_cudss, b_cudss);
-	dss_handle.set_initial_factorization(true);
+        dss_handle.set_initial_factorization(true);
 
         cudssMatrixDestroy(A_cudss);
         cudssMatrixDestroy(b_cudss);
