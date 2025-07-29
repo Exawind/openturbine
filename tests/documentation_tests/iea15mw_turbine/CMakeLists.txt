@@ -18,5 +18,5 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(OpenTurbine REQUIRED)
 
 add_executable(iea15mw_turbine)
-target_link_libraries(iea15MW_turbine PRIVATE OpenTurbine::openturbine_library)
+target_link_libraries(iea15mw_turbine PRIVATE OpenTurbine::openturbine_library)
 target_sources(iea15mw_turbine PRIVATE iea15mw_turbine.cpp)
