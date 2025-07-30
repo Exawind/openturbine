@@ -162,3 +162,4 @@ Eqs. (`[eq:force] <#eq:force>`__)-(`[eq:moment] <#eq:moment>`__)):
    \underline{m}^\mathrm{force}_j = \underline{\underline{R}}\left(\widehat{q}_j^\mathrm{motion,map} \right) 
    \underline{\underline{R}}\left(\widehat{q}_j^\mathrm{motion,map,0}\right) \underline{m}_j
    \end{aligned}
+

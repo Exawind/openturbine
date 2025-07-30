@@ -15,4 +15,3 @@ elements, constraints, and other relevant topics.
    configs
    fsi-api
    blade-element
-
