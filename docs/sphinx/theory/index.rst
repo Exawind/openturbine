@@ -13,5 +13,5 @@ elements, constraints, and other relevant topics.
    rigid
    beam
    configs
-   fsi
+   fsi-api
    blade-element
