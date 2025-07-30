@@ -454,8 +454,8 @@ class WindIOPreprocessor:
     def _setup_property_interpolators(self) -> Dict[str, Dict[str, Any]]:
         """
         Sets up interpolators for blade properties including outer_shape properties
-        like chord, twist, section_offset_y, section_offset_x, and rthick, and
-        airfoil-specific properties like aerodynamic center.
+        namely chord, twist, section_offset_y, section_offset_x, and rthick, and
+        airfoil-specific properties namely aerodynamic center.
 
         Returns:
             Dictionary of interpolators for each property
@@ -709,6 +709,67 @@ class WindIOPreprocessor:
 
         return {'polars': interpolated_polar}
 
+    def _calculate_aerodynamic_center_coords(self, interpolated_cross_sections: Dict[str, Any]) -> Dict[str, Tuple[float, float]]:
+        """
+        Calculate local x-y coordinates of aerodynamic centers for each aerodynamic node.
+
+        This function performs the following steps:
+        - Scales airfoil coordinates by chord length
+        - Positions aerodynamic center along x-axis (chord line) based on aerodynamic_center value
+        - Applies section offsets (section_offset_x, section_offset_y)
+        - Applies twist rotation around leading edge
+
+        Args:
+            interpolated_cross_sections: Dictionary containing interpolated cross-section data
+
+        Returns:
+            Dictionary with node_name -> (x_ac, y_ac) coordinates of aerodynamic centers
+        """
+        ac_coords = {}
+
+        for node_name, section_data in interpolated_cross_sections.items():
+            # Get interpolated properties
+            chord = section_data.get('chord', 1.)
+            twist = section_data.get('twist', 0.)
+            section_offset_x = section_data.get('section_offset_x', 0.)
+            section_offset_y = section_data.get('section_offset_y', 0.)
+            ac_percentage = section_data.get('aerodynamic_center', 0.25)
+
+            # Get airfoil coordinates
+            airfoil_coords = section_data['airfoil_coordinates']
+            x_airfoil = airfoil_coords['x']
+            y_airfoil = airfoil_coords['y']
+
+            # Step 1: Scale airfoil by chord length
+            x_scaled, y_scaled = x_airfoil * chord, y_airfoil * chord
+
+            # Step 2: Find leading edge
+            x_le, y_le = np.min(x_scaled), y_scaled[np.argmin(x_scaled)]  # Leading edge -> minimum x
+
+            # Step 3: Calculate aerodynamic center position along chord line (x-axis)
+            ac_distance = ac_percentage * chord
+            x_ac, y_ac = x_le + ac_distance, 0.  # AC position along x-axis
+
+            # Step 4: Apply section offsets
+            x_with_offsets = x_ac + section_offset_y # offset_y is along chord direction -> x-axis
+            y_with_offsets = y_ac + section_offset_x # offset_x is normal to chord direction -> y-axis
+
+            # Step 5: Apply twist rotation around leading edge
+            twist_rad = np.radians(twist)
+            # Rotation matrix for 2D rotation
+            R = np.array(
+                [[np.cos(twist_rad), -np.sin(twist_rad)],
+                [np.sin(twist_rad), np.cos(twist_rad)]
+            ])
+            p = np.array([x_with_offsets - x_le, y_with_offsets - y_le]) # vector: leading edge -> point of interest
+            p_rotated = R @ p # rotate position vector around leading edge
+            x_final = x_le + p_rotated[0] # final coordinates: leading edge + rotated vector
+            y_final = y_le + p_rotated[1]
+
+            ac_coords[node_name] = (x_final, y_final)
+
+        return ac_coords
+
     #-------------------------------------------------------------
     # Public methods
     #-------------------------------------------------------------
@@ -731,6 +792,16 @@ class WindIOPreprocessor:
         # Interpolate airfoil cross-sections
         print("\nInterpolating airfoil cross-sections at aerodynamic nodes...")
         normalized_cross_sections, interpolated_cross_sections = self._interpolate_airfoil_cross_sections(aero_nodes)
+
+        # Add aerodynamic center local coordinates to interpolated cross sections
+        print("\nCalculating aerodynamic center local coordinates...")
+        ac_coords = self._calculate_aerodynamic_center_coords(interpolated_cross_sections)
+        for node_name, (x_ac, y_ac) in ac_coords.items():
+            if node_name in interpolated_cross_sections:
+                interpolated_cross_sections[node_name]['ac_local_coordinates'] = {
+                    'x': x_ac,
+                    'y': y_ac
+                }
 
         # Create target angle of attack array in radians (from -π to +π radians)
         # target_alpha = np.linspace(-np.pi, np.pi, 361)  # 361 points for 1° resolution
@@ -807,8 +878,12 @@ class WindIOPreprocessor:
                     'y': section_data['airfoil_coordinates']['y']
                 },
                 'aerodynamic_center': section_data.get('aerodynamic_center'),
+                'aerodynamic_center_local_coordinates': {
+                    'x': section_data['ac_local_coordinates']['x'],
+                    'y': section_data['ac_local_coordinates']['y']
+                } if 'ac_local_coordinates' in section_data else None,
                 'polars': [],
-                'rthick': section_data.get('rthick', 0.)
+                'rthick': section_data.get('rthick', 1.),
             }
 
             # Add polar data if available for this node
@@ -886,11 +961,11 @@ class WindIOPreprocessor:
                 for node_name, section_data in processed_data['interpolated_cross_sections'].items():
                     node_position = section_data['position']
                     aero_node_positions.append(node_position)
-                    chord_values.append(section_data.get('chord', 0.))
+                    chord_values.append(section_data.get('chord', 1.))
                     twist_values.append(section_data.get('twist', 0.))
                     section_offset_y_values.append(section_data.get('section_offset_y', 0.))
                     section_offset_x_values.append(section_data.get('section_offset_x', 0.))
-                    rthick_values.append(section_data.get('rthick', 0.))
+                    rthick_values.append(section_data.get('rthick', 1.))
 
                 properties = {
                     'chord': chord_values,
