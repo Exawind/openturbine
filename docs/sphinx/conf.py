@@ -11,7 +11,7 @@ extensions = [
     'sphinxcontrib.bibtex',     # BibTeX bibliography
     'sphinxcontrib.doxylink',   # Doxygen links
     'sphinxcontrib.mermaid',    # Mermaid diagrams
-    'sphinxcontrib.spelling'    # Spelling checker
+    'sphinxcontrib.spelling'   # Spelling checker
 ]
 
 bibtex_bibfiles = []
@@ -60,7 +60,7 @@ numfig_format = {'figure': '%s', 'table': '%s', 'code-block': '%s'}
 # HTML output configuration
 #--------------------------------------------------------------------------
 html_theme = 'sphinx_rtd_theme'
-html_logo = '_static/oturb_logo_v1.jpeg'
+html_logo = '_static/oturb_logo_v2.png'
 html_static_path = ['_static']         # Path to static files
 html_show_copyright = True             # Show copyright in the footer
 htmlhelp_basename = 'openturbine_doc'  # Output file base name for HTML help builder

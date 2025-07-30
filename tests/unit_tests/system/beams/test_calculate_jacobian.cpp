@@ -132,7 +132,7 @@ TEST(CalculateJacobian, FourthOrderElement) {
     constexpr std::array<double, 5> expected_jacobians = {
         0.671587005850145, 1.509599209717606, 2.861380785564898, 4.097191592895187, 4.880926263217582
     };
-    for (size_t qp = 0; qp < num_qps; ++qp) {
+    for (auto qp = 0U; qp < num_qps; ++qp) {
         EXPECT_NEAR(host_qp_jacobian(0, qp), expected_jacobians[qp], 1e-12);
     }
 
@@ -144,7 +144,7 @@ TEST(CalculateJacobian, FourthOrderElement) {
     ASSERT_EQ(host_qp_position_derivative.extent(1), num_qps);    // 5 quadrature points
     ASSERT_EQ(host_qp_position_derivative.extent(2), 3);          // 3 dimensions
 
-    for (size_t qp = 0; qp < num_qps; ++qp) {
+    for (auto qp = 0U; qp < num_qps; ++qp) {
         const auto magnitude = std::sqrt(
             host_qp_position_derivative(0, qp, 0) * host_qp_position_derivative(0, qp, 0) +
             host_qp_position_derivative(0, qp, 1) * host_qp_position_derivative(0, qp, 1) +

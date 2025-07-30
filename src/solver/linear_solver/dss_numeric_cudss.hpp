@@ -2,6 +2,9 @@
 
 #include <cudss.h>
 
+#include "dss_algorithm.hpp"
+#include "dss_handle_cudss.hpp"
+
 namespace openturbine {
 template <typename CrsMatrixType>
 struct DSSNumericFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {

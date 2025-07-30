@@ -17,7 +17,6 @@ install(FILES
         integrate_stiffness_matrix.hpp
         interpolate_to_quadrature_point_for_inertia.hpp
         interpolate_to_quadrature_point_for_stiffness.hpp
-        rotate_section_matrix.hpp
         update_node_state.hpp
         DESTINATION include/OpenTurbine/system/beams/
 )

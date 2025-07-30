@@ -2,8 +2,6 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "dof_management/freedom_signature.hpp"
-
 namespace openturbine {
 
 template <typename DeviceType>
@@ -20,9 +18,11 @@ template <typename DeviceType>
     const typename Kokkos::View<size_t*, DeviceType>::const_type& active_dofs
 ) {
     auto total_system_dofs = 0UL;
+
+    using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;
+
     Kokkos::parallel_reduce(
-        "ComputeNumSystemDofs",
-        Kokkos::RangePolicy<typename DeviceType::execution_space>(0, active_dofs.extent(0)),
+        "ComputeNumSystemDofs", RangePolicy(0, active_dofs.extent(0)),
         ComputeNumSystemDofsReducer<DeviceType>{active_dofs}, total_system_dofs
     );
     return total_system_dofs;

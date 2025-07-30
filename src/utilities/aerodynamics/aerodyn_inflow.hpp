@@ -1,13 +1,13 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "math/quaternion_operations.hpp"
-#include "types.hpp"
 #include "vendor/dylib/dylib.hpp"
 
 namespace openturbine::util {
@@ -102,23 +102,27 @@ struct TurbineConfig {
      * qz]
      */
     struct BladeInitialState {
-        Array_7 root_initial_position;  //< Initial root position of the blade (1 per blade)
-        std::vector<Array_7> node_initial_positions;  //< Initial node positions of the blade
+        std::array<double, 7>
+            root_initial_position;  //< Initial root position of the blade (1 per blade)
+        std::vector<std::array<double, 7>>
+            node_initial_positions;  //< Initial node positions of the blade
 
-        BladeInitialState(const Array_7& root, const std::vector<Array_7>& nodes)
+        BladeInitialState(
+            const std::array<double, 7>& root, const std::vector<std::array<double, 7>>& nodes
+        )
             : root_initial_position(root), node_initial_positions(nodes) {}
     };
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
     std::array<float, 3> reference_position{0.F, 0.F, 0.F};  //< Reference position of the turbine
-    Array_7 hub_initial_position;                            //< Initial hub position
-    Array_7 nacelle_initial_position;                        //< Initial nacelle position
+    std::array<double, 7> hub_initial_position;              //< Initial hub position
+    std::array<double, 7> nacelle_initial_position;          //< Initial nacelle position
     std::vector<BladeInitialState>
         blade_initial_states;  //< Initial root and node positions of blades (size = n_blades)
 
     TurbineConfig(
-        bool is_hawt, std::array<float, 3> ref_pos, Array_7 hub_pos, Array_7 nacelle_pos,
-        std::vector<BladeInitialState> blade_states
+        bool is_hawt, std::array<float, 3> ref_pos, std::array<double, 7> hub_pos,
+        std::array<double, 7> nacelle_pos, std::vector<BladeInitialState> blade_states
     )
         : is_horizontal_axis(is_hawt),
           reference_position(ref_pos),
@@ -157,10 +161,11 @@ struct TurbineConfig {
  * @param orientation Output array for flattened 3x3 rotation matrix
  */
 inline void SetPositionAndOrientation(
-    const Array_7& data, std::array<float, 3>& position, Array_3x3& orientation
+    const std::array<double, 7>& data, std::array<float, 3>& position,
+    std::array<std::array<double, 3>, 3>& orientation
 ) {
     // Set position (first 3 elements)
-    for (size_t i = 0; i < 3; ++i) {
+    for (auto i = 0U; i < 3U; ++i) {
         position[i] = static_cast<float>(data[i]);
     }
 
@@ -179,7 +184,8 @@ inline void SetPositionAndOrientation(
 struct MeshData {
     int32_t n_points;                            //< Number of mesh points (nodes)
     std::vector<std::array<float, 3>> position;  //< N x 3 array [x, y, z]
-    std::vector<Array_3x3> orientation;          //< N x 9 array [r11, r12, ..., r33]
+    std::vector<std::array<std::array<double, 3>, 3>>
+        orientation;                             //< N x 9 array [r11, r12, ..., r33]
     std::vector<std::array<float, 6>> velocity;  //< N x 6 array [u, v, w, p, q, r]
     std::vector<std::array<float, 6>>
         acceleration;  //< N x 6 array [u_dot, v_dot, w_dot, p_dot, q_dot, r_dot]
@@ -189,29 +195,30 @@ struct MeshData {
     MeshData(size_t n_nodes)
         : n_points(static_cast<int32_t>(n_nodes)),
           position(std::vector<std::array<float, 3>>(n_nodes, {0.F, 0.F, 0.F})),
-          orientation(
-              std::vector<Array_3x3>(n_nodes, Array_3x3{{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}})
-          ),
+          orientation(std::vector<std::array<std::array<double, 3>, 3>>(
+              n_nodes,
+              std::array<std::array<double, 3>, 3>{{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}}
+          )),
           velocity(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
           acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
           load(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})) {}
 
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
-        size_t n_mesh_pts, const std::vector<Array_7>& pos,
+        size_t n_mesh_pts, const std::vector<std::array<double, 7>>& pos,
         const std::vector<std::array<float, 6>>& vel, const std::vector<std::array<float, 6>>& acc,
         const std::vector<std::array<float, 6>>& ld
     )
         : n_points(static_cast<int32_t>(n_mesh_pts)),
           position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.F, 0.F, 0.F})),
-          orientation(
-              std::vector<Array_3x3>(n_mesh_pts, {{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}})
-          ),
+          orientation(std::vector<std::array<std::array<double, 3>, 3>>(
+              n_mesh_pts, {{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}}
+          )),
           velocity(vel),
           acceleration(acc),
           load(ld) {
         // Set mesh position and orientation from 7x1 array [x, y, z, qw, qx, qy, qz]
-        for (size_t i = 0; i < NumberOfMeshPoints(); ++i) {
+        for (auto i = 0U; i < NumberOfMeshPoints(); ++i) {
             SetPositionAndOrientation(pos[i], position[i], orientation[i]);
         }
 
@@ -244,14 +251,17 @@ struct MeshData {
     [[nodiscard]] size_t NumberOfMeshPoints() const { return static_cast<size_t>(n_points); }
 
     // Updates the values at the given point number
-    void SetValues(size_t point_number, const Array_7& pos, const Array_6& vel, const Array_6& acc) {
+    void SetValues(
+        size_t point_number, const std::array<double, 7>& pos, const std::array<double, 6>& vel,
+        const std::array<double, 6>& acc
+    ) {
         if (point_number >= static_cast<size_t>(n_points)) {
             throw std::out_of_range("point number out of range.");
         }
         SetPositionAndOrientation(
             pos, this->position[point_number], this->orientation[point_number]
         );
-        for (size_t i = 0; i < kLieAlgebraComponents; ++i) {
+        for (auto i = 0U; i < 6U; ++i) {
             this->velocity[point_number][i] = static_cast<float>(vel[i]);
             this->acceleration[point_number][i] = static_cast<float>(acc[i]);
         }
@@ -373,8 +383,8 @@ struct TurbineData {
      * r_dot]
      */
     void SetBladeNodeMotion(
-        size_t blade_number, size_t node_number, const Array_7& position, const Array_6& velocity,
-        const Array_6& acceleration
+        size_t blade_number, size_t node_number, const std::array<double, 7>& position,
+        const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
     ) {
         // Check if the blade and node numbers are within the valid range
         if (blade_number >= NumberOfBlades() ||
@@ -386,14 +396,14 @@ struct TurbineData {
         const auto r_x2z = RotationVectorToQuaternion({0., M_PI / 2., 0.});
 
         // Original orientation
-        const Array_4 r{position[3], position[4], position[5], position[6]};
+        const std::array<double, 4> r{position[3], position[4], position[5], position[6]};
 
         // Converted orientation
         const auto r_adi = QuaternionCompose(r, r_x2z);
 
         // Position with new orientation
-        const Array_7 position_new{position[0], position[1], position[2], r_adi[0],
-                                   r_adi[1],    r_adi[2],    r_adi[3]};
+        const std::array<double, 7> position_new{position[0], position[1], position[2], r_adi[0],
+                                                 r_adi[1],    r_adi[2],    r_adi[3]};
 
         const size_t node_index = node_indices_by_blade[blade_number][node_number];
         blade_nodes.SetValues(node_index, position_new, velocity, acceleration);
@@ -412,8 +422,8 @@ struct TurbineData {
      * r_dot]
      */
     void SetBladeRootMotion(
-        size_t blade_number, const Array_7& position, const Array_6& velocity,
-        const Array_6& acceleration
+        size_t blade_number, const std::array<double, 7>& position,
+        const std::array<double, 6>& velocity, const std::array<double, 6>& acceleration
     ) {
         if (blade_number >= static_cast<size_t>(n_blades)) {
             throw std::out_of_range("Blade number out of range.");
@@ -423,14 +433,14 @@ struct TurbineData {
         const auto r_x2z = RotationVectorToQuaternion({0., M_PI / 2., 0.});
 
         // Original orientation
-        const Array_4 r{position[3], position[4], position[5], position[6]};
+        const auto r = std::array{position[3], position[4], position[5], position[6]};
 
         // Converted orientation
         const auto r_adi = QuaternionCompose(r, r_x2z);
 
         // Position with new orientation
-        const Array_7 position_new{position[0], position[1], position[2], r_adi[0],
-                                   r_adi[1],    r_adi[2],    r_adi[3]};
+        const auto position_new = std::array{position[0], position[1], position[2], r_adi[0],
+                                             r_adi[1],    r_adi[2],    r_adi[3]};
 
         blade_roots.SetValues(blade_number, position_new, velocity, acceleration);
     }
@@ -446,7 +456,8 @@ struct TurbineData {
      * r_dot]
      */
     void SetHubMotion(
-        const Array_7& position, const Array_6& velocity, const Array_6& acceleration
+        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
+        const std::array<double, 6>& acceleration
     ) {
         this->hub.SetValues(0, position, velocity, acceleration);
     }
@@ -462,7 +473,8 @@ struct TurbineData {
      * r_dot]
      */
     void SetNacelleMotion(
-        const Array_7& position, const Array_6& velocity, const Array_6& acceleration
+        const std::array<double, 7>& position, const std::array<double, 6>& velocity,
+        const std::array<double, 6>& acceleration
     ) {
         this->nacelle.SetValues(0, position, velocity, acceleration);
     }
@@ -476,7 +488,8 @@ struct TurbineData {
      * @param blade_number The number of the blade to update.
      * @param node_number The number of the node to update within the specified blade.
      */
-    [[nodiscard]] Array_6 GetBladeNodeLoad(size_t blade_number, size_t node_number) const {
+    [[nodiscard]] std::array<double, 6> GetBladeNodeLoad(size_t blade_number, size_t node_number)
+        const {
         if (blade_number >= static_cast<size_t>(n_blades) ||
             node_number >= node_indices_by_blade[blade_number].size()) {
             throw std::out_of_range("Blade or node number out of range.");
@@ -486,7 +499,7 @@ struct TurbineData {
         const size_t node_index = node_indices_by_blade[blade_number][node_number];
         const auto loads = blade_nodes.load[node_index];
 
-        return Array_6{
+        return std::array<double, 6>{
             static_cast<double>(loads[0]), static_cast<double>(loads[1]),
             static_cast<double>(loads[2]), static_cast<double>(loads[3]),
             static_cast<double>(loads[4]), static_cast<double>(loads[5]),
@@ -521,8 +534,8 @@ private:
         for (const auto& blade : tc.blade_initial_states) {
             // Initialize blade root
             this->SetBladeRootMotion(
-                i_blade, blade.root_initial_position, Array_6{0., 0., 0., 0., 0., 0.},
-                Array_6{0., 0., 0., 0., 0., 0.}
+                i_blade, blade.root_initial_position, std::array<double, 6>{0., 0., 0., 0., 0., 0.},
+                std::array<double, 6>{0., 0., 0., 0., 0., 0.}
             );
 
             // Initialize blade nodes
@@ -532,8 +545,9 @@ private:
                 blade_nodes_to_blade_num_mapping.emplace_back(static_cast<int32_t>(i_blade + 1));
 
                 this->SetBladeNodeMotion(
-                    i_blade, i_node, position, Array_6{0., 0., 0., 0., 0., 0.},  // velocity
-                    Array_6{0., 0., 0., 0., 0., 0.}                              // acceleration
+                    i_blade, i_node, position,
+                    std::array<double, 6>{0., 0., 0., 0., 0., 0.},  // velocity
+                    std::array<double, 6>{0., 0., 0., 0., 0., 0.}   // acceleration
                 );
                 ++i_node;
                 ++i_node_total;
@@ -854,11 +868,11 @@ public:
         channel_names.resize(sim_controls_.n_channels);
         channel_units.resize(sim_controls_.n_channels);
         std::string tmp;
-        for (size_t i = 0; i < sim_controls_.n_channels; ++i) {
-            tmp = channel_names_c.substr(20 * i, 20);
+        for (auto i = 0U; i < sim_controls_.n_channels; ++i) {
+            tmp = channel_names_c.substr(20UL * i, 20);
             tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_names[i] = tmp;
-            tmp = channel_units_c.substr(20 * i, 20);
+            tmp = channel_units_c.substr(20UL * i, 20);
             tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_units[i] = tmp;
         }

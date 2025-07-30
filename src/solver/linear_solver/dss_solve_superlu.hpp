@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
+
+#include "dss_algorithm.hpp"
 #include "dss_handle_superlu.hpp"
 #include "slu_ddefs.h"
 

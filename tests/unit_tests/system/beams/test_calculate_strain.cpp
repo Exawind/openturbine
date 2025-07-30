@@ -25,7 +25,7 @@ void TestCalculateStrain() {
     Kokkos::parallel_for(
         "CalculateStrain", 1,
         KOKKOS_LAMBDA(size_t) {
-            openturbine::beams::CalculateStrain<Kokkos::DefaultExecutionSpace>(
+            openturbine::beams::CalculateStrain<Kokkos::DefaultExecutionSpace>::invoke(
                 x0_prime, u_prime, r, r_prime, strain
             );
         }

@@ -20,7 +20,7 @@ void TestCalculateDistanceComponentsTests_OneElement() {
     Kokkos::parallel_for(
         "CalculateDistanceComponents", 1,
         KOKKOS_LAMBDA(const size_t) {
-            openturbine::springs::CalculateDistanceComponents<Kokkos::DefaultExecutionSpace>(
+            openturbine::springs::CalculateDistanceComponents<Kokkos::DefaultExecutionSpace>::invoke(
                 x0, u1, u2, r
             );
         }

@@ -23,6 +23,7 @@ inline void AssembleConstraintsResidual(
 
     auto range_policy =
         Kokkos::RangePolicy<typename DeviceType::execution_space>(0, constraints.num_constraints);
+
     Kokkos::parallel_for(
         "ContributeConstraintsSystemResidualToVector", range_policy,
         ContributeConstraintsSystemResidualToVector<DeviceType>{

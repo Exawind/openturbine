@@ -12,6 +12,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
     const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");
     const auto& wio_blade = wio["components"]["blade"];
+    const auto write_output{true};
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
@@ -24,8 +25,11 @@ TEST(BladeInterfaceTest, BladeWindIO) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetOutputFile("BladeInterfaceTest.BladeWindIO");
+        .SetRelativeErrorTolerance(1e-4);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.BladeWindIO");
+    }
 
     // Set blade parameters
     // Use prescribed root motion to fix root rotation
@@ -122,9 +126,10 @@ TEST(BladeInterfaceTest, BladeWindIO) {
 
 TEST(BladeInterfaceTest, RotatingBeam) {
     const auto time_step{0.01};
-    const Array_3 omega{0., 0., 1.};
-    const Array_3 x0_root{2., 0., 0.};
+    const auto omega = std::array{0., 0., 1.};
+    const auto x0_root = std::array{2., 0., 0.};
     const auto root_vel = CrossProduct(omega, x0_root);
+    const auto write_output{false};
 
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
@@ -136,8 +141,12 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         .SetDampingFactor(0.0)
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetOutputFile("BladeInterfaceTest.RotatingBeam");
+        .SetRelativeErrorTolerance(1e-4);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.RotatingBeam");
+    }
+
     // Node locations (GLL quadrature)
     const auto node_s = std::vector{
         0., 0.11747233803526763, 0.35738424175967748, 0.64261575824032247, 0.88252766196473242, 1.
@@ -199,9 +208,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         // Calculate root displacement from initial position and apply
         const auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
         const auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
-        const Array_3 u_trans{
-            x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]
-        };
+        const auto u_trans =
+            std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         interface.SetRootDisplacement(
             {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
         );
@@ -376,6 +384,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
 TEST(BladeInterfaceTest, StaticCurledBeam) {
     // Create interface builder
     auto builder = interfaces::BladeInterfaceBuilder{};
+    const auto write_output{false};
 
     builder.Solution()
         .EnableStaticSolve()
@@ -383,8 +392,11 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
         .SetDampingFactor(1.)
         .SetMaximumNonlinearIterations(10)
         .SetAbsoluteErrorTolerance(1e-5)
-        .SetRelativeErrorTolerance(1e-3)
-        .SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
+        .SetRelativeErrorTolerance(1e-3);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("BladeInterfaceTest.StaticCurledBeam");
+    }
 
     // Node locations
     const std::vector<double> kp_s{0., 1.};
@@ -432,7 +444,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     auto interface = builder.Build();
 
     // Create vector to store deformed tip positions
-    std::vector<Array_3> tip_positions;
+    std::vector<std::array<double, 3>> tip_positions;
 
     // Get reference to tip node
     auto& tip_node = interface.Blade().nodes[interface.Blade().nodes.size() - 1];
@@ -451,7 +463,7 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
 
         // Add tip position
         tip_positions.emplace_back(
-            Array_3{tip_node.position[0], tip_node.position[1], tip_node.position[2]}
+            std::array{tip_node.position[0], tip_node.position[1], tip_node.position[2]}
         );
     }
 

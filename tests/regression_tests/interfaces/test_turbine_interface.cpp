@@ -11,11 +11,12 @@ namespace openturbine::tests {
 // and applies a tower load, generator torque, blade pitch, and yaw angle to test the
 // structure's response.
 TEST(TurbineInterfaceTest, IEA15_Structure) {
-    const auto duration{0.1};      // Simulation duration in seconds
-    const auto time_step{0.01};    // Time step for the simulation
-    const auto n_blades{3};        // Number of blades in turbine
-    const auto n_blade_nodes{11};  // Number of nodes per blade
-    const auto n_tower_nodes{11};  // Number of nodes in tower
+    const auto duration{0.1};        // Simulation duration in seconds
+    const auto time_step{0.01};      // Time step for the simulation
+    const auto n_blades{3};          // Number of blades in turbine
+    const auto n_blade_nodes{11};    // Number of nodes per blade
+    const auto n_tower_nodes{11};    // Number of nodes in tower
+    const auto write_output{false};  // Write output file
 
     // Create interface builder
     auto builder = interfaces::TurbineInterfaceBuilder{};
@@ -28,8 +29,11 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         .SetGravity({0., 0., -9.81})
         .SetMaximumNonlinearIterations(6)
         .SetAbsoluteErrorTolerance(1e-6)
-        .SetRelativeErrorTolerance(1e-4)
-        .SetOutputFile("TurbineInterfaceTest.IEA15");
+        .SetRelativeErrorTolerance(1e-4);
+
+    if (write_output) {
+        builder.Solution().SetOutputFile("TurbineInterfaceTest.IEA15");
+    }
 
     // Read WindIO yaml file
     const YAML::Node wio = YAML::LoadFile("interfaces_test_files/IEA-15-240-RWT.yaml");

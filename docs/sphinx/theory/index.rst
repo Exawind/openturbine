@@ -6,8 +6,12 @@ elements, constraints, and other relevant topics.
 
 .. toctree::
    :glob:
-   :maxdepth: 2
+   :maxdepth: 3
 
-   flexible_beam
-   rigid_body
-   nonlinear_spring
+   overview
+   gen-alpha
+   rigid
+   beam
+   configs
+   fsi-api
+   blade-element

@@ -1,7 +1,10 @@
 #pragma once
 
+#include <Kokkos_Core.hpp>
 #include <cusolverSp.h>
 #include <cusolverSp_LOWLEVEL_PREVIEW.h>
+
+#include "dss_algorithm.hpp"
 
 namespace openturbine {
 template <>

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <array>
+#include <vector>
+
 #include "mass_element.hpp"
 
 namespace openturbine {
