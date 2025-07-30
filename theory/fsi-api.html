@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coupling for fluid-structure-interaction &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Blade-Element Aerodynamics Solver" href="blade-element.html" />
+    <link rel="prev" title="Model bodies and constraints for a HAWT" href="hawt.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beam.html">Beam Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Coupling for fluid-structure-interaction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motion-transfer-structure-to-fluid-nodes">Motion transfer: Structure to fluid nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#force-and-moment-transfer-fluid-to-structure">Force and Moment transfer: Fluid to structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Aerodynamics Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+      <li class="breadcrumb-item active">Coupling for fluid-structure-interaction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/fsi-api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="coupling-for-fluid-structure-interaction">
+<span id="sec-fsi"></span><h1>Coupling for fluid-structure-interaction<a class="headerlink" href="#coupling-for-fluid-structure-interaction" title="Permalink to this heading"></a></h1>
+<p>OpenTurbine was designed as a flexible multibody dynamics solver to be
+coupled with external modules for fluid forcing at various
+fluid-dynamics-model fidelity levels. At the lowest level, OpenTurbine
+is coupled to a blade-element or blade-element-momentum-theory (BEMT)
+solver like AeroDyn. At mid-fidelity, OpenTurbine is coupled to a CFD
+solver, such as AMR-Wind, wherein blades are represented in the fluid as
+actuator lines and forces are calculated through BE/BEMT. At the highest
+fidelity, OpenTurbine is directly coupled to a geometry-resolved fluid
+mesh in a solver like Nalu-Wind.</p>
+<p>In all of these coupling approaches, the common thread is that forces
+and moments are passed to OpenTurbine and OpenTurbine provides position
+and velocity of the structure. For the preliminary development of
+OpenTurbine and the coupling API, we assume that the fluid solver will
+provide <strong>point</strong> force and moments that are appropriately distributed
+to the nodes in a manner consistent with the beam basis functions.</p>
+<p>In the following we describe the fluid-structure coupling between a
+single <strong>member</strong> of OpenTurbine and a corresponding fluid model. As
+discussed above, a member could be a beam, rigid body, or a massless
+6-DOF point. Each member can be mapped to one or more fluid models. For
+example, in a geometry-resolved CFD model, the CFD domain surrounding a
+beam will often be decomposed for parallel computation, each domain tied
+to a computational MPI rank.</p>
+<p>We focus on coupling between a member with <span class="math notranslate nohighlight">\(P\)</span> nodes, where
+<span class="math notranslate nohighlight">\(P=1\)</span> for body represented by a point, e.g. a rigid body or a
+massless 6-DOE node, and a fluid model whose motion is tied to structure
+motion. The interface should be such that only the following nodal data
+(for <span class="math notranslate nohighlight">\(P\)</span> nodes) is transferred after initialization:</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{f}_i \in \mathbb{R}^3, \,
+\underline{m}_i \in \mathbb{R}^3, \,
+\underline{q}_i \in \mathbb{R}^7,\,
+\underline{\dot{q}}_i \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+\end{aligned}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{q}_i =
+\begin{bmatrix} \underline{u}_i \\
+\underline{\widehat{q}}_i
+\end{bmatrix} \qquad
+\underline{\dot{q}}_i =
+\begin{bmatrix} \underline{\dot{u}}_i  \\
+\underline{\omega}_i
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>and where <span class="math notranslate nohighlight">\(\underline{u}_i \in \mathbb{R}^3\)</span> is displacement,
+<span class="math notranslate nohighlight">\(\widehat{q}_i \in \mathbb{R}^4\)</span> is relative rotation in
+quaternions, and <span class="math notranslate nohighlight">\(\underline{\omega}_i \in \mathbb{R}^3\)</span> is
+angular velocity. In this approach, either within the fluid solver or
+within an interface layer, the following data must be calculated at
+initialization and be accessible to the fluid solver or interface layer:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^0_\ell \in\mathbb{R}^3\,,\, \widehat{q}^0_\ell \in\mathbb{R}^4\,,\ell \in \{1, \ldots, P\}\)</span>,
+structure nodal locations and orientations (quaternions) in reference
+configuration</p></li>
+<li><p><span class="math notranslate nohighlight">\(n^\mathrm{motion}\)</span> and <span class="math notranslate nohighlight">\(n^\mathrm{force}\)</span>, which are the
+number of fluid nodes tied to structure motion and forcing,
+respectively. For BE/BEMT,
+<span class="math notranslate nohighlight">\(n^\mathrm{motion} = n^\mathrm{force}\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{motion},0}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{motion}\}\)</span>,
+fluid nodal locations in reference configuration (user provided; or
+calculated based on aerodynamic section data for BE/BEMT)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{force},0}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{force}\}\)</span>,
+fluid nodal locations in reference configuration (user provided; or
+calculated based on aerodynamic section data for BE/BEMT)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\xi^{\mathrm{motion},\mathrm{map}}_j\in[-1,1]\,,\, j \in \{1, \ldots, n^\mathrm{motion}\}\)</span>
+nearest location on the beam reference line for
+<span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{motion},0}_j\)</span>; provided by user for
+BE/BEMT, but must be calculated at initialization for CFD coupling</p></li>
+<li><p><span class="math notranslate nohighlight">\(\xi^{\mathrm{force},\mathrm{map}}_j\in[-1,1]\,,\, j \in \{1, \ldots, n^\mathrm{force}\}\)</span>
+nearest location on the beam reference line for
+<span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{force},0}_j\)</span>; provided by user for
+BE/BEMT, but must be calculated at initialization for CFD coupling</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi_\ell\left( \xi^{\mathrm{force},\mathrm{map}}_j\right)\,,\,
+\, \ell \in \{1, \ldots, P \},\,
+\, j \in \{1, \ldots, n^\mathrm{force} \}\)</span>, basis functions evaluated
+at the mapped nearest-neighbor location for each of the fluid nodes
+providing a force/moment value</p></li>
+<li><p><span class="math notranslate nohighlight">\(\phi_\ell \left(\xi^{\mathrm{motion},\mathrm{map}}_j\right)\,,
+\, \ell \in \{1, \ldots, P \},
+\, j \in \{1, \ldots, n^\mathrm{motion} \}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{force},\mathrm{map},0}\in\mathbb{R}^3\)</span>
+and
+<span class="math notranslate nohighlight">\(\widehat{q}_j^{\mathrm{force},\mathrm{map},0}\in\mathbb{R}^4\)</span>,
+<span class="math notranslate nohighlight">\(j \in \{1,\ldots,n^\mathrm{force}\}\)</span>; calculated at
+initialization</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{motion},\mathrm{map},0}\in\mathbb{R}^3\)</span>
+and
+<span class="math notranslate nohighlight">\(\widehat{q}_j^{\mathrm{motion},\mathrm{map},0}\in\mathbb{R}^4\)</span>,
+<span class="math notranslate nohighlight">\(j \in \{1,\ldots,n^\mathrm{motion}\}\)</span> ; calculated at
+initialization</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{force-con}}\in\mathbb{R}^3,\, j \in \{1,\ldots,n^\mathrm{force}\}\)</span>,
+reference vectors between force-providing fluid nodes and nearest
+neighbor on the element; calculated at initialization</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{motion-con}}\in\mathbb{R}^3,\, j \in \{1,\ldots,n^\mathrm{motion}\}\)</span>,
+reference vectors between fluid nodes whose motion is driven by the
+structure and nearest neighbor on the structure element; calculated at
+initialization</p></li>
+</ul>
+<p>Note that while this formulation is generalized for a single beam
+element with <span class="math notranslate nohighlight">\(P\)</span> nodes, it can be applied to a single-DOF rigid
+body, in which case <span class="math notranslate nohighlight">\(P=1\)</span>, or expanded to multiple beam elements.</p>
+<div class="section" id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this heading"></a></h2>
+<p>We have set of <span class="math notranslate nohighlight">\(n^\mathrm{force}\)</span> points in the fluid domain that
+provide point forces/moments to the structure, and a set of
+<span class="math notranslate nohighlight">\(n^\mathrm{motion}\)</span> points in the fluid domain whose motion is
+defined by the structure. For BE/BEMT coupling, typically
+<span class="math notranslate nohighlight">\(n^\mathrm{force}=n^\mathrm{motion}\)</span> and
+<span class="math notranslate nohighlight">\(\xi^{\mathrm{force},\mathrm{map}}_j = \xi^{\mathrm{motion},\mathrm{map}}_j\)</span>
+and their definition is given as an input. For more general CFD
+coupling, typically <span class="math notranslate nohighlight">\(n^\mathrm{force} \ll n^\mathrm{motion}\)</span>. Each
+of these force and motion fluid points must be mapped and tied to a
+unique location on its associated structural member,
+<span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{force,map},\mathrm{0}}\)</span> and
+<span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{motion,map},\mathrm{0}}\)</span>, respectively.
+For a point member,
+<span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{force,map},\mathrm{0}} = \underline{x}_j^0\)</span>
+and
+<span class="math notranslate nohighlight">\(\underline{x}_j^{\mathrm{motion,map},\mathrm{0}}=\underline{x}_j^0\)</span>.</p>
+<p>For a beam member coupled to geometry-resolved CFD, our coupling is
+based on minimum distance to the the finite-element represenation of the
+beam reference line. To that end, we find
+<span class="math notranslate nohighlight">\(\xi^{\mathrm{force},\mathrm{map}}_l \in [-1,1]\)</span> such that the
+distance squared,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+d_i^2 = \left(\underline{x}^{\mathrm{force},0}_i
+- \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}^0_\ell\right)^2
+\end{aligned}\]</div>
+<p>is minimized for all <span class="math notranslate nohighlight">\(i \in \{1, \ldots, n^\mathrm{force} \}\)</span> and
+find <span class="math notranslate nohighlight">\(\xi^{\mathrm{motion},\mathrm{map}}_j \in [-1,1]\)</span>, such that
+the distance squared,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+d_j^2 = \left(\underline{x}^{\mathrm{motion},0}_j
+- \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}_\ell^0\right)^2
+\end{aligned}\]</div>
+<p>is minimized for all <span class="math notranslate nohighlight">\(j \in \{1, \ldots, n^\mathrm{motion} \}\)</span>.
+<strong>The Jenkins–Traub algorithm, RPOLY, should be considered for these
+root solving problems.</strong> The locations of those mapped reference points
+in the inertial coordinate system are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{x}^{\mathrm{force},\mathrm{map},\mathrm{0}}_i =
+\sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{force},\mathrm{map}}_i) \underline{x}^\mathrm{0}_\ell, \qquad i \in \{ 1, \ldots, n^\mathrm{force} \}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{0}}_j =
+\sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{motion},\mathrm{map}}_j) \underline{x}^\mathrm{0}_\ell, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\widehat{q}^{\mathrm{force,map,0}}_i &amp;= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^{\mathrm{force,map}} \right) \widehat{q}^0_\ell}
+{\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^\mathrm{force,map} \right) \widehat{q}^0_\ell \right \Vert} \\
+\widehat{q}^{\mathrm{motion,map,0}}_j &amp;= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{motion,map}} \right) \widehat{q}^0_\ell}
+{\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^\mathrm{motion,map} \right) \widehat{q}^0_\ell \right \Vert}
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(P\)</span> is the number of nodes in the structural element, and
+<span class="math notranslate nohighlight">\(\underline{x}^\mathrm{0}_\ell\)</span> and
+<span class="math notranslate nohighlight">\(\widehat{q}^0_\ell\)</span>are the reference locations and orientations
+(represented as quaternions), respectively of the structural nodes in
+the inertial coordinate system. For a beam coupled to a BE/BEMT solver,
+<span class="math notranslate nohighlight">\(\xi_j^\mathrm{motion,map} = \xi_j^\mathrm{force,map}\)</span> and those
+are provided by the user. The vectors connecting these points are given
+by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{x}^\mathrm{force-con}_i &amp;= -\underline{x}^{\mathrm{force},\mathrm{0}}_i + \underline{x}_i^{\mathrm{force},\mathrm{map}\mathrm{0}},  \qquad i \in \{ 1, \ldots, n^\mathrm{force} \} \\
+\underline{x}^\mathrm{motion-con}_j &amp;= \underline{x}_j^{\mathrm{motion},\mathrm{0}} - \underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{0}}_j, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+\end{aligned}\end{split}\]</div>
+<p>blah</p>
+<div class="figure align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/fsi-map.png"><img alt="../_images/fsi-map.png" src="../_images/fsi-map.png" style="width: 50.0%;" /></a>
+<p class="caption"><span class="caption-number">6 </span><span class="caption-text">blah</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</div>
+</div>
+<div class="section" id="motion-transfer-structure-to-fluid-nodes">
+<h2>Motion transfer: Structure to fluid nodes<a class="headerlink" href="#motion-transfer-structure-to-fluid-nodes" title="Permalink to this heading"></a></h2>
+<p>As the first step, generalized displacements and velocities are
+calculated at the mapped locations on the structure:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{q}_j^{\mathrm{motion},\mathrm{map}} =
+\begin{bmatrix} \underline{u}_j^{\mathrm{motion},\mathrm{map}} \\
+\widehat{q}_j^{\mathrm{motion},\mathrm{map}}
+\end{bmatrix} \qquad
+\underline{\dot{q}}_j^{\mathrm{motion},\mathrm{map}}
+\begin{bmatrix} \underline{\dot{u}}_j^{\mathrm{motion},\mathrm{map}} \\
+\underline{\omega}_j^{\mathrm{motion},\mathrm{map}}
+\end{bmatrix},
+\qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+\end{aligned}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{u}_j^{\mathrm{motion},\mathrm{map}} = \sum_{\ell=1}^P \phi_\ell \left(\xi_j^{\mathrm{motion},\mathrm{map}} \right) \underline{u}_\ell \\
+\widehat{q}^{\mathrm{motion},\mathrm{map}}_j = \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{motion},\mathrm{map}} \right) \widehat{q}_\ell}
+{|| \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{motion},\mathrm{map}} \right) \widehat{q}_\ell ||} \\
+\underline{\dot{q}}_j^{\mathrm{motion},\mathrm{map}} = \sum_{\ell=1}^P \phi_i \left(\xi_j^{\mathrm{motion},\mathrm{map}} \right) \underline{\dot{q}}_\ell
+\end{aligned}\end{split}\]</div>
+<p>The current position of the fluid nodes (in global/inertial coordinates)
+is</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{x}_j^\mathrm{fl} =
+\underline{x}_j^{\mathrm{motion},\mathrm{0}}
++ \underline{u}_j^{\mathrm{motion},\mathrm{map}} +
+\left[ \underline{\underline{R}}(\widehat{q}_j^{\mathrm{motion},\mathrm{map}}) - \underline{\underline{I}} \right] \underline{x}^\mathrm{motion-con}_j,
+\qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+\end{aligned}\]</div>
+<p>and the current velocity of the fluid nodes is</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\dot{\underline{u}}_j^\mathrm{fl} =
+\dot{\underline{u}}_j^{\mathrm{motion},\mathrm{map}}
++ \underline{\omega}^{\mathrm{motion},\mathrm{map}}_j \times \left[\underline{\underline{R}}(\underline{\widehat{q}}_j^{\mathrm{motion},\mathrm{map}})\underline{x}^\mathrm{motion-con}_j\right],\,
+\qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+\end{aligned}\]</div>
+<p>These are passed to the fluid solver.</p>
+</div>
+<div class="section" id="force-and-moment-transfer-fluid-to-structure">
+<h2>Force and Moment transfer: Fluid to structure<a class="headerlink" href="#force-and-moment-transfer-fluid-to-structure" title="Permalink to this heading"></a></h2>
+<p>We have a set of <span class="math notranslate nohighlight">\(n^\mathrm{force}\)</span> forces and moments,
+<span class="math notranslate nohighlight">\(\underline{f}^\mathrm{force}_i\)</span> and
+<span class="math notranslate nohighlight">\(\underline{m}^\mathrm{force}_i\)</span>, with reference locations
+<span class="math notranslate nohighlight">\(\underline{x}_i^{\mathrm{force},\mathrm{0}}\)</span>. Note that in CFD
+coupling, the applied moments will be zero.</p>
+<p>We need the orientations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\widehat{q}^{\mathrm{force},\mathrm{map}}_j = \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{force},\mathrm{map}} \right) \widehat{q}_\ell}
+{|| \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{force},\mathrm{map}} \right) \widehat{q}_\ell ||}
+\,, \qquad j \in \{ 1, \ldots, n^\mathrm{force} \}
+\end{aligned}\]</div>
+<p>Nodal forces (at <span class="math notranslate nohighlight">\(P\)</span> nodes) are</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{f}_\ell = \sum_{j=1}^{n^\mathrm{force}} \phi_\ell(\xi^{\mathrm{force},\mathrm{map}}_j) \underline{f}^\mathrm{force}_j, \qquad \ell \in \{ 1, \ldots, P \}
+\label{eq:force}
+\end{aligned}\]</div>
+<p>Nodal moments (at <span class="math notranslate nohighlight">\(P\)</span> nodes) are</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\underline{m}_\ell = \sum_{j=1}^{n^\mathrm{force}} \phi_\ell(\xi^{\mathrm{force},\mathrm{map}}_j) \left[\underline{f}^\mathrm{force}_j \times \left( \underline{\underline{R}}(\widehat{q}^{\mathrm{force},\mathrm{map}}_j) \underline{x}^\mathrm{force-con}_j\right) + \underline{m}^\mathrm{force}_j\right], \qquad \ell \in \{ 1, \ldots, P \}
+\label{eq:moment}
+\end{aligned}\]</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hawt.html" class="btn btn-neutral float-left" title="Model bodies and constraints for a HAWT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="blade-element.html" class="btn btn-neutral float-right" title="Blade-Element Aerodynamics Solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
