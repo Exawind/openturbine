@@ -1,5 +1,5 @@
-Blade-element solver
---------------------
+Blade-Element Aerodynamics Solver
+---------------------------------
 
 In this section we describe the theory for a simple blade-element solver
 for fluid-structure interaction calculations.
