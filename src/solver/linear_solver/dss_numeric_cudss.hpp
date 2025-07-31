@@ -37,7 +37,14 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {
             &x_cudss, num_rows, 1, num_rows, nullptr, CUDA_R_64F, CUDSS_LAYOUT_COL_MAJOR
         );
 
-        cudssExecute(handle, CUDSS_PHASE_FACTORIZATION, config, data, A_cudss, x_cudss, b_cudss);
+        if (dss_handle.is_initial_factorization()) {
+            cudssExecute(handle, CUDSS_PHASE_FACTORIZATION, config, data, A_cudss, x_cudss, b_cudss);
+            dss_handle.set_initial_factorization(false);
+        } else {
+            cudssExecute(
+                handle, CUDSS_PHASE_REFACTORIZATION, config, data, A_cudss, x_cudss, b_cudss
+            );
+        }
 
         cudssMatrixDestroy(A_cudss);
         cudssMatrixDestroy(b_cudss);
