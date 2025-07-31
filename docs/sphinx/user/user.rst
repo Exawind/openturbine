@@ -5,4 +5,6 @@ User Manual
    :glob:
    :maxdepth: 2
 
-   features.rst
+   compiling.rst
+   floating_platform.rst
+   turbine.rst
