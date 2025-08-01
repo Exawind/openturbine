@@ -56,13 +56,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="beam.html">Beam Elements</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Legendre spectral finite elements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="member-types.html">Member Library</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rigid.html">Rigid Body</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spring.html">Geometrically Nonlinear Spring</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="beam.html">Beam</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Legendre spectral finite elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lsfit.html">Beam reference lines and reference configuration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
@@ -71,6 +75,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
 </ul>
 
         </div>
@@ -88,7 +93,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
-          <li class="breadcrumb-item"><a href="beam.html">Beam Elements</a></li>
+          <li class="breadcrumb-item"><a href="member-types.html">Member Library</a></li>
+          <li class="breadcrumb-item"><a href="beam.html">Beam</a></li>
       <li class="breadcrumb-item active">Legendre spectral finite elements</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/lsfe.rst.txt" rel="nofollow"> View page source</a>
@@ -100,7 +106,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="legendre-spectral-finite-elements">
-<h1>Legendre spectral finite elements<a class="headerlink" href="#legendre-spectral-finite-elements" title="Permalink to this heading"></a></h1>
+<span id="sec-lsfe"></span><h1>Legendre spectral finite elements<a class="headerlink" href="#legendre-spectral-finite-elements" title="Permalink to this heading"></a></h1>
 <p>The GEBT equations are discretized with Legendre spectral finite
 elements (LSFEs), which are defined by <span class="math notranslate nohighlight">\(P\)</span> nodes and
 <span class="math notranslate nohighlight">\((P-1)\)</span>th order Lagrangian-interpolant basis functions. Nodes

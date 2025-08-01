@@ -1,3 +1,5 @@
+.. _sec-heavy-top:
+
 Heavy Top Constrained-Rigid-Body Example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -42,7 +44,7 @@ written as three constraint equations as
 
 .. math:: \underline{\Phi} = \underline{\underline{R}}\, \underline{x}^0 - \underline{x}^c \in  \mathbb{R}^3
 
-where :math:`\underline{x}^c` is the current center-of-mass position,
+where :math:`\underline{\Phi} \in \mathbb{R}^3`, :math:`\underline{x}^c` is the current center-of-mass position,
 and for which the constraint gradient matrix is
 
 .. math:: \underline{\underline{B}}  = \begin{bmatrix}
@@ -54,10 +56,11 @@ stiffness matrix associated with linearization of the contraint forces (see Eq.�
 
 .. math:: \underline{\underline{K}}^\Phi = \begin{bmatrix} 
    \underline{\underline{0}} & \underline{\underline{0}}\\
-   \underline{\underline{0}} & \underline{\underline{0}}
+   \underline{\underline{0}} & 
+   \widetilde{\lambda} \, \widetilde{\underline{\underline{R}} \underline{x}}
    \end{bmatrix}
 
-The OpenTurbine regression test suite includes the spinning, heavy top
+where :math:`\underline{\lambda} \in  \mathbb{R}^3` are the Lagrange multipliers.  The OpenTurbine regression test suite includes the spinning, heavy top
 problem with the following initial conditions:
 
 .. math::
@@ -87,6 +90,6 @@ where :math:`\theta = \pi/2`,
       :name: ref-Bruls-etal:2012
 
       Brüls, O., A. Cardona, and M. Arnold. 2012. “Lie Group
-      Generalized-:math:`\alpha` Time Integration Fo Constrained
+      Generalized-:math:`\alpha` Time Integration For Constrained
       Flexible Multibody Systems.” *Mechanism and Machine Theory*,
       121–37.

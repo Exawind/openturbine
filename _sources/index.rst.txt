@@ -39,7 +39,7 @@ Following are the high-level development objectives of OpenTurbine:
    user/user
    theory/index
    developer/index
-
+   acknowledgement
 
 Indices and tables
 ==================

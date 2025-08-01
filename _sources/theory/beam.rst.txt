@@ -1,5 +1,7 @@
-Beam Elements
--------------
+.. _sec-beam:
+
+Beam 
+----
 
 .. toctree::
    gebt

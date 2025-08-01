@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Coupling for fluid-structure-interaction" href="fsi-api.html" />
-    <link rel="prev" title="Model Configurations" href="configs.html" /> 
+    <link rel="prev" title="Rigid body with three taut springs" href="rb-springs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,10 +56,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="beam.html">Beam Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2"><a class="reference internal" href="member-types.html">Member Library</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model Configurations</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heavy-top.html">Heavy Top Constrained-Rigid-Body Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rb-springs.html">Rigid body with three taut springs</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Model bodies and constraints for a HAWT</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#constraints">Constraints</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#constraint-gradient">Constraint Gradient</a></li>
@@ -74,6 +75,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
 </ul>
 
         </div>
@@ -103,7 +105,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="model-bodies-and-constraints-for-a-hawt">
-<h1>Model bodies and constraints for a HAWT<a class="headerlink" href="#model-bodies-and-constraints-for-a-hawt" title="Permalink to this heading"></a></h1>
+<span id="sec-hawt"></span><h1>Model bodies and constraints for a HAWT<a class="headerlink" href="#model-bodies-and-constraints-for-a-hawt" title="Permalink to this heading"></a></h1>
 <p>In this section we describe out approach to modeling a HAWT, including
 the specific “bodies” that include massless nodes with six DOF (position
 and orientation), 6-DOF rigid bodies, rigid connections, and flexible
@@ -742,7 +744,7 @@ Conference on Multibody System Dynamics</em>. Stuttgart, Germany.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="configs.html" class="btn btn-neutral float-left" title="Model Configurations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rb-springs.html" class="btn btn-neutral float-left" title="Rigid body with three taut springs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="fsi-api.html" class="btn btn-neutral float-right" title="Coupling for fluid-structure-interaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

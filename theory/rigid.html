@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid Bodies &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Rigid Body &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -25,8 +25,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Heavy Top Constrained-Rigid-Body Example" href="heavy-top.html" />
-    <link rel="prev" title="Time integration" href="gen-alpha.html" /> 
+    <link rel="next" title="Geometrically Nonlinear Spring" href="spring.html" />
+    <link rel="prev" title="Member Library" href="member-types.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,18 +56,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Rigid Bodies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="heavy-top.html">Heavy Top Constrained-Rigid-Body Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="member-types.html">Member Library</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Rigid Body</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spring.html">Geometrically Nonlinear Spring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="beam.html">Beam</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="beam.html">Beam Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fsi-api.html">Coupling for fluid-structure-interaction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Aerodynamics Solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
 </ul>
 
         </div>
@@ -85,7 +87,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
-      <li class="breadcrumb-item active">Rigid Bodies</li>
+          <li class="breadcrumb-item"><a href="member-types.html">Member Library</a></li>
+      <li class="breadcrumb-item active">Rigid Body</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/rigid.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,8 +98,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="rigid-bodies">
-<h1>Rigid Bodies<a class="headerlink" href="#rigid-bodies" title="Permalink to this heading"></a></h1>
+  <div class="section" id="rigid-body">
+<span id="sec-rigid"></span><h1>Rigid Body<a class="headerlink" href="#rigid-body" title="Permalink to this heading"></a></h1>
 <p>In this section we describe the terms required to calculate the residual
 vector and iteration matrix in Algorithm 1 for simulation of the
 dynamics of a rigid body with six degrees of freedom. An OpenTurbine
@@ -192,19 +195,14 @@ Eq. <a class="reference internal" href="overview.html#equation-residual">(1)</a
 and <span class="math notranslate nohighlight">\(\underline{\underline{K}}\)</span> are assembled, via direct
 stiffness summation, into their global counterparts in the iteration
 matrix, Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a>.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="heavy-top.html">Heavy Top Constrained-Rigid-Body Example</a></li>
-</ul>
-</div>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gen-alpha.html" class="btn btn-neutral float-left" title="Time integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="heavy-top.html" class="btn btn-neutral float-right" title="Heavy Top Constrained-Rigid-Body Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="member-types.html" class="btn btn-neutral float-left" title="Member Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="spring.html" class="btn btn-neutral float-right" title="Geometrically Nonlinear Spring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

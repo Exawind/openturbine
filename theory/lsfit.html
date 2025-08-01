@@ -56,13 +56,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rigid.html">Rigid Bodies</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="beam.html">Beam Elements</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Beam reference lines and reference configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="member-types.html">Member Library</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rigid.html">Rigid Body</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spring.html">Geometrically Nonlinear Spring</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="beam.html">Beam</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gebt.html">Geometrically Exact Beam Theory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Beam reference lines and reference configuration</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
@@ -71,6 +75,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
 </ul>
 
         </div>
@@ -88,7 +93,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
-          <li class="breadcrumb-item"><a href="beam.html">Beam Elements</a></li>
+          <li class="breadcrumb-item"><a href="member-types.html">Member Library</a></li>
+          <li class="breadcrumb-item"><a href="beam.html">Beam</a></li>
       <li class="breadcrumb-item active">Beam reference lines and reference configuration</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/lsfit.rst.txt" rel="nofollow"> View page source</a>
@@ -100,7 +106,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="beam-reference-lines-and-reference-configuration">
-<h1>Beam reference lines and reference configuration<a class="headerlink" href="#beam-reference-lines-and-reference-configuration" title="Permalink to this heading"></a></h1>
+<span id="sec-lsfit"></span><h1>Beam reference lines and reference configuration<a class="headerlink" href="#beam-reference-lines-and-reference-configuration" title="Permalink to this heading"></a></h1>
 <p>The use of LSFEs as our beam spatial discretization presents
 opportunities and challenges for the geometric representation of slender
 structures like turbine blades. Turbine blades can be curved, swept,
@@ -156,7 +162,7 @@ coordinates) as</p>
  \underline{x}^\mathrm{geom}(\xi) = \sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell \phi_\ell(\xi)
 \end{aligned}\]</div>
 <p>for <span class="math notranslate nohighlight">\(\xi\in[-1,1]\)</span>.</p>
-<p>Figure <a class="reference external" href="#fig:lsfit-example">1</a> shows the results of the fitting
+<p>Figure <a class="reference internal" href="#fig-lsfit-example"><span class="std std-numref">1</span></a> shows the results of the fitting
 process for the IEA 15-MW reference turbine, which is defined by 50
 points. Shown are LSFE fits with 3, 7, and 10 nodes. Clearly the 10-node
 fit provides an excellent geometric approximation of the discrete data.
@@ -164,12 +170,12 @@ For reference, also shown is 10-node representation with linear
 segments, which emphasizes the advantage of the LSFE representation for
 a given number of nodes.</p>
 <div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="../_images/doc-lsfit.png"><img alt="A plot of data" src="../_images/doc-lsfit.png" style="width: 80%;" /></a>
-<p class="caption"><span class="caption-number">1 </span><span class="caption-text">This is the caption of the figure.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+<span id="fig-lsfit-example"></span><a class="reference internal image-reference" href="../_images/doc-lsfit.png"><img alt="A plot of data" src="../_images/doc-lsfit.png" style="width: 80%;" /></a>
+<p class="caption"><span class="caption-number">1 </span><span class="caption-text">Discrete representation of the IEA 15-MW reference-turbine blade reference line with 50 points, and four continuous-function representations of the beam reference line.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
 </div>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/doc-lsfit-zoom.png"><img alt="A plot of data" src="../_images/doc-lsfit-zoom.png" style="width: 80%;" /></a>
-<p class="caption"><span class="caption-number">2 </span><span class="caption-text">This is the caption of the figure.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+<p class="caption"><span class="caption-number">2 </span><span class="caption-text">Close up of the data shown in Figure <a class="reference internal" href="#fig-lsfit-example"><span class="std std-numref">1</span></a>.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
 </div>
 <p>A beam’s reference line also requires the definition of its orientation.
 We construct the orientation from the LSFE line as follows:</p>

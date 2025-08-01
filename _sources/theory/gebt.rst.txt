@@ -1,3 +1,5 @@
+.. _sec-gebt:
+
 Geometrically Exact Beam Theory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rigid body with three taut springs &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model bodies and constraints for a HAWT" href="hawt.html" />
+    <link rel="prev" title="Heavy Top Constrained-Rigid-Body Example" href="heavy-top.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2"><a class="reference internal" href="member-types.html">Member Library</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model Configurations</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heavy-top.html">Heavy Top Constrained-Rigid-Body Example</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Rigid body with three taut springs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hawt.html">Model bodies and constraints for a HAWT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fsi-api.html">Coupling for fluid-structure-interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Aerodynamics Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
+          <li class="breadcrumb-item"><a href="configs.html">Model Configurations</a></li>
+      <li class="breadcrumb-item active">Rigid body with three taut springs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/theory/rb-springs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="rigid-body-with-three-taut-springs">
+<span id="sec-rb-springs"></span><h1>Rigid body with three taut springs<a class="headerlink" href="#rigid-body-with-three-taut-springs" title="Permalink to this heading"></a></h1>
+<p>This section provides model details for a rigid-body solver with three
+massless taut-line “mooring lines”, represented by geometrically
+nonlinear springs. The model configuration is appropriate for modeling
+the DeepCWind floating platform.</p>
+<p>The generalied model degrees of freedom are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{q} = \begin{bmatrix}
+  \underline{u} \\
+  \underline{\underline{R}} \\
+  \underline{u}^\mathrm{sp1} \\
+  \underline{u}^\mathrm{sp2} \\
+  \underline{u}^\mathrm{sp3}
+ \end{bmatrix} \quad
+ \underline{v} = \begin{bmatrix}
+  \dot{\underline{u}} \\
+  \underline{\omega} \\
+  \dot{\underline{u}}^\mathrm{sp1} \\
+  \dot{\underline{u}}^\mathrm{sp2} \\
+  \dot{\underline{u}}^\mathrm{sp3}
+ \end{bmatrix}\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\underline{u} \in \mathbb{R}^3\)</span> and
+<span class="math notranslate nohighlight">\(\underline{\underline{R}} \in \mathbb{R}^{3\times 3}\)</span> are rigid
+body displacement and orientation, respectively,
+<span class="math notranslate nohighlight">\(\underline{u}^{\mathrm{sp}i} \in \mathbb{R}^6\)</span> is spring i end
+displacement (2 nodes with 3 DOF each; see <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically Nonlinear Spring</span></a>) and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{u}^{\mathrm{sp}i} =
+\begin{bmatrix}
+\underline{u}^{\mathrm{sp}i}_1 \\ \underline{u}^{\mathrm{sp}i}_2
+\end{bmatrix}\end{split}\]</div>
+<p>The system input parameters include the following:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\underline{\underline{M}}^* \in \mathbb{R}^{6\times 6}\)</span>: Rigid
+body mass matrix in material coordinate system</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^0 \in \mathbb{R}^3\)</span>: Rigid body reference
+position</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{\underline{R}}^0 \in \mathbb{R}^{3\times3}\)</span>: Rigid
+body reference orientation</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{u}^\mathrm{init} \in \mathbb{R}^3\)</span>: Rigid body
+initial displacement</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{init} \in \mathbb{R}^{3\times3}\)</span>:
+Rigid body initial orientation</p></li>
+<li><p><span class="math notranslate nohighlight">\(\dot{\underline{u}}^\mathrm{init} \in \mathbb{R}^3\)</span>: Rigid body
+initial velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{\omega}^\mathrm{init} \in \mathbb{R}^3\)</span>: Rigid body
+initial angular velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{sp0}i} \in \mathbb{R}^6\)</span>: Spring
+<span class="math notranslate nohighlight">\(i\)</span> reference location</p></li>
+<li><p><span class="math notranslate nohighlight">\(k^{\mathrm{sp}i} \in \mathbb{R}\)</span>: Spring <span class="math notranslate nohighlight">\(i\)</span> spring
+constant</p></li>
+<li><p><span class="math notranslate nohighlight">\(L^{\mathrm{sp0}i} \in \mathbb{R}\)</span>: Spring <span class="math notranslate nohighlight">\(i\)</span> unstretched
+length</p></li>
+</ul>
+<p>and where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{x}^{\mathrm{sp0}i} =
+\begin{bmatrix}
+\underline{x}^{\mathrm{sp0}i}_1 \\ \underline{x}^{\mathrm{sp0}i}_2
+\end{bmatrix}\end{split}\]</div>
+<p>The contraints for each spring can be written</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+ \underline{u}_1^{\mathrm{sp}i} &amp;=  \underline{u} + \underline{\underline{R}} \underline{r}^{\mathrm{sp0}i}_1
+- \underline{r}^{\mathrm{sp0}i}  = \underline{u} + \left(\underline{\underline{R}}-\underline{\underline{I}}\right)
+\underline{r}^{\mathrm{sp0}i}_1 \\
+\underline{u}_2^{\mathrm{sp}i} &amp;= 0
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{r}^{\mathrm{sp0}i}_1
+= \underline{x}^{\mathrm{sp0}i}_1 - \underline{x}^0\)</span>.</p>
+<p>The full-system residual required for time integration can be written as follows (see Eq. <a class="reference internal" href="overview.html#equation-residual">(1)</a>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{R} = \begin{bmatrix}
+\underline{\underline{M}}\, \dot{\underline{v}} +\underline{g} - \underline{f} + \underline{\underline{B}}^T\underline{\lambda} \\
+\underline{\Phi}
+\end{bmatrix}
+\in \mathbb{R}^{42}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\lambda} \in \mathbb{R}^{18}\)</span>, <span class="math notranslate nohighlight">\(\underline{\underline{B}} \in \mathbb{R}^{18 \times 24}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{M}}
+= \begin{bmatrix}
+\underline{\underline{M}}^\mathrm{rb} &amp; \underline{\underline{0}}_{6\times 18}\\
+\underline{\underline{0}}_{18\times 6} &amp; \underline{\underline{0}}_{18\times 18}
+\end{bmatrix} \in \mathbb{R}^{24\times 24}
+\,,\quad \underline{g} = \begin{bmatrix}
+\underline{g}^\mathrm{rb} \\
+\underline{g}^\mathrm{sp1} \\
+\underline{g}^\mathrm{sp2} \\
+\underline{g}^\mathrm{sp3}
+\end{bmatrix} \in \mathbb{R}^{24}
+\,,\quad
+\underline{f}
+=
+\begin{bmatrix}
+\underline{f}^\mathrm{rb}\\
+\underline{0}_{18}\\
+\end{bmatrix}
+\in \mathbb{R}^{24}\end{split}\]</div>
+<p>In the above, <span class="math notranslate nohighlight">\(\underline{\underline{M}}^\mathrm{rb} \in \mathbb{R}^{6 \times 6}\)</span> and <span class="math notranslate nohighlight">\(\underline{g}^\mathrm{rb}\in \mathbb{R}^6\)</span> are defined in <a class="reference internal" href="rigid.html#sec-rigid"><span class="std std-ref">Rigid Body</span></a>, <span class="math notranslate nohighlight">\(\underline{f}^\mathrm{rb}\in \mathbb{R}^6\)</span> is the force applied to the rigid-body center of mass, and <span class="math notranslate nohighlight">\(\underline{g}^{\mathrm{sp}i}\in\mathbb{R}^6\)</span> is defined in <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically Nonlinear Spring</span></a>. The constraints are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\Phi} =
+\begin{bmatrix}
+\underline{u}_1^{\mathrm{sp}1} - \underline{u}
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}1} \\
+\underline{u}_2^{\mathrm{sp}1} \\
+\underline{u}_1^{\mathrm{sp}2} - \underline{u}
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}2} \\
+\underline{u}_2^{\mathrm{sp}2} \\
+\underline{u}_1^{\mathrm{sp}3} - \underline{u}
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}3} \\
+\underline{u}_2^{\mathrm{sp}3} \\
+\end{bmatrix} \quad
+\in \mathbb{R}^{18}\end{split}\]</div>
+<p>The specific entries of <span class="math notranslate nohighlight">\(\underline{\underline{B}}\)</span> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\underline{\underline{B}} =
+\begin{bmatrix}
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}1} }
+&amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
+%
+\underline{\underline{0}}_{3 \times 3} &amp;  \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
+%
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}2} }
+&amp; \underline{\underline{0}}_{3 \times 3}  &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
+%
+\underline{\underline{0}}_{3 \times 3} &amp;  \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
+%
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}3} }
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}\\
+%
+\underline{\underline{0}}_{3 \times 3} &amp;  \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
+&amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3} \\
+\end{bmatrix}
+\end{aligned}\end{split}\]</div>
+<p>The full matrices <span class="math notranslate nohighlight">\(\underline{\underline{C}}\)</span>, <span class="math notranslate nohighlight">\(\underline{\underline{K}}\)</span>, and <span class="math notranslate nohighlight">\(\underline{\underline{K}}^\Phi\)</span> for the iteration matrix Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a> in <a class="reference internal" href="gen-alpha.html#sec-gen-alpha"><span class="std std-ref">Time integration: Generalized-Alpha</span></a> are given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{C}} = \begin{bmatrix}
+\underline{\underline{C}}^\mathrm{rb} &amp; \underline{\underline{0}}_{6 \times 18}\\
+\underline{\underline{0}}_{18 \times 6} &amp; \underline{\underline{0}}_{18 \times 18}
+\end{bmatrix}
+\in \mathbb{R}^{24 \times 24}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}} = \begin{bmatrix}
+\underline{\underline{K}}^\mathrm{rb} &amp; \underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{0}}_{6 \times 6}\\
+\underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{K}}^\mathrm{sp1} &amp; \underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{0}}_{6 \times 6}\\
+\underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{K}}^\mathrm{sp2} &amp; \underline{\underline{0}}_{6 \times 12}\\
+\underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{0}}_{6 \times 6} &amp;  \underline{\underline{0}}_{6 \times 6} &amp; \underline{\underline{K}}^\mathrm{sp3}
+\end{bmatrix}
+\in \mathbb{R}^{24 \times 24}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{K}}^\Phi = \begin{bmatrix}
+\underline{\underline{0}}_{3 \times 3} &amp;
+\underline{\underline{0}}_{3 \times 3} &amp;
+\underline{\underline{0}}_{3 \times 18} \\
+\underline{\underline{0}}_{3 \times 3} &amp;
+\left(
+ \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp01}}} +
+ \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp02}}} +
+ \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp03}}}\right)  &amp;
+\underline{\underline{0}}_{3 \times 18} \\
+\underline{\underline{0}}_{18 \times 3} &amp;
+\underline{\underline{0}}_{18 \times 3} &amp;
+\underline{\underline{0}}_{18 \times 18}
+\end{bmatrix} \in \mathbb{R}^{24 \times 24}\end{split}\]</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="heavy-top.html" class="btn btn-neutral float-left" title="Heavy Top Constrained-Rigid-Body Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hawt.html" class="btn btn-neutral float-right" title="Model bodies and constraints for a HAWT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

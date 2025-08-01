@@ -25,8 +25,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Beam Elements" href="beam.html" />
-    <link rel="prev" title="Rigid Bodies" href="rigid.html" /> 
+    <link rel="next" title="Rigid body with three taut springs" href="rb-springs.html" />
+    <link rel="prev" title="Model Configurations" href="configs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,18 +56,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="rigid.html">Rigid Bodies</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
+<li class="toctree-l2"><a class="reference internal" href="member-types.html">Member Library</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model Configurations</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Heavy Top Constrained-Rigid-Body Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rb-springs.html">Rigid body with three taut springs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hawt.html">Model bodies and constraints for a HAWT</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="beam.html">Beam Elements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configs.html">Model Configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fsi-api.html">Coupling for fluid-structure-interaction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Aerodynamics Solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
 </ul>
 
         </div>
@@ -85,7 +87,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
-          <li class="breadcrumb-item"><a href="rigid.html">Rigid Bodies</a></li>
+          <li class="breadcrumb-item"><a href="configs.html">Model Configurations</a></li>
       <li class="breadcrumb-item active">Heavy Top Constrained-Rigid-Body Example</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/heavy-top.rst.txt" rel="nofollow"> View page source</a>
@@ -97,7 +99,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="heavy-top-constrained-rigid-body-example">
-<h1>Heavy Top Constrained-Rigid-Body Example<a class="headerlink" href="#heavy-top-constrained-rigid-body-example" title="Permalink to this heading"></a></h1>
+<span id="sec-heavy-top"></span><h1>Heavy Top Constrained-Rigid-Body Example<a class="headerlink" href="#heavy-top-constrained-rigid-body-example" title="Permalink to this heading"></a></h1>
 <p>We provide here a simple application of the OpenTurbine formulation for
 the the heavy-top problem, which is a rotating body fixed to the ground
 by a spherical joint. It is a common benchmark problem for
@@ -131,7 +133,7 @@ that the center of mass is located 1 m from the origin, which can be
 written as three constraint equations as</p>
 <div class="math notranslate nohighlight">
 \[\underline{\Phi} = \underline{\underline{R}}\, \underline{x}^0 - \underline{x}^c \in  \mathbb{R}^3\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{x}^c\)</span> is the current center-of-mass position,
+<p>where <span class="math notranslate nohighlight">\(\underline{\Phi} \in \mathbb{R}^3\)</span>, <span class="math notranslate nohighlight">\(\underline{x}^c\)</span> is the current center-of-mass position,
 and for which the constraint gradient matrix is</p>
 <div class="math notranslate nohighlight">
 \[\underline{\underline{B}}  = \begin{bmatrix}
@@ -142,9 +144,10 @@ stiffness matrix associated with linearization of the contraint forces (see Eq.�
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{\underline{K}}^\Phi = \begin{bmatrix}
 \underline{\underline{0}} &amp; \underline{\underline{0}}\\
-\underline{\underline{0}} &amp; \underline{\underline{0}}
+\underline{\underline{0}} &amp;
+\widetilde{\lambda} \, \widetilde{\underline{\underline{R}} \underline{x}}
 \end{bmatrix}\end{split}\]</div>
-<p>The OpenTurbine regression test suite includes the spinning, heavy top
+<p>where <span class="math notranslate nohighlight">\(\underline{\lambda} \in  \mathbb{R}^3\)</span> are the Lagrange multipliers.  The OpenTurbine regression test suite includes the spinning, heavy top
 problem with the following initial conditions:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -164,7 +167,7 @@ problem with the following initial conditions:</p>
 <div class="references csl-bib-body hanging-indent docutils container" id="refs">
 <div class="csl-entry docutils container" id="ref-bruls-etal-2012">
 <p>Brüls, O., A. Cardona, and M. Arnold. 2012. “Lie Group
-Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Time Integration Fo Constrained
+Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Time Integration For Constrained
 Flexible Multibody Systems.” <em>Mechanism and Machine Theory</em>,
 121–37.</p>
 </div>
@@ -175,8 +178,8 @@ Flexible Multibody Systems.” <em>Mechanism and Machine Theory</em>,
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rigid.html" class="btn btn-neutral float-left" title="Rigid Bodies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="beam.html" class="btn btn-neutral float-right" title="Beam Elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="configs.html" class="btn btn-neutral float-left" title="Model Configurations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rb-springs.html" class="btn btn-neutral float-right" title="Rigid body with three taut springs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
