@@ -12,7 +12,7 @@ namespace openturbine {
  *
  * @param x Evaluation point
  * @param xs Interpolation nodes (sorted)
- * @return weights Weights for linear interpolation (same size as xs)
+ * @param weights Output: weights for linear interpolation
  */
 inline void LinearInterpWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
