@@ -2,11 +2,10 @@
 #include <cassert>
 
 #include <Kokkos_Core.hpp>
-#include <yaml-cpp/yaml.h>
-
 #include <elements/beams/hollow_circle_properties.hpp>
 #include <interfaces/turbine/turbine_interface.hpp>
 #include <interfaces/turbine/turbine_interface_builder.hpp>
+#include <yaml-cpp/yaml.h>
 
 int main() {
     // OpenTurbine is based on Kokkos for performance portability.  Make sure to
