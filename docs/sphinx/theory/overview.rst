@@ -1,6 +1,6 @@
 .. _sec-overview:
 
-Formulation Overview
+Formulation overview
 --------------------
 
 OpenTurbine was designed to solve flexible multibody problems that have

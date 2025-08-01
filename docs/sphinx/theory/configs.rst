@@ -1,6 +1,6 @@
 .. _sec-configs:
 
-Model Configurations
+Model configurations
 --------------------
 
 .. toctree::

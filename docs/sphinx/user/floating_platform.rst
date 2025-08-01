@@ -1,7 +1,7 @@
-Example: Floating Platform
-==========================
+Example: Rigid body with three springs
+======================================
 
-This example will walkthrough how to run a floating platform simulation using OpenTurbine's high level API.
+This example will walkthrough how to run simulation of a forced rigid body supported by three nonlinear springs (see :ref:`sec-rb-springs` for details) using OpenTurbine's high level API.  This model is associated with the DeepCWind platform.
 For the most up to date working version of this code, look in ``tests/documentation_tests/floating_platform``.
 
 As with any C++ program, start with the includes.

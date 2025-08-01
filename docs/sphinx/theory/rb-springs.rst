@@ -1,7 +1,7 @@
 .. _sec-rb-springs:
 
-Rigid body with three taut springs
-----------------------------------
+Rigid body with three springs
+-----------------------------
 
 This section provides model details for a rigid-body solver with three
 massless taut-line "mooring lines", represented by geometrically

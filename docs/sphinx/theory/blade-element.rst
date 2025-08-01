@@ -1,6 +1,6 @@
 .. _sec-blade-element:
 
-Blade-Element Aerodynamics Solver
+Blade-element aerodynamics solver
 ---------------------------------
 
 In this section we describe the theory for a simple blade-element solver
