@@ -420,7 +420,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ScanRowEntries.html">ScanRowEntries</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix operations and linear systems solution.  <a href="structopenturbine_1_1Solver.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This object manages the assembly and solution of linear system arising from the generalized-alpha based time integration of the dynamic structural problem.  <a href="structopenturbine_1_1Solver.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1SpringElement.html">SpringElement</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spring element represents a constitutively linear spring connecting two nodes and defined by its scalar stiffness and undeformed length.  <a href="structopenturbine_1_1SpringElement.html#details">More...</a><br /></td></tr>
@@ -4298,7 +4298,7 @@ template&lt;typename DeviceType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameters</td><td>Simulation step parameters including time step size and convergence criteria </td></tr>
-    <tr><td class="paramname">solver</td><td><a class="el" href="structopenturbine_1_1Solver.html" title="A linear systems solver for assembling and solving system matrices and constraints in OpenTurbine....">Solver</a> object containing system matrices and solution methods </td></tr>
+    <tr><td class="paramname">solver</td><td><a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object containing system matrices and solution methods </td></tr>
     <tr><td class="paramname">elements</td><td>Collection of elements (beams, masses etc.) in the FE mesh </td></tr>
     <tr><td class="paramname">state</td><td>Current state of the system (positions, velocities, accelerations etc.) </td></tr>
     <tr><td class="paramname">constraints</td><td>System constraints and their associated data</td></tr>
