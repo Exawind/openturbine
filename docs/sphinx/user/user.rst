@@ -6,5 +6,6 @@ User Manual
    :maxdepth: 2
 
    compiling.rst
+   linking.rst
    floating_platform.rst
    turbine.rst
