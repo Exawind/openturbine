@@ -1,3 +1,5 @@
+.. _sec-lsfe:
+
 Legendre spectral finite elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

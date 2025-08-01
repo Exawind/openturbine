@@ -10,8 +10,7 @@ elements, constraints, and other relevant topics.
 
    overview
    gen-alpha
-   rigid
-   beam
+   member-types
    configs
    fsi-api
    blade-element

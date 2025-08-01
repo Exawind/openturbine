@@ -1,4 +1,4 @@
-.. _`sec:fsi`:
+.. _`sec:fsi-api`:
 
 Coupling for fluid-structure-interaction
 ----------------------------------------
@@ -30,7 +30,7 @@ to a computational MPI rank.
 
 We focus on coupling between a member with :math:`P` nodes, where
 :math:`P=1` for body represented by a point, e.g. a rigid body or a
-massless 6-DOE node, and a fluid model whose motion is tied to structure
+massless 6-DOF node, and a fluid model whose motion is tied to structure
 motion. The interface should be such that only the following nodal data
 (for :math:`P` nodes) is transferred after initialization:
 

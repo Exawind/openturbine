@@ -1,3 +1,5 @@
+.. _sec-hawt:
+
 Model bodies and constraints for a HAWT
 ---------------------------------------
 

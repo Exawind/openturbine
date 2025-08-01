@@ -1,3 +1,5 @@
+.. _sec-lsfit:
+
 Beam reference lines and reference configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -63,7 +65,7 @@ coordinates) as
 
 for :math:`\xi\in[-1,1]`.
 
-Figure `1 <#fig:lsfit-example>`__ shows the results of the fitting
+Figure :numref:`fig-lsfit-example` shows the results of the fitting
 process for the IEA 15-MW reference turbine, which is defined by 50
 points. Shown are LSFE fits with 3, 7, and 10 nodes. Clearly the 10-node
 fit provides an excellent geometric approximation of the discrete data.
@@ -71,19 +73,21 @@ For reference, also shown is 10-node representation with linear
 segments, which emphasizes the advantage of the LSFE representation for
 a given number of nodes.
 
+.. _fig-lsfit-example:
+
 .. figure:: images/doc-lsfit.png
    :alt: A plot of data
    :width: 80%
    :align: center
 
-   This is the caption of the figure.
+   Discrete representation of the IEA 15-MW reference-turbine blade reference line with 50 points, and four continuous-function representations of the beam reference line.
 
 .. figure:: images/doc-lsfit-zoom.png
    :alt: A plot of data
    :width: 80%
    :align: center
 
-   This is the caption of the figure.
+   Close up of the data shown in Figure :numref:`fig-lsfit-example`.
 
 A beam’s reference line also requires the definition of its orientation.
 We construct the orientation from the LSFE line as follows:

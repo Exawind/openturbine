@@ -1,3 +1,4 @@
+.. _sec-overview:
 
 Formulation Overview
 --------------------
