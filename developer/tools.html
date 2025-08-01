@@ -51,7 +51,6 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Theory Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developer Documentation</a><ul class="current">
@@ -61,6 +60,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../doxygen/html/index.html">OpenTurbine API</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Developer Tools</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#clang-format">clang-format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clang-tidy">clang-tidy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cppcheck">Cppcheck</a></li>
 </ul>
 </li>
 </ul>
@@ -94,29 +95,32 @@
              
   <div class="section" id="developer-tools">
 <h1>Developer Tools<a class="headerlink" href="#developer-tools" title="Permalink to this heading"></a></h1>
-<p>This page describes tools used in the development of OpenTurbine. These should
-generally be adopted by all developers so that expectations and systems are
-aligned.</p>
+<p>This page describes static and dynamic analysis tools used in the development
+of OpenTurbine. These tools are run and must pass as part of the CI process,
+so it will likely become important for integration into a developer’s process.</p>
 <div class="section" id="clang-format">
 <h2>clang-format<a class="headerlink" href="#clang-format" title="Permalink to this heading"></a></h2>
 <p><a class="reference external" href="https://clang.llvm.org/docs/ClangFormat.html">ClangFormat</a> is used for
 linting to enforce a consistent code style. It can be installed with most package
-managers. The syntax to run the linter is given below.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lint in place all .cpp files in the src directory</span>
-clang-format<span class="w"> </span>-i<span class="w"> </span>src/*.cpp
-
-<span class="c1"># Show changes in stdout for all header files in the utilities directory</span>
-clang-format<span class="w"> </span>-i<span class="w"> </span>src/utilities/*.H
-</pre></div>
+managers.</p>
+<p>ClangFormat is configured by the <code class="docutils literal notranslate"><span class="pre">.clang-format</span></code> file at the top of the repository.
+If the tool is run from the top directory, it will automatically detect and load the
+settings in the configuration file.</p>
 </div>
-<p>ClangFormat is configured by the <code class="docutils literal notranslate"><span class="pre">.clang-format</span></code>. If the tool is run from the
-top directory, it will automatically detect and load the settings in the
-configuration file.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The CI system runs this linter and any required changes will cause the system
-to fail.</p>
+<div class="section" id="clang-tidy">
+<h2>clang-tidy<a class="headerlink" href="#clang-tidy" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://clang.llvm.org/extra/clang-tidy/">ClangTidy</a> is another linting tool
+tool which enforces a variety of rules on the code in order to avoid common
+bugs.</p>
+<p>ClangTidy is configure by the <code class="docutils literal notranslate"><span class="pre">.clang-tidy</span></code> file at the top of the repository.
+To run it, configure OpenTurbine with the <code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_CLANG_TIDY</span></code> option.</p>
 </div>
+<div class="section" id="cppcheck">
+<h2>Cppcheck<a class="headerlink" href="#cppcheck" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://cppcheck.sourceforge.io/">Cppcehck</a> is yet another linting tools
+which detects undefined behavior and dangerous constructs with very few
+false positives.</p>
+<p>To run Cppcheck, configure OpenTurbine with the <code class="docutils literal notranslate"><span class="pre">OpenTurbine_ENABLE_CPPCHECK</span></code> option.</p>
 </div>
 </div>
 

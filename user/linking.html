@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capabilities and Roadmap &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Linking To OpenTurbine &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Theory Manual" href="../theory/index.html" />
-    <link rel="prev" title="User Manual" href="user.html" /> 
+    <link rel="next" title="Example: Floating Platform" href="floating_platform.html" />
+    <link rel="prev" title="Compiling" href="compiling.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,12 +52,11 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../walkthrough/index.html">Walkthrough</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Capabilities and Roadmap</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Capabilities</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linking To OpenTurbine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_platform.html">Example: Floating Platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Theory Manual</a></li>
@@ -79,9 +78,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="user.html">User Manual</a></li>
-      <li class="breadcrumb-item active">Capabilities and Roadmap</li>
+      <li class="breadcrumb-item active">Linking To OpenTurbine</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/user/features.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/user/linking.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,36 +88,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="capabilities-and-roadmap">
-<span id="capabilities"></span><h1>Capabilities and Roadmap<a class="headerlink" href="#capabilities-and-roadmap" title="Permalink to this heading"></a></h1>
-<p>This section documents a non-exhaustive list of current OpenTurbine
-capabilities and roadmap for future capabilities.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>If your project relies on a capability that is not yet present in
-OpenTurbine, please create an issue on the code project page.</p>
-<p>Please acknowledge as a publication co-author any developer that
-has significantly contributed to implementing or improving specific
-capability that was used for that publication.</p>
+  <div class="section" id="linking-to-openturbine">
+<h1>Linking To OpenTurbine<a class="headerlink" href="#linking-to-openturbine" title="Permalink to this heading"></a></h1>
+<p>OpenTurbine is fully discoverable using CMake’s <code class="docutils literal notranslate"><span class="pre">find_package</span></code> utility.
+Simply add the following line to your <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">OpenTurbine</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="id1">
-<h2>Capabilities<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>The capabilities are linked to the relevant input file references
-(keyword <cite>inp</cite>) and documentation (keyword <cite>doc</cite>). Searching for
-those keywords in the <cite>test/test_files</cite> directory will give
-concrete examples of the feature usage.</p>
+<p>This utility will search your path for your OpenTurbine installation and load its target information.
+To link against OpenTurbine, add to your <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> the line</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my_executable</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">OpenTurbine::openturbine_library</span><span class="p">)</span>
+</pre></div>
 </div>
-</div>
+<p>This line will link to OpenTurbine and all of its dependencies - there is no need to include any transitive dependencies, such as Kokkos, explicitly.</p>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="user.html" class="btn btn-neutral float-left" title="User Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../theory/index.html" class="btn btn-neutral float-right" title="Theory Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compiling.html" class="btn btn-neutral float-left" title="Compiling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="floating_platform.html" class="btn btn-neutral float-right" title="Example: Floating Platform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

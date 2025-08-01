@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example: Floating Platform &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example: IEA15MW Turbine" href="turbine.html" />
+    <link rel="prev" title="Linking To OpenTurbine" href="linking.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To OpenTurbine</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example: Floating Platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="user.html">User Manual</a></li>
+      <li class="breadcrumb-item active">Example: Floating Platform</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user/floating_platform.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="example-floating-platform">
+<h1>Example: Floating Platform<a class="headerlink" href="#example-floating-platform" title="Permalink to this heading"></a></h1>
+<p>This example will walkthrough how to run a floating platform simulation using OpenTurbine’s high level API.
+For the most up to date working version of this code, look in <code class="docutils literal notranslate"><span class="pre">tests/documentation_tests/floating_platform</span></code>.</p>
+<p>As with any C++ program, start with the includes.
+As a Kokkos-based library, you’ll need to include <code class="docutils literal notranslate"><span class="pre">Kokkos_Core.hpp</span></code> for setup and teardown operations.
+In this example, we will be interfacing to OpenTurbine using its CFD interface.
+In addition to the interface itself, we will include the builder, which is a factory class which will aid in setting up all the necessary data structures.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;array&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cassert&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Kokkos_Core.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;interfaces/cfd/interface.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;interfaces/cfd/interface_builder.hpp&gt;</span>
+</pre></div>
+</div>
+<p>We now create the main function of our program and initialize Kokkos.
+We also start a scope around the rest of the program.
+This scoping is necessary to ensure that all Kokkos objects are destroyed before finalize is called and the program exits.
+Failure to do this will result in lots of nasty, hard to decipher errors on program termination.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Kokkos</span><span class="o">::</span><span class="n">initialize</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Kokkos</span><span class="o">::</span><span class="n">finalize</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now set up some constants that we’ll need when running the simulation.
+In general, these will be read fom an input file, but we just define them inline here.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">time_step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">rho_inf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">max_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_steps</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">t_end</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">time_step</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">gravity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">-9.8124</span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">platform_mass</span><span class="p">{</span><span class="mf">1.419625E+7</span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">platform_moi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">1.2898E+10</span><span class="p">,</span><span class="w"> </span><span class="mf">1.2851E+10</span><span class="p">,</span><span class="w"> </span><span class="mf">1.4189E+10</span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">platform_mass_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="n">platform_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">platform_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">platform_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">platform_moi</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">platform_moi</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">platform_moi</span><span class="p">[</span><span class="mi">2</span><span class="p">]},</span>
+<span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">mooring_line_stiffness</span><span class="p">{</span><span class="mf">48.9e3</span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">mooring_line_initial_length</span><span class="p">{</span><span class="mf">55.432</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>We start by creating an interface builder.
+You can string together setter functions, or call them individually, depending on what works best with your application.</p>
+<p>First, we’ll set some general parameters to be used by the solver.
+These include the gravity, time step size, numerical damping factor, and maximum number of nonlinear iterations taken per step.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">interface_builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">cfd</span><span class="o">::</span><span class="n">InterfaceBuilder</span><span class="p">{}</span>
+<span class="w">                          </span><span class="p">.</span><span class="n">SetGravity</span><span class="p">(</span><span class="n">gravity</span><span class="p">)</span>
+<span class="w">                          </span><span class="p">.</span><span class="n">SetTimeStep</span><span class="p">(</span><span class="n">time_step</span><span class="p">)</span>
+<span class="w">                          </span><span class="p">.</span><span class="n">SetDampingFactor</span><span class="p">(</span><span class="n">rho_inf</span><span class="p">)</span>
+<span class="w">                          </span><span class="p">.</span><span class="n">SetMaximumNonlinearIterations</span><span class="p">(</span><span class="n">max_iter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The floating platform itself is modeled as a point mass.
+To initialize it, we need two pieces of information: its initial position/orientation (as a quaternion) and its mass matrix.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">interface_builder</span><span class="p">.</span><span class="n">EnableFloatingPlatform</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetFloatingPlatformPosition</span><span class="p">({</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">-7.53</span><span class="p">,</span><span class="w"> </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetFloatingPlatformMassMatrix</span><span class="p">(</span><span class="n">platform_mass_matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Mooring lines are modeled as linear springs and require four pieces of information: the stiffness, the initial length, the position of the fairlead point, and the position of the anchor point.
+The first argument to each of these setters is the index to the mooring line to be specified.</p>
+<p>While the number of Mooring lines must be set before any other information, the other parameters may be set in any order.
+We specify all the information for each mooring line at once here, you can also set all the lengths for each line before moving on to the stiffnesses, and so on.
+Pick whichever style best fits your application.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">interface_builder</span><span class="p">.</span><span class="n">SetNumberOfMooringLines</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineStiffness</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_stiffness</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineUndeformedLength</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_initial_length</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineFairleadPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">-40.87</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-14.</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineAnchorPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">-105.47</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">-58.4</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineStiffness</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_stiffness</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineUndeformedLength</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_initial_length</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineFairleadPosition</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">20.43</span><span class="p">,</span><span class="w"> </span><span class="mf">-35.39</span><span class="p">,</span><span class="w"> </span><span class="mf">-14.</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineAnchorPosition</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">52.73</span><span class="p">,</span><span class="w"> </span><span class="mf">-91.34</span><span class="p">,</span><span class="w"> </span><span class="mf">-58.4</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineStiffness</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_stiffness</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineUndeformedLength</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">mooring_line_initial_length</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineFairleadPosition</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">20.43</span><span class="p">,</span><span class="w"> </span><span class="mf">35.39</span><span class="p">,</span><span class="w"> </span><span class="mf">-14.</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMooringLineAnchorPosition</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mf">52.73</span><span class="p">,</span><span class="w"> </span><span class="mf">91.34</span><span class="p">,</span><span class="w"> </span><span class="mf">-58.4</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>When done, call the <code class="docutils literal notranslate"><span class="pre">.Build()</span></code> function to generate all of OpenTurbine’s data structures and create the interface itself.</p>
+<p>..code-block:: cpp</p>
+<blockquote>
+<div><p>auto interface = interface_builder.Build();</p>
+</div></blockquote>
+<p>We now compute the buoyancy forces for use during the time stepping process.</p>
+<p>..code-block:: cpp</p>
+<blockquote>
+<div><p>const auto initial_spring_force = 1907514.4912628897;
+const auto platform_gravity_force = -gravity[2] * platform_mass;
+const auto buoyancy_force = initial_spring_force + platform_gravity_force;</p>
+</div></blockquote>
+<p>The process of taking each time step is controlled by the user.
+Control commands and loads can be changed freely throughout the simulation, either as part of a coupling to an external code or as response to discrete events.</p>
+<p>..code-block:: cpp</p>
+<blockquote>
+<div><p>for (auto i = 0U; i &lt; n_steps; ++i) {
+…
+}</p>
+</div></blockquote>
+<p>Within this loop, we first set the time-dependent buoyancy forces and moments to the floating platform.</p>
+<p>..code-block:: cpp</p>
+<blockquote>
+<div><p>const auto t = static_cast&lt;double&gt;(i) * time_step;
+interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+interface.turbine.floating_platform.node.loads[2] = buoyancy_force + 0.5 * initial_spring_force * sin(2. * M_PI / 20. * t);
+interface.turbine.floating_platform.node.loads[3] = 5.0e5 * sin(2. * M_PI / 15. * t);
+interface.turbine.floating_platform.node.loads[4] = 1.0e6 * sin(2. * M_PI / 30. * t);
+interface.turbine.floating_platform.node.loads[5] = 2.0e7 * sin(2. * M_PI / 60. * t);</p>
+</div></blockquote>
+<p>Finally, we call the <code class="docutils literal notranslate"><span class="pre">Step</span></code> function to advance the simulation forward one time step.
+This function returns a boolean stating if the time step converged or not.</p>
+<p>..code-block:: cpp</p>
+<blockquote>
+<div><p>auto converged = interface.Step();
+[[maybe_unused]] const auto converged = interface.Step();
+assert(converged);</p>
+</div></blockquote>
+<p>And that’s it - the simulation will advance the solution in time.
+At any time, you can access the current position and orientation of the platform as a quaternion through the <code class="docutils literal notranslate"><span class="pre">interface/turbine.floating_platform.node.displacement</span></code> variable.
+You can also tell OpenTurbine to write out the solution to a file at each time step by providing an output file name to the <code class="docutils literal notranslate"><span class="pre">InterfaceBuilder::SetOutputFile</span></code> method before building the interface.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="linking.html" class="btn btn-neutral float-left" title="Linking To OpenTurbine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="turbine.html" class="btn btn-neutral float-right" title="Example: IEA15MW Turbine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

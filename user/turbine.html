@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example: IEA15MW Turbine &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Theory Manual" href="../theory/index.html" />
+    <link rel="prev" title="Example: Floating Platform" href="floating_platform.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To OpenTurbine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="floating_platform.html">Example: Floating Platform</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example: IEA15MW Turbine</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="user.html">User Manual</a></li>
+      <li class="breadcrumb-item active">Example: IEA15MW Turbine</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user/turbine.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="example-iea15mw-turbine">
+<h1>Example: IEA15MW Turbine<a class="headerlink" href="#example-iea15mw-turbine" title="Permalink to this heading"></a></h1>
+<p>This example will walkthrough how to simulate a wind turbine using OpenTurbine’s high level API.
+For the most up to date working version of this code, look in <code class="docutils literal notranslate"><span class="pre">tests/documentation_tests/iea15mw_turbine</span></code>.</p>
+<p>As with any C++ program, start with the includes.
+We will need to include <code class="docutils literal notranslate"><span class="pre">Kokkos_Core.hpp</span></code> to initialize and finalize Kokkos at the beginning of the application.
+We will also include the turbine interface, which we will be using in this example, and its builder.
+We’ll also include the <code class="docutils literal notranslate"><span class="pre">HollowCircleProperties.hpp</span></code> header to support creating the hub of our turbine.
+Finally, we’ll include the <code class="docutils literal notranslate"><span class="pre">yaml-cpp</span></code> file for reading a Wind-IO input file.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;array&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cassert&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Kokkos_Core.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;elements/beams/hollow_circle_properties.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;interfaces/turbine/turbine_interface.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;interfaces/turbine/turbine_interface_builder.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yaml-cpp/yaml.h&gt;</span>
+</pre></div>
+</div>
+<p>We now create the main function of our program and initialize Kokkos.
+We also start a scope around the rest of the program.
+This scoping is necessary to ensure that all Kokkos objects are destroyed before finalize is called and the program exits.
+Failure to do this will result in lots of nasty, hard to decipher errors on program termination.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Kokkos</span><span class="o">::</span><span class="n">initialize</span><span class="p">();</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Kokkos</span><span class="o">::</span><span class="n">finalize</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now set up some constants that we’ll need when running the simulation.
+In general, these will be read fom an input file, but we just define them inline here.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">duration</span><span class="p">{</span><span class="mf">0.1</span><span class="p">};</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">time_step</span><span class="p">{</span><span class="mf">0.01</span><span class="p">};</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_blades</span><span class="p">{</span><span class="mi">3</span><span class="p">};</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_blade_nodes</span><span class="p">{</span><span class="mi">11</span><span class="p">};</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_tower_nodes</span><span class="p">{</span><span class="mi">11</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>Next, we create the turbine interface builder.
+This is a factory class which will aid us in setting up all of the structures OpenTurbine needs for its simulation.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">interfaces</span><span class="o">::</span><span class="n">TurbineInterfaceBuilder</span><span class="p">{};</span>
+</pre></div>
+</div>
+<p>The builder has several groupings of options that we will use to set up our problem.
+The <code class="docutils literal notranslate"><span class="pre">.Solution()</span></code> function provides options related to controling the solver, such as the time step, numerical damping, and convergence criteria.
+You can also optionally set an output file in which OpenTurbine will write its solution data each iteration.
+If this file is not set, no output will be performed.</p>
+<p>When using the builder, you can string together setter function calls as seen here, or you can call each of them individually.
+The setters are very light weight and will only start constructing the major data structures when .Build() is called on builder.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">.</span><span class="n">Solution</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">EnableDynamicSolve</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetTimeStep</span><span class="p">(</span><span class="n">time_step</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetDampingFactor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetGravity</span><span class="p">({</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">-9.81</span><span class="p">})</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetMaximumNonlinearIterations</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetAbsoluteErrorTolerance</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetRelativeErrorTolerance</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetOutputFile</span><span class="p">(</span><span class="s">&quot;TurbineInterfaceTest.IEA15&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>System parameters will usually be provided in the form of a .yaml file.
+Here, we use yaml-cpp to read and parse this file.
+Do note that the builder itself does not take in a YAML::Node itself, but requires the user to ferry the information as desired.
+Feel free to write your own .yaml parser, use any other file format, or otherwise generate your problem set up as is convienent for your application.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">wio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">YAML</span><span class="o">::</span><span class="n">LoadFile</span><span class="p">(</span><span class="s">&quot;./IEA-15-240-RWT.yaml&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For this problem, we will create four parts: the main tower, the turbine nacelle, the three blades, and the turbine hub</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">wio_tower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio</span><span class="p">[</span><span class="s">&quot;components&quot;</span><span class="p">][</span><span class="s">&quot;tower&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">wio_nacelle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio</span><span class="p">[</span><span class="s">&quot;components&quot;</span><span class="p">][</span><span class="s">&quot;nacelle&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">wio_blade</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio</span><span class="p">[</span><span class="s">&quot;components&quot;</span><span class="p">][</span><span class="s">&quot;blade&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">wio_hub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio</span><span class="p">[</span><span class="s">&quot;components&quot;</span><span class="p">][</span><span class="s">&quot;hub&quot;</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>The Turbine Interface Builder we created above can create a Turbine Builder, which will be used to create the four parts mentioned above, as well as setting the orientation of the various components.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">turbine_builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Turbine</span><span class="p">();</span>
+<span class="n">turbine_builder</span><span class="p">.</span><span class="n">SetAzimuthAngle</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetRotorApexToHub</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetHubDiameter</span><span class="p">(</span><span class="n">wio_hub</span><span class="p">[</span><span class="s">&quot;diameter&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetConeAngle</span><span class="p">(</span><span class="n">wio_hub</span><span class="p">[</span><span class="s">&quot;cone_angle&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetShaftTiltAngle</span><span class="p">(</span><span class="n">wio_nacelle</span><span class="p">[</span><span class="s">&quot;drivetrain&quot;</span><span class="p">][</span><span class="s">&quot;uptilt&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetTowerAxisToRotorApex</span><span class="p">(</span><span class="n">wio_nacelle</span><span class="p">[</span><span class="s">&quot;drivetrain&quot;</span><span class="p">][</span><span class="s">&quot;overhang&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">SetTowerTopToRotorApex</span><span class="p">(</span><span class="n">wio_nacelle</span><span class="p">[</span><span class="s">&quot;drivetrain&quot;</span><span class="p">][</span><span class="s">&quot;distance_tt_hub&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>Each blade is added in reference coordinates and then rotated onto the rotor automatically by OpenTurbine.
+The blades of a turbine are assumed to be equally spaced around the rotor - for example, a turbine with three blades will have one blade every 120 degrees about the X-axis, with the first blade starting along the global Z-axis.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n_blades</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Turbine Builder will automatically create a new Blade Builder for each blade that is referenced.
+The blade numbers should be contiguous, starting at 0, and the blades will be distributed in counter-clockwise order based on their index.
+Blades can be added in any order or edited at any time before final assembly by accessing the approprite Blade Builder through this interface.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">blade_builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">turbine_builder</span><span class="p">.</span><span class="n">Blade</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>OpenTurbine’s Turbine model assumes one, high order, element per blade.
+In this case, eleven blade node are used, which we have seen to give accurate results for the IEA15MW blades.</p>
+<p>The grid points specified in the input will define the number and location of the quadrature points used for assembling the system matrix.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">blade_builder</span><span class="p">.</span><span class="n">SetElementOrder</span><span class="p">(</span><span class="n">n_blade_nodes</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">).</span><span class="n">PrescribedRootMotion</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We now add the reference axis coordinates of the nodes along the blade.
+Note that Wind-IO uses the Z-axis as its reference axis, but your application may differ in this choice.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">ref_axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_blade</span><span class="p">[</span><span class="s">&quot;outer_shape_bem&quot;</span><span class="p">][</span><span class="s">&quot;reference_axis&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">axis_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_axis</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">][</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_axis</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">y_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_axis</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">z_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref_axis</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">axis_grid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">blade_builder</span><span class="p">.</span><span class="n">AddRefAxisPoint</span><span class="p">(</span>
+<span class="w">        </span><span class="n">axis_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="n">x_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">y_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">z_values</span><span class="p">[</span><span class="n">i</span><span class="p">]},</span>
+<span class="w">        </span><span class="n">openturbine</span><span class="o">::</span><span class="n">interfaces</span><span class="o">::</span><span class="n">components</span><span class="o">::</span><span class="n">ReferenceAxisOrientation</span><span class="o">::</span><span class="n">Z</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Next, we add blade twist about the reference axis.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">twist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_blade</span><span class="p">[</span><span class="s">&quot;outer_shape_bem&quot;</span><span class="p">][</span><span class="s">&quot;twist&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">twist_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">twist</span><span class="p">[</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">twist_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">twist</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">twist_grid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">blade_builder</span><span class="p">.</span><span class="n">AddRefAxisTwist</span><span class="p">(</span><span class="n">twist_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">twist_values</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The stiffness and inertia matrices must be specified for each section.
+These are provided to the Blade Builder by way of a std::array&lt;std::array&lt;double, 6&gt;&gt; object.
+The WindIO file provides them as their tensor components, so we decompress that structure here.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">stiff_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_blade</span><span class="p">[</span><span class="s">&quot;elastic_properties_mb&quot;</span><span class="p">][</span><span class="s">&quot;six_x_six&quot;</span><span class="p">][</span><span class="s">&quot;stiff_matrix&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">inertia_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_blade</span><span class="p">[</span><span class="s">&quot;elastic_properties_mb&quot;</span><span class="p">][</span><span class="s">&quot;six_x_six&quot;</span><span class="p">][</span><span class="s">&quot;inertia_matrix&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">k_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stiff_matrix</span><span class="p">[</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">m_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inertia_matrix</span><span class="p">[</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_sections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_grid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n_sections</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inertia_matrix</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stiff_matrix</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">blade_builder</span><span class="p">.</span><span class="n">AddSection</span><span class="p">(</span>
+<span class="w">        </span><span class="n">m_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+<span class="w">        </span><span class="p">{{</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">5</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">10</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">14</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">17</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">19</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">m</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">17</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">19</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="mi">20</span><span class="p">]},</span>
+<span class="w">        </span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{{</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">10</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">14</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">17</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">18</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">19</span><span class="p">]},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">17</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">19</span><span class="p">],</span><span class="w"> </span><span class="n">k</span><span class="p">[</span><span class="mi">20</span><span class="p">]},</span>
+<span class="w">        </span><span class="p">}},</span>
+<span class="w">        </span><span class="n">openturbine</span><span class="o">::</span><span class="n">interfaces</span><span class="o">::</span><span class="n">components</span><span class="o">::</span><span class="n">ReferenceAxisOrientation</span><span class="o">::</span><span class="n">Z</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With the blades of the turbine built, the Turbine Builder can also create a Tower Builder object.
+This acts much like the Blade builder class, but there is only one Tower.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">tower_builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">turbine_builder</span><span class="p">.</span><span class="n">Tower</span><span class="p">();</span>
+<span class="w"> </span><span class="n">tower_builder</span><span class="p">.</span><span class="n">SetElementOrder</span><span class="p">(</span><span class="n">n_tower_nodes</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">).</span><span class="n">PrescribedRootMotion</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_ref_axis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_tower</span><span class="p">[</span><span class="s">&quot;outer_shape_bem&quot;</span><span class="p">][</span><span class="s">&quot;reference_axis&quot;</span><span class="p">];</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">axis_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_ref_axis</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">][</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_ref_axis</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">y_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_ref_axis</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">z_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_ref_axis</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">axis_grid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">tower_builder</span><span class="p">.</span><span class="n">AddRefAxisPoint</span><span class="p">(</span>
+<span class="w">         </span><span class="n">axis_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="n">x_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">y_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">z_values</span><span class="p">[</span><span class="n">i</span><span class="p">]},</span>
+<span class="w">         </span><span class="n">openturbine</span><span class="o">::</span><span class="n">interfaces</span><span class="o">::</span><span class="n">components</span><span class="o">::</span><span class="n">ReferenceAxisOrientation</span><span class="o">::</span><span class="n">Z</span>
+<span class="w">     </span><span class="p">);</span>
+<span class="w"> </span><span class="p">}</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">tower_base_position</span><span class="w"> </span><span class="o">=</span>
+<span class="w">     </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="o">&gt;</span><span class="p">{</span><span class="n">x_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">y_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">z_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">};</span>
+<span class="w"> </span><span class="n">turbine_builder</span><span class="p">.</span><span class="n">SetTowerBasePosition</span><span class="p">(</span><span class="n">tower_base_position</span><span class="p">);</span>
+<span class="w"> </span><span class="n">tower_builder</span><span class="p">.</span><span class="n">AddRefAxisTwist</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">).</span><span class="n">AddRefAxisTwist</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_layer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_tower</span><span class="p">[</span><span class="s">&quot;internal_structure_2d_fem&quot;</span><span class="p">][</span><span class="s">&quot;layers&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_material_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_layer</span><span class="p">[</span><span class="s">&quot;material&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="n">YAML</span><span class="o">::</span><span class="n">Node</span><span class="w"> </span><span class="n">t_material</span><span class="p">;</span>
+<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">wio</span><span class="p">[</span><span class="s">&quot;materials&quot;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">t_material_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="n">t_material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">as</span><span class="o">&lt;</span><span class="n">YAML</span><span class="o">::</span><span class="n">Node</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">         </span><span class="k">break</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w"> </span><span class="p">}</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_diameter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_tower</span><span class="p">[</span><span class="s">&quot;outer_shape_bem&quot;</span><span class="p">][</span><span class="s">&quot;outer_diameter&quot;</span><span class="p">];</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_diameter_grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_diameter</span><span class="p">[</span><span class="s">&quot;grid&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_diameter_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_diameter</span><span class="p">[</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t_wall_thickness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_layer</span><span class="p">[</span><span class="s">&quot;thickness&quot;</span><span class="p">][</span><span class="s">&quot;values&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">t_diameter_grid</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">GenerateHollowCircleSection</span><span class="p">(</span>
+<span class="w">         </span><span class="n">t_diameter_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">t_material</span><span class="p">[</span><span class="s">&quot;E&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">t_material</span><span class="p">[</span><span class="s">&quot;G&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span>
+<span class="w">         </span><span class="n">t_material</span><span class="p">[</span><span class="s">&quot;rho&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(),</span><span class="w"> </span><span class="n">t_diameter_values</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">t_wall_thickness</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+<span class="w">         </span><span class="n">t_material</span><span class="p">[</span><span class="s">&quot;nu&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">     </span><span class="p">);</span>
+
+<span class="w">     </span><span class="c1">// Add section</span>
+<span class="w">     </span><span class="n">tower_builder</span><span class="p">.</span><span class="n">AddSection</span><span class="p">(</span>
+<span class="w">         </span><span class="n">t_diameter_grid</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">section</span><span class="p">.</span><span class="n">M_star</span><span class="p">,</span><span class="w"> </span><span class="n">section</span><span class="p">.</span><span class="n">C_star</span><span class="p">,</span>
+<span class="w">         </span><span class="n">openturbine</span><span class="o">::</span><span class="n">interfaces</span><span class="o">::</span><span class="n">components</span><span class="o">::</span><span class="n">ReferenceAxisOrientation</span><span class="o">::</span><span class="n">Z</span>
+<span class="w">     </span><span class="p">);</span>
+<span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The nacelle and hub are represented as simple mass elements on the system matrix.
+For these parts, only an inertia matrix is needed.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">nacelle_props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_nacelle</span><span class="p">[</span><span class="s">&quot;elastic_properties_mb&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">system_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nacelle_props</span><span class="p">[</span><span class="s">&quot;system_mass&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">yaw_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nacelle_props</span><span class="p">[</span><span class="s">&quot;yaw_mass&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nacelle_props</span><span class="p">[</span><span class="s">&quot;system_inertia_tt&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">total_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system_mass</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">yaw_mass</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">nacelle_inertia_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="o">&gt;</span><span class="p">{</span>
+<span class="w">    </span><span class="p">{{</span><span class="n">total_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">total_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">total_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">4</span><span class="p">]},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">5</span><span class="p">]},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">system_inertia_tt</span><span class="p">[</span><span class="mi">2</span><span class="p">]}}</span>
+<span class="p">};</span>
+<span class="n">turbine_builder</span><span class="p">.</span><span class="n">SetYawBearingInertiaMatrix</span><span class="p">(</span><span class="n">nacelle_inertia_matrix</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">hub_props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wio_hub</span><span class="p">[</span><span class="s">&quot;elastic_properties_mb&quot;</span><span class="p">];</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">hub_mass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hub_props</span><span class="p">[</span><span class="s">&quot;system_mass&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">hub_inertia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hub_props</span><span class="p">[</span><span class="s">&quot;system_inertia&quot;</span><span class="p">].</span><span class="n">as</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">hub_inertia_matrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="o">&gt;</span><span class="p">{</span>
+<span class="w">    </span><span class="p">{{</span><span class="n">hub_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">hub_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">hub_mass</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">4</span><span class="p">]},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">5</span><span class="p">]},</span>
+<span class="w">     </span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="w"> </span><span class="n">hub_inertia</span><span class="p">[</span><span class="mi">2</span><span class="p">]}}</span>
+<span class="p">};</span>
+<span class="n">turbine_builder</span><span class="p">.</span><span class="n">SetHubInertiaMatrix</span><span class="p">(</span><span class="n">hub_inertia_matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now that we are done setting up the system, call build on the initial Inerface Builder that we made back at the beginning.
+This step is where everything actually gets sized and allocated for solving the system.
+You interact with this system through the Turbine Interface object that’s created.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>We now set the initial loads and torque on the turbine.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">interface</span><span class="p">.</span><span class="n">Turbine</span><span class="p">().</span><span class="n">tower</span><span class="p">.</span><span class="n">nodes</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">loads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">1e5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">};</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">Turbine</span><span class="p">().</span><span class="n">torque_control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e8</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The process of taking each time step is controlled by the user.
+Control commands and loads can be changed freely throughout the simulation, either as part of a coupling to an external code or as response to discrete events.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">n_steps</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">time_step</span><span class="p">)};</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n_steps</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Within each time step, we set the control commands.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t</span><span class="p">{</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">time_step</span><span class="p">};</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">Turbine</span><span class="p">().</span><span class="n">blade_pitch_control</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5</span><span class="p">;</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">Turbine</span><span class="p">().</span><span class="n">yaw_control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">500</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">interface</span><span class="p">.</span><span class="n">Turbine</span><span class="p">().</span><span class="n">torque_control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Finally, we call the <code class="docutils literal notranslate"><span class="pre">Step()</span></code> function on the turbine interface, which actually performs the action of advancing the solution in time.
+This function returns a boolean stating if OpenTurbine’s solver converged or not, which can be checked for error handling.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interface</span><span class="p">.</span><span class="n">Step</span><span class="p">();</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">converged</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And that’s it, the simulation will advance to the total solution time.
+OpenTurbine will have written out the solution at each time step in NetCDF format.
+At any time, the solution can be accessed by looking at the <code class="docutils literal notranslate"><span class="pre">interface.Turbine()</span></code> object.
+For example, the position and orientation quaternion can be accessed by calling <code class="docutils literal notranslate"><span class="pre">interface.Turbine().tower.nodes.back()</span></code>.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="floating_platform.html" class="btn btn-neutral float-left" title="Example: Floating Platform" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../theory/index.html" class="btn btn-neutral float-right" title="Theory Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
