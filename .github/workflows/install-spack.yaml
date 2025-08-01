@@ -22,16 +22,32 @@ jobs:
         spack compiler find
         spack env create -d .
         spack env activate .
-        spack add openturbine
+        spack add openturbine ^netcdf-c~mpi ^hdf5~mpi
         spack develop openturbine@main
         spack concretize -f
         cd openturbine
         git checkout ${{ github.head_ref || github.ref_name}}
         spack install
-        cd tests/documentation_tests/floating_platform
+    - name: Floating Platform Test
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
+        cd openturbine/tests/documentation_tests/floating_platform
         mkdir build
         cd build
         spack build-env openturbine -- bash
         cmake ../
         make -j 2
         ./floating_platform
+    - name: Turbine Test
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
+        cd openturbine/tests/documentation_tests/iea15mw_turbine
+        mkdir build
+        cd build
+        spack build-env openturbine -- bash
+        cmake ../
+        make -j 2
+        cp ../IEA-15-240-RWT.yaml ./
+        ./iea15mw_turbine

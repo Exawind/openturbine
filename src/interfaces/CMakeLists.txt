@@ -10,6 +10,7 @@ target_sources(openturbine_library
 )
 
 install(FILES
+	constraint_data.hpp
         host_state.hpp
         node_data.hpp
         outputs.hpp
