@@ -14,17 +14,8 @@
 
 namespace openturbine {
 
-/** @brief A linear systems solver for assembling and solving system matrices and constraints in
- * OpenTurbine. This wraps Trilinos packages (Tpetra, Amesos2) for handling sparse matrix
- * operations and linear systems solution.
- *
- * @details This solver manages the assembly and solution of linear systems arising from the
- * generalized-alpha based time integration of the dynamic structural problem. The linear systems
- * include:
- *   - System stiffness matrix (K)
- *   - Tangent operator matrix (T)
- *   - Constraint matrices (B and B_t)
- *   - Combined system matrices for the complete structural problem
+/** @brief This object manages the assembly and solution of linear system arising from the
+ * generalized-alpha based time integration of the dynamic structural problem.
  */
 template <typename DeviceType>
 struct Solver {
@@ -87,11 +78,13 @@ struct Solver {
     MultiVectorType b;  //< System RHS
     MultiVectorType x;  //< System solution
 
-    HandleType handle;
+    HandleType handle;  //< Handle for internal information needed for the selected linear solver
 
-    std::vector<double> convergence_err;
+    std::vector<double> convergence_err;  //< The convergence history of the solver
 
-    /** @brief Constructs a sparse linear systems solver for OpenTurbine
+    /** @brief Constructs the sparse matrix structure for the provided connectivity information
+     * and performs the sparse direct solver's symbolic factorization step, which initializes
+     * its internal data structures.
      *
      * @param node_IDs View containing the global IDs for each node
      * @param node_freedom_allocation_table View containing the freedom signature for each node

@@ -7,8 +7,7 @@
 # Note that many systems have CUDA already built and properly configured.  If this
 # is the case for you, make sure that all modules are loaded and paths set correctly.
 # You may have to manually set some of this for Spack configuration.
-# You may also need to add the cuda_arch option for your platform to the Spack spec
-# for Trilinos.
+# You may also need to add the cuda_arch option for your platform to the Spack spec.
 # -----------------------------------------------------------------------------
 
 # Exit on error
