@@ -93,7 +93,7 @@ inline void LagrangePolynomialInterpWeights(
  *
  * @param x Evaluation point
  * @param xs Interpolation nodes (sorted)
- * @return weights Weights for Lagrange polynomial derivative interpolation (same size as xs)
+ * @param weights Output: weights for Lagrange polynomial derivative interpolation
  */
 inline void LagrangePolynomialDerivWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
