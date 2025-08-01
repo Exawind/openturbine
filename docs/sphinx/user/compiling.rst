@@ -117,8 +117,6 @@ Before building OpenTurbine, you'll need the following:
   possible to use.
 - A LAPACK implementation, such as `OpenBLAS <https://github.com/OpenMathLib/OpenBLAS>`_ 
   or `netlib-lapack <https://github.com/Reference-LAPACK/lapack>`_
-- `Trilinos <https://github.com/trilinos/Trilinos>`_: primarily for the
-  Amesos2 sparse direct linear solver package
 - `GoogleTest <https://github.com/google/googletest>`_: unit testing package
 
 Installing Third Party Libraries
