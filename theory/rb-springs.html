@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body with three taut springs &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Rigid body with three springs &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Model bodies and constraints for a HAWT" href="hawt.html" />
-    <link rel="prev" title="Heavy Top Constrained-Rigid-Body Example" href="heavy-top.html" /> 
+    <link rel="prev" title="Heavy top constrained-rigid-body example" href="heavy-top.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -55,17 +55,17 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user/user.html">User Manual</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Theory Manual</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Formulation overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gen-alpha.html">Time integration: Generalized-Alpha</a></li>
-<li class="toctree-l2"><a class="reference internal" href="member-types.html">Member Library</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model Configurations</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="heavy-top.html">Heavy Top Constrained-Rigid-Body Example</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Rigid body with three taut springs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="member-types.html">Member library</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="configs.html">Model configurations</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heavy-top.html">Heavy top constrained-rigid-body example</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Rigid body with three springs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hawt.html">Model bodies and constraints for a HAWT</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="fsi-api.html">Coupling for fluid-structure-interaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-Element Aerodynamics Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blade-element.html">Blade-element aerodynamics solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
@@ -87,8 +87,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
-          <li class="breadcrumb-item"><a href="configs.html">Model Configurations</a></li>
-      <li class="breadcrumb-item active">Rigid body with three taut springs</li>
+          <li class="breadcrumb-item"><a href="configs.html">Model configurations</a></li>
+      <li class="breadcrumb-item active">Rigid body with three springs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/rb-springs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -98,8 +98,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="rigid-body-with-three-taut-springs">
-<span id="sec-rb-springs"></span><h1>Rigid body with three taut springs<a class="headerlink" href="#rigid-body-with-three-taut-springs" title="Permalink to this heading"></a></h1>
+  <div class="section" id="rigid-body-with-three-springs">
+<span id="sec-rb-springs"></span><h1>Rigid body with three springs<a class="headerlink" href="#rigid-body-with-three-springs" title="Permalink to this heading"></a></h1>
 <p>This section provides model details for a rigid-body solver with three
 massless taut-line “mooring lines”, represented by geometrically
 nonlinear springs. The model configuration is appropriate for modeling
@@ -124,7 +124,7 @@ the DeepCWind floating platform.</p>
 <span class="math notranslate nohighlight">\(\underline{\underline{R}} \in \mathbb{R}^{3\times 3}\)</span> are rigid
 body displacement and orientation, respectively,
 <span class="math notranslate nohighlight">\(\underline{u}^{\mathrm{sp}i} \in \mathbb{R}^6\)</span> is spring i end
-displacement (2 nodes with 3 DOF each; see <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically Nonlinear Spring</span></a>) and</p>
+displacement (2 nodes with 3 DOF each; see <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically nonlinear spring</span></a>) and</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{u}^{\mathrm{sp}i} =
 \begin{bmatrix}
@@ -197,7 +197,7 @@ length</p></li>
 \underline{0}_{18}\\
 \end{bmatrix}
 \in \mathbb{R}^{24}\end{split}\]</div>
-<p>In the above, <span class="math notranslate nohighlight">\(\underline{\underline{M}}^\mathrm{rb} \in \mathbb{R}^{6 \times 6}\)</span> and <span class="math notranslate nohighlight">\(\underline{g}^\mathrm{rb}\in \mathbb{R}^6\)</span> are defined in <a class="reference internal" href="rigid.html#sec-rigid"><span class="std std-ref">Rigid Body</span></a>, <span class="math notranslate nohighlight">\(\underline{f}^\mathrm{rb}\in \mathbb{R}^6\)</span> is the force applied to the rigid-body center of mass, and <span class="math notranslate nohighlight">\(\underline{g}^{\mathrm{sp}i}\in\mathbb{R}^6\)</span> is defined in <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically Nonlinear Spring</span></a>. The constraints are given by</p>
+<p>In the above, <span class="math notranslate nohighlight">\(\underline{\underline{M}}^\mathrm{rb} \in \mathbb{R}^{6 \times 6}\)</span> and <span class="math notranslate nohighlight">\(\underline{g}^\mathrm{rb}\in \mathbb{R}^6\)</span> are defined in <a class="reference internal" href="rigid.html#sec-rigid"><span class="std std-ref">Rigid body</span></a>, <span class="math notranslate nohighlight">\(\underline{f}^\mathrm{rb}\in \mathbb{R}^6\)</span> is the force applied to the rigid-body center of mass, and <span class="math notranslate nohighlight">\(\underline{g}^{\mathrm{sp}i}\in\mathbb{R}^6\)</span> is defined in <a class="reference internal" href="spring.html#sec-spring"><span class="std std-ref">Geometrically nonlinear spring</span></a>. The constraints are given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{\Phi} =
 \begin{bmatrix}
@@ -278,7 +278,7 @@ length</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="heavy-top.html" class="btn btn-neutral float-left" title="Heavy Top Constrained-Rigid-Body Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="heavy-top.html" class="btn btn-neutral float-left" title="Heavy top constrained-rigid-body example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="hawt.html" class="btn btn-neutral float-right" title="Model bodies and constraints for a HAWT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,6 +1,6 @@
 .. _sec-heavy-top:
 
-Heavy Top Constrained-Rigid-Body Example
+Heavy top constrained-rigid-body example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We provide here a simple application of the OpenTurbine formulation for

@@ -1,6 +1,6 @@
 .. _sec-gebt:
 
-Geometrically Exact Beam Theory
+Geometrically exact beam theory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 OpenTurbine beam finite elements are based on geometrically exact beam

@@ -21,6 +21,7 @@
         <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -83,16 +84,19 @@
              
   <div class="section" id="openturbine">
 <h1>OpenTurbine<a class="headerlink" href="#openturbine" title="Permalink to this heading"></a></h1>
-<p><a class="reference external" href="https://github.com/exawind/openturbine">OpenTurbine</a> is an open-source wind
-turbine structural dynamics simulation code designed to meet the research needs of
-the Wind Energy Technologies Office (WETO) and the broader wind energy community
-for both land-based and offshore wind turbines. OpenTurbine offers high-fidelity,
-high-performance structural dynamics models that can integrate with low-fidelity
-aerodynamic/hydrodynamic models, such as those in
-<a class="reference external" href="https://github.com/OpenFAST/openfast">OpenFAST</a>, as well as high-fidelity
-computational fluid dynamics (CFD) models, like those in the WETO and Office of
-Science-supported <a class="reference external" href="https://github.com/Exawind">ExaWind</a> code suite.</p>
-<p>Following are the high-level development objectives of OpenTurbine:</p>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/exawind/openturbine">OpenTurbine</a>
+is an open-source flexible multibody dynamics (FMD) solver designed for time-domain simulations.  While tailored for wind turbine structural dynamics, the formulation and implementation is that of a general FMD solver and can readily be applied to other systems.  OpenTurbine was designed with a narrow focus, namely to provide a lightweight, accurate FMD solver for coupling to fluid-dynamics codes in wind turbine research, especially the <a class="reference external" href="https://github.com/exawind">ExaWind</a> [&#64;Sprague-etal:2020,&#64;Sharma-etal:2023,&#64;Kuhn-etal:2025] suite of computational-fluid-dynamics codes.
+Wind turbine blades and towers are long slender structures; as such turbines can be represented at high-fidelity with beams, rigid bodies, and constraints.  OpenTurbine provides these model elements, where degrees of freedom are defined in the inertial/global frame of reference and include displacements and rotations (formally as rotation matrices, but stored as quaternions).
+The underlying formulation is built on a Lie-group time integrator for index-3 differential-algebraic equations which is second-order accurate in time [&#64;Bruls-etal:2012].
+Beam models are based on geometrically exact beam theory (GEBT) and are discretized as high-order spectral finite elements similar to those in the BeamDyn module [&#64;Wang-etal:2017] of <a class="reference external" href="https://github.com/openfast/">OpenFAST</a> [&#64;Jonkman:2013].
+The governing equations for a FMD system like a wind turbine form a highly nonlinear system of constrained partial-differential equations.  OpenTurbine uses analytical Jacobians in the nonlinear-system solves performed at each time step.  Linear systems use sparse storage and several third-party sparse-linear-system solvers are enabled. Ill conditioning of our linear systems are mitigated with preconditioning described in [&#64;Bottasso-etal:2008].  OpenTurbine is integrated with a simple open-source controller [&#64;Abbas-etal:2022].
+OpenTurbine is written in C++ and leverages Kokkos and Kokkos-Kernels as its performance portability layer enabling simulations on both CPU and GPU systems.   The repository is equipped with extensive automated testing at the unit and regression/system levels including several full reference megawatt-scale reference turbines.
+OpenTurbine fills the need for a lightweight, open-source turbine structural dynamics code that is high fidelity, robust, fast, and capable on running on different computer architectures.</p>
+</div>
+<div class="section" id="software-development-objectives-of-openturbine">
+<h2>Software-development objectives of OpenTurbine<a class="headerlink" href="#software-development-objectives-of-openturbine" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>OpenTurbine adheres to modern software development best practices. The
 development process emphasizes test-driven development (TDD), version control,
@@ -113,22 +117,25 @@ mathematical operations, resource allocation, and data management.</p></li>
 integration with existing and future ecosystems for data science, machine
 learning, and AI.</p></li>
 </ul>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="user/user.html">User Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="user/compiling.html">Compiling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user/linking.html">Linking To OpenTurbine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user/floating_platform.html">Example: Floating Platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user/floating_platform.html">Example: Rigid body with three springs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user/turbine.html">Example: IEA15MW Turbine</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="theory/index.html">Theory Manual</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory/overview.html">Formulation Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/overview.html">Formulation overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/gen-alpha.html">Time integration: Generalized-Alpha</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory/member-types.html">Member Library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory/configs.html">Model Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/member-types.html">Member library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/configs.html">Model configurations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory/fsi-api.html">Coupling for fluid-structure-interaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="theory/blade-element.html">Blade-Element Aerodynamics Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory/blade-element.html">Blade-element aerodynamics solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="developer/index.html">Developer Documentation</a><ul>
@@ -142,12 +149,75 @@ learning, and AI.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgement.html">Acknowledgements</a></li>
 </ul>
 </div>
+</div>
 <div class="section" id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
+</div>
+<div class="section" id="references-this-page">
+<h2>References (this page)<a class="headerlink" href="#references-this-page" title="Permalink to this heading"></a></h2>
+<div class="references csl-bib-body hanging-indent docutils container" id="refs">
+<div class="csl-entry docutils container" id="ref-abbas-etal-2022">
+<p>Abbas, N.J., D.S. Zalkind, L. Pao, and A. Wright.
+2022.
+“A reference open-source controller for fixed and floating
+offshore wind turbines.”
+<em>Wind Energy Science</em> <strong>7</strong>
+53-73.
+<a class="reference external" href="https://doi.org/10.5194/wes-7-53-2022">https://doi.org/10.5194/wes-7-53-2022</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-bauchau-2011">
+<p>Bauchau, O. A. 2011. <em>Flexible Multibody Dynamics</em>. Springer.</p>
+</div>
+<div class="csl-entry docutils container" id="ref-bottasso-etal-2008">
+<p>Bottasso, C.L., D. Dopicao, and L. Trainelli. 2008. “On the
+optimal scaling of index three {DAEs} in multibody dynamics.”
+<em>Multibody System Dynamics</em> <strong>19</strong>
+3–20.
+<a class="reference external" href="https://doi.org/10.1007/s11044-007-9051-9">https://doi.org/10.1007/s11044-007-9051-9</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-bruls-etal-2012">
+<p>Brüls, O., A. Cardona, and M. Arnold. 2012. “Lie Group
+Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> time integration for constrained
+flexible multibody systems.” <em>Mechanism and Machine Theory</em> <strong>48</strong>,
+121–37.
+<a class="reference external" href="https://doi.org/10.1016/j.mechmachtheory.2011.07.017">https://doi.org/10.1016/j.mechmachtheory.2011.07.017</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-jonkman-2013">
+<p>Jonkman, J. M. 2013. “The new modularization framework for the
+FAST wind turbine CAE tool.” In <em>Proceedings of the 51st AIAA
+Aerospace Sciences Meeting Including the New Horizons Forum and
+Aerospace Exposition</em>. Grapevine, Texas.
+<a class="reference external" href="https://www.osti.gov/servlets/purl/1068607">https://www.osti.gov/servlets/purl/1068607</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-kuhn-etal-2025">
+<p>Kuhn, M., M. Henry de Frahan, and P. Mohan et al. 2025. “AMR-Wind:
+A Performance-Portable, High-Fidelity Flow Solver for Wind Farm
+Simulations.” <em>Wind Energy</em> <strong>28</strong>, e70010.
+<a class="reference external" href="https://doi.org/https://doi.org/10.1002/we.70010">https://doi.org/https://doi.org/10.1002/we.70010</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-sharma-etal-2023">
+<p>Sharma, A., M. J. Brazell, and G. Vijayakumar et al. 2023.
+“ExaWind: Open-Source CFD for Hybrid-RANS/LES Geometry-Resolved
+Wind Turbine Simulations in Atmospheric Flows.” <em>Wind Energy</em> <strong>27</strong>
+(3): 225–57. <a class="reference external" href="https://doi.org/10.1002/we.2886">https://doi.org/10.1002/we.2886</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-sprague-etal-2020">
+<p>Sprague, M.A., S. Ananthan, G. Vijayakumar, and M. Robinson. 2020.
+“ExaWind: A multi-fidelity modeling and simulation environment for
+wind energy.” <em>Journal of Physics: Conference Series</em> <strong>1452</strong>, 012071.
+<a class="reference external" href="https://doi.org/10.1088/1742-6596/1452/1/012071">https://doi.org/10.1088/1742-6596/1452/1/012071</a></p>
+</div>
+<div class="csl-entry docutils container" id="ref-wang-etal-2017">
+<p>Wang, Q., M. A. Sprague, J. Jonkman, N. Johnson, and B. Jonkman.
+2017. “BeamDyn: A High-Fidelity Wind Turbine Blade Solver in the
+FAST Modular Framework.” <em>Wind Energy</em> <strong>20</strong>, 1439–62.
+<a class="reference external" href="https://doi.org/10.1002/we.2101">https://doi.org/10.1002/we.2101</a></p>
+</div>
+</div>
 </div>
 </div>
 

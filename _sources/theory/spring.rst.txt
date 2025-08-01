@@ -1,6 +1,6 @@
 .. _sec-spring:
 
-Geometrically Nonlinear Spring
+Geometrically nonlinear spring
 ------------------------------
 
 In this section we describe the variables and unconstrained governing

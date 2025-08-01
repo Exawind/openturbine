@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example: Floating Platform &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Example: Rigid body with three springs &mdash; OpenTurbine 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -55,7 +55,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To OpenTurbine</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Example: Floating Platform</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example: Rigid body with three springs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
 </ul>
 </li>
@@ -79,7 +79,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="user.html">User Manual</a></li>
-      <li class="breadcrumb-item active">Example: Floating Platform</li>
+      <li class="breadcrumb-item active">Example: Rigid body with three springs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/user/floating_platform.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -89,9 +89,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="example-floating-platform">
-<h1>Example: Floating Platform<a class="headerlink" href="#example-floating-platform" title="Permalink to this heading"></a></h1>
-<p>This example will walkthrough how to run a floating platform simulation using OpenTurbine’s high level API.
+  <div class="section" id="example-rigid-body-with-three-springs">
+<h1>Example: Rigid body with three springs<a class="headerlink" href="#example-rigid-body-with-three-springs" title="Permalink to this heading"></a></h1>
+<p>This example will walkthrough how to run simulation of a forced rigid body supported by three nonlinear springs (see <a class="reference internal" href="../theory/rb-springs.html#sec-rb-springs"><span class="std std-ref">Rigid body with three springs</span></a> for details) using OpenTurbine’s high level API.  This model is associated with the DeepCWind platform.
 For the most up to date working version of this code, look in <code class="docutils literal notranslate"><span class="pre">tests/documentation_tests/floating_platform</span></code>.</p>
 <p>As with any C++ program, start with the includes.
 As a Kokkos-based library, you’ll need to include <code class="docutils literal notranslate"><span class="pre">Kokkos_Core.hpp</span></code> for setup and teardown operations.
