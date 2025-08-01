@@ -32,14 +32,14 @@ struct NodeData {
     std::array<double, 6> loads{0., 0., 0., 0., 0., 0.};
 
     /// @brief Node data constructor
-    /// @param id Node identifier in model
+    /// @param id_ Node identifier in model
     explicit NodeData(size_t id_) : id(id_) {}
 
     /// @brief Set point loads and moments to zero
     void ClearLoads();
 
     /// @brief Populates node position, displacement, velocity, acceleration from state data
-    /// @param node
+    /// @param host_state Host state from which to obtain data
     void GetMotion(const HostState<DeviceType>& host_state);
 
     /// @brief Updates the node loads in the host state

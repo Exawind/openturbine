@@ -87,16 +87,13 @@ struct Solver {
      * its internal data structures.
      *
      * @param node_IDs View containing the global IDs for each node
-     * @param node_freedom_allocation_table View containing the freedom signature for each node
+     * @param active_dofs View containing the number of active DoFs for each node
      * @param node_freedom_map_table View mapping node indices to DOF indices
      * @param num_nodes_per_element View containing number of nodes per element
      * @param node_state_indices View containing element-to-node connectivity
      * @param num_constraint_dofs Number of constraint degrees of freedom
-     * @param constraint_type View containing the type of each constraint
-     * @param base_node_freedom_signature View containing the base node freedom signature of the
-     * constraints
-     * @param target_node_freedom_signature View containing the target node freedom signature of the
-     * constraints
+     * @param base_active_dofs View containing the number of DoFs at the base node
+     * @param target_active_dofs View containing the number of DoFs at the target node
      * @param constraint_base_node_freedom_table View containing base node DOFs for constraints
      * @param constraint_target_node_freedom_table View containing target node DOFs for constraints
      * @param constraint_row_range View containing row ranges for each constraint
