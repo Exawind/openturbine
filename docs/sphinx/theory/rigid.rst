@@ -1,6 +1,6 @@
 .. _sec-rigid:
 
-Rigid Body
+Rigid body
 ----------
 
 In this section we describe the terms required to calculate the residual
