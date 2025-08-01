@@ -1,30 +1,36 @@
 Developer Tools
 ===============
 
-This page describes tools used in the development of OpenTurbine. These should
-generally be adopted by all developers so that expectations and systems are
-aligned.
+This page describes static and dynamic analysis tools used in the development
+of OpenTurbine. These tools are run and must pass as part of the CI process,
+so it will likely become important for integration into a developer's process.
 
 clang-format
 ------------
 
 `ClangFormat <https://clang.llvm.org/docs/ClangFormat.html>`_ is used for
 linting to enforce a consistent code style. It can be installed with most package
-managers. The syntax to run the linter is given below.
+managers.
 
-.. code-block:: bash
+ClangFormat is configured by the ``.clang-format`` file at the top of the repository.
+If the tool is run from the top directory, it will automatically detect and load the
+settings in the configuration file.
 
-   # Lint in place all .cpp files in the src directory
-   clang-format -i src/*.cpp
+clang-tidy
+----------
 
-   # Show changes in stdout for all header files in the utilities directory
-   clang-format -i src/utilities/*.H
+`ClangTidy <https://clang.llvm.org/extra/clang-tidy/>`_ is another linting tool
+tool which enforces a variety of rules on the code in order to avoid common
+bugs.
 
-ClangFormat is configured by the ``.clang-format``. If the tool is run from the
-top directory, it will automatically detect and load the settings in the
-configuration file.
+ClangTidy is configure by the ``.clang-tidy`` file at the top of the repository.
+To run it, configure OpenTurbine with the ``OpenTurbine_ENABLE_CLANG_TIDY`` option.
 
-.. note::
+Cppcheck
+--------
 
-   The CI system runs this linter and any required changes will cause the system
-   to fail.
+`Cppcehck <https://cppcheck.sourceforge.io/>`_ is yet another linting tools
+which detects undefined behavior and dangerous constructs with very few
+false positives.
+
+To run Cppcheck, configure OpenTurbine with the ``OpenTurbine_ENABLE_CPPCHECK`` option.
