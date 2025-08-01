@@ -9,7 +9,7 @@
 /// @cond
 namespace lapack {
 #include <lapacke.h>
-} // namespace lapack
+}  // namespace lapack
 /// @endcond
 
 #include "elements/beams/interpolation.hpp"
