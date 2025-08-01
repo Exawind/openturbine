@@ -1,5 +1,7 @@
-Rigid Bodies
-------------
+.. _sec-rigid:
+
+Rigid Body
+----------
 
 In this section we describe the terms required to calculate the residual
 vector and iteration matrix in Algorithm 1 for simulation of the
@@ -124,7 +126,4 @@ and :math:`\underline{\underline{K}}` are assembled, via direct
 stiffness summation, into their global counterparts in the iteration
 matrix, Eq. :eq:`iteration`.
 
-.. toctree::
-   
-   heavy-top
 

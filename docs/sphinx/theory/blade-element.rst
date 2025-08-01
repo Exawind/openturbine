@@ -1,3 +1,5 @@
+.. _sec-blade-element:
+
 Blade-Element Aerodynamics Solver
 ---------------------------------
 

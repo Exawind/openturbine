@@ -1,3 +1,5 @@
+.. _sec-quadrature:
+
 Notes on quadrature
 ^^^^^^^^^^^^^^^^^^^
 
