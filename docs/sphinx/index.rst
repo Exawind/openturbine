@@ -36,7 +36,6 @@ Following are the high-level development objectives of OpenTurbine:
 .. toctree::
    :maxdepth: 2
 
-   walkthrough/index
    user/user
    theory/index
    developer/index
