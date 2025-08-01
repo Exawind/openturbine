@@ -202,4 +202,18 @@ The full matrices :math:`\underline{\underline{C}}`, :math:`\underline{\underlin
 
 .. math::
 
-   \underline{\underline{K}}^\Phi = 
+   \underline{\underline{K}}^\Phi = \begin{bmatrix}
+   \underline{\underline{0}}_{3 \times 3} & 
+   \underline{\underline{0}}_{3 \times 3} & 
+   \underline{\underline{0}}_{3 \times 18} \\
+   \underline{\underline{0}}_{3 \times 3} & 
+   \left( 
+    \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp01}}} +  
+    \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp02}}} +  
+    \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp03}}}\right)  &
+   \underline{\underline{0}}_{3 \times 18} \\
+   \underline{\underline{0}}_{18 \times 3} & 
+   \underline{\underline{0}}_{18 \times 3} & 
+   \underline{\underline{0}}_{18 \times 18} 
+   \end{bmatrix} \in \mathbb{R}^{24 \times 24}
+
