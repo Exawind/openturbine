@@ -6,9 +6,11 @@
 
 #include <Kokkos_Core.hpp>
 
+/// @cond
 namespace lapack {
 #include <lapacke.h>
-}
+} // namespace lapack
+/// @endcond
 
 #include "elements/beams/interpolation.hpp"
 
