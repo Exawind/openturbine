@@ -15,7 +15,7 @@
 namespace openturbine {
 
 /** @brief This object manages the assembly and solution of linear system arising from the
- * generalized-alpha based time integration of the dynamic structural problem. 
+ * generalized-alpha based time integration of the dynamic structural problem.
  */
 template <typename DeviceType>
 struct Solver {
@@ -80,7 +80,7 @@ struct Solver {
 
     HandleType handle;  //< Handle for internal information needed for the selected linear solver
 
-    std::vector<double> convergence_err; //< The convergence history of the solver
+    std::vector<double> convergence_err;  //< The convergence history of the solver
 
     /** @brief Constructs the sparse matrix structure for the provided connectivity information
      * and performs the sparse direct solver's symbolic factorization step, which initializes
