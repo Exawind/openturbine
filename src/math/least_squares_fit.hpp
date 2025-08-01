@@ -44,9 +44,11 @@ inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom
 
 /**
  * @brief Computes shape function matrices ϕg relating points ξb to ξg
+ * At least two input points are required and it is assumed that there are more
+ * output points than input points.
  *
- * @param input_pts Input points, ξb, in [-1, 1] (2 <= input_pts.size() <= output_pts.size())
- * @param output_pts Output points, ξg, in [-1, 1]
+ * @param input_points Input points, ξb, in [-1, 1]
+ * @param output_points Output points, ξg, in [-1, 1]
  * @return Shape function matrix
  */
 inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
