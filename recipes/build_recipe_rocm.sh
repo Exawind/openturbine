@@ -8,7 +8,7 @@
 # is the case for you, make sure that all modules are loaded and paths set correctly.
 # You may have to manually set some of this for Spack configuration.
 # You may also need to add the amdgpu_target option for your platform to the Spack
-# spec for Trilinos.
+# spec.
 # -----------------------------------------------------------------------------
 
 # Exit on error
