@@ -65,7 +65,7 @@ inline double LinearInterp(
  *
  * @param x Evaluation point
  * @param xs Interpolation nodes (sorted)
- * @return weights Weights for Lagrange polynomial interpolation (same size as xs)
+ * @param weights Output: weights for Lagrange polynomial interpolation
  */
 inline void LagrangePolynomialInterpWeights(
     double x, const std::vector<double>& xs, std::vector<double>& weights
