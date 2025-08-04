@@ -115,7 +115,7 @@ public:
      *  @throws `std::invalid_argument` if the arguments are null
      *
      *  @param dir_path the directory path where the dynamic library is located
-     *  @param name the name of the dynamic library to load
+     *  @param lib_name the name of the dynamic library to load
      *  @param decorations adds OS-specific decorations to the library name
      */
     ///@{
