@@ -179,10 +179,9 @@ Pick whichever style best fits your application.</p>
 </pre></div>
 </div>
 <p>When done, call the <code class="docutils literal notranslate"><span class="pre">.Build()</span></code> function to generate all of OpenTurbine’s data structures and create the interface itself.</p>
-<p>..code-block:: cpp</p>
-<blockquote>
-<div><p>auto interface = interface_builder.Build();</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interface_builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+</pre></div>
+</div>
 <p>We now compute the buoyancy forces for use during the time stepping process.</p>
 <p>..code-block:: cpp</p>
 <blockquote>
@@ -192,30 +191,27 @@ const auto buoyancy_force = initial_spring_force + platform_gravity_force;</p>
 </div></blockquote>
 <p>The process of taking each time step is controlled by the user.
 Control commands and loads can be changed freely throughout the simulation, either as part of a coupling to an external code or as response to discrete events.</p>
-<p>..code-block:: cpp</p>
-<blockquote>
-<div><p>for (auto i = 0U; i &lt; n_steps; ++i) {
-…
-}</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n_steps</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Within this loop, we first set the time-dependent buoyancy forces and moments to the floating platform.</p>
-<p>..code-block:: cpp</p>
-<blockquote>
-<div><p>const auto t = static_cast&lt;double&gt;(i) * time_step;
-interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
-interface.turbine.floating_platform.node.loads[2] = buoyancy_force + 0.5 * initial_spring_force * sin(2. * M_PI / 20. * t);
-interface.turbine.floating_platform.node.loads[3] = 5.0e5 * sin(2. * M_PI / 15. * t);
-interface.turbine.floating_platform.node.loads[4] = 1.0e6 * sin(2. * M_PI / 30. * t);
-interface.turbine.floating_platform.node.loads[5] = 2.0e7 * sin(2. * M_PI / 60. * t);</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">time_step</span><span class="p">;</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">turbine</span><span class="p">.</span><span class="n">floating_platform</span><span class="p">.</span><span class="n">node</span><span class="p">.</span><span class="n">loads</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e6</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_PI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">20.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">turbine</span><span class="p">.</span><span class="n">floating_platform</span><span class="p">.</span><span class="n">node</span><span class="p">.</span><span class="n">loads</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buoyancy_force</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">initial_spring_force</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_PI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">20.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">turbine</span><span class="p">.</span><span class="n">floating_platform</span><span class="p">.</span><span class="n">node</span><span class="p">.</span><span class="n">loads</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0e5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_PI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">15.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">turbine</span><span class="p">.</span><span class="n">floating_platform</span><span class="p">.</span><span class="n">node</span><span class="p">.</span><span class="n">loads</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e6</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_PI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">30.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+<span class="n">interface</span><span class="p">.</span><span class="n">turbine</span><span class="p">.</span><span class="n">floating_platform</span><span class="p">.</span><span class="n">node</span><span class="p">.</span><span class="n">loads</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0e7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sin</span><span class="p">(</span><span class="mf">2.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_PI</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">60.</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>Finally, we call the <code class="docutils literal notranslate"><span class="pre">Step</span></code> function to advance the simulation forward one time step.
 This function returns a boolean stating if the time step converged or not.</p>
-<p>..code-block:: cpp</p>
-<blockquote>
-<div><p>auto converged = interface.Step();
-[[maybe_unused]] const auto converged = interface.Step();
-assert(converged);</p>
-</div></blockquote>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interface</span><span class="p">.</span><span class="n">Step</span><span class="p">();</span>
+<span class="p">[[</span><span class="n">maybe_unused</span><span class="p">]]</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interface</span><span class="p">.</span><span class="n">Step</span><span class="p">();</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">converged</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>And that’s it - the simulation will advance the solution in time.
 At any time, you can access the current position and orientation of the platform as a quaternion through the <code class="docutils literal notranslate"><span class="pre">interface/turbine.floating_platform.node.displacement</span></code> variable.
 You can also tell OpenTurbine to write out the solution to a file at each time step by providing an output file name to the <code class="docutils literal notranslate"><span class="pre">InterfaceBuilder::SetOutputFile</span></code> method before building the interface.</p>
