@@ -15,8 +15,8 @@ int main() {
         constexpr auto mass = 15.;                                         // mass
         constexpr auto inertia = std::array{0.234375, 0.46875, 0.234375};  // inertia matrix
         const auto x = std::array{0., 1., 0.};                             // initial position
-        const auto omega = std::array{0., 150., -4.61538};                 // initial angular velocity
-        const auto x_dot = openturbine::CrossProduct(omega, x);            // initial velocity
+        const auto omega = std::array{0., 150., -4.61538};       // initial angular velocity
+        const auto x_dot = openturbine::CrossProduct(omega, x);  // initial velocity
         const auto omega_dot =
             std::array{661.3461692307691919, 0., 0.};  // initial anguluar acceleration
         const auto x_ddot =
