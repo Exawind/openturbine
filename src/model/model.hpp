@@ -293,7 +293,7 @@ public:
     // Mass Elements
     //--------------------------------------------------------------------------
 
-    /** 
+    /**
      * @brief Adds a mass element to the model
      *
      * @param node_id ID of the node where the mass element will be placed
@@ -328,7 +328,7 @@ public:
      */
     [[nodiscard]] MassElement& GetMassElement(size_t id) { return this->mass_elements_[id]; }
 
-    /** 
+    /**
      * @brief Returns a reference to the mass elements present in the model
      *
      * @return A reference to the vector containing the mass elements
