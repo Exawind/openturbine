@@ -105,7 +105,7 @@ Pick whichever style best fits your application.
 
 When done, call the ``.Build()`` function to generate all of OpenTurbine's data structures and create the interface itself.
 
-..code-block:: cpp
+.. code-block:: cpp
 
    auto interface = interface_builder.Build();
 
@@ -120,7 +120,7 @@ We now compute the buoyancy forces for use during the time stepping process.
 The process of taking each time step is controlled by the user.
 Control commands and loads can be changed freely throughout the simulation, either as part of a coupling to an external code or as response to discrete events.
 
-..code-block:: cpp
+.. code-block:: cpp
 
    for (auto i = 0U; i < n_steps; ++i) {
    ...
@@ -128,7 +128,7 @@ Control commands and loads can be changed freely throughout the simulation, eith
 
 Within this loop, we first set the time-dependent buoyancy forces and moments to the floating platform.
 
-..code-block:: cpp
+.. code-block:: cpp
 
    const auto t = static_cast<double>(i) * time_step;
    interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
@@ -140,7 +140,7 @@ Within this loop, we first set the time-dependent buoyancy forces and moments to
 Finally, we call the ``Step`` function to advance the simulation forward one time step.
 This function returns a boolean stating if the time step converged or not.
                         
-..code-block:: cpp
+.. code-block:: cpp
 
    auto converged = interface.Step();
    [[maybe_unused]] const auto converged = interface.Step();
