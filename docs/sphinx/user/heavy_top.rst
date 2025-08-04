@@ -51,6 +51,7 @@ A Model is OpenTurbine's low level interface for specifying elements, nodes, con
 One everything has been specified, we will use model to create OpenTurbine's fundamental data structures and advance the problem in time.
 
 .. code-block:: cpp
+
     auto model = openturbine::Model();
 
 To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
