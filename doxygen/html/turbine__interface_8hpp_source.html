@@ -197,54 +197,54 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a9eea5d692b8ec9d4f80e7cc091a2f5d4">   26</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a9eea5d692b8ec9d4f80e7cc091a2f5d4">DeviceType</a> =</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html">TurbineInterface</a>(</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a>&amp; solution_input,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a>&amp; turbine_input,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a>&amp; controller_input = {}</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    );</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    [[nodiscard]] <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a>&amp; <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#aff1631f1e3db4dc0be921d71ae1a37b3">Turbine</a>();</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a5ba64ccc54cd7641bae9adbaa9ba7c6e">Step</a>();</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#af73aa7577259739b72f8c969a4519b9b">SaveState</a>();</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a72c30ef900fb0fd472e4d249ca96c811">RestoreState</a>();</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classopenturbine_1_1Model.html">Model</a> model;                  </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a> turbine;  </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_struct" href="structopenturbine_1_1State.html">State&lt;DeviceType&gt;</a> state;      </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_struct" href="structopenturbine_1_1Elements.html">Elements&lt;DeviceType&gt;</a></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        elements;  </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_struct" href="structopenturbine_1_1Constraints.html">Constraints&lt;DeviceType&gt;</a></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        constraints;               </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_struct" href="structopenturbine_1_1StepParameters.html">StepParameters</a> parameters;     </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_struct" href="structopenturbine_1_1Solver.html">Solver&lt;DeviceType&gt;</a> solver;     </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_struct" href="structopenturbine_1_1State.html">State&lt;DeviceType&gt;</a> state_save;  </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState&lt;DeviceType&gt;</a> host_state;                     </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    std::unique_ptr&lt;Outputs&gt; outputs;                     </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::unique_ptr&lt;util::TurbineController&gt; controller;  </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordtype">void</span> WriteRotorTimeSeriesData();</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    [[nodiscard]] <span class="keywordtype">double</span> CalculateAzimuthAngle() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    [[nodiscard]] <span class="keywordtype">double</span> CalculateRotorSpeed() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordtype">void</span> InitializeController(</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a>&amp; turbine_input,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a>&amp; solution_input</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    );</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordtype">void</span> ApplyController();</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordtype">void</span> UpdateControllerInputs();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>};</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html">TurbineInterface</a>(</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a>&amp; solution_input,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a>&amp; turbine_input,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a>&amp; controller_input = {}</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    );</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    [[nodiscard]] <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a>&amp; <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#aff1631f1e3db4dc0be921d71ae1a37b3">Turbine</a>();</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    [[nodiscard]] <span class="keywordtype">bool</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a5ba64ccc54cd7641bae9adbaa9ba7c6e">Step</a>();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#af73aa7577259739b72f8c969a4519b9b">SaveState</a>();</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a72c30ef900fb0fd472e4d249ca96c811">RestoreState</a>();</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classopenturbine_1_1Model.html">Model</a> model;                  </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_class" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a> turbine;  </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_struct" href="structopenturbine_1_1State.html">State&lt;DeviceType&gt;</a> state;      </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_struct" href="structopenturbine_1_1Elements.html">Elements&lt;DeviceType&gt;</a></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        elements;  </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <a class="code hl_struct" href="structopenturbine_1_1Constraints.html">Constraints&lt;DeviceType&gt;</a></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        constraints;               </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_struct" href="structopenturbine_1_1StepParameters.html">StepParameters</a> parameters;     </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_struct" href="structopenturbine_1_1Solver.html">Solver&lt;DeviceType&gt;</a> solver;     </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_struct" href="structopenturbine_1_1State.html">State&lt;DeviceType&gt;</a> state_save;  </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState&lt;DeviceType&gt;</a> host_state;                     </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::unique_ptr&lt;Outputs&gt; outputs;                     </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::unique_ptr&lt;util::TurbineController&gt; controller;  </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keywordtype">void</span> WriteRotorTimeSeriesData();</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    [[nodiscard]] <span class="keywordtype">double</span> CalculateAzimuthAngle() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    [[nodiscard]] <span class="keywordtype">double</span> CalculateRotorSpeed() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordtype">void</span> InitializeController(</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a>&amp; turbine_input,</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a>&amp; solution_input</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    );</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordtype">void</span> ApplyController();</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">void</span> UpdateControllerInputs();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
 </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}  <span class="comment">// namespace openturbine::interfaces</span></div>
-<div class="ttc" id="aclassopenturbine_1_1Model_html"><div class="ttname"><a href="classopenturbine_1_1Model.html">openturbine::Model</a></div><div class="ttdoc">Struct to define a turbine model with nodes, elements, and constraints.</div><div class="ttdef"><b>Definition</b> model.hpp:66</div></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}  <span class="comment">// namespace openturbine::interfaces</span></div>
+<div class="ttc" id="aclassopenturbine_1_1Model_html"><div class="ttname"><a href="classopenturbine_1_1Model.html">openturbine::Model</a></div><div class="ttdoc">Struct to define a turbine model with nodes, elements, and constraints.</div><div class="ttdef"><b>Definition</b> model.hpp:75</div></div>
 <div class="ttc" id="aclassopenturbine_1_1interfaces_1_1TurbineInterface_html"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1TurbineInterface.html">openturbine::interfaces::TurbineInterface</a></div><div class="ttdoc">Interface for blade simulation that manages state, solver, and components.</div><div class="ttdef"><b>Definition</b> turbine_interface.hpp:24</div></div>
 <div class="ttc" id="aclassopenturbine_1_1interfaces_1_1TurbineInterface_html_a5ba64ccc54cd7641bae9adbaa9ba7c6e"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a5ba64ccc54cd7641bae9adbaa9ba7c6e">openturbine::interfaces::TurbineInterface::Step</a></div><div class="ttdeci">bool Step()</div><div class="ttdoc">Steps forward in time.</div><div class="ttdef"><b>Definition</b> turbine_interface.cpp:82</div></div>
 <div class="ttc" id="aclassopenturbine_1_1interfaces_1_1TurbineInterface_html_a72c30ef900fb0fd472e4d249ca96c811"><div class="ttname"><a href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a72c30ef900fb0fd472e4d249ca96c811">openturbine::interfaces::TurbineInterface::RestoreState</a></div><div class="ttdeci">void RestoreState()</div><div class="ttdoc">Restores the previously saved state (in correction step)</div><div class="ttdef"><b>Definition</b> turbine_interface.cpp:125</div></div>

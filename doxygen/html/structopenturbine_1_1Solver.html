@@ -451,14 +451,13 @@ template&lt;<a class="el" href="structopenturbine_1_1Solver.html#aa8c709ef4f1183
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">node_IDs</td><td>View containing the global IDs for each node </td></tr>
-    <tr><td class="paramname">node_freedom_allocation_table</td><td>View containing the freedom signature for each node </td></tr>
+    <tr><td class="paramname">active_dofs</td><td>View containing the number of active DoFs for each node </td></tr>
     <tr><td class="paramname">node_freedom_map_table</td><td>View mapping node indices to DOF indices </td></tr>
     <tr><td class="paramname">num_nodes_per_element</td><td>View containing number of nodes per element </td></tr>
     <tr><td class="paramname">node_state_indices</td><td>View containing element-to-node connectivity </td></tr>
     <tr><td class="paramname">num_constraint_dofs</td><td>Number of constraint degrees of freedom </td></tr>
-    <tr><td class="paramname">constraint_type</td><td>View containing the type of each constraint </td></tr>
-    <tr><td class="paramname">base_node_freedom_signature</td><td>View containing the base node freedom signature of the constraints </td></tr>
-    <tr><td class="paramname">target_node_freedom_signature</td><td>View containing the target node freedom signature of the constraints </td></tr>
+    <tr><td class="paramname">base_active_dofs</td><td>View containing the number of DoFs at the base node </td></tr>
+    <tr><td class="paramname">target_active_dofs</td><td>View containing the number of DoFs at the target node </td></tr>
     <tr><td class="paramname">constraint_base_node_freedom_table</td><td>View containing base node DOFs for constraints </td></tr>
     <tr><td class="paramname">constraint_target_node_freedom_table</td><td>View containing target node DOFs for constraints </td></tr>
     <tr><td class="paramname">constraint_row_range</td><td>View containing row ranges for each constraint </td></tr>

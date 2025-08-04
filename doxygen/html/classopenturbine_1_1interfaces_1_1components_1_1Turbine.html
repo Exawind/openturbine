@@ -264,7 +264,7 @@ Static Public Attributes</h2></td></tr>
 <li>Tower nodes: <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> nodes distributed along tower height (1, 2, ..., n)</li>
 <li>Tower base: Fixed constraint point at tower foundation (first tower node)</li>
 <li><p class="startli">Tower top: Connection point to nacelle assembly (last tower node)</p>
-<p class="startli">┌─── Tower top node (connection to nacelle) │ ○ &lt;- Tower node n │ ○ &lt;- Tower node n-1 │ ○ &lt;- Tower node 2 │ </p><h2>○ &lt;- Tower node 1 (Tower base node - fixed constraint) </h2>
+<p class="startli">┌─── Tower top node (connection to nacelle) │ ○ &lt;- Tower node n │ ○ &lt;- Tower node n-1 | | │ ○ &lt;- Tower node 2 │ </p><h2>○ &lt;- Tower node 1 (Tower base node - fixed constraint) </h2>
 <p class="startli">/ / / / / / / &lt;&ndash; Ground / Foundation</p>
 </li>
 </ul>

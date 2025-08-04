@@ -176,15 +176,12 @@ $(function() {
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
-<code>#include &lt;lapacke.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="interpolation_8hpp_source.html">elements/beams/interpolation.hpp</a>&quot;</code><br />
 </div>
 <p><a href="least__squares__fit_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacelapack" id="r_namespacelapack"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelapack.html">lapack</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine" id="r_namespaceopenturbine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html">openturbine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -194,10 +191,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a0205ddd45198a3c2892ebfb251c18be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
 <tr class="separator:a0205ddd45198a3c2892ebfb251c18be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaebb059748c7ce168f6805f1d5dffaf" id="r_acaebb059748c7ce168f6805f1d5dffaf"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#acaebb059748c7ce168f6805f1d5dffaf">openturbine::ComputeShapeFunctionValues</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:acaebb059748c7ce168f6805f1d5dffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg.  <br /></td></tr>
+<tr class="memdesc:acaebb059748c7ce168f6805f1d5dffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
 <tr class="separator:acaebb059748c7ce168f6805f1d5dffaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cd2e5475f8dbe9b31462d40b246ea9c" id="r_a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a4cd2e5475f8dbe9b31462d40b246ea9c">openturbine::ComputeShapeFunctionDerivatives</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg.  <br /></td></tr>
+<tr class="memdesc:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
 <tr class="separator:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55ac2ab5492e98dbb225554c19dc9935" id="r_a55ac2ab5492e98dbb225554c19dc9935"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a55ac2ab5492e98dbb225554c19dc9935">openturbine::PerformLeastSquaresFitting</a> (size_t p, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
 <tr class="memdesc:a55ac2ab5492e98dbb225554c19dc9935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>

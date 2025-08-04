@@ -600,10 +600,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a0205ddd45198a3c2892ebfb251c18be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
 <tr class="separator:a0205ddd45198a3c2892ebfb251c18be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaebb059748c7ce168f6805f1d5dffaf" id="r_acaebb059748c7ce168f6805f1d5dffaf"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#acaebb059748c7ce168f6805f1d5dffaf">ComputeShapeFunctionValues</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:acaebb059748c7ce168f6805f1d5dffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg.  <br /></td></tr>
+<tr class="memdesc:acaebb059748c7ce168f6805f1d5dffaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
 <tr class="separator:acaebb059748c7ce168f6805f1d5dffaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cd2e5475f8dbe9b31462d40b246ea9c" id="r_a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a4cd2e5475f8dbe9b31462d40b246ea9c">ComputeShapeFunctionDerivatives</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg.  <br /></td></tr>
+<tr class="memdesc:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
 <tr class="separator:a4cd2e5475f8dbe9b31462d40b246ea9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55ac2ab5492e98dbb225554c19dc9935" id="r_a55ac2ab5492e98dbb225554c19dc9935"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a55ac2ab5492e98dbb225554c19dc9935">PerformLeastSquaresFitting</a> (size_t p, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
 <tr class="memdesc:a55ac2ab5492e98dbb225554c19dc9935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
@@ -1412,11 +1412,11 @@ template&lt;typename DeviceType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Computes shape function derivatives dϕg relating points ξb to ξg. </p>
+<p>Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input_pts</td><td>Input points, ξb, in [-1, 1] (2 &lt;= input_pts.size() &lt;= output_pts.size()) </td></tr>
-    <tr><td class="paramname">output_pts</td><td>Output points, ξg, in [-1, 1] </td></tr>
+    <tr><td class="paramname">input_points</td><td>Input points, ξb, in [-1, 1] </td></tr>
+    <tr><td class="paramname">output_points</td><td>Output points, ξg, in [-1, 1] </td></tr>
   </table>
   </dd>
 </dl>
@@ -1458,11 +1458,11 @@ template&lt;typename DeviceType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Computes shape function matrices ϕg relating points ξb to ξg. </p>
+<p>Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">input_pts</td><td>Input points, ξb, in [-1, 1] (2 &lt;= input_pts.size() &lt;= output_pts.size()) </td></tr>
-    <tr><td class="paramname">output_pts</td><td>Output points, ξg, in [-1, 1] </td></tr>
+    <tr><td class="paramname">input_points</td><td>Input points, ξb, in [-1, 1] </td></tr>
+    <tr><td class="paramname">output_points</td><td>Output points, ξg, in [-1, 1] </td></tr>
   </table>
   </dd>
 </dl>
@@ -1768,6 +1768,21 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpa
 </div><div class="memdoc">
 
 <p>Compute freedom tables for state, elements, and constraints, then construct and return solver. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>A Kokkos device or execution/memory space</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>A fully initialized <a class="el" href="structopenturbine_1_1State.html">State</a> object </td></tr>
+    <tr><td class="paramname">elements</td><td>A fully initialized <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a> object </td></tr>
+    <tr><td class="paramname">constraints</td><td>A fully initialized <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A solver based on the system connectivity described by the inputs </dd></dl>
 
 </div>
 </div>
@@ -2791,10 +2806,10 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
   <table class="params">
     <tr><td class="paramname">x</td><td>Evaluation point </td></tr>
     <tr><td class="paramname">xs</td><td>Interpolation nodes (sorted) </td></tr>
+    <tr><td class="paramname">weights</td><td>Output: weights for Lagrange polynomial derivative interpolation </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>weights Weights for Lagrange polynomial derivative interpolation (same size as xs) </dd></dl>
 
 </div>
 </div>
@@ -2843,10 +2858,10 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
   <table class="params">
     <tr><td class="paramname">x</td><td>Evaluation point </td></tr>
     <tr><td class="paramname">xs</td><td>Interpolation nodes (sorted) </td></tr>
+    <tr><td class="paramname">weights</td><td>Output: weights for Lagrange polynomial interpolation </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>weights Weights for Lagrange polynomial interpolation (same size as xs) </dd></dl>
 
 </div>
 </div>
@@ -2995,10 +3010,10 @@ template&lt;typename shape_matrix_type , typename jacobian_type , typename node_
   <table class="params">
     <tr><td class="paramname">x</td><td>Evaluation point </td></tr>
     <tr><td class="paramname">xs</td><td>Interpolation nodes (sorted) </td></tr>
+    <tr><td class="paramname">weights</td><td>Output: weights for linear interpolation </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>weights Weights for linear interpolation (same size as xs) </dd></dl>
 
 </div>
 </div>
