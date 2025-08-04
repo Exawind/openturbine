@@ -28,7 +28,7 @@ jobs:
         cd openturbine
         git checkout ${{ github.head_ref || github.ref_name}}
         spack install
-    - name: Floating Platform Test
+    - name: Rigid Body and Springs Test
       run: |
         source spack/share/spack/setup-env.sh
         spack env activate .
@@ -36,10 +36,10 @@ jobs:
         mkdir build
         cd build
         spack build-env openturbine -- bash
-        cmake ../
+        cmake ../ -DCMAKE_BUILD_TYPE=Debug
         make -j 2
         ./floating_platform
-    - name: Turbine Test
+    - name: IEA15MW Turbine Test
       run: |
         source spack/share/spack/setup-env.sh
         spack env activate .
@@ -47,7 +47,18 @@ jobs:
         mkdir build
         cd build
         spack build-env openturbine -- bash
-        cmake ../
+        cmake ../ -DCMAKE_BUILD_TYPE=Debug
         make -j 2
         cp ../IEA-15-240-RWT.yaml ./
         ./iea15mw_turbine
+    - name: Heavy Top
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
+        cd openturbine/tests/documentation_tests/heavy_top
+        mkdir build
+        cd build
+        spack build-env openturbine -- bash
+        cmake ../ -DCMAKE_BUILD_TYPE=Debug
+        make -j 2
+        ./heavy_top

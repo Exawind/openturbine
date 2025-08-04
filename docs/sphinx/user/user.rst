@@ -9,3 +9,4 @@ User Manual
    linking.rst
    floating_platform.rst
    turbine.rst
+   heavy_top.rst
