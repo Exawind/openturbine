@@ -935,7 +935,6 @@ public:
      * and the output channel values to the Fortran routine. It also populates the turbine loads.
      *
      * @param time Time at which to calculate the output channels
-     * @param output_channel_values Output channel values
      */
     void CalculateOutput(double time) {
         auto ADI_C_CalcOutput =

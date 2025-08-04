@@ -2,7 +2,6 @@
  * @file dylib.hpp
  * @version 2.2.1
  * @brief C++ cross-platform wrapper around dynamic loading of shared libraries
- * @link https://github.com/martin-olivier/dylib
  *
  * @author Martin Olivier <martin.olivier@live.fr>
  * @copyright (c) 2023 Martin Olivier
@@ -116,7 +115,7 @@ public:
      *  @throws `std::invalid_argument` if the arguments are null
      *
      *  @param dir_path the directory path where the dynamic library is located
-     *  @param name the name of the dynamic library to load
+     *  @param lib_name the name of the dynamic library to load
      *  @param decorations adds OS-specific decorations to the library name
      */
     ///@{

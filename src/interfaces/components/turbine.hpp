@@ -36,8 +36,8 @@ namespace openturbine::interfaces::components {
  *     ○ <- Tower node n
  *     │
  *     ○ <- Tower node n-1
- *     .
- *     .
+ *     |
+ *     |
  *     │
  *     ○ <- Tower node 2
  *     │
