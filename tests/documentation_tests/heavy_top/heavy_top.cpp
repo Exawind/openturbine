@@ -15,8 +15,8 @@ int main() {
         constexpr auto mass = 15.;                                         // mass
         constexpr auto inertia = std::array{0.234375, 0.46875, 0.234375};  // inertia matrix
         const auto x = std::array{0., 1., 0.};                             // initial position
-        const auto omega = std::array{0., 150., -4.61538};       // initial angular velocity
-        const auto x_dot = openturbine::CrossProduct(omega, x);  // initial velocity
+        const auto omega = std::array{0., 150., -4.61538};                 // initial angular velocity
+        const auto x_dot = openturbine::CrossProduct(omega, x);            // initial velocity
         const auto omega_dot =
             std::array{661.3461692307691919, 0., 0.};  // initial anguluar acceleration
         const auto x_ddot =
@@ -27,13 +27,13 @@ int main() {
         // create OpenTurbine's fundamental data structures and advance the problem in time.
         auto model = openturbine::Model();
 
-        // To add a node, we call uthe AddNode method on Model, which creates a NodeBuilder object.
+        // To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
         // This factory lets us string together function calls to specify the initial position,
         // velocity, and acceleration in a human readable fashion.  Once we finalized by calling
         // the Build method, the NodeBuilder adds a node to the model and returns its newly created
         // ID number.  This ID will be used for specifying elements and constraints.
         //
-        // For this problem, we'll add two nodes: one ffor the mass and one at the origin for
+        // For this problem, we'll add two nodes: one for the mass and one at the origin for
         // defining constraints
         auto mass_node_id =
             model.AddNode()
@@ -59,7 +59,7 @@ int main() {
                           }}
         );
 
-        // This problem requires two constraints: a rigid joint prescribing that the ceneter of
+        // This problem requires two constraints: a rigid joint prescribing that the center of
         // mass remains a constant distance from the ground node and a prescribed boundary
         // condition forcing the ground node to remain stationary.
         model.AddRigidJoint6DOFsTo3DOFs({mass_node_id, ground_node_id});
@@ -75,10 +75,10 @@ int main() {
         // execution/memory space, so a serial build will run on the CPU, a CUDA build will run on a
         // CUDA device, etc.
         //
-        // State contains the current state (position, velocity ,etc) information for each node
+        // State contains the current state (position, velocity, etc) information for each node.
         //
         // Elements contains each a Beams, Masses, and Springs structure.  These contain the
-        // connectivity and basis information or all of the elements of the respective type,
+        // connectivity and basis information or all of the elements of the respective type.
         //
         // Constraints contains the connectivity information for each constraint in the system.
         //
@@ -88,12 +88,12 @@ int main() {
         // The final stage is to create a StepParameters object, which contains information like
         // the number of non-linear iterations, time step size, and numerical damping factor used
         // to take a single time step.
-        constexpr bool is_dynamic_solve(true);
-        constexpr size_t max_iter(10);
-        constexpr double step_size(0.002);
-        constexpr double rho_inf(0.9);
-        constexpr double a_tol(1e-5);
-        constexpr double r_tol(1e-3);
+        constexpr auto is_dynamic_solve(true);
+        constexpr auto max_iter(10UL);
+        constexpr auto step_size(0.002);
+        constexpr auto rho_inf(0.9);
+        constexpr auto a_tol(1e-5);
+        constexpr auto r_tol(1e-3);
         auto parameters = openturbine::StepParameters(
             is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol
         );
