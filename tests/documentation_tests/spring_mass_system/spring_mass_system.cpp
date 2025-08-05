@@ -15,12 +15,12 @@ int main() {
         constexpr auto mass = 1.;
         constexpr auto inertia = 1.;
         constexpr auto mass_matrix = std::array{
-            std::array{mass, 0.,   0.,   0.,      0.,      0.     },  // mass in x-direction
-            std::array{0.,   mass, 0.,   0.,      0.,      0.     },  // mass in y-direction
-            std::array{0.,   0.,   mass, 0.,      0.,      0.     },  // mass in z-direction
-            std::array{0.,   0.,   0.,   inertia, 0.,      0.     },  // inertia around x-axis
-            std::array{0.,   0.,   0.,   0.,      inertia, 0.     },  // inertia around y-axis
-            std::array{0.,   0.,   0.,   0.,      0.,      inertia},  // inertia around z-axis
+            std::array{mass, 0., 0., 0., 0., 0.},     // mass in x-direction
+            std::array{0., mass, 0., 0., 0., 0.},     // mass in y-direction
+            std::array{0., 0., mass, 0., 0., 0.},     // mass in z-direction
+            std::array{0., 0., 0., inertia, 0., 0.},  // inertia around x-axis
+            std::array{0., 0., 0., 0., inertia, 0.},  // inertia around y-axis
+            std::array{0., 0., 0., 0., 0., inertia},  // inertia around z-axis
         };
 
         // A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints,
@@ -35,58 +35,63 @@ int main() {
         // ID number.  This ID will be used for specifying elements and constraints.
         //
         // For this problem, we'll add a series of equally spaced nodes for each mass and an anchor
-	// point at the beginning and end of the list.  We'll store the node-ids for each of these
-	// for later use defining the physics and connectivity information.
+        // point at the beginning and end of the list.  We'll store the node-ids for each of these
+        // for later use defining the physics and connectivity information.
         constexpr auto number_of_masses = 10U;
         constexpr auto displacement = 0.5;
-	auto anchor_node_ids = std::array<size_t, 2>{};
-	auto mass_node_ids = std::array<size_t, number_of_masses>{};
+        auto anchor_node_ids = std::array<size_t, 2>{};
+        auto mass_node_ids = std::array<size_t, number_of_masses>{};
         auto position = 0.;
-        anchor_node_ids.front() = model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.).Build();
-	for (auto& mass_node_id : mass_node_ids) {
+        anchor_node_ids.front() =
+            model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.).Build();
+        for (auto& mass_node_id : mass_node_ids) {
             position += displacement;
             mass_node_id = model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.).Build();
-	}
+        }
         position += displacement;
-	anchor_node_ids.back() = model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.).Build();
+        anchor_node_ids.back() =
+            model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.).Build();
 
         // To add a mass element to the model, we will need a single node id number and the
         // mass matrix containing the mass and inertia information.
-	//
-	// We'll add a mass element for each of the mass nodes
-	for (auto mass_node_id : mass_node_ids) {
-	    model.AddMassElement(mass_node_id, mass_matrix);
-	}
+        //
+        // We'll add a mass element for each of the mass nodes
+        for (auto mass_node_id : mass_node_ids) {
+            model.AddMassElement(mass_node_id, mass_matrix);
+        }
 
-	// To add a spring to the model, we will need a node id number, a stiffness, and an 
-	// undisplaced length where the spring force is zero.
-	//
-	// We'll add a spring element between each of the mass elements and between the ending
-	// mass elements and our anchor points.
-	const auto stiffness = 10.;
-	const auto length = 0.;
-	model.AddSpringElement(anchor_node_ids.front(), mass_node_ids.front(), stiffness, length);
-	for (auto index = 0U; index < number_of_masses-1; ++index) {
-            model.AddSpringElement(mass_node_ids[index], mass_node_ids[index+1U], stiffness, length);
-	}
-	model.AddSpringElement(mass_node_ids.back(), anchor_node_ids.back(), stiffness, length);
-	
-	// Each of the anchor nodes requires a fixed boundary condition, which will prevent it from
-	// either moving or rotating.
-	for (auto anchor_node_id : anchor_node_ids) {
-	    model.AddFixedBC(anchor_node_id);
-	}
+        // To add a spring to the model, we will need a node id number, a stiffness, and an
+        // undisplaced length where the spring force is zero.
+        //
+        // We'll add a spring element between each of the mass elements and between the ending
+        // mass elements and our anchor points.
+        const auto stiffness = 10.;
+        const auto length = 0.;
+        model.AddSpringElement(anchor_node_ids.front(), mass_node_ids.front(), stiffness, length);
+        for (auto index = 0U; index < number_of_masses - 1; ++index) {
+            model.AddSpringElement(
+                mass_node_ids[index], mass_node_ids[index + 1U], stiffness, length
+            );
+        }
+        model.AddSpringElement(mass_node_ids.back(), anchor_node_ids.back(), stiffness, length);
+
+        // Each of the anchor nodes requires a fixed boundary condition, which will prevent it from
+        // either moving or rotating.
+        for (auto anchor_node_id : anchor_node_ids) {
+            model.AddFixedBC(anchor_node_id);
+        }
 
         // Now that the problem has been fully described in the model, we will create OpenTurbine's
         // main data structures: State, Elements, Constraints, and Solver.
-	//
-	// The CreateSystem method takes an optional template argument with a Kokkos device describing
-	// where the system will reside and run.  By default, it uses Kokkos' default execution/memory
-	// space, so a serial build will run on the CPU, a CUDA build will run on a CUDA device, etc.
         //
-	// The CreateSolver<> function uses the connectivity defined in the State, Elements, and
-	// Constraints structures to construct the Solver object.
-	//
+        // The CreateSystem method takes an optional template argument with a Kokkos device
+        // describing where the system will reside and run.  By default, it uses Kokkos' default
+        // execution/memory space, so a serial build will run on the CPU, a CUDA build will run on a
+        // CUDA device, etc.
+        //
+        // The CreateSolver<> function uses the connectivity defined in the State, Elements, and
+        // Constraints structures to construct the Solver object.
+        //
         // State contains the current state (position, velocity, etc) information for each node.
         //
         // Elements contains each a Beams, Masses, and Springs structure.  These contain the
@@ -107,16 +112,18 @@ int main() {
         constexpr double rho_inf(0.);
         const double final_time = 2. * M_PI * sqrt(mass / stiffness);
         const double step_size(final_time / static_cast<double>(num_steps));
-        auto parameters = openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+        auto parameters =
+            openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
         // OpenTurbine allows the user to control the actual time stepping process.  This includes
         // setting forces, post-processing data, or coupling to other codes.  In this example, we'll
-	// check that none of the nodes have moved - the chain is in constant tension and equilibrium.
-	//
-	// The current state is stored in the State object's q member.  This is a Kokkos view of size
-	// num_nodes x 7.  This view lives on device, so we can't access it directly from host code.
-	// Here, we create a mirror view on host and, at each time step, copy the data to host and
-	// check the value of x-displacement at each node.
+        // check that none of the nodes have moved - the chain is in constant tension and
+        // equilibrium.
+        //
+        // The current state is stored in the State object's q member.  This is a Kokkos view of size
+        // num_nodes x 7.  This view lives on device, so we can't access it directly from host code.
+        // Here, we create a mirror view on host and, at each time step, copy the data to host and
+        // check the value of x-displacement at each node.
         auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
         for (auto i = 0; i < 400; ++i) {
             [[maybe_unused]] const auto converged =
