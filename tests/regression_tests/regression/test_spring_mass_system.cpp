@@ -140,7 +140,7 @@ inline auto SetUpSpringMassChainSystem() {
     };
 
     for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
-        model.AddMassElement(mass_number + 1, {mass_matrix});
+        model.AddMassElement(mass_number + 1, mass_matrix);
     }
 
     // Create springs
@@ -157,14 +157,13 @@ inline auto SetUpSpringMassChainSystem() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    const double T = 2. * M_PI * sqrt(m / k);
-    constexpr auto num_steps = 1000;
-
     // Set up step parameters
+    constexpr auto num_steps = 1000;
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
-    constexpr double rho_inf(0.);                                // No damping
-    const double step_size(T / static_cast<double>(num_steps));  // Calculate step size
+    constexpr double rho_inf(0.);
+    const double final_time = 2. * M_PI * sqrt(m / k);
+    const double step_size(final_time / static_cast<double>(num_steps));
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);

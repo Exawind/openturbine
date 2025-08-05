@@ -109,7 +109,7 @@ int main() {
         }
 
         // Finally, we can check that our solution is correct.  The current state is stored
-        // in the State object's q member.  This is a Kokkos view of size num_nodes x 6.  This View
+        // in the State object's q member.  This is a Kokkos view of size num_nodes x 7.  This View
         // lives on device, so we can't access it directly from host code.  Here, we create a mirror
         // view on host and then check the values.  For more information on working with Kokkos data
         // structures, see the Kokkos documentation.
