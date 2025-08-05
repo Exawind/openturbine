@@ -62,3 +62,14 @@ jobs:
         cmake ../ -DCMAKE_BUILD_TYPE=Debug
         make -j 2
         ./heavy_top
+    - name: Spring Mass System
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
+        cd openturbine/tests/documentation_tests/spring_mass_system
+        mkdir build
+        cd build
+        spack build-env openturbine -- bash
+        cmake ../ -DCMAKE_BUILD_TYPE=Debug
+        make -j 2
+        ./spring_mass_system
