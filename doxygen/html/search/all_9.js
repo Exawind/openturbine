@@ -58,9 +58,10 @@ var searchData=
   ['io_55',['io',['../classopenturbine_1_1util_1_1TurbineController.html#a76b86c6564f62a7111a7ccf87224e993',1,'openturbine::util::TurbineController']]],
   ['is_5fdynamic_5fsolve_56',['is_dynamic_solve',['../structopenturbine_1_1StepParameters.html#a17db32936a726c2d8a5ad6e2b9a3b3c2',1,'openturbine::StepParameters']]],
   ['is_5fhorizontal_5faxis_57',['is_horizontal_axis',['../structopenturbine_1_1util_1_1TurbineConfig.html#a1cb671095764da28dc8eca1b5ee6dd87',1,'openturbine::util::TurbineConfig']]],
-  ['isenabled_58',['IsEnabled',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#a6ad0ead3a71b0ca20507df630641b940',1,'openturbine::interfaces::components::ControllerInput']]],
-  ['isidentityquaternion_59',['IsIdentityQuaternion',['../namespaceopenturbine.html#ad3ae7ec2f79c8519eb93122773096413',1,'openturbine']]],
-  ['items_60',['items',['../classwindio_1_1Schema.html#a37518ca28cc54221de8476a08fc31a49',1,'windio::Schema']]],
-  ['ixx_61',['Ixx',['../structopenturbine_1_1HollowCircleProperties.html#a13b8eb3e324818ee09d06002683e1740',1,'openturbine::HollowCircleProperties']]],
-  ['iyy_62',['Iyy',['../structopenturbine_1_1HollowCircleProperties.html#a145cf653c7e3225174fb79f2e4f07f5e',1,'openturbine::HollowCircleProperties']]]
+  ['is_5finitial_5ffactorization_58',['is_initial_factorization',['../classopenturbine_1_1DSSHandle_3_01DSSAlgorithm_1_1CUDSS_01_4.html#a80443a3e97a5851200192c43a52de889',1,'openturbine::DSSHandle&lt; DSSAlgorithm::CUDSS &gt;']]],
+  ['isenabled_59',['IsEnabled',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#a6ad0ead3a71b0ca20507df630641b940',1,'openturbine::interfaces::components::ControllerInput']]],
+  ['isidentityquaternion_60',['IsIdentityQuaternion',['../namespaceopenturbine.html#ad3ae7ec2f79c8519eb93122773096413',1,'openturbine']]],
+  ['items_61',['items',['../classwindio_1_1Schema.html#a37518ca28cc54221de8476a08fc31a49',1,'windio::Schema']]],
+  ['ixx_62',['Ixx',['../structopenturbine_1_1HollowCircleProperties.html#a13b8eb3e324818ee09d06002683e1740',1,'openturbine::HollowCircleProperties']]],
+  ['iyy_63',['Iyy',['../structopenturbine_1_1HollowCircleProperties.html#a145cf653c7e3225174fb79f2e4f07f5e',1,'openturbine::HollowCircleProperties']]]
 ];

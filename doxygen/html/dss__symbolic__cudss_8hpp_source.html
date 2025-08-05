@@ -217,16 +217,17 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        );</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        cudssExecute(handle, CUDSS_PHASE_ANALYSIS, config, data, A_cudss, x_cudss, b_cudss);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        cudssMatrixDestroy(A_cudss);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        cudssMatrixDestroy(b_cudss);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        cudssMatrixDestroy(x_cudss);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        dss_handle.set_initial_factorization(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        cudssMatrixDestroy(A_cudss);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        cudssMatrixDestroy(b_cudss);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        cudssMatrixDestroy(x_cudss);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
 </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="aclassopenturbine_1_1DSSHandle_html"><div class="ttname"><a href="classopenturbine_1_1DSSHandle.html">openturbine::DSSHandle</a></div><div class="ttdef"><b>Definition</b> dss_handle.hpp:10</div></div>
 <div class="ttc" id="adss__algorithm_8hpp_html"><div class="ttname"><a href="dss__algorithm_8hpp.html">dss_algorithm.hpp</a></div></div>
 <div class="ttc" id="adss__handle__cudss_8hpp_html"><div class="ttname"><a href="dss__handle__cudss_8hpp.html">dss_handle_cudss.hpp</a></div></div>

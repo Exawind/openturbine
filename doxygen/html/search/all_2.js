@@ -27,7 +27,7 @@ var searchData=
   ['beambuilder_24',['BeamBuilder',['../classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html',1,'openturbine::interfaces::components']]],
   ['beamelement_25',['beamelement',['../structopenturbine_1_1BeamElement.html#a04ef46ce6a58c1017b40555bc49ad6cd',1,'openturbine::BeamElement::BeamElement()'],['../structopenturbine_1_1BeamElement.html',1,'openturbine::BeamElement']]],
   ['beaminput_26',['BeamInput',['../structopenturbine_1_1interfaces_1_1components_1_1BeamInput.html',1,'openturbine::interfaces::components']]],
-  ['beams_27',['beams',['../structopenturbine_1_1Elements.html#aa5cf5c3aa7465df41ebcbd66801269bd',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html#aa62749cbe4f2d45b4087e38fe4cd31e6',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams&lt; DeviceType &gt;']]],
+  ['beams_27',['beams',['../structopenturbine_1_1Beams.html#aa62749cbe4f2d45b4087e38fe4cd31e6',1,'openturbine::Beams::Beams()'],['../structopenturbine_1_1Elements.html#aa5cf5c3aa7465df41ebcbd66801269bd',1,'openturbine::Elements::beams'],['../structopenturbine_1_1Beams.html',1,'openturbine::Beams&lt; DeviceType &gt;']]],
   ['beams_2ehpp_28',['beams.hpp',['../beams_8hpp.html',1,'']]],
   ['beams_5finput_2ehpp_29',['beams_input.hpp',['../beams__input_8hpp.html',1,'']]],
   ['beamsection_30',['beamsection',['../structopenturbine_1_1BeamSection.html#ad5ee645fdb6ee903b54edf006a3c0756',1,'openturbine::BeamSection::BeamSection()'],['../structopenturbine_1_1BeamSection.html',1,'openturbine::BeamSection']]],
