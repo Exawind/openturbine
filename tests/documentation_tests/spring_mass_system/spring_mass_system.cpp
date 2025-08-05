@@ -104,9 +104,9 @@ int main() {
         constexpr auto num_steps = 1000;
         constexpr bool is_dynamic_solve(true);
         constexpr size_t max_iter(6);
-        constexpr double rho_inf(0.);  // No damping
+        constexpr double rho_inf(0.);
         const double final_time = 2. * M_PI * sqrt(mass / stiffness);
-        const double step_size(final_time / static_cast<double>(num_steps));  // Calculate step size
+        const double step_size(final_time / static_cast<double>(num_steps));
         auto parameters = openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
         // OpenTurbine allows the user to control the actual time stepping process.  This includes

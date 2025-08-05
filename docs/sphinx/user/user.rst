@@ -10,3 +10,4 @@ User Manual
    floating_platform.rst
    turbine.rst
    heavy_top.rst
+   spring_mass.rst
