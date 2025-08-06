@@ -11,3 +11,4 @@ User Manual
    turbine.rst
    heavy_top.rst
    spring_mass.rst
+   three_blade.rst

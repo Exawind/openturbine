@@ -15,7 +15,8 @@ int main() {
         // matrices defined at given nodes along the beam.  These physical properties
         // will be interpolated to the quadrature points for use in our simulation.
         // This problem uses a constant-cross-section blade, so the sections at the root
-        // and tip of the beam will be identical, but any number of complex
+        // and tip of the beam will be identical, but any number of complex cross-sections
+	// can be modeled
         constexpr auto mass_matrix = std::array{
             std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
             std::array{0., 0., 8.538e-2, 0., 0., 0.},   std::array{0., 0., 0., 1.4433e-2, 0., 0.},
@@ -60,10 +61,12 @@ int main() {
         // The aptly named SetGravity method is used to set the gravity vector for the problem.
         model.SetGravity(0., 0., -9.81);
 
-        // When specifying the nodes, we'll also set the initial velocity for each node.  To help
-        // formulate this, we specify the rotor angular velocity in rad/s
+        // When specifying the beam elements, we'll also set the initial velocity.  To help
+        // formulate this, we specify the rotor velocity (both translational and rotational)
+	// and the origin about which we'll rotate.
         const auto velocity = std::array{0., 0., 0., 0., 0., 1.};
         const auto origin = std::array{0., 0., 0.};
+	const auto hub_radius = 2.;
 
         // We'll now define three beam elements to be our main rotor.  Each of these beams will be
         // identical, but we'll rotate each of them by 120 degrees around the origin to create a
@@ -81,7 +84,7 @@ int main() {
             auto rotation_quaternion = openturbine::RotationVectorToQuaternion(
                 {0., 0., 2. * M_PI * blade_number / num_blades}
             );
-            model.TranslateBeam(blade_elem_id, {2., 0., 0.});
+            model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
             model.RotateBeamAboutPoint(blade_elem_id, rotation_quaternion, origin);
             model.SetBeamVelocityAboutPoint(blade_elem_id, velocity, origin);
         }
@@ -131,11 +134,8 @@ int main() {
             openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
         // OpenTurbine allows the user to control the actual time stepping process.  This includes
-        // setting forces, post-processing data, or coupling to other codes.  In this example, we'll
-        // check that none of the nodes have moved - the chain is in constant tension and
-        // equilibrium.
-        //
-        // For this problem, we will prescribe a rotation on the hub boundary condition, which will
+        // setting forces, post-processing data, or coupling to other codes.
+	// For this problem, we will prescribe a rotation on the hub boundary condition, which will
         // be transmitted to the blades through their respective constraints.
         for (auto i = 0U; i < num_steps; ++i) {
             const auto q_hub = openturbine::RotationVectorToQuaternion(
