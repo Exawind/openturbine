@@ -73,3 +73,14 @@ jobs:
         cmake ../ -DCMAKE_BUILD_TYPE=Debug
         make -j 2
         ./spring_mass_system
+    - name: Three Blade Rotor
+      run: |
+        source spack/share/spack/setup-env.sh
+        spack env activate .
+        cd openturbine/tests/documentation_tests/three_blade_rotor
+        mkdir build
+        cd build
+        spack build-env openturbine -- bash
+        cmake ../ -DCMAKE_BUILD_TYPE=Debug
+        make -j 2
+        ./three_blade_rotor
