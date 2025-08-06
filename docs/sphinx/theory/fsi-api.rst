@@ -21,7 +21,7 @@ provide **point** force and moments that are appropriately distributed
 to the nodes in a manner consistent with the beam basis functions.
 
 In the following we describe the fluid-structure coupling between a
-single **member** of OpenTurbine and a corresponding fluid model. As
+single **structural member** of OpenTurbine and a corresponding fluid model. As
 discussed above, a member could be a beam, rigid body, or a massless
 6-DOF point. Each member can be mapped to one or more fluid models. For
 example, in a geometry-resolved CFD model, the CFD domain surrounding a
@@ -53,7 +53,7 @@ where
    \underline{\widehat{q}}_i
    \end{bmatrix} \qquad
    \underline{\dot{q}}_i = 
-   \begin{bmatrix} \underline{\dot{u}}_i  \\
+   \begin{bmatrix} \dot{\underline{u}}_i  \\
    \underline{\omega}_i
    \end{bmatrix} 
    \end{aligned}
