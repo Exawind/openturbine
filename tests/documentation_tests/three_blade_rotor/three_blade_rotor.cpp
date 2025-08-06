@@ -16,7 +16,7 @@ int main() {
         // will be interpolated to the quadrature points for use in our simulation.
         // This problem uses a constant-cross-section blade, so the sections at the root
         // and tip of the beam will be identical, but any number of complex cross-sections
-	// can be modeled
+        // can be modeled
         constexpr auto mass_matrix = std::array{
             std::array{8.538e-2, 0., 0., 0., 0., 0.},   std::array{0., 8.538e-2, 0., 0., 0., 0.},
             std::array{0., 0., 8.538e-2, 0., 0., 0.},   std::array{0., 0., 0., 1.4433e-2, 0., 0.},
@@ -63,10 +63,10 @@ int main() {
 
         // When specifying the beam elements, we'll also set the initial velocity.  To help
         // formulate this, we specify the rotor velocity (both translational and rotational)
-	// and the origin about which we'll rotate.
+        // and the origin about which we'll rotate.
         const auto velocity = std::array{0., 0., 0., 0., 0., 1.};
         const auto origin = std::array{0., 0., 0.};
-	const auto hub_radius = 2.;
+        const auto hub_radius = 2.;
 
         // We'll now define three beam elements to be our main rotor.  Each of these beams will be
         // identical, but we'll rotate each of them by 120 degrees around the origin to create a
@@ -135,7 +135,7 @@ int main() {
 
         // OpenTurbine allows the user to control the actual time stepping process.  This includes
         // setting forces, post-processing data, or coupling to other codes.
-	// For this problem, we will prescribe a rotation on the hub boundary condition, which will
+        // For this problem, we will prescribe a rotation on the hub boundary condition, which will
         // be transmitted to the blades through their respective constraints.
         for (auto i = 0U; i < num_steps; ++i) {
             const auto q_hub = openturbine::RotationVectorToQuaternion(
