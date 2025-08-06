@@ -3,6 +3,9 @@
 Coupling for fluid-structure-interaction
 ----------------------------------------
 
+Overview
+~~~~~~~~
+
 OpenTurbine was designed as a flexible multibody dynamics solver to be
 coupled with external modules for fluid forcing at various
 fluid-dynamics-model fidelity levels. At the lowest level, OpenTurbine
@@ -26,7 +29,12 @@ discussed above, a member could be a beam, rigid body, or a massless
 6-DOF point. Each member can be mapped to one or more fluid models. For
 example, in a geometry-resolved CFD model, the CFD domain surrounding a
 beam will often be decomposed for parallel computation, each domain tied
-to a computational MPI rank.
+to a computational MPI rank.  
+
+.. _`sec:fsi-init`:
+
+Data initialization and transfer between solvers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We focus on coupling between a member with :math:`P` nodes, where
 :math:`P=1` for body represented by a point, e.g. a rigid body or a
@@ -35,37 +43,35 @@ motion. The interface should be such that only the following nodal data
 (for :math:`P` nodes) is transferred after initialization:
 
 .. math::
+   \underline{f}_i^n \in \mathbb{R}^3, \,
+   \underline{m}_i^n \in \mathbb{R}^3, \,
+   \underline{q}_i^n \in \mathbb{R}^7,\,
+   \underline{v}_i^n \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+   :label: fsi-data
 
-   \begin{aligned}
-   \underline{f}_i \in \mathbb{R}^3, \,
-   \underline{m}_i \in \mathbb{R}^3, \,
-   \underline{q}_i \in \mathbb{R}^7,\,
-   \underline{\dot{q}}_i \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
-   \end{aligned}
-
-where
+where the :math:`n` superscript denotes time station (:math:`t = t^{n-1} + \Delta t^n`)
 
 .. math::
 
    \begin{aligned}
-   \underline{q}_i = 
-   \begin{bmatrix} \underline{u}_i \\
-   \underline{\widehat{q}}_i
+   \underline{q}_i^n = 
+   \begin{bmatrix} \underline{u}_i^n \\
+   \widehat{q}^n_i
    \end{bmatrix} \qquad
-   \underline{\dot{q}}_i = 
-   \begin{bmatrix} \dot{\underline{u}}_i  \\
-   \underline{\omega}_i
+   \underline{v}^n_i = 
+   \begin{bmatrix} \dot{\underline{u}}^n_i  \\
+   \underline{\omega}^n_i
    \end{bmatrix} 
    \end{aligned}
 
-and where :math:`\underline{u}_i \in \mathbb{R}^3` is displacement,
-:math:`\widehat{q}_i \in \mathbb{R}^4` is relative rotation in
-quaternions, and :math:`\underline{\omega}_i \in \mathbb{R}^3` is
+and where :math:`\underline{u}_i^n \in \mathbb{R}^3` is displacement,
+:math:`\widehat{q}_i^n \in \mathbb{R}^4` is relative rotation in
+quaternions, and :math:`\underline{\omega}_i^n \in \mathbb{R}^3` is
 angular velocity. In this approach, either within the fluid solver or
 within an interface layer, the following data must be calculated at
 initialization and be accessible to the fluid solver or interface layer:
 
-- :math:`\underline{x}^0_\ell \in\mathbb{R}^3\,,\, \widehat{q}^0_\ell \in\mathbb{R}^4\,,\ell \in \{1, \ldots, P\}`,
+- :math:`\underline{x}^\mathrm{r}_\ell \in\mathbb{R}^3\,,\, \widehat{q}^\mathrm{r}_\ell \in\mathbb{R}^4\,,\ell \in \{1, \ldots, P\}`,
   structure nodal locations and orientations (quaternions) in reference
   configuration
 
@@ -74,22 +80,22 @@ initialization and be accessible to the fluid solver or interface layer:
   respectively. For BE/BEMT,
   :math:`n^\mathrm{motion} = n^\mathrm{force}`.
 
-- :math:`\underline{x}^{\mathrm{motion},0}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{motion}\}`,
+- :math:`\underline{x}^{\mathrm{motion},\mathrm{r}}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{motion}\}`,
   fluid nodal locations in reference configuration (user provided; or
   calculated based on aerodynamic section data for BE/BEMT)
 
-- :math:`\underline{x}^{\mathrm{force},0}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{force}\}`,
+- :math:`\underline{x}^{\mathrm{force},\mathrm{r}}_j\in\mathbb{R}^3\,,\, j \in \{1, \ldots, n^\mathrm{force}\}`,
   fluid nodal locations in reference configuration (user provided; or
   calculated based on aerodynamic section data for BE/BEMT)
 
 - :math:`\xi^{\mathrm{motion},\mathrm{map}}_j\in[-1,1]\,,\, j \in \{1, \ldots, n^\mathrm{motion}\}`
   nearest location on the beam reference line for
-  :math:`\underline{x}^{\mathrm{motion},0}_j`; provided by user for
+  :math:`\underline{x}^{\mathrm{motion},\mathrm{r}}_j`; provided by user for
   BE/BEMT, but must be calculated at initialization for CFD coupling
 
 - :math:`\xi^{\mathrm{force},\mathrm{map}}_j\in[-1,1]\,,\, j \in \{1, \ldots, n^\mathrm{force}\}`
   nearest location on the beam reference line for
-  :math:`\underline{x}^{\mathrm{force},0}_j`; provided by user for
+  :math:`\underline{x}^{\mathrm{force},\mathrm{r}}_j`; provided by user for
   BE/BEMT, but must be calculated at initialization for CFD coupling
 
 - :math:`\phi_\ell\left( \xi^{\mathrm{force},\mathrm{map}}_j\right)\,,\,
@@ -102,15 +108,15 @@ initialization and be accessible to the fluid solver or interface layer:
   \, \ell \in \{1, \ldots, P \}, 
   \, j \in \{1, \ldots, n^\mathrm{motion} \}`
 
-- :math:`\underline{x}_j^{\mathrm{force},\mathrm{map},0}\in\mathbb{R}^3`
+- :math:`\underline{x}_j^{\mathrm{force},\mathrm{map},\mathrm{r}}\in\mathbb{R}^3`
   and
-  :math:`\widehat{q}_j^{\mathrm{force},\mathrm{map},0}\in\mathbb{R}^4`,
+  :math:`\widehat{q}_j^{\mathrm{force},\mathrm{map},\mathrm{r}}\in\mathbb{R}^4`,
   :math:`j \in \{1,\ldots,n^\mathrm{force}\}`; calculated at
   initialization
 
-- :math:`\underline{x}_j^{\mathrm{motion},\mathrm{map},0}\in\mathbb{R}^3`
+- :math:`\underline{x}_j^{\mathrm{motion},\mathrm{map},\mathrm{r}}\in\mathbb{R}^3`
   and
-  :math:`\widehat{q}_j^{\mathrm{motion},\mathrm{map},0}\in\mathbb{R}^4`,
+  :math:`\widehat{q}_j^{\mathrm{motion},\mathrm{map},\mathrm{r}}\in\mathbb{R}^4`,
   :math:`j \in \{1,\ldots,n^\mathrm{motion}\}` ; calculated at
   initialization
 
@@ -127,8 +133,12 @@ Note that while this formulation is generalized for a single beam
 element with :math:`P` nodes, it can be applied to a single-DOF rigid
 body, in which case :math:`P=1`, or expanded to multiple beam elements.
 
-Initialization
-~~~~~~~~~~~~~~
+.. _`sec:fsi-map`:
+
+Fluid-structure spatial mapping
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section describes the mapping between fluid and structure points, which must be done as part of initialization.  The formulation assumes that the fluid and structure are defined in the same global reference frame. 
 
 We have set of :math:`n^\mathrm{force}` points in the fluid domain that
 provide point forces/moments to the structure, and a set of
@@ -140,12 +150,12 @@ and their definition is given as an input. For more general CFD
 coupling, typically :math:`n^\mathrm{force} \ll n^\mathrm{motion}`. Each
 of these force and motion fluid points must be mapped and tied to a
 unique location on its associated structural member,
-:math:`\underline{x}_j^{\mathrm{force,map},\mathrm{0}}` and
-:math:`\underline{x}_j^{\mathrm{motion,map},\mathrm{0}}`, respectively.
+:math:`\underline{x}_j^{\mathrm{force,map},\mathrm{r}}` and
+:math:`\underline{x}_j^{\mathrm{motion,map},\mathrm{r}}`, respectively.
 For a point member,
-:math:`\underline{x}_j^{\mathrm{force,map},\mathrm{0}} = \underline{x}_j^0`
+:math:`\underline{x}_j^{\mathrm{force,map},\mathrm{r}} = \underline{x}_j^\mathrm{r}`
 and
-:math:`\underline{x}_j^{\mathrm{motion,map},\mathrm{0}}=\underline{x}_j^0`.
+:math:`\underline{x}_j^{\mathrm{motion,map},\mathrm{r}}=\underline{x}_j^\mathrm{r}`.
 
 For a beam member coupled to geometry-resolved CFD, our coupling is
 based on minimum distance to the the finite-element represenation of the
@@ -156,8 +166,8 @@ distance squared,
 .. math::
 
    \begin{aligned}
-   d_i^2 = \left(\underline{x}^{\mathrm{force},0}_i 
-   - \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}^0_\ell\right)^2
+   d_i^2 = \left(\underline{x}^{\mathrm{force},\mathrm{r}}_i 
+   - \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}^\mathrm{r}_\ell\right)^2
    \end{aligned}
 
 is minimized for all :math:`i \in \{1, \ldots, n^\mathrm{force} \}` and
@@ -167,8 +177,8 @@ the distance squared,
 .. math::
 
    \begin{aligned}
-   d_j^2 = \left(\underline{x}^{\mathrm{motion},0}_j 
-   - \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}_\ell^0\right)^2
+   d_j^2 = \left(\underline{x}^{\mathrm{motion},\mathrm{r}}_j 
+   - \sum_{\ell=1}^P \phi_\ell(\xi) \underline{x}_\ell^\mathrm{r}\right)^2
    \end{aligned}
 
 is minimized for all :math:`j \in \{1, \ldots, n^\mathrm{motion} \}`.
@@ -179,29 +189,29 @@ in the inertial coordinate system are given by
 .. math::
 
    \begin{aligned}
-   \underline{x}^{\mathrm{force},\mathrm{map},\mathrm{0}}_i = 
-   \sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{force},\mathrm{map}}_i) \underline{x}^\mathrm{0}_\ell, \qquad i \in \{ 1, \ldots, n^\mathrm{force} \}
+   \underline{x}^{\mathrm{force},\mathrm{map},\mathrm{\mathrm{r}}}_i = 
+   \sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{force},\mathrm{map}}_i) \underline{x}^\mathrm{r}_\ell, \qquad i \in \{ 1, \ldots, n^\mathrm{force} \}
    \end{aligned}
 
 .. math::
 
    \begin{aligned}
-   \underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{0}}_j = 
-   \sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{motion},\mathrm{map}}_j) \underline{x}^\mathrm{0}_\ell, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+   \underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{r}}_j = 
+   \sum_{\ell=1}^{P} \phi_\ell(\xi^{\mathrm{motion},\mathrm{map}}_j) \underline{x}^\mathrm{r}_\ell, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
    \end{aligned}
 
 .. math::
 
    \begin{aligned}
-   \widehat{q}^{\mathrm{force,map,0}}_i &= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^{\mathrm{force,map}} \right) \widehat{q}^0_\ell}
-   {\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^\mathrm{force,map} \right) \widehat{q}^0_\ell \right \Vert} \\
-   \widehat{q}^{\mathrm{motion,map,0}}_j &= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{motion,map}} \right) \widehat{q}^0_\ell}
-   {\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^\mathrm{motion,map} \right) \widehat{q}^0_\ell \right \Vert} 
+   \widehat{q}^{\mathrm{force,map,\mathrm{r}}}_i &= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^{\mathrm{force,map}} \right) \widehat{q}^\mathrm{r}_\ell}
+   {\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_i^\mathrm{force,map} \right) \widehat{q}^\mathrm{r}_\ell \right \Vert} \\
+   \widehat{q}^{\mathrm{motion,map,r}}_j &= \frac{ \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^{\mathrm{motion,map}} \right) \widehat{q}^\mathrm{r}_\ell}
+   {\left \Vert \sum_{\ell=1}^{P} \phi_\ell\left(\xi_j^\mathrm{motion,map} \right) \widehat{q}^\mathrm{r}_\ell \right \Vert} 
    \end{aligned}
 
 where :math:`P` is the number of nodes in the structural element, and
-:math:`\underline{x}^\mathrm{0}_\ell` and
-:math:`\widehat{q}^0_\ell`\ are the reference locations and orientations
+:math:`\underline{x}^\mathrm{r}_\ell` and
+:math:`\widehat{q}^\mathrm{r}_\ell`\ are the reference locations and orientations
 (represented as quaternions), respectively of the structural nodes in
 the inertial coordinate system. For a beam coupled to a BE/BEMT solver,
 :math:`\xi_j^\mathrm{motion,map} = \xi_j^\mathrm{force,map}` and those
@@ -210,16 +220,78 @@ by
 
 .. math::
    \begin{aligned}
-   \underline{x}^\mathrm{force-con}_i &= -\underline{x}^{\mathrm{force},\mathrm{0}}_i + \underline{x}_i^{\mathrm{force},\mathrm{map}\mathrm{0}},  \qquad i \in \{ 1, \ldots, n^\mathrm{force} \} \\
-   \underline{x}^\mathrm{motion-con}_j &= \underline{x}_j^{\mathrm{motion},\mathrm{0}} - \underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{0}}_j, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
+   \underline{x}^\mathrm{force-con}_i &= -\underline{x}^{\mathrm{force},\mathrm{r}}_i + \underline{x}_i^{\mathrm{force},\mathrm{map}\mathrm{r}},  \qquad i \in \{ 1, \ldots, n^\mathrm{force} \} \\
+   \underline{x}^\mathrm{motion-con}_j &= \underline{x}_j^{\mathrm{motion},\mathrm{r}} - \underline{x}^{\mathrm{motion},\mathrm{map},\mathrm{r}}_j, \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
    \end{aligned}
-
-blah
 
 .. figure:: images/fsi-map.png
    :width: 50.0%
 
-   blah
+   Schematic of mapping between a 5-node beam element and fluid force-transfer and motion-transfer nodes.
+
+
+
+.. _sec-fsi-time:
+
+Coupling in time
+~~~~~~~~~~~~~~~~
+
+An OpenTurbine goal is to provide an API mhat facilitates robust and accurate coupling with fluid-dynamics codes, like those in the ExaWind suite. OpenTurbine needs to provide data to the fluid solver at the "right" time. In our approach, we assume that OpenTurbine and the fluid solver are operating on a shared timeline.  However, the structural time integration scheme is typically different than that of the fluid solver, and the codes may be using different time step sizes.  For example, accuracy or stability requirements may require :math:`\Delta t^\mathrm{structure} < \Delta t^\mathrm{fluid}`, or vice versa.  In the following, :math:`\Delta t^{n+1}` is the FSI timestep for data sharing between codes such that :math:`t^{n+1} = t^{n} + \Delta t^{n+1}`, and we require that either :math:`\Delta t^\mathrm{fluid} = A \Delta t^\mathrm{structure}`  
+:math:`A\ge 1` is a positive integer, and :math:`\Delta t^{n+1}` is taken equal to :math:`\Delta t^\mathrm{fluid}`.
+
+Depending on the fluid solver, OpenTurbine output may be required at :math:`t^n` (e.g., fluid solver is explicit), :math:`t^{n+1/2}` (e.g., fluid solver is Crank-Nicolson), or :math:`t^{n+1}` (e.g., fluid solver is backwards Euler). For example, the Nalu-Wind CFD code uses a backwards Euler time integration scheme and AMR-Wind uses a Crank-Nicolson-like solver.  
+
+Assume we know the following states at time :math:`t^n`, which are the data being transferred between the fluid and structure (see Eq. :eq:`fsi-data`):
+
+.. math::
+
+   \begin{aligned}
+   \underline{f}_i^{n-1} \in \mathbb{R}^3, \,
+   \underline{m}_i^{n-1} \in \mathbb{R}^3, \,
+   \underline{q}_i^{n-1} \in \mathbb{R}^7,\,
+   \underline{v}_i^{n-1} \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+   \end{aligned}
+
+.. math::
+
+   \begin{aligned}
+   \underline{f}_i^n \in \mathbb{R}^3, \,
+   \underline{m}_i^n \in \mathbb{R}^3, \,
+   \underline{q}_i^n \in \mathbb{R}^7,\,
+   \underline{v}_i^n \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+   \end{aligned}
+
+The following describes the order of operations for the OpenTurbine FSI API.  It is "serial" in that the fluid and structure solvers are updated in serial.
+
+
+Step 1: Predict/extrapolate the nodal fluid forces at
+:math:`t^{n+1} = t^n + \Delta t^{n+1}`
+
+.. math::
+
+   \begin{aligned}
+   \underline{f}_i^{n+1} \approx \underline{f}_i^{n} 
+   + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{f}^{n}_i - \underline{f}^{n-1}_i \right)\\
+   \underline{m}_i^{n+1} \approx \underline{m}_i^{n} 
+   + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{m}^{n}_i - \underline{m}^{n-1}_i \right)
+   \end{aligned}
+
+Step 2: Advance the OpenTurbine solution to
+:math:`t^{n+1} = t^n + \Delta t^{n+1}`, using forces
+predicted/solved at :math:`t^{n+1}`. In the case that the structure uses
+substeps, use force values linearly interpolated between those at :math:`t^{n+1}` and :math:`t^n`.
+
+Step 3: Based on the nodal values at :math:`t^{n+1}`, calculate the associated motions of the fluid nodes at :math:`t^{n+1}`.  See :ref:`sec:fsi-motion`.
+
+Step 4: Advance the fluid solver based on motion calculated by the
+structural solver in Step 2.
+
+Step 5: Update the fluid forces at nodes following :ref:`sec:fsi-force`.
+
+Step 6: Either accept completion of time advance, or go back to Step 2
+and repeat with latest fluid forces from Step 3. Note that one might to choose to only recalculate the structure solve, but that would potentially create a discrepancy between fluid and structure locations at :math:`t^{n+1}.
+
+.. _`sec:fsi-motion`:
 
 Motion transfer: Structure to fluid nodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -234,7 +306,7 @@ calculated at the mapped locations on the structure:
    \begin{bmatrix} \underline{u}_j^{\mathrm{motion},\mathrm{map}} \\
    \widehat{q}_j^{\mathrm{motion},\mathrm{map}}
    \end{bmatrix} \qquad
-   \underline{\dot{q}}_j^{\mathrm{motion},\mathrm{map}}
+   \underline{q}_j^{\mathrm{motion},\mathrm{map}}
    \begin{bmatrix} \underline{\dot{u}}_j^{\mathrm{motion},\mathrm{map}} \\
    \underline{\omega}_j^{\mathrm{motion},\mathrm{map}}
    \end{bmatrix}, 
@@ -259,7 +331,7 @@ is
 
    \begin{aligned}
    \underline{x}_j^\mathrm{fl} = 
-   \underline{x}_j^{\mathrm{motion},\mathrm{0}} 
+   \underline{x}_j^{\mathrm{motion},\mathrm{r}} 
    + \underline{u}_j^{\mathrm{motion},\mathrm{map}} + 
    \left[ \underline{\underline{R}}(\widehat{q}_j^{\mathrm{motion},\mathrm{map}}) - \underline{\underline{I}} \right] \underline{x}^\mathrm{motion-con}_j, 
    \qquad j \in \{ 1, \ldots, n^\mathrm{motion} \}
@@ -278,13 +350,15 @@ and the current velocity of the fluid nodes is
 
 These are passed to the fluid solver.
 
+.. _`sec:fsi-force`:
+
 Force and Moment transfer: Fluid to structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We have a set of :math:`n^\mathrm{force}` forces and moments,
 :math:`\underline{f}^\mathrm{force}_i` and
 :math:`\underline{m}^\mathrm{force}_i`, with reference locations
-:math:`\underline{x}_i^{\mathrm{force},\mathrm{0}}`. Note that in CFD
+:math:`\underline{x}_i^{\mathrm{force},\mathrm{r}}`. Note that in CFD
 coupling, the applied moments will be zero.
 
 We need the orientations:
