@@ -3,6 +3,10 @@
 Coupling for fluid-structure-interaction
 ----------------------------------------
 
+.. note::
+
+   This section is a work in progress; pending review from CFD teams
+
 Overview
 ~~~~~~~~
 
@@ -239,32 +243,90 @@ Coupling in time
 An OpenTurbine goal is to provide an API mhat facilitates robust and accurate coupling with fluid-dynamics codes, like those in the ExaWind suite. OpenTurbine needs to provide data to the fluid solver at the "right" time. In our approach, we assume that OpenTurbine and the fluid solver are operating on a shared timeline.  However, the structural time integration scheme is typically different than that of the fluid solver, and the codes may be using different time step sizes.  For example, accuracy or stability requirements may require :math:`\Delta t^\mathrm{structure} < \Delta t^\mathrm{fluid}`, or vice versa.  In the following, :math:`\Delta t^{n+1}` is the FSI timestep for data sharing between codes such that :math:`t^{n+1} = t^{n} + \Delta t^{n+1}`, and we require that either :math:`\Delta t^\mathrm{fluid} = A \Delta t^\mathrm{structure}`  
 :math:`A\ge 1` is a positive integer, and :math:`\Delta t^{n+1}` is taken equal to :math:`\Delta t^\mathrm{fluid}`.
 
-Depending on the fluid solver, OpenTurbine output may be required at :math:`t^n` (e.g., fluid solver is explicit), :math:`t^{n+1/2}` (e.g., fluid solver is Crank-Nicolson), or :math:`t^{n+1}` (e.g., fluid solver is backwards Euler). For example, the Nalu-Wind CFD code uses a backwards Euler time integration scheme and AMR-Wind uses a Crank-Nicolson-like solver.  
+Depending on the fluid solver, OpenTurbine output may be required at :math:`t^n` (e.g., fluid solver is explicit), :math:`t^{n+1/2}` (e.g., fluid solver is Crank-Nicolson), or :math:`t^{n+1}` (e.g., fluid solver is backwards Euler). For example, the Nalu-Wind CFD code uses a backwards Euler time integration scheme and AMR-Wind uses a Crank-Nicolson-like solver; these two CFD codes are our primary targets for coupling.
 
 Assume we know the following states at time :math:`t^n`, which are the data being transferred between the fluid and structure (see Eq. :eq:`fsi-data`):
 
 .. math::
 
    \begin{aligned}
-   \underline{f}_i^{n-1} \in \mathbb{R}^3, \,
-   \underline{m}_i^{n-1} \in \mathbb{R}^3, \,
-   \underline{q}_i^{n-1} \in \mathbb{R}^7,\,
-   \underline{v}_i^{n-1} \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+   \underline{f}_\ell^{n-1} \in \mathbb{R}^3, \,
+   \underline{m}_\ell^{n-1} \in \mathbb{R}^3, \,
+   \underline{q}_\ell^{n-1} \in \mathbb{R}^7,\,
+   \underline{v}_\ell^{n-1} \in \mathbb{R}^6, \qquad \ell\in \{1,\ldots,P\}
    \end{aligned}
+
+.. math::
+   \underline{f}_\ell^n \in \mathbb{R}^3, \,
+   \underline{m}_\ell^n \in \mathbb{R}^3, \,
+   \underline{q}_\ell^n \in \mathbb{R}^7,\,
+   \underline{v}_\ell^n \in \mathbb{R}^6, \qquad \ell\in \{1,\ldots,P\}
+
+If we are coupling to AMR-Wind for actuator-line type simulations, simulations are facilitated if we also have the following data, which are the forces at the fluid nodes (for actuator-line simulations, those "nodes" are the aerodynamic centers) (see :ref:`sec:fsi-force`):
+
+.. math::
+   \underline{f}_i^{\mathrm{force},n} \in \mathbb{R}^3,
+   \underline{f}_i^{\mathrm{force},n-1} \in \mathbb{R}^3, \quad 
+   \forall i \in \{1, \ldots, n^\mathrm{force} \}
+
+
+
+The following describes the order of operations for the OpenTurbine FSI API.  It is "serial" in that the fluid and structure solvers are updated sequentially and not concurrently.
+
+**FSI Algorithm for coupling to actuator-line CFD (AMR-Wind)**
+
+In the following approach, we assume that the fluid solver, e.g., AMR-Wind, needs positions and forces at the half step.
+
+Step 1: Predict with first-order extrapolation the fluid forces and moments on structure nodes at
+:math:`t^{n+1}`, and the forces at aerodynamic centers at :math:`t^{n+1/2}`
 
 .. math::
 
    \begin{aligned}
-   \underline{f}_i^n \in \mathbb{R}^3, \,
-   \underline{m}_i^n \in \mathbb{R}^3, \,
-   \underline{q}_i^n \in \mathbb{R}^7,\,
-   \underline{v}_i^n \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}
+   \underline{f}_i^{n+1} \approx \underline{f}_i^{n} 
+   + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{f}^{n}_i - \underline{f}^{n-1}_i \right)\\
+   \underline{m}_i^{n+1} \approx \underline{m}_i^{n} 
+   + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{m}^{n}_i - \underline{m}^{n-1}_i \right)\\
+  \forall i \in \{1,\ldots,P\}
    \end{aligned}
 
-The following describes the order of operations for the OpenTurbine FSI API.  It is "serial" in that the fluid and structure solvers are updated in serial.
+.. math::
+
+   \underline{f}_j^{\mathrm{force},n+1/2} \approx \underline{f}_j^{\mathrm{force},n} 
+   + \frac{\Delta t^{n+1}}{2 \Delta t^n} \left( \underline{f}^{\mathrm{force},n}_j - \underline{f}^{\mathrm{force},n-1}_j \right)\\
+  \forall j \in \{1,\ldots,n^\mathrm{force}\}
 
 
-Step 1: Predict/extrapolate the nodal fluid forces at
+Step 2: Advance the OpenTurbine solution to
+:math:`t^{n+1} = t^n + \Delta t^{n+1}`, using nodal forces
+predicted (or solved if iterating on these steps) at :math:`t^{n+1}`. In the case that the structure uses
+substeps, use force values linearly interpolated between those at :math:`t^{n+1}` and :math:`t^n`.  Update the locations of the aerodynamic centers:
+
+.. math::
+   \underline{x}_j^{\mathrm{motion},n+1} = 
+
+
+Step 3: Interpolate from :math:`t^{n}` and :math:`t^{n+1}` the positions of the 
+aerodynamic centers (OpenTurbine) at :math:`t^{n+1/2}`:
+
+.. math::
+   \underline{x}_j^{\mathrm{motion},n+1/2} = 
+
+
+Step 4: Advance the CFD solution to :math:`t^{n+1}` using interpolated positions of aerodynamic centers (Step 3) and forces at :math:`t^{n+1/2}`.
+
+Step 5: Based on the structure nodal positions, orientations, and velocities at :math:`t^{n+1}`, calculate the associated positions and Lagrangian velocities of the aerodynamic centers.  See :ref:`sec:fsi-motion`.
+
+Step 6: Calculate the Eulerian CFD velocities at those locations (Step 5) to determine the relative velocity, and then calculate through blade-element theory (lookup tables) the aerodynamic forces and moments at those points.  
+
+Step 7: Update the fluid forces at structure nodes following :ref:`sec:fsi-force`.
+
+Step 8: Either accept completion of time advance, or go back to Step 2
+and repeat with latest fluid forces and positions. Note that one might to choose to only recalculate the structure solve, but that would potentially create a discrepancy between fluid and structure locations at :math:`t^{n+1}`.
+
+**FSI Algorithm for coupling to geometry-resolved CFD**
+
+Step 1: Predict/extrapolate the fluid forces at strcture nodes
 :math:`t^{n+1} = t^n + \Delta t^{n+1}`
 
 .. math::
@@ -281,15 +343,15 @@ Step 2: Advance the OpenTurbine solution to
 predicted/solved at :math:`t^{n+1}`. In the case that the structure uses
 substeps, use force values linearly interpolated between those at :math:`t^{n+1}` and :math:`t^n`.
 
-Step 3: Based on the nodal values at :math:`t^{n+1}`, calculate the associated motions of the fluid nodes at :math:`t^{n+1}`.  See :ref:`sec:fsi-motion`.
+Step 3: Based on the nodal values at :math:`t^{n}` and :math:`t^{n+1}`, calculate the associated positions and velocities of the fluid nodes at :math:`t^{n+1}`.  See :ref:`sec:fsi-motion`.
 
 Step 4: Advance the fluid solver based on motion calculated by the
 structural solver in Step 2.
 
-Step 5: Update the fluid forces at nodes following :ref:`sec:fsi-force`.
+Step 5: Update the fluid forces at structure nodes following :ref:`sec:fsi-force`.
 
 Step 6: Either accept completion of time advance, or go back to Step 2
-and repeat with latest fluid forces from Step 3. Note that one might to choose to only recalculate the structure solve, but that would potentially create a discrepancy between fluid and structure locations at :math:`t^{n+1}.
+and repeat with latest fluid forces from Step 3. Note that one might to choose to only recalculate the structure solve, but that would potentially create a discrepancy between fluid and structure locations at :math:`t^{n+1}`.
 
 .. _`sec:fsi-motion`:
 
