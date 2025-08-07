@@ -5,7 +5,7 @@
 namespace openturbine {
 
 /**
- * A Scanning Kernel which calculates the row pointers from a list of the number
+ * @brief A Scanning Kernel which calculates the row pointers from a list of the number
  * of entries in each row.
  */
 template <typename RowPtrType>
