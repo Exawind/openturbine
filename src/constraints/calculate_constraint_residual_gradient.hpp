@@ -22,7 +22,7 @@ namespace openturbine {
  * @brief Top level kernel which calculates the residual and gradient contributions
  * of a constraint.
  *
- * @detail This Kernel performs the action of identifying the constraint's type, loading
+ * @details This Kernel performs the action of identifying the constraint's type, loading
  * the required input variables into local variables, and then calling specialized
  * kernels that perform the actual calculations.
  */
