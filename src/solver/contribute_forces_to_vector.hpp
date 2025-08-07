@@ -6,6 +6,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which sums the nodal forces into the global RHS vector
+ */
 template <typename DeviceType>
 struct ContributeForcesToVector {
     template <typename ValueType>

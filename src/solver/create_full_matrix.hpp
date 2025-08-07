@@ -9,6 +9,13 @@
 
 namespace openturbine {
 
+/**
+ * @brief The top level function object which creates the CRS matrix structure for the linear system
+ * to be solved.
+ *
+ * @details This involves computing both the row pointers and the column indices for the entire matrix.
+ * These indices will be unique and sorted
+ */
 template <typename CrsMatrixType>
 struct CreateFullMatrix {
     using DeviceType = typename CrsMatrixType::device_type;

@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which sums the system residual contributions for a constraint's target
+ * node into the correct location of the global RHS vector.
+ */
 template <typename DeviceType>
 struct ContributeConstraintsSystemResidualToVector {
     template <typename ValueType>

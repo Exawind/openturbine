@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which sums the system matrix contributions computed at a mass element's node
+ * into the correct location of the global CRS matrix.
+ */
 template <typename CrsMatrixType>
 struct ContributeMassesToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
