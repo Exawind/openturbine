@@ -18,19 +18,7 @@ element has reference position defined by its endpoint positions,
    \end{bmatrix}
    \end{aligned}
 
-where :math:`\underline{q}^0 \in \mathbb{R}^6`. Initial displacement is
-denoted
-
-.. math::
-
-   \begin{aligned}
-    \underline{q}^\mathrm{init} = 
-   \begin{bmatrix}
-     \underline{u}_1^\mathrm{init} \\
-     \underline{u}_2^\mathrm{init} 
-   \end{bmatrix}
-   \end{aligned}
-
+where :math:`\underline{q}^0 \in \mathbb{R}^6`,
 and displacement is denoted
 
 .. math::
