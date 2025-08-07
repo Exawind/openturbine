@@ -8,6 +8,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the residual and system gradient for a Prescribed BC constraint
+ * with six degrees of freedom
+ */
 template <typename DeviceType>
 struct CalculatePrescribedBCConstraint {
     template <typename ValueType>

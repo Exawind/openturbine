@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which interpolates a rotation quaternion on a given element from its nodes
+ * to all of it quadrature points.
+ */
 template <typename DeviceType>
 struct InterpolateQPRotation {
     template <typename ValueType>

@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Reduction kernel which sums the number of active degrees of freedom
+ * at each node
+ */
 template <typename DeviceType>
 struct ComputeNumSystemDofsReducer {
     typename Kokkos::View<size_t*, DeviceType>::const_type active_dofs;
@@ -12,7 +16,13 @@ struct ComputeNumSystemDofsReducer {
     void operator()(size_t i, size_t& update) const { update += active_dofs(i); }
 };
 
-/// Computes the total number of active degrees of freedom in the system
+/**
+ * @brief Computes the total number of active degrees of freedom in the system
+ *
+ * @tparam DeviceType The Kokkos Device describing where the input resides
+ *
+ * @param active_dofs The number of active degrees of freedom at each node
+ */
 template <typename DeviceType>
 [[nodiscard]] inline size_t ComputeNumSystemDofs(
     const typename Kokkos::View<size_t*, DeviceType>::const_type& active_dofs

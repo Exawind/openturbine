@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the output for a revolute joint constraint for feedback to
+ * controllers
+ */
 template <typename DeviceType>
 struct CalculateRevoluteJointOutput {
     template <typename ValueType>

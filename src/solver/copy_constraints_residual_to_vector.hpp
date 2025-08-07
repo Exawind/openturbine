@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which copies the residual contributions for each constraint to their correct
+ * location in the global RHS vector.
+ */
 template <typename DeviceType>
 struct CopyConstraintsResidualToVector {
     template <typename ValueType>

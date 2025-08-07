@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to predict the next state values before nonlinear iteration begins for
+ * a given time step
+ */
 template <typename DeviceType>
 struct CalculateNextState {
     template <typename ValueType>

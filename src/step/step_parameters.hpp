@@ -4,20 +4,36 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Struct containing the paramters used to control the time stepping process.
+ *
+ * @details These paramteres
+ */
 struct StepParameters {
     bool is_dynamic_solve;
-    size_t max_iter;
-    double h;
-    double alpha_m;
-    double alpha_f;
-    double gamma;
-    double beta;
-    double gamma_prime;
-    double beta_prime;
-    double conditioner;
-    double absolute_convergence_tol;
-    double relative_convergence_tol;
+    size_t max_iter;                  //< maximum number of nonlinear iterations
+    double h;                         //< time step size
+    double alpha_m;                   //< generalized alpha solver parameter
+    double alpha_f;                   //< generalized alpha solver parameter
+    double gamma;                     //< generalized alpha solver parameter
+    double beta;                      //< generalized alpha solver parameter
+    double gamma_prime;               //< generalized alpha solver parameter
+    double beta_prime;                //< generalized alpha solver parameter
+    double conditioner;               //< diagonal preconditioner value
+    double absolute_convergence_tol;  //< absolute convergence tolerance
+    double relative_convergence_tol;  //< relative convergence tolerance
 
+    /**
+     * @brief Constructor for the StepParameters object
+     *
+     * @param is_dynamic_solve_ if a dynamic solve is to be performed (versus static)
+     * @param max_iter_ the maximum number of nonlinear iterations to be performed
+     * @param h_ the time step size
+     * @param rho_inf the numerical damping pactor, used to set the generalized alpha solver
+     * parameters
+     * @param a_tol the absolute error convergence tolerance
+     * @param r_tol the relative error convergence tolerance
+     */
     StepParameters(
         bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf, double a_tol = 1e-5,
         double r_tol = 1e-3

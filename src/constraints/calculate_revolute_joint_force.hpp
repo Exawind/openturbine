@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the force applied to the system residual as the result of
+ * a revolute joint constraint
+ */
 template <typename DeviceType>
 struct CalculateRevoluteJointForce {
     template <typename ValueType>

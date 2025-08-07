@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to update the algorithmic acceleration based on the acceleration and
+ * generalized alpha solver parameters
+ */
 template <typename DeviceType>
 struct UpdateAlgorithmicAcceleration {
     typename Kokkos::View<double* [6], DeviceType> acceleration;

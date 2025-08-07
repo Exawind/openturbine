@@ -18,6 +18,14 @@
 
 namespace openturbine {
 
+/**
+ * @brief Top level kernel which calculates the residual and gradient contributions
+ * of a constraint.
+ *
+ * @details This Kernel performs the action of identifying the constraint's type, loading
+ * the required input variables into local variables, and then calling specialized
+ * kernels that perform the actual calculations.
+ */
 template <typename DeviceType>
 struct CalculateConstraintResidualGradient {
     using TransposeMatrix = KokkosBatched::SerialCopy<KokkosBatched::Trans::Transpose>;

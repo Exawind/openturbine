@@ -6,6 +6,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to update the change in state at a node for a static problem
+ */
 template <typename DeviceType>
 struct UpdateStaticPrediction {
     template <typename ValueType>
