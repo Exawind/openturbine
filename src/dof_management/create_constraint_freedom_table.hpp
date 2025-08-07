@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel that creates the node freedom tables for each the target and base nodes
+ * for a given constrain.
+ */
 template <typename DeviceType>
 struct CreateConstraintFreedomTable {
     template <typename ValueType>
@@ -47,6 +51,17 @@ struct CreateConstraintFreedomTable {
     }
 };
 
+/**
+ * @brief Creates node freedom tables for each the target and base nodes in the constraints
+ *
+ * @details The constraint freedom table maps each degree of freedom for each node of a constraint
+ * to its global degree of freedom number
+ *
+ * @tparam DeviceType The Kokkos Device where constraints and state reside
+ *
+ * @param constraints The Constraints object used to create state's node freedom map table
+ * @param state A State object with a completed node freedom map table
+ */
 template <typename DeviceType>
 inline void create_constraint_freedom_table(
     Constraints<DeviceType>& constraints, const State<DeviceType>& state
