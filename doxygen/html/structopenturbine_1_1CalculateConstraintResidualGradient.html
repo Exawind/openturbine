@@ -175,6 +175,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Top level kernel which calculates the residual and gradient contributions of a constraint.  
+ <a href="structopenturbine_1_1CalculateConstraintResidualGradient.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="calculate__constraint__residual__gradient_8hpp_source.html">calculate_constraint_residual_gradient.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
@@ -252,7 +255,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a217adf8b778d623aa6ddc5d8e00879a1" id="r_a217adf8b778d623aa6ddc5d8e00879a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a6c8f5415ebf50fcce8971d0ab4a389f3">View</a>&lt; <a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a6c8f5415ebf50fcce8971d0ab4a389f3">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a217adf8b778d623aa6ddc5d8e00879a1">t_grad_trans_</a></td></tr>
 <tr class="separator:a217adf8b778d623aa6ddc5d8e00879a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html#a6c8f5415ebf50fcce8971d0ab4a389f3">typename</a> DeviceType&gt;<br />
+struct openturbine::CalculateConstraintResidualGradient&lt; DeviceType &gt;</div><p>Top level kernel which calculates the residual and gradient contributions of a constraint. </p>
+<p>This Kernel performs the action of identifying the constraint's type, loading the required input variables into local variables, and then calling specialized kernels that perform the actual calculations. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="add081e3641c1e7325793338cd20ab2c3" name="add081e3641c1e7325793338cd20ab2c3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#add081e3641c1e7325793338cd20ab2c3">&#9670;&#160;</a></span>ConstView</h2>
 

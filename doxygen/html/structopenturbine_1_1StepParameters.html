@@ -174,11 +174,15 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A Struct containing the paramters used to control the time stepping process.  
+ <a href="structopenturbine_1_1StepParameters.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="step__parameters_8hpp_source.html">step_parameters.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa3768db050f3ad800d9641c9c8e8891e" id="r_aa3768db050f3ad800d9641c9c8e8891e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#aa3768db050f3ad800d9641c9c8e8891e">StepParameters</a> (bool is_dynamic_solve_, size_t max_iter_, double h_, double rho_inf, double a_tol=1e-5, double r_tol=1e-3)</td></tr>
+<tr class="memdesc:aa3768db050f3ad800d9641c9c8e8891e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="structopenturbine_1_1StepParameters.html" title="A Struct containing the paramters used to control the time stepping process.">StepParameters</a> object.  <br /></td></tr>
 <tr class="separator:aa3768db050f3ad800d9641c9c8e8891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -208,7 +212,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:abde3d74e83fb9d65ea2362f01259635f" id="r_abde3d74e83fb9d65ea2362f01259635f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html#abde3d74e83fb9d65ea2362f01259635f">relative_convergence_tol</a></td></tr>
 <tr class="separator:abde3d74e83fb9d65ea2362f01259635f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A Struct containing the paramters used to control the time stepping process. </p>
+<p>These paramteres </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa3768db050f3ad800d9641c9c8e8891e" name="aa3768db050f3ad800d9641c9c8e8891e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3768db050f3ad800d9641c9c8e8891e">&#9670;&#160;</a></span>StepParameters()</h2>
 
@@ -266,6 +273,19 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructor for the <a class="el" href="structopenturbine_1_1StepParameters.html" title="A Struct containing the paramters used to control the time stepping process.">StepParameters</a> object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">is_dynamic_solve_</td><td>if a dynamic solve is to be performed (versus static) </td></tr>
+    <tr><td class="paramname">max_iter_</td><td>the maximum number of nonlinear iterations to be performed </td></tr>
+    <tr><td class="paramname">h_</td><td>the time step size </td></tr>
+    <tr><td class="paramname">rho_inf</td><td>the numerical damping pactor, used to set the generalized alpha solver parameters </td></tr>
+    <tr><td class="paramname">a_tol</td><td>the absolute error convergence tolerance </td></tr>
+    <tr><td class="paramname">r_tol</td><td>the relative error convergence tolerance </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

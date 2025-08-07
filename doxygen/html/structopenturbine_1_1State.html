@@ -175,6 +175,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Container for storing the complete system state of the simulation at a given time increment.  
+ <a href="structopenturbine_1_1State.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="state_8hpp_source.html">state.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
@@ -223,7 +226,16 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a69a81bcf3c32ff55ae4dd7e10de7edb1" id="r_a69a81bcf3c32ff55ae4dd7e10de7edb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">View</a>&lt; <a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html#a69a81bcf3c32ff55ae4dd7e10de7edb1">tangent</a></td></tr>
 <tr class="separator:a69a81bcf3c32ff55ae4dd7e10de7edb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1State.html#a593016bd3fac97df211bfc3be9540670">typename</a> DeviceType&gt;<br />
+struct openturbine::State&lt; DeviceType &gt;</div><p>Container for storing the complete system state of the simulation at a given time increment. </p>
+<p>This struct maintains all state variables required for the dynamic simulation, including:</p><ul>
+<li><a class="el" href="structopenturbine_1_1Node.html" title="Represents a node in the finite element model.">Node</a> configuration and freedom allocation</li>
+<li>Position and rotation states (current, previous, and initial)</li>
+<li>Velocity and acceleration states</li>
+<li>Tangent matrix </li>
+</ul>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a593016bd3fac97df211bfc3be9540670" name="a593016bd3fac97df211bfc3be9540670"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a593016bd3fac97df211bfc3be9540670">&#9670;&#160;</a></span>View</h2>
 

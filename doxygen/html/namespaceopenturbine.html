@@ -190,12 +190,16 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html">AssembleNodeFreedomMapTable_Beams</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a Beam element's freedom signature to all nodes it contains.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html">AssembleNodeFreedomMapTable_Constraints</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a constraint's freedom signature to its base and target nodes.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html">AssembleNodeFreedomMapTable_Masses</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a mass element's freedom signature to its node.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html">AssembleNodeFreedomMapTable_Springs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a spring element's freedom signature to both of its nodes.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Beam element constitutes flexible beams material behavior in openturbine.  <a href="structopenturbine_1_1BeamElement.html#details">More...</a><br /></td></tr>
@@ -204,67 +208,93 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the field variables needed to compute the per-element contributions to the residual vector and system matrix.  <a href="structopenturbine_1_1Beams.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure containing the position, mass matrix, and stiffness matrix to be used in defining a beam cross section at a given location.  <a href="structopenturbine_1_1BeamSection.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the input data for creating flexible beams.  <a href="structopenturbine_1_1BeamsInput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">CalculateConstraintOutput</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel that calculates the output for a constraints, for use as feedback to controllers.  <a href="structopenturbine_1_1CalculateConstraintOutput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html">CalculateConstraintResidualGradient</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top level kernel which calculates the residual and gradient contributions of a constraint.  <a href="structopenturbine_1_1CalculateConstraintResidualGradient.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html">CalculateConstraintsErrorSumSquares</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduction Kernel which calculates the sum of the squares of the error for each constraint for use in computing system convergence.  <a href="structopenturbine_1_1CalculateConstraintsErrorSumSquares.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateDisplacement.html">CalculateDisplacement</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying the computed change in state (displacement) to the previous state to get an estimate for the current state.  <a href="structopenturbine_1_1CalculateDisplacement.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateFixedBC3DOFConstraint.html">CalculateFixedBC3DOFConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Fix BC constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculateFixedBC3DOFConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateFixedBCConstraint.html">CalculateFixedBCConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Fix BC constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculateFixedBCConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateJacobian.html">CalculateJacobian</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate Jacobians and unit tangent vectors at quadrature points for beam elements.  <a href="structopenturbine_1_1CalculateJacobian.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html">CalculateNextState</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to predict the next state values before nonlinear iteration begins for a given time step.  <a href="structopenturbine_1_1CalculateNextState.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculatePrescribedBC3DOFConstraint.html">CalculatePrescribedBC3DOFConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Prescribed BC constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculatePrescribedBC3DOFConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculatePrescribedBCConstraint.html">CalculatePrescribedBCConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Prescribed BC constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculatePrescribedBCConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateQPPosition.html">CalculateQPPosition</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functor to calculate current position and orientation at quadrature points.  <a href="structopenturbine_1_1CalculateQPPosition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointConstraint.html">CalculateRevoluteJointConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a revolute joint constraint.  <a href="structopenturbine_1_1CalculateRevoluteJointConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointForce.html">CalculateRevoluteJointForce</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the force applied to the system residual as the result of a revolute joint constraint.  <a href="structopenturbine_1_1CalculateRevoluteJointForce.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointOutput.html">CalculateRevoluteJointOutput</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the output for a revolute joint constraint for feedback to controllers.  <a href="structopenturbine_1_1CalculateRevoluteJointOutput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJoint3DOFConstraint.html">CalculateRigidJoint3DOFConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a rigid joint constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculateRigidJoint3DOFConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html">CalculateRigidJointConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a rigid joint constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculateRigidJointConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRotationControlConstraint.html">CalculateRotationControlConstraint</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which calculates the residual and gradient contributions of a rotation control constraint.  <a href="structopenturbine_1_1CalculateRotationControlConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateSystemErrorSumSquares.html">CalculateSystemErrorSumSquares</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduction Kernel which calculates the sum of the square of the errors for each node in the system for use in computing the system convergence.  <a href="structopenturbine_1_1CalculateSystemErrorSumSquares.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for calculating the tangent operator at each node.  <a href="structopenturbine_1_1CalculateTangentOperator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeColInds.html">ComputeColInds</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The top level function object for computing the column indicies for the CRS matrix to be solved at each nonlinear iteration.  <a href="structopenturbine_1_1ComputeColInds.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsColInds.html">ComputeConstraintsColInds</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for computing the system constraints' contribution to the column indicies for the CRS matrix to be solved at each nonlinear iteration.  <a href="structopenturbine_1_1ComputeConstraintsColInds.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeConstraintsRowEntries.html">ComputeConstraintsRowEntries</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel to compute the constraints' contribution to the row pointers of the CRS matrix.  <a href="structopenturbine_1_1ComputeConstraintsRowEntries.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeNodeFreedomMapTable.html">ComputeNodeFreedomMapTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeNumSystemDofsReducer.html">ComputeNumSystemDofsReducer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Reduction kernel which sums the number of active degrees of freedom at each node.  <a href="structopenturbine_1_1ComputeNumSystemDofsReducer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeRowPtrs.html">ComputeRowPtrs</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top level function object for calculating the row pointers of the CRS matrix to be solved during each nonlinear iteration.  <a href="structopenturbine_1_1ComputeRowPtrs.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeSystemColInds.html">ComputeSystemColInds</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for computing the system elements' contribution to the column indicies for the CRS matrix to be solved at each nonlinear iteration.  <a href="structopenturbine_1_1ComputeSystemColInds.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeSystemRowEntries.html">ComputeSystemRowEntries</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel to compute the elements' contribution to the row pointers of the CRS matrix.  <a href="structopenturbine_1_1ComputeSystemRowEntries.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ConditionR.html">ConditionR</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which applies the given factor to the system RHS vector.  <a href="structopenturbine_1_1ConditionR.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html">Constraint</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a constraint between two nodes or enforces a boundary condition at a single node.  <a href="structopenturbine_1_1Constraint.html#details">More...</a><br /></td></tr>
@@ -273,28 +303,40 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container class for managing multiple constraints in a simulation.  <a href="structopenturbine_1_1Constraints.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html">ContributeBeamsToSparseMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the system matrix contributions computed at each node in a beam into the correct location of the global CRS matrix.  <a href="structopenturbine_1_1ContributeBeamsToSparseMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeBeamsToVector.html">ContributeBeamsToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the residual contributions computed at each node in a beam into the correct location of the global RHS vector.  <a href="structopenturbine_1_1ContributeBeamsToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeConstraintsSystemResidualToVector.html">ContributeConstraintsSystemResidualToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the system residual contributions for a constraint's target node into the correct location of the global RHS vector.  <a href="structopenturbine_1_1ContributeConstraintsSystemResidualToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeForcesToVector.html">ContributeForcesToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the nodal forces into the global RHS vector.  <a href="structopenturbine_1_1ContributeForcesToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeLambdaToVector.html">ContributeLambdaToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A kernel which contributes the constraint Lagrange multiplier terms to the correct locations in the global RHS vector.  <a href="structopenturbine_1_1ContributeLambdaToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToSparseMatrix.html">ContributeMassesToSparseMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the system matrix contributions computed at a mass element's node into the correct location of the global CRS matrix.  <a href="structopenturbine_1_1ContributeMassesToSparseMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeMassesToVector.html">ContributeMassesToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the residual contributions computed at a mass element's node into the correct location of the global RHS vector.  <a href="structopenturbine_1_1ContributeMassesToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html">ContributeSpringsToSparseMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the system matrix contributions computed at each of the nodes in a spring element into the correct location of the global CRS matrix.  <a href="structopenturbine_1_1ContributeSpringsToSparseMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ContributeSpringsToVector.html">ContributeSpringsToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which sums the residual contributions computed at each of the nodes in a spring element into the correct location of the global RHS vector.  <a href="structopenturbine_1_1ContributeSpringsToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsResidualToVector.html">CopyConstraintsResidualToVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which copies the residual contributions for each constraint to their correct location in the global RHS vector.  <a href="structopenturbine_1_1CopyConstraintsResidualToVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html">CopyConstraintsToSparseMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which copies the gradient matrix contributions for the base and target node of a constraint to the correct locations in the global CRS matrix.  <a href="structopenturbine_1_1CopyConstraintsToSparseMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CopyConstraintsTransposeToSparseMatrix.html">CopyConstraintsTransposeToSparseMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which copies the transpose gradient matrix contributions for the base and target node of a constraint to the correct location in the global CRS matrix.  <a href="structopenturbine_1_1CopyConstraintsTransposeToSparseMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateConstraintFreedomTable.html">CreateConstraintFreedomTable</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -305,6 +347,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateElementFreedomTable__Springs.html">CreateElementFreedomTable_Springs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateFullMatrix.html">CreateFullMatrix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The top level function object which creates the CRS matrix structure for the linear system to be solved.  <a href="structopenturbine_1_1CreateFullMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1DSSHandle.html">DSSHandle</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -380,6 +423,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolates quadrature point positions from nodal positions using shape functions.  <a href="structopenturbine_1_1InterpolateQPPosition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPRotation.html">InterpolateQPRotation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which interpolates a rotation quaternion on a given element from its nodes to all of it quadrature points.  <a href="structopenturbine_1_1InterpolateQPRotation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPState__r.html">InterpolateQPState_r</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolates the rotation (r) part of the state at a quadrature point.  <a href="structopenturbine_1_1InterpolateQPState__r.html#details">More...</a><br /></td></tr>
@@ -394,6 +438,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolates the displacement derivative (u') part of the state at a quadrature point.  <a href="structopenturbine_1_1InterpolateQPState__uprime.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateQPVector.html">InterpolateQPVector</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which interpolates a vector quantity from nodes on a given element to a quadrature point given a basis function.  <a href="structopenturbine_1_1InterpolateQPVector.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1InterpolateToQuadraturePoints.html">InterpolateToQuadraturePoints</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolates various quantities from nodes to quadrature points for beam elements.  <a href="structopenturbine_1_1InterpolateToQuadraturePoints.html#details">More...</a><br /></td></tr>
@@ -411,12 +456,13 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to manage element-to-node connectivity information for a mesh.  <a href="classopenturbine_1_1MeshConnectivity.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html">Model</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to define a turbine model with nodes, elements, and constraints.  <a href="classopenturbine_1_1Model.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbine problem.  <a href="classopenturbine_1_1Model.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html">Node</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a node in the finite element model.  <a href="structopenturbine_1_1Node.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1NodeBuilder.html">NodeBuilder</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder class for constructing and configuring <a class="el" href="structopenturbine_1_1Node.html">Node</a> objects.  <a href="classopenturbine_1_1NodeBuilder.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builder class for constructing and configuring <a class="el" href="structopenturbine_1_1Node.html" title="Represents a node in the finite element model.">Node</a> objects.  <a href="classopenturbine_1_1NodeBuilder.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ScanRowEntries.html">ScanRowEntries</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -433,20 +479,28 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the input data for creating spring elements.  <a href="structopenturbine_1_1SpringsInput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1State.html">State</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container for storing the complete system state of the simulation at a given time increment.  <a href="structopenturbine_1_1State.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Struct containing the paramters used to control the time stepping process.  <a href="structopenturbine_1_1StepParameters.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UnconditionSolution.html">UnconditionSolution</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which divides the RHS vector terms corresponding to the constraints by a given conditioner factor.  <a href="structopenturbine_1_1UnconditionSolution.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html">UpdateAlgorithmicAcceleration</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the algorithmic acceleration based on the acceleration and generalized alpha solver parameters.  <a href="structopenturbine_1_1UpdateAlgorithmicAcceleration.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateDynamicPrediction.html">UpdateDynamicPrediction</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the velocity, acceleration, and change in state at a node for a dynamic problem.  <a href="structopenturbine_1_1UpdateDynamicPrediction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the absolute position of each node based on the solver's current state and the initial absolute position.  <a href="structopenturbine_1_1UpdateGlobalPosition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html">UpdateLambdaPrediction</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the predicted constraint Lagrange multiplier values at each nonlinear iteration.  <a href="structopenturbine_1_1UpdateLambdaPrediction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateStaticPrediction.html">UpdateStaticPrediction</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the change in state at a node for a static problem.  <a href="structopenturbine_1_1UpdateStaticPrediction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -500,6 +554,7 @@ Functions</h2></td></tr>
 <tr class="separator:a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a932a665948376539c8aa98265a8e8257" id="r_a932a665948376539c8aa98265a8e8257"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:a932a665948376539c8aa98265a8e8257"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a932a665948376539c8aa98265a8e8257">assemble_node_freedom_allocation_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="memdesc:a932a665948376539c8aa98265a8e8257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the node freedom allocation table in state based on the connectivities defined in the elements and constraints structures.  <br /></td></tr>
 <tr class="separator:a932a665948376539c8aa98265a8e8257"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab306821727cde73c9c0a552c66b62238" id="r_ab306821727cde73c9c0a552c66b62238"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:ab306821727cde73c9c0a552c66b62238"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab306821727cde73c9c0a552c66b62238">compute_node_freedom_map_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
@@ -531,7 +586,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a01b0000c5534a6d45904580d6de55850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates geometric properties for a hollow circular cross-section.  <br /></td></tr>
 <tr class="separator:a01b0000c5534a6d45904580d6de55850"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba008b3bc6e6267dedceab420db6a548" id="r_aba008b3bc6e6267dedceab420db6a548"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aba008b3bc6e6267dedceab420db6a548">GenerateHollowCircleSection</a> (double s, double E, double G, double rho, double outer_diameter, double wall_thickness, double nu, double x_C=0., double y_C=0., double theta_p=0., double x_S=0., double y_S=0., double theta_s=0., double x_G=0., double y_G=0., double theta_i=0)</td></tr>
-<tr class="memdesc:aba008b3bc6e6267dedceab420db6a548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section.  <br /></td></tr>
+<tr class="memdesc:aba008b3bc6e6267dedceab420db6a548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a <a class="el" href="structopenturbine_1_1BeamSection.html" title="A structure containing the position, mass matrix, and stiffness matrix to be used in defining a beam ...">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section.  <br /></td></tr>
 <tr class="separator:aba008b3bc6e6267dedceab420db6a548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8211d7f6377e8997cc7bc582b0026cf1" id="r_a8211d7f6377e8997cc7bc582b0026cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a8211d7f6377e8997cc7bc582b0026cf1">LinearInterpWeights</a> (double x, const std::vector&lt; double &gt; &amp;xs, std::vector&lt; double &gt; &amp;weights)</td></tr>
 <tr class="memdesc:a8211d7f6377e8997cc7bc582b0026cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes weights for linear interpolation.  <br /></td></tr>
@@ -772,6 +827,7 @@ Functions</h2></td></tr>
 <tr class="separator:ab85467e8fa5b8b0757ac1749a12f6640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab135fd3e4a55b8eafb693d63778d6d0b" id="r_ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab135fd3e4a55b8eafb693d63778d6d0b">UpdateStatePrediction</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="memdesc:ab135fd3e4a55b8eafb693d63778d6d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the predicted next state values, based on computed solver solution, solver.x.  <br /></td></tr>
 <tr class="separator:ab135fd3e4a55b8eafb693d63778d6d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aceb0d78408970e2f5707eb6da6c65656" id="r_aceb0d78408970e2f5707eb6da6c65656"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:aceb0d78408970e2f5707eb6da6c65656"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#aceb0d78408970e2f5707eb6da6c65656">UpdateSystemVariables</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
@@ -941,6 +997,23 @@ template&lt;typename DeviceType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Creates the node freedom allocation table in state based on the connectivities defined in the elements and constraints structures. </p>
+<p>The node freedom allocation table defines which degrees of freedom are defined on which nodes by collecting this information from all elements and constraints which contain this node. The most common action using this information is to query how many degrees of freedom are defined, so this information is also computed.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos device defining where OpenTurbine's structures reside</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>A structure containing the node freedom allocation table to be filled </td></tr>
+    <tr><td class="paramname">elements</td><td>A structure containing all of the elements and their connectivities </td></tr>
+    <tr><td class="paramname">constraints</td><td>A structure containing all of the constraints and their connectivities </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1375,6 +1448,18 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Computes the total number of active degrees of freedom in the system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device describing where the input resides</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">active_dofs</td><td>The number of active degrees of freedom at each node </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1776,7 +1861,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;Kokkos::DefaultExecutionSpa
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">state</td><td>A fully initialized <a class="el" href="structopenturbine_1_1State.html">State</a> object </td></tr>
+    <tr><td class="paramname">state</td><td>A fully initialized <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object </td></tr>
     <tr><td class="paramname">elements</td><td>A fully initialized <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a> object </td></tr>
     <tr><td class="paramname">constraints</td><td>A fully initialized <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object </td></tr>
   </table>
@@ -2259,7 +2344,7 @@ template&lt;typename DSSHandleType , typename CrsMatrixType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Generates a <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section. </p>
+<p>Generates a <a class="el" href="structopenturbine_1_1BeamSection.html" title="A structure containing the position, mass matrix, and stiffness matrix to be used in defining a beam ...">BeamSection</a> with 6x6 mass and stiffness matrices for a hollow circular cross-section. </p>
 <p>This is a convenience function specifically for hollow circular sections commonly used in wind turbine towers. It calculates the geometric properties and then calls the general GenerateMassMatrix and GenerateStiffnessMatrix functions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -2282,7 +2367,7 @@ template&lt;typename DSSHandleType , typename CrsMatrixType &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> object containing stiffness matrix, mass matrix, and position</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structopenturbine_1_1BeamSection.html" title="A structure containing the position, mass matrix, and stiffness matrix to be used in defining a beam ...">BeamSection</a> object containing stiffness matrix, mass matrix, and position</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>For hollow circular sections, the elastic centroid, shear center, and center of gravity all coincide at the geometric center, so offset parameters are typically zero. </dd>
 <dd>
 Principal axes align with the reference axes due to circular symmetry. </dd></dl>
@@ -4508,6 +4593,22 @@ template&lt;typename DeviceType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Updates the predicted next state values, based on computed solver solution, solver.x. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where the solver and state data structures reside</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameters</td><td>A struct containing the control parameters for time stepping </td></tr>
+    <tr><td class="paramname">solver</td><td>A struct containing the linear system, already solved for this iteration </td></tr>
+    <tr><td class="paramname">state</td><td>A struct containing the state information at each node </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

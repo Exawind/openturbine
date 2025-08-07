@@ -258,7 +258,7 @@ Static Public Attributes</h2></td></tr>
 <div class="textblock"><p>Represents a turbine with nodes, elements, and constraints. </p>
 <p>This class is responsible for creating and managing a turbine based on the turbine input specifications. It handles the creation of the beam elements, mass elements, nodes, and constraints within the provided model.</p>
 <hr  />
- <h2><a class="el" href="structopenturbine_1_1Node.html">Node</a> structure </h2>
+ <h2><a class="el" href="structopenturbine_1_1Node.html" title="Represents a node in the finite element model.">Node</a> structure </h2>
 <p>The turbine assembly consists of multiple interconnected nodes that represent different physical components and their kinematic relationships.</p>
 <p>Tower Nodes</p><ul>
 <li>Tower nodes: <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html" title="Represents a turbine blade with nodes, elements, and constraints.">Beam</a> nodes distributed along tower height (1, 2, ..., n)</li>
@@ -339,7 +339,7 @@ Static Public Attributes</h2></td></tr>
 <h2>Construction sequence </h2>
 <ol type="1">
 <li>Validation: Input parameters are checked for physical consistency</li>
-<li><a class="el" href="structopenturbine_1_1Node.html">Node</a> creation + positioning: All nodes are created at the origin and assembled at their correct spatial locations/orientations</li>
+<li><a class="el" href="structopenturbine_1_1Node.html" title="Represents a node in the finite element model.">Node</a> creation + positioning: All nodes are created at the origin and assembled at their correct spatial locations/orientations</li>
 <li>Mass element addition: Mass and inertia properties are assigned to relevant nodes/components, e.g. lumped mass elements at hub and nacelle</li>
 <li><a class="el" href="structopenturbine_1_1Constraint.html" title="Defines a constraint between two nodes or enforces a boundary condition at a single node.">Constraint</a> creation: Kinematic relationships are established between nodes</li>
 <li>Initial conditions: Initial conditions such as displacements, velocities, and accelerations are applied as required</li>

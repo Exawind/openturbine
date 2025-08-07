@@ -174,6 +174,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Represents a node in the finite element model.  
+ <a href="structopenturbine_1_1Node.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="node_8hpp_source.html">node.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -226,7 +229,19 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af400827a120ce05261433c066cfdd6b8" id="r_af400827a120ce05261433c066cfdd6b8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Node.html#af400827a120ce05261433c066cfdd6b8">s</a></td></tr>
 <tr class="separator:af400827a120ce05261433c066cfdd6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Represents a node in the finite element model. </p>
+<p>A node is a point in 3D space that can have position, orientation, displacement, velocity, and acceleration. Nodes are the fundamental building blocks that connect elements in the structural model. Each node has:</p><ul>
+<li>Unique identifier (id) -&gt; used to reference the node in elements and constraints</li>
+<li>Initial position and orientation (x0) -&gt; 7 x 1 vector</li>
+<li>Displacement from initial position (u) -&gt; 7 x 1 vector</li>
+<li>Velocity (v) -&gt; 6 x 1 vector</li>
+<li>Acceleration (vd) -&gt; 6 x 1 vector</li>
+<li>Parametric position within an element (s) -&gt; scalar</li>
+</ul>
+<p>The position and displacement vectors contain 7 components: [x, y, z, qw, qx, qy, qz] where the first 3 are translational and the last 4 represent orientation as a quaternion.</p>
+<p>The velocity and acceleration vectors contain 6 components: [vx, vy, vz, wx, wy, wz] where the first 3 are translational and the last 3 are rotational components. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5ef27449c5f32dabf7bce440a2839adf" name="a5ef27449c5f32dabf7bce440a2839adf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5ef27449c5f32dabf7bce440a2839adf">&#9670;&#160;</a></span>Node() <span class="overload">[1/2]</span></h2>
 

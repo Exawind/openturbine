@@ -174,7 +174,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Struct to define a turbine model with nodes, elements, and constraints.  
+<p>Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbine problem.  
  <a href="classopenturbine_1_1Model.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="model_8hpp_source.html">model.hpp</a>&gt;</code></p>
@@ -280,7 +280,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af9b6d555c19106997a81762c7b48138d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af38055ba13dbc299ecf3ccf5516915d4" id="r_af38055ba13dbc299ecf3ccf5516915d4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:af38055ba13dbc299ecf3ccf5516915d4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#af38055ba13dbc299ecf3ccf5516915d4">CreateState</a> () const</td></tr>
-<tr class="memdesc:af38055ba13dbc299ecf3ccf5516915d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="structopenturbine_1_1State.html">State</a> struct based on the nodes in this model.  <br /></td></tr>
+<tr class="memdesc:af38055ba13dbc299ecf3ccf5516915d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> struct based on the nodes in this model.  <br /></td></tr>
 <tr class="separator:af38055ba13dbc299ecf3ccf5516915d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fcece47978b82422ab415280ad5d69f" id="r_a9fcece47978b82422ab415280ad5d69f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a9fcece47978b82422ab415280ad5d69f">AddFixedBC</a> (const size_t node_id)</td></tr>
 <tr class="memdesc:a9fcece47978b82422ab415280ad5d69f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a fixed boundary condition constraint to the model and returns the ID.  <br /></td></tr>
@@ -314,11 +314,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3d9616159e917baff8b0c76357d23245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6804ea3df001f29b05ad5f1c43179e33" id="r_a6804ea3df001f29b05ad5f1c43179e33"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
 <tr class="memitem:a6804ea3df001f29b05ad5f1c43179e33"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a6804ea3df001f29b05ad5f1c43179e33">CreateSystem</a> () const</td></tr>
-<tr class="memdesc:a6804ea3df001f29b05ad5f1c43179e33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model.  <br /></td></tr>
+<tr class="memdesc:a6804ea3df001f29b05ad5f1c43179e33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model.  <br /></td></tr>
 <tr class="separator:a6804ea3df001f29b05ad5f1c43179e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaaf33e11bcf34ee3fb40448385335c2" id="r_aaaaf33e11bcf34ee3fb40448385335c2"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;&gt; </td></tr>
 <tr class="memitem:aaaaf33e11bcf34ee3fb40448385335c2"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt;, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aaaaf33e11bcf34ee3fb40448385335c2">CreateSystemWithSolver</a> () const</td></tr>
-<tr class="memdesc:aaaaf33e11bcf34ee3fb40448385335c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model.  <br /></td></tr>
+<tr class="memdesc:aaaaf33e11bcf34ee3fb40448385335c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model.  <br /></td></tr>
 <tr class="separator:aaaaf33e11bcf34ee3fb40448385335c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa355a0ec895f005a4ba10eba422cfbff" id="r_aa355a0ec895f005a4ba10eba422cfbff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classopenturbine_1_1MeshConnectivity.html">MeshConnectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#aa355a0ec895f005a4ba10eba422cfbff">GetMeshConnectivity</a> () const</td></tr>
 <tr class="memdesc:aa355a0ec895f005a4ba10eba422cfbff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mesh connectivity (const/read-only version)  <br /></td></tr>
@@ -337,12 +337,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:af4db114507ad034b7d67fb1415eb1b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Struct to define a turbine model with nodes, elements, and constraints. </p>
-<p>A model is a collection of nodes, elements, and constraints that define the geometry and relationships between components in a turbine</p><ul>
-<li>Nodes represent points in space with position, displacement, velocity, and acceleration</li>
-<li><a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a> represent components in the turbine with mass (beams, rigid bodies) and stiffness matrices (beams)</li>
-<li><a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> represent relationships between nodes that restrict their relative motion in some way </li>
-</ul>
+<div class="textblock"><p>Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbine problem. </p>
+<p>A model is a collection of nodes, elements, and constraints that define the geometry and relationships between components in an OpenTurbine problem. <a class="el" href="classopenturbine_1_1Model.html" title="Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbi...">Model</a> also provides methods to consistantly manipulate the nodes associated with a given element (for example, rotating all nodes in a beam) to ease the process of defining problems. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a78cd86c47d200dcd53c357b66c9c4418" name="a78cd86c47d200dcd53c357b66c9c4418"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a78cd86c47d200dcd53c357b66c9c4418">&#9670;&#160;</a></span>Model() <span class="overload">[1/2]</span></h2>
@@ -1084,14 +1080,14 @@ template&lt;typename DeviceType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Creates an <a class="el" href="structopenturbine_1_1State.html">State</a> struct based on the nodes in this model. </p>
+<p>Creates an <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> struct based on the nodes in this model. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">DeviceType</td><td>a Kokkos device where the <a class="el" href="structopenturbine_1_1State.html">State</a> object will reside</td></tr>
+    <tr><td class="paramname">DeviceType</td><td>a Kokkos device where the <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object will reside</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>an initialized <a class="el" href="structopenturbine_1_1State.html">State</a> object </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>an initialized <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object </dd></dl>
 
 </div>
 </div>
@@ -1120,7 +1116,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </table>
 </div><div class="memdoc">
 
-<p>Returns a <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model. </p>
+<p>Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model. </p>
 
 </div>
 </div>
@@ -1149,7 +1145,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </table>
 </div><div class="memdoc">
 
-<p>Returns a <a class="el" href="structopenturbine_1_1State.html">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model. </p>
+<p>Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model. </p>
 
 </div>
 </div>
