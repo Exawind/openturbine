@@ -16,7 +16,7 @@ struct ComputeNumSystemDofsReducer {
     void operator()(size_t i, size_t& update) const { update += active_dofs(i); }
 };
 
-/** 
+/**
  * @brief Computes the total number of active degrees of freedom in the system
  *
  * @tparam DeviceType The Kokkos Device describing where the input resides

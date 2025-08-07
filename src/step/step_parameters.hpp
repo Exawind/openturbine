@@ -11,17 +11,17 @@ namespace openturbine {
  */
 struct StepParameters {
     bool is_dynamic_solve;
-    size_t max_iter;                 //< maximum number of nonlinear iterations
-    double h;                        //< time step size
-    double alpha_m;                  //< generalized alpha solver parameter
-    double alpha_f;                  //< generalized alpha solver parameter
-    double gamma;                    //< generalized alpha solver parameter
-    double beta;                     //< generalized alpha solver parameter
-    double gamma_prime;              //< generalized alpha solver parameter
-    double beta_prime;               //< generalized alpha solver parameter
-    double conditioner;              //< diagonal preconditioner value
-    double absolute_convergence_tol; //< absolute convergence tolerance
-    double relative_convergence_tol; //< relative convergence tolerance
+    size_t max_iter;                  //< maximum number of nonlinear iterations
+    double h;                         //< time step size
+    double alpha_m;                   //< generalized alpha solver parameter
+    double alpha_f;                   //< generalized alpha solver parameter
+    double gamma;                     //< generalized alpha solver parameter
+    double beta;                      //< generalized alpha solver parameter
+    double gamma_prime;               //< generalized alpha solver parameter
+    double beta_prime;                //< generalized alpha solver parameter
+    double conditioner;               //< diagonal preconditioner value
+    double absolute_convergence_tol;  //< absolute convergence tolerance
+    double relative_convergence_tol;  //< relative convergence tolerance
 
     /**
      * @brief Constructor for the StepParameters object

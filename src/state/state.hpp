@@ -4,7 +4,7 @@
 
 namespace openturbine {
 
-/** 
+/**
  * @brief Container for storing the complete system state of the simulation at a given
  * time increment
  * @details This struct maintains all state variables required for the dynamic simulation,
