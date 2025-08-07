@@ -7,6 +7,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the residual and system gradient for a revolute joint constraint
+ */
 template <typename DeviceType>
 struct CalculateRevoluteJointConstraint {
     template <typename ValueType>

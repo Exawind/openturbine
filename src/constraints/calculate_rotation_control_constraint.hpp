@@ -9,6 +9,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which calculates the residual and gradient contributions of a rotation
+ * control constraint
+ */
 template <typename DeviceType>
 struct CalculateRotationControlConstraint {
     template <typename ValueType>

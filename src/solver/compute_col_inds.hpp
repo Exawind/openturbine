@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief The top level function object for computing the column indicies for the CRS matrix
+ * to be solved at each nonlinear iteration
+ */
 template <typename RowPtrType, typename IndicesType>
 struct ComputeColInds {
     template <typename ValueType>

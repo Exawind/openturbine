@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel for computing the system elements' contribution to the
+ * column indicies for the CRS matrix to be solved at each nonlinear iteration
+ */
 template <typename RowPtrType, typename IndicesType>
 struct ComputeSystemColInds {
     using RowPtrValueType = typename RowPtrType::value_type;

@@ -8,6 +8,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Top level function object for calculating the row pointers of the CRS matrix to be solved
+ * during each nonlinear iteration.
+ */
 template <typename RowPtrType>
 struct ComputeRowPtrs {
     using DeviceType = typename RowPtrType::device_type;

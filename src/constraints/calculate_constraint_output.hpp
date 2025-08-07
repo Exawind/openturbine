@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel that calculates the output for a constraints, for use as feedback
+ * to controllers
+ */
 template <typename DeviceType>
 struct CalculateConstraintOutput {
     template <typename ValueType>

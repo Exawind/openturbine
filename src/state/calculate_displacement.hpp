@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel for applying the computed change in state (displacement) to the previous state
+ * to get an estimate for the current state.
+ */
 template <typename DeviceType>
 struct CalculateDisplacement {
     template <typename ValueType>

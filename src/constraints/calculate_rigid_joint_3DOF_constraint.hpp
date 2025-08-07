@@ -8,6 +8,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the residual and system gradient for a rigid joint constraint
+ * with three degrees of freedom
+ */
 template <typename DeviceType>
 struct CalculateRigidJoint3DOFConstraint {
     template <typename ValueType>

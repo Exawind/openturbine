@@ -9,6 +9,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel for calculating the tangent operator at each node
+ */
 template <typename DeviceType>
 struct CalculateTangentOperator {
     template <typename ValueType>

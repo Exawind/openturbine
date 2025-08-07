@@ -9,6 +9,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel for applying a Beam element's freedom signature to all nodes it contains
+ */
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Beams {
     template <typename ValueType>
@@ -33,6 +36,9 @@ struct AssembleNodeFreedomMapTable_Beams {
     }
 };
 
+/**
+ * @brief A Kernel for applying a mass element's freedom signature to its node
+ */
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Masses {
     template <typename ValueType>
@@ -54,6 +60,9 @@ struct AssembleNodeFreedomMapTable_Masses {
     }
 };
 
+/**
+ * @brief A Kernel for applying a spring element's freedom signature to both of its nodes
+ */
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Springs {
     template <typename ValueType>
@@ -77,6 +86,9 @@ struct AssembleNodeFreedomMapTable_Springs {
     }
 };
 
+/**
+ * @brief A Kernel for applying a constraint's freedom signature to its base and target nodes
+ */
 template <typename DeviceType>
 struct AssembleNodeFreedomMapTable_Constraints {
     template <typename ValueType>
@@ -109,6 +121,21 @@ struct AssembleNodeFreedomMapTable_Constraints {
     }
 };
 
+/**
+ * @brief Creates the node freedom allocation table in state based on the connectivities
+ * defined in the elements and constraints structures
+ *
+ * @details The node freedom allocation table defines which degrees of freedom are defined
+ * on which nodes by collecting this information from all elements and constraints which
+ * contain this node.  The most common action using this information is to query how many
+ * degrees of freedom are defined, so this information is also computed.
+ *
+ * @tparam DeviceType The Kokkos device defining where OpenTurbine's structures reside
+ *
+ * @param state A structure containing the node freedom allocation table to be filled
+ * @param elements A structure containing all of the elements and their connectivities
+ * @param constraints A structure containing all of the constraints and their connectivities
+ */
 template <typename DeviceType>
 inline void assemble_node_freedom_allocation_table(
     State<DeviceType>& state, const Elements<DeviceType>& elements,

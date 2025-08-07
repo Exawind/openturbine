@@ -4,6 +4,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel to compute the elements' contribution to the row pointers of the CRS matrix
+ */
 template <typename RowPtrType>
 struct ComputeSystemRowEntries {
     using ValueType = typename RowPtrType::value_type;
