@@ -4,7 +4,7 @@
 
 namespace openturbine {
 
-/*
+/**
  * @brief Represents a node in the finite element model
  *
  * @details A node is a point in 3D space that can have position, orientation, displacement,

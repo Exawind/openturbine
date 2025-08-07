@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A  Kernel which interpolates a vector quantity from nodes on a given element
+ * to a quadrature point given a basis function
+ */
 template <typename DeviceType>
 struct InterpolateQPVector {
     template <typename ValueType>

@@ -4,6 +4,9 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel which applies the given factor to the system RHS vector
+ */
 template <typename DeviceType>
 struct ConditionR {
     double conditioner;
@@ -13,6 +16,10 @@ struct ConditionR {
     void operator()(int i) const { R(i, 0) *= conditioner; }
 };
 
+/**
+ * @brief A Kernel which divides the RHS vector terms corresponding to the constraints
+ * by a given conditioner factor
+ */
 template <typename DeviceType>
 struct UnconditionSolution {
     size_t num_system_dofs;

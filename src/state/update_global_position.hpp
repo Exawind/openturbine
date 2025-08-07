@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @breif A Kernel to update the absolute position of each node based on the solver's current
+ * state and the initial absolute position.
+ */
 template <typename DeviceType>
 struct UpdateGlobalPosition {
     template <typename ValueType>

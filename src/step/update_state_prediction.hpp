@@ -12,6 +12,15 @@
 
 namespace openturbine {
 
+/**
+ * @brief Updates the predicted next state values, based on computed solver solution, solver.x
+ *
+ * @tparam DeviceType The Kokkos Device where the solver and state data structures reside
+ *
+ * @param parameters A struct containing the control parameters for time stepping
+ * @param solver A struct containing the linear system, already solved for this iteration
+ * @param state A struct containing the state information at each node
+ */
 template <typename DeviceType>
 inline void UpdateStatePrediction(
     StepParameters& parameters, const Solver<DeviceType>& solver, State<DeviceType>& state

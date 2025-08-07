@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to update the velocity, acceleration, and change in state at a node for
+ * a dynamic problem
+ */
 template <typename DeviceType>
 struct UpdateDynamicPrediction {
     template <typename ValueType>
