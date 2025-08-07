@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Scanning Kernel which to convert the number of active degrees of freedom per node to
+ * a pointer map to the start of their degrees of freedom in a serialized global vector
+ */
 template <typename DeviceType>
 struct ComputeNodeFreedomMapTable {
     typename Kokkos::View<FreedomSignature*, DeviceType>::const_type node_freedom_allocation_table;
@@ -22,6 +26,14 @@ struct ComputeNodeFreedomMapTable {
     }
 };
 
+/**
+ * @brief Compute the node freedom map table, a pointer map to the start of the degrees of freedom
+ * ofa given node in a serialized global vector
+ *
+ * @tparam DeviceType The Kokkos Device where the State object resides
+ *
+ * @param state A state object with a completed node freedom allocation table
+ */
 template <typename DeviceType>
 inline void compute_node_freedom_map_table(State<DeviceType>& state) {
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;

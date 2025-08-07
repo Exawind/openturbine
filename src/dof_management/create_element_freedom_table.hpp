@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel that creates the element freedom table which maps each degree of freedom
+ * on the beam element to its global component number.
+ */
 template <typename DeviceType>
 struct CreateElementFreedomTable_Beams {
     template <typename ValueType>
@@ -31,6 +35,10 @@ struct CreateElementFreedomTable_Beams {
     }
 };
 
+/**
+ * @brief A Kernel that creates the element freedom table which maps each degree of freedom
+ * on the mass element to its global component number.
+ */
 template <typename DeviceType>
 struct CreateElementFreedomTable_Masses {
     template <typename ValueType>
@@ -53,6 +61,10 @@ struct CreateElementFreedomTable_Masses {
     }
 };
 
+/**
+ * @brief A Kernel that creates the element freedom table which maps each degree of freedom
+ * on the spring element to its global component number.
+ */
 template <typename DeviceType>
 struct CreateElementFreedomTable_Springs {
     template <typename ValueType>
@@ -79,6 +91,17 @@ struct CreateElementFreedomTable_Springs {
     }
 };
 
+/**
+ * @brief Creates the element freedom tables for all of the elements in the system
+ *
+ * @details The element freedom table for each element type maps the degrees of freedom
+ * for that element to their global degree of freedom number
+ *
+ * @tparam DeviceType The Kokkos Device where elements and state reside
+ *
+ * @param elements the Elements object used to create state's node freedom map table
+ * @param state A State object with a completed node freedom map table
+ */
 template <typename DeviceType>
 inline void create_element_freedom_table(
     Elements<DeviceType>& elements, const State<DeviceType>& state
