@@ -275,7 +275,10 @@ TEST(Milestone, IEA15RotorAeroController) {
             // Loop through nodes in blade
             for (auto j = 0U; j < n_blade_nodes; ++j) {
                 // Calculate node position and orientation for this blade
-                const auto rot = QuaternionCompose(q_root, node_rotation[j]);
+                const auto rot = QuaternionCompose(
+                    q_root,
+                    {node_coords[j][3], node_coords[j][4], node_coords[j][5], node_coords[j][6]}
+                );
                 auto pos = RotateVectorByQuaternion(
                     q_root, {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                 );
