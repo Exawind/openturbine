@@ -102,8 +102,9 @@ To help formulate this, we specify the rotor velocity (both translational and ro
 
 .. code-block:: cpp
 
-    const auto velocity = std::array{0., 0., 0., 0., 0., 1.};
-    const auto origin = std::array{0., 0., 0.};
+    constexpr auto velocity = std::array{0., 0., 0., 0., 0., 1.};
+    constexpr auto origin = std::array{0., 0., 0.};
+    constexpr auto hub_radius = 2.;
 
 We'll now define three beam elements to be our main rotor.  Each of these beams will be
 identical, but we'll rotate each of them by 120 degrees around the origin to create a
@@ -117,7 +118,7 @@ rotor like one would see on a wind turbine.
         std::transform(
             std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
             [&](auto s) {
-                return model.AddNode().SetPosition(10. * s, 0., 0., 1., 0., 0., 0.).Build();
+                return model.AddNode().SetElemLocation(s).SetPosition(10. * s, 0., 0., 1., 0., 0., 0.).Build();
             }
         );
         auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
