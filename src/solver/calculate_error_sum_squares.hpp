@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief Reduction Kernel which calculates the sum of the square of the errors for each
@@ -79,4 +79,4 @@ struct CalculateConstraintsErrorSumSquares {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief A Kernel for computing the system constraints' contribution to the
@@ -59,4 +59,4 @@ struct ComputeConstraintsColInds {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

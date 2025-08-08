@@ -34,14 +34,14 @@ inline void AssembleSystemResidual(
 
     Kokkos::parallel_for(
         "ContributeForcesToVector", forces_vector_policy,
-        ContributeForcesToVector<DeviceType>{
+        solver::ContributeForcesToVector<DeviceType>{
             state.node_freedom_allocation_table, state.node_freedom_map_table, state.f, solver.b
         }
     );
     Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeBeamsToVector", beams_vector_policy,
-        ContributeBeamsToVector<DeviceType>{
+        solver::ContributeBeamsToVector<DeviceType>{
             elements.beams.num_nodes_per_element, elements.beams.element_freedom_table,
             elements.beams.residual_vector_terms, solver.b
         }
@@ -49,14 +49,14 @@ inline void AssembleSystemResidual(
     Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeMassesToVector", masses_vector_policy,
-        ContributeMassesToVector<DeviceType>{
+        solver::ContributeMassesToVector<DeviceType>{
             elements.masses.element_freedom_table, elements.masses.residual_vector_terms, solver.b
         }
     );
     Kokkos::fence();
     Kokkos::parallel_for(
         "ContributeSpringsToVector", springs_vector_policy,
-        ContributeSpringsToVector<DeviceType>{
+        solver::ContributeSpringsToVector<DeviceType>{
             elements.springs.element_freedom_table, elements.springs.residual_vector_terms, solver.b
         }
     );

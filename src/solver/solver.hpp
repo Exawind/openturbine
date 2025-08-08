@@ -109,9 +109,9 @@ struct Solver {
         const ConstView<Kokkos::pair<size_t, size_t>*>& constraint_row_range
     )
         : num_system_nodes(node_IDs.extent(0)),
-          num_system_dofs(ComputeNumSystemDofs<DeviceType>(active_dofs)),
+          num_system_dofs(solver::ComputeNumSystemDofs<DeviceType>(active_dofs)),
           num_dofs(num_system_dofs + num_constraint_dofs),
-          A(CreateFullMatrix<CrsMatrixType>::invoke(
+          A(solver::CreateFullMatrix<CrsMatrixType>::invoke(
               num_system_dofs, num_dofs, base_active_dofs, target_active_dofs,
               constraint_base_node_freedom_table, constraint_target_node_freedom_table,
               constraint_row_range, active_dofs, node_freedom_map_table, num_nodes_per_element,

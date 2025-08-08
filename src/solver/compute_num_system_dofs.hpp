@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief A Reduction kernel which sums the number of active degrees of freedom
@@ -38,4 +38,4 @@ template <typename DeviceType>
     return total_system_dofs;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

@@ -19,7 +19,7 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
 
     Kokkos::parallel_for(
         "ConditionR", RangePolicy(0, solver.num_system_dofs),
-        ConditionR<DeviceType>{parameters.conditioner, solver.b}
+        solver::ConditionR<DeviceType>{parameters.conditioner, solver.b}
     );
 
     KokkosBlas::scal(solver.b, -1., solver.b);
@@ -32,7 +32,9 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
 
     Kokkos::parallel_for(
         "UnconditionSolution", RangePolicy(0, solver.num_dofs - solver.num_system_dofs),
-        UnconditionSolution<DeviceType>{solver.num_system_dofs, parameters.conditioner, solver.x}
+        solver::UnconditionSolution<DeviceType>{
+            solver.num_system_dofs, parameters.conditioner, solver.x
+        }
     );
 }
 

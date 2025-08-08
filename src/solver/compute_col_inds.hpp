@@ -5,7 +5,7 @@
 #include "compute_constraints_col_inds.hpp"
 #include "compute_system_col_inds.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief The top level function object for computing the column indicies for the CRS matrix
@@ -59,4 +59,4 @@ struct ComputeColInds {
         return col_inds;
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::solver

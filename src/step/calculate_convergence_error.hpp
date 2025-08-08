@@ -24,7 +24,7 @@ inline double CalculateConvergenceError(
     auto sum_error_squared_system = 0.;
     Kokkos::parallel_reduce(
         RangePolicy(0, solver.num_system_nodes),
-        CalculateSystemErrorSumSquares<DeviceType>{
+        solver::CalculateSystemErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             parameters.h,
@@ -38,7 +38,7 @@ inline double CalculateConvergenceError(
     auto sum_error_squared_constraints = 0.;
     Kokkos::parallel_reduce(
         RangePolicy(0, constraints.num_constraints),
-        CalculateConstraintsErrorSumSquares<DeviceType>{
+        solver::CalculateConstraintsErrorSumSquares<DeviceType>{
             parameters.absolute_convergence_tol,
             parameters.relative_convergence_tol,
             solver.num_system_dofs,
