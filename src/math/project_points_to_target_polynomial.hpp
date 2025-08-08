@@ -6,7 +6,7 @@
 #include "elements/beams/interpolation.hpp"
 #include "least_squares_fit.hpp"
 
-namespace openturbine {
+namespace openturbine::math {
 
 /**
  * @brief Projects 3D points from a given (lower) polynomial representation to a target (higher)

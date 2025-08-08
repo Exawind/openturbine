@@ -31,7 +31,7 @@ struct CalculateStiffnessMatrix {
         a(1, 1) = diag_term;
         a(2, 2) = diag_term;
 
-        VecTilde(r, r_tilde);
+	math::VecTilde(r, r_tilde);
         Gemm::invoke(-c2, r_tilde, r_tilde, 1., a);
     }
 };

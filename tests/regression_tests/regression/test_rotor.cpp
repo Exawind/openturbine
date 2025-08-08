@@ -41,7 +41,7 @@ Model CreateIEA15Blades(const std::array<double, 3>& omega) {
     constexpr auto origin = std::array{0., 0., 0.};
 
     for (auto blade_number = 0U; blade_number < num_blades; ++blade_number) {
-        const auto rotation_quaternion = RotationVectorToQuaternion(
+        const auto rotation_quaternion = math::RotationVectorToQuaternion(
             {0., 0., -2. * M_PI * static_cast<double>(blade_number) / static_cast<double>(num_blades)
             }
         );
@@ -119,7 +119,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}
@@ -225,7 +225,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}
@@ -282,8 +282,8 @@ TEST(RotorTest, IEA15RotorController) {
     for (const auto& beam_elem : model.GetBeamElements()) {
         const auto rotation_fraction =
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
-        const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
+        const auto q_root = math::RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
+        const auto pitch_axis = math::RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
         );
@@ -300,7 +300,7 @@ TEST(RotorTest, IEA15RotorController) {
         const double t = step_size * static_cast<double>(i + 1);
 
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto q_hub = math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
@@ -356,7 +356,7 @@ TEST(RotorTest, IEA15RotorHost) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}

@@ -13,7 +13,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_PositiveRange) {
     const std::vector<double> input = {0., 2.5, 5.};
     const std::vector<double> expected = {-1., 0., 1.};
 
-    const auto result = openturbine::MapGeometricLocations(input);
+    const auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
     for (auto i = 0U; i < result.size(); ++i) {
@@ -25,7 +25,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_NegativeRange) {
     const std::vector<double> input = {-10., -5., 0.};
     const std::vector<double> expected = {-1., 0., 1.};
 
-    const auto result = openturbine::MapGeometricLocations(input);
+    const auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
     for (auto i = 0U; i < result.size(); ++i) {
@@ -37,7 +37,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
     const std::vector<double> input = {0., 0.5, 1.};
     const std::vector<double> expected = {-1., 0., 1.};
 
-    auto result = openturbine::MapGeometricLocations(input);
+    auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
     for (auto i = 0U; i < result.size(); ++i) {
@@ -48,7 +48,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
 TEST(LeastSquaresFitTest, MapGeometricLocations_InvalidInput) {
     const std::vector<double> input = {1., 1.};
 
-    EXPECT_THROW(openturbine::MapGeometricLocations(input), std::invalid_argument);
+    EXPECT_THROW(math::MapGeometricLocations(input), std::invalid_argument);
 }
 
 TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
@@ -56,8 +56,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
     const size_t p{2};                               // Polynomial order + 1
     const std::vector<double> xi_g = {-1., 0., 1.};  // Evaluation points
     const auto gll_pts = GenerateGLLPoints(p - 1);
-    const auto phi_g = ComputeShapeFunctionValues(xi_g, gll_pts);
-    const auto dphi_g = ComputeShapeFunctionDerivatives(xi_g, gll_pts);
+    const auto phi_g = math::ComputeShapeFunctionValues(xi_g, gll_pts);
+    const auto dphi_g = math::ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
     // Check GLL points (2 at -1 and 1)
     ASSERT_EQ(gll_pts.size(), p);
@@ -103,8 +103,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
     const size_t p{3};                                          // Polynomial order + 1
     const std::vector<double> xi_g = {-1., -0.5, 0., 0.5, 1.};  // Evaluation points
     const auto gll_pts = GenerateGLLPoints(p - 1);
-    const auto phi_g = ComputeShapeFunctionValues(xi_g, gll_pts);
-    const auto dphi_g = ComputeShapeFunctionDerivatives(xi_g, gll_pts);
+    const auto phi_g = math::ComputeShapeFunctionValues(xi_g, gll_pts);
+    const auto dphi_g = math::ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
     // Check GLL points (3 at -1, 0, and 1)
     ASSERT_EQ(gll_pts.size(), 3);
@@ -163,16 +163,16 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     };
 
     // Step 1: Map geometric locations
-    auto mapped_locations = MapGeometricLocations(geom_locations);
+    auto mapped_locations = math::MapGeometricLocations(geom_locations);
 
     // Step 2: Generate shape function matrices (using p = 4 i.e. cubic interpolation)
     const size_t p = 4;
     const auto gll_pts = GenerateGLLPoints(p - 1);
-    const auto phi_g = ComputeShapeFunctionValues(mapped_locations, gll_pts);
-    const auto dphi_g = ComputeShapeFunctionDerivatives(mapped_locations, gll_pts);
+    const auto phi_g = math::ComputeShapeFunctionValues(mapped_locations, gll_pts);
+    const auto dphi_g = math::ComputeShapeFunctionDerivatives(mapped_locations, gll_pts);
 
     // Step 3: Perform least squares fitting
-    const auto X = PerformLeastSquaresFitting(p, phi_g, input_points);
+    const auto X = math::PerformLeastSquaresFitting(p, phi_g, input_points);
 
     // Expected coefficients from Mathematica (rounded to 3 decimal places)
     const std::vector<std::array<double, 3>> expected_coefficients = {

@@ -50,8 +50,8 @@ struct CalculateFixedBC3DOFConstraint {
         //----------------------------------------------------------------------
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
-        QuaternionInverse(R1, R1t);
-        RotateVectorByQuaternion(R1, X0, R1_X0);
+	math::QuaternionInverse(R1, R1t);
+	math::RotateVectorByQuaternion(R1, X0, R1_X0);
         for (auto component = 0; component < 3; ++component) {
             residual_terms(component) =
                 u2(component) + X0(component) - u1(component) - R1_X0(component);

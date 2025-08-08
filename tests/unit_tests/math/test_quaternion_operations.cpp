@@ -19,7 +19,7 @@ Kokkos::View<double[3][3]> TestQuaternionToRotationMatrix(
     auto R_from_q = Kokkos::View<double[3][3]>("R_from_q");
     Kokkos::parallel_for(
         "QuaternionToRotationMatrix", 1,
-        KOKKOS_LAMBDA(int) { QuaternionToRotationMatrix(q, R_from_q); }
+        KOKKOS_LAMBDA(int) { math::QuaternionToRotationMatrix(q, R_from_q); }
     );
     return R_from_q;
 }
@@ -80,11 +80,11 @@ TEST(QuaternionTest, ConvertRotationMatrixToQuaternion) {
     const auto dtheta = M_PI / static_cast<double>(n);
     for (auto i = 0U; i < n; ++i) {
         for (auto j = 0U; j < n; ++j) {
-            auto q_ref = RotationVectorToQuaternion(
+            auto q_ref = math::RotationVectorToQuaternion(
                 {static_cast<double>(i) * dtheta, static_cast<double>(j) * dtheta, 0.}
             );
-            auto r = QuaternionToRotationMatrix(q_ref);
-            auto q_new = RotationMatrixToQuaternion(r);
+            auto r = math::QuaternionToRotationMatrix(q_ref);
+            auto q_new = math::RotationMatrixToQuaternion(r);
             for (auto m = 0U; m < 4; ++m) {
                 EXPECT_NEAR(q_ref[m], q_new[m], 1e-12);
             }
@@ -97,7 +97,7 @@ Kokkos::View<double[3]> TestRotateVectorByQuaternion(
 ) {
     auto v_rot = Kokkos::View<double[3]>("v_rot");
     Kokkos::parallel_for(
-        "RotateVectorBoyQuaternion", 1, KOKKOS_LAMBDA(int) { RotateVectorByQuaternion(q, v, v_rot); }
+        "RotateVectorBoyQuaternion", 1, KOKKOS_LAMBDA(int) { math::RotateVectorByQuaternion(q, v, v_rot); }
     );
     return v_rot;
 }
@@ -194,7 +194,7 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
 Kokkos::View<double[3][4]> TestQuaternionDerivative(const Kokkos::View<double[4]>::const_type& q) {
     auto m = Kokkos::View<double[3][4]>("m");
     Kokkos::parallel_for(
-        "QuaternionDerivative", 1, KOKKOS_LAMBDA(int) { QuaternionDerivative(q, m); }
+        "QuaternionDerivative", 1, KOKKOS_LAMBDA(int) { math::QuaternionDerivative(q, m); }
     );
     return m;
 }
@@ -220,7 +220,7 @@ TEST(QuaternionTest, QuaternionDerivative) {
 Kokkos::View<double[4]> TestQuaternionInverse(const Kokkos::View<double[4]>::const_type& q) {
     auto q_inv = Kokkos::View<double[4]>("q_inv");
     Kokkos::parallel_for(
-        "QuaternionInverse", 1, KOKKOS_LAMBDA(int) { QuaternionInverse(q, q_inv); }
+        "QuaternionInverse", 1, KOKKOS_LAMBDA(int) { math::QuaternionInverse(q, q_inv); }
     );
     return q_inv;
 }
@@ -247,7 +247,7 @@ Kokkos::View<double[4]> TestQuaternionCompose(
 ) {
     auto qn = Kokkos::View<double[4]>("qn");
     Kokkos::parallel_for(
-        "QuaternionCompose", 1, KOKKOS_LAMBDA(int) { QuaternionCompose(q1, q2, qn); }
+        "QuaternionCompose", 1, KOKKOS_LAMBDA(int) { math::QuaternionCompose(q1, q2, qn); }
     );
     return qn;
 }
@@ -288,7 +288,7 @@ Kokkos::View<double[4]> TestRotationToQuaternion(const Kokkos::View<double[3]>::
     auto quaternion = Kokkos::View<double[4]>("quaternion");
     Kokkos::parallel_for(
         "RotationVectorToQuaternion", 1,
-        KOKKOS_LAMBDA(int) { RotationVectorToQuaternion(phi, quaternion); }
+        KOKKOS_LAMBDA(int) { math::RotationVectorToQuaternion(phi, quaternion); }
     );
     return quaternion;
 }
@@ -354,11 +354,11 @@ void test_quaternion_to_rotation_vector_2() {
         auto q = Create1DView<4>({0., 0., 0., 0.});
         Kokkos::parallel_for(
             "RotationVectorToQuaternion", 1,
-            KOKKOS_LAMBDA(int) { RotationVectorToQuaternion(phi, q); }
+            KOKKOS_LAMBDA(int) { math::RotationVectorToQuaternion(phi, q); }
         );
         Kokkos::parallel_for(
             "RotationVectorToQuaternion", 1,
-            KOKKOS_LAMBDA(int) { QuaternionToRotationVector(q, phi2); }
+            KOKKOS_LAMBDA(int) { math::QuaternionToRotationVector(q, phi2); }
         );
 
         const auto phi2_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), phi2);
@@ -377,8 +377,8 @@ TEST(QuaternionTest, QuaternionToRotationVector_2) {
     const auto dtheta = M_PI / static_cast<double>(n);
     for (auto i = 0U; i < n; ++i) {
         auto rot_vec = std::array{static_cast<double>(i) * dtheta, 0., 0.};
-        auto q = RotationVectorToQuaternion(rot_vec);
-        auto rot_vec2 = QuaternionToRotationVector(q);
+        auto q = math::RotationVectorToQuaternion(rot_vec);
+        auto rot_vec2 = math::QuaternionToRotationVector(q);
         ASSERT_NEAR(rot_vec2[0], rot_vec[0], 1e-14);
         ASSERT_NEAR(rot_vec2[1], rot_vec[1], 1e-14);
         ASSERT_NEAR(rot_vec2[2], rot_vec[2], 1e-14);
@@ -409,7 +409,7 @@ TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
                  },
              },
          }) {
-        const auto q_act = TangentTwistToQuaternion(td.tan, td.twist);
+        const auto q_act = math::TangentTwistToQuaternion(td.tan, td.twist);
         ASSERT_NEAR(q_act[0], td.q_exp[0], 1e-14);
         ASSERT_NEAR(q_act[1], td.q_exp[1], 1e-14);
         ASSERT_NEAR(q_act[2], td.q_exp[2], 1e-14);
@@ -419,43 +419,43 @@ TEST(QuaternionTest, CheckTangentTwistToQuaternion) {
 
 TEST(QuaternionTest, IsIdentityQuaternion_ExactIdentity) {
     const auto identity_q = std::array{1., 0., 0., 0.};
-    EXPECT_TRUE(IsIdentityQuaternion(identity_q));
+    EXPECT_TRUE(math::IsIdentityQuaternion(identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_WithinDefaultTolerance) {
     // 1e-13 is within default tolerance
     const auto near_identity_q = std::array{1. + 1e-13, 1e-13, -1e-13, 1e-13};
-    EXPECT_TRUE(IsIdentityQuaternion(near_identity_q));
+    EXPECT_TRUE(math::IsIdentityQuaternion(near_identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_OutsideDefaultTolerance) {
     // 1e-11 is outside default tolerance
     const auto not_identity_q = std::array{1. + 1e-11, 0., 0., 0.};
-    EXPECT_FALSE(IsIdentityQuaternion(not_identity_q));
+    EXPECT_FALSE(math::IsIdentityQuaternion(not_identity_q));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_WithCustomTolerance) {
     // 1e-10 is within custom tolerance
     const auto near_identity_q = std::array{1. + 1e-10, 1e-10, 0., 0.};
-    EXPECT_TRUE(IsIdentityQuaternion(near_identity_q, 1e-9));
+    EXPECT_TRUE(math::IsIdentityQuaternion(near_identity_q, 1e-9));
 }
 
 TEST(QuaternionTest, IsIdentityQuaternion_NonIdentityQuaternions) {
     // 90 degree rotation about X axis
-    const auto rotation_x = RotationVectorToQuaternion({M_PI / 2., 0., 0.});
-    EXPECT_FALSE(IsIdentityQuaternion(rotation_x));
+    const auto rotation_x = math::RotationVectorToQuaternion({M_PI / 2., 0., 0.});
+    EXPECT_FALSE(math::IsIdentityQuaternion(rotation_x));
 
     // 90 degree rotation about Y axis
-    const auto rotation_y = RotationVectorToQuaternion({0., M_PI / 2., 0.});
-    EXPECT_FALSE(IsIdentityQuaternion(rotation_y));
+    const auto rotation_y = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+    EXPECT_FALSE(math::IsIdentityQuaternion(rotation_y));
 
     // 90 degree rotation about Z axis
-    const auto rotation_z = RotationVectorToQuaternion({0., 0., M_PI / 2.});
-    EXPECT_FALSE(IsIdentityQuaternion(rotation_z));
+    const auto rotation_z = math::RotationVectorToQuaternion({0., 0., M_PI / 2.});
+    EXPECT_FALSE(math::IsIdentityQuaternion(rotation_z));
 
     // Arbitrary quaternion
     const auto arbitrary = std::array{0.5, 0.5, 0.5, 0.5};
-    EXPECT_FALSE(IsIdentityQuaternion(arbitrary));
+    EXPECT_FALSE(math::IsIdentityQuaternion(arbitrary));
 }
 
 }  // namespace openturbine::tests

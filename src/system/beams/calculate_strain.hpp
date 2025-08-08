@@ -27,13 +27,13 @@ struct CalculateStrain {
         auto R_x0_prime_data = Array<double, 3>{};
         auto R_x0_prime = View<double[3]>(R_x0_prime_data.data());
 
-        RotateVectorByQuaternion(r, x0_prime, R_x0_prime);
+	math::RotateVectorByQuaternion(r, x0_prime, R_x0_prime);
         KokkosBlas::serial_axpy(-1., u_prime, R_x0_prime);
         KokkosBlas::serial_axpy(-1., x0_prime, R_x0_prime);
 
         auto E_data = Array<double, 12>{};
         auto E = View<double[3][4]>(E_data.data());
-        QuaternionDerivative(r, E);
+	math::QuaternionDerivative(r, E);
         auto e2_data = Array<double, 4>{};
         auto e2 = View<double[4]>{e2_data.data()};
         Gemv::invoke(2., E, r_prime, 0., e2);

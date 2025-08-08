@@ -95,16 +95,16 @@ struct CalculateInertialQuadraturePointValues {
             omega_dot
         );
 
-        QuaternionCompose(r, r0, xr);
+	math::QuaternionCompose(r, r0, xr);
         masses::RotateSectionMatrix<DeviceType>::invoke(xr, Mstar, Muu);
 
         const auto mass = Muu(0, 0);
         masses::CalculateEta<DeviceType>(Muu, eta);
-        VecTilde(eta, eta_tilde);
+	math::VecTilde(eta, eta_tilde);
         masses::CalculateRho<DeviceType>(Muu, rho);
 
-        VecTilde(omega, omega_tilde);
-        VecTilde(omega_dot, omega_dot_tilde);
+	math::VecTilde(omega, omega_tilde);
+	math::VecTilde(omega_dot, omega_dot_tilde);
 
         masses::CalculateInertialForce<DeviceType>::invoke(
             mass, u_ddot, omega, omega_dot, eta, eta_tilde, rho, omega_tilde, omega_dot_tilde, FI

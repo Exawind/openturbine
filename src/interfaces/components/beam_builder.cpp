@@ -30,8 +30,8 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
         return *this;
     }
     if (ref_axis == ReferenceAxisOrientation::Z) {
-        const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
-        input.ref_axis.coordinates.emplace_back(RotateVectorByQuaternion(q_z_to_x, coordinates));
+        const auto q_z_to_x = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        input.ref_axis.coordinates.emplace_back(math::RotateVectorByQuaternion(q_z_to_x, coordinates));
         return *this;
     }
     throw std::invalid_argument("Invalid reference axis orientation");
@@ -78,10 +78,10 @@ BeamBuilder& BeamBuilder::AddSection(
         return *this;
     }
     if (ref_axis == ReferenceAxisOrientation::Z) {
-        const auto q_z_to_x = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto q_z_to_x = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
         input.sections.emplace_back(
-            grid_location, RotateMatrix6(mass_matrix, q_z_to_x),
-            RotateMatrix6(stiffness_matrix, q_z_to_x)
+            grid_location, math::RotateMatrix6(mass_matrix, q_z_to_x),
+            math::RotateMatrix6(stiffness_matrix, q_z_to_x)
         );
         return *this;
     }

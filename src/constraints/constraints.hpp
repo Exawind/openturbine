@@ -288,13 +288,13 @@ struct Constraints {
         std::array<std::array<double, 3>, 3> rotation_matrix{};
         if (constraint.type == ConstraintType::RevoluteJoint) {
             constexpr std::array<double, 3> x = {1., 0., 0.};
-            const std::array<double, 3> x_hat = Norm(constraint.axis_vector) != 0.
-                                                    ? UnitVector(constraint.axis_vector)
-                                                    : UnitVector(x0);
+            const std::array<double, 3> x_hat = math::Norm(constraint.axis_vector) != 0.
+                                                    ? math::UnitVector(constraint.axis_vector)
+                                                    : math::UnitVector(x0);
 
             // Create rotation matrix to rotate x to match vector
-            const auto cross_product = CrossProduct(x, x_hat);
-            const auto dot_product = DotProduct(x_hat, x);
+            const auto cross_product = math::CrossProduct(x, x_hat);
+            const auto dot_product = math::DotProduct(x_hat, x);
             const auto k = 1. / (1. + dot_product);
 
             // Set orthogonal unit vectors from the rotation matrix
@@ -315,7 +315,7 @@ struct Constraints {
 
         // Set rotation_matrix to the unit vector of the constraint axis for rotation control
         if (constraint.type == ConstraintType::RotationControl) {
-            const auto unit_vector = UnitVector(constraint.axis_vector);
+            const auto unit_vector = math::UnitVector(constraint.axis_vector);
             rotation_matrix[0][0] = unit_vector[0];
             rotation_matrix[0][1] = unit_vector[1];
             rotation_matrix[0][2] = unit_vector[2];

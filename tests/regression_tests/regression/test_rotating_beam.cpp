@@ -132,8 +132,8 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
-        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        const auto x_root = RotateVectorByQuaternion(q, x0_root);
+        const auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        const auto x_root = math::RotateVectorByQuaternion(q, x0_root);
         const auto u_root =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         constraints.UpdateDisplacement(0, {u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]});
@@ -214,7 +214,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Calculate hub rotation for this time step
-    const auto q_hub = RotationVectorToQuaternion(
+    const auto q_hub = math::RotationVectorToQuaternion(
         {step_size * velocity[3], step_size * velocity[4], step_size * velocity[5]}
     );
 
@@ -276,7 +276,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
         );
         auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
         auto rotation_quaternion =
-            openturbine::RotationVectorToQuaternion({0., 0., 2. * M_PI * blade_number / num_blades});
+            math::RotationVectorToQuaternion({0., 0., 2. * M_PI * blade_number / num_blades});
         model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
         model.RotateBeamAboutPoint(blade_elem_id, rotation_quaternion, origin);
         model.SetBeamVelocityAboutPoint(blade_elem_id, velocity, origin);
@@ -303,7 +303,7 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {step_size * (i + 1) * velocity[3], step_size * (i + 1) * velocity[4],
              step_size * (i + 1) * velocity[5]}
         );
@@ -368,7 +368,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
-        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        const auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
@@ -510,14 +510,14 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         const auto t = step_size * static_cast<double>(i + 1);
         pitch = t * M_PI / 2.;
         azimuth = 0.5 * t * M_PI / 2.;
-        auto q = RotationVectorToQuaternion({0., 0., azimuth});
+        auto q = math::RotationVectorToQuaternion({0., 0., azimuth});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
     auto q = kokkos_view_2D_to_vector(state.q);
-    auto rv = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
+    auto rv = math::QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
 
     // Same as euler rotation xz [azimuth, pitch]
     EXPECT_NEAR(rv[0], 1.482189821649821, 1e-8);
@@ -615,7 +615,7 @@ void GeneratorTorqueWithAxisTilt(
     model.SetGravity(0., 0., 0.);
 
     // Calculate tilt about x axis as a quaternion
-    auto node_tilt = RotationVectorToQuaternion({tilt, 0., 0.});
+    auto node_tilt = math::RotationVectorToQuaternion({tilt, 0., 0.});
 
     // Build vector of nodes (straight along x axis, no rotation)
     constexpr double hub_size = 2.;

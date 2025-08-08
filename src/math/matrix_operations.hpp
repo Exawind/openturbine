@@ -6,7 +6,7 @@
 
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::math {
 
 /**
  * @brief Computes AX(A) of a square matrix

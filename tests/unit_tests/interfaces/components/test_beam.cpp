@@ -40,7 +40,7 @@ TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
         std::array{root_node.x0[3], root_node.x0[4], root_node.x0[5], root_node.x0[6]};
 
     const auto root_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(root_rotation_quaternion);
+        math::QuaternionToRotationMatrix(root_rotation_quaternion);
 
     EXPECT_NEAR(root_node.x0[0], 0., 1.e-16);
     EXPECT_NEAR(root_node.x0[1], 0., 1.e-16);
@@ -63,7 +63,7 @@ TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
         std::array{middle_node.x0[3], middle_node.x0[4], middle_node.x0[5], middle_node.x0[6]};
 
     const auto middle_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(middle_rotation_quaternion);
+        math::QuaternionToRotationMatrix(middle_rotation_quaternion);
 
     EXPECT_NEAR(middle_node.x0[0], .5, 1.e-16);
     EXPECT_NEAR(middle_node.x0[1], 0., 1.e-16);
@@ -86,7 +86,7 @@ TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
         std::array{end_node.x0[3], end_node.x0[4], end_node.x0[5], end_node.x0[6]};
 
     const auto end_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(end_rotation_quaternion);
+        math::QuaternionToRotationMatrix(end_rotation_quaternion);
 
     EXPECT_NEAR(end_node.x0[0], 1., 1.e-16);
     EXPECT_NEAR(end_node.x0[1], 0., 1.e-16);
@@ -135,7 +135,7 @@ TEST(BeamComponentTest, UnrotatedBeamHasIdentityRotationMatrix) {
         std::array{root_node.x0[3], root_node.x0[4], root_node.x0[5], root_node.x0[6]};
 
     const auto root_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(root_rotation_quaternion);
+        math::QuaternionToRotationMatrix(root_rotation_quaternion);
 
     EXPECT_NEAR(root_rotation_matrix[0][0], 1., 1.e-16);
     EXPECT_NEAR(root_rotation_matrix[0][1], 0., 1.e-16);
@@ -183,7 +183,7 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
         std::array{root_node.x0[3], root_node.x0[4], root_node.x0[5], root_node.x0[6]};
 
     const auto root_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(root_rotation_quaternion);
+        math::QuaternionToRotationMatrix(root_rotation_quaternion);
 
     EXPECT_NEAR(root_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(root_node.x0[1], 0., 1.e-15);
@@ -206,7 +206,7 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
         std::array{middle_node.x0[3], middle_node.x0[4], middle_node.x0[5], middle_node.x0[6]};
 
     const auto middle_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(middle_rotation_quaternion);
+        math::QuaternionToRotationMatrix(middle_rotation_quaternion);
 
     EXPECT_NEAR(middle_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(middle_node.x0[1], 0., 1.e-15);
@@ -229,7 +229,7 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
         std::array{end_node.x0[3], end_node.x0[4], end_node.x0[5], end_node.x0[6]};
 
     const auto end_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(end_rotation_quaternion);
+        math::QuaternionToRotationMatrix(end_rotation_quaternion);
 
     EXPECT_NEAR(end_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(end_node.x0[1], 0., 1.e-15);
@@ -281,7 +281,7 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
         std::array{root_node.x0[3], root_node.x0[4], root_node.x0[5], root_node.x0[6]};
 
     const auto root_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(root_rotation_quaternion);
+        math::QuaternionToRotationMatrix(root_rotation_quaternion);
 
     EXPECT_NEAR(root_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(root_node.x0[1], 0., 1.e-15);
@@ -304,7 +304,7 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
         std::array{middle_node.x0[3], middle_node.x0[4], middle_node.x0[5], middle_node.x0[6]};
 
     const auto middle_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(middle_rotation_quaternion);
+        math::QuaternionToRotationMatrix(middle_rotation_quaternion);
 
     EXPECT_NEAR(middle_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(middle_node.x0[1], .5, 1.e-15);
@@ -327,7 +327,7 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
         std::array{end_node.x0[3], end_node.x0[4], end_node.x0[5], end_node.x0[6]};
 
     const auto end_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(end_rotation_quaternion);
+        math::QuaternionToRotationMatrix(end_rotation_quaternion);
 
     EXPECT_NEAR(end_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(end_node.x0[1], 1., 1.e-15);
@@ -379,7 +379,7 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
         std::array{root_node.x0[3], root_node.x0[4], root_node.x0[5], root_node.x0[6]};
 
     const auto root_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(root_rotation_quaternion);
+        math::QuaternionToRotationMatrix(root_rotation_quaternion);
 
     EXPECT_NEAR(root_node.x0[0], 0., 1.e-15);
     EXPECT_NEAR(root_node.x0[1], 0., 1.e-15);
@@ -402,7 +402,7 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
         std::array{middle_node.x0[3], middle_node.x0[4], middle_node.x0[5], middle_node.x0[6]};
 
     const auto middle_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(middle_rotation_quaternion);
+        math::QuaternionToRotationMatrix(middle_rotation_quaternion);
 
     EXPECT_NEAR(middle_node.x0[0], .5, 1.e-15);
     EXPECT_NEAR(middle_node.x0[1], 0., 1.e-15);
@@ -425,7 +425,7 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
         std::array{end_node.x0[3], end_node.x0[4], end_node.x0[5], end_node.x0[6]};
 
     const auto end_rotation_matrix =
-        openturbine::QuaternionToRotationMatrix(end_rotation_quaternion);
+        math::QuaternionToRotationMatrix(end_rotation_quaternion);
 
     EXPECT_NEAR(end_node.x0[0], 1., 1.e-15);
     EXPECT_NEAR(end_node.x0[1], 0., 1.e-15);

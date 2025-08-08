@@ -19,7 +19,7 @@ Kokkos::View<double[rows][cols]> Create2DView(const std::array<double, rows * co
 inline void test_AX_Matrix() {
     const auto A = Create2DView<3, 3>({1., 2., 3., 4., 5., 6., 7., 8., 9.});
     const auto out = Kokkos::View<double[3][3]>("out");
-    Kokkos::parallel_for(1, KOKKOS_LAMBDA(int) { AX_Matrix(A, out); });
+    Kokkos::parallel_for(1, KOKKOS_LAMBDA(int) { math::AX_Matrix(A, out); });
     const auto out_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), out);
 
     constexpr auto expected_data = std::array{7., -1., -1.5, -2., 5., -3., -3.5, -4., 3.};
@@ -40,7 +40,7 @@ TEST(MatrixTest, AX_Matrix) {
 Kokkos::View<double[3]> TestAxialVectorOfMatrix(const Kokkos::View<const double[3][3]>& m) {
     auto v = Kokkos::View<double[3]>("v");
     Kokkos::parallel_for(
-        "AxialVectorOfMatrix", 1, KOKKOS_LAMBDA(int) { AxialVectorOfMatrix(m, v); }
+        "AxialVectorOfMatrix", 1, KOKKOS_LAMBDA(int) { math::AxialVectorOfMatrix(m, v); }
     );
     return v;
 }
@@ -72,7 +72,7 @@ TEST(MatrixTest, RotateMatrix6_1) {
         std::array{25., 26., 27., 28., 29., 30.}, std::array{31., 32., 33., 34., 35., 36.},
     };
     const auto q = std::array{1., 0., 0., 0.};
-    const auto m_act = RotateMatrix6(m, q);
+    const auto m_act = math::RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
@@ -92,7 +92,7 @@ TEST(MatrixTest, RotateMatrix6_2) {
         std::array{-25, 26, 27, -28, 29, 30}, std::array{-31, 32, 33, -34, 35, 36},
     };
     const auto q = std::array{0., 1., 0., 0.};
-    const auto m_act = RotateMatrix6(m, q);
+    const auto m_act = math::RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
@@ -131,8 +131,8 @@ TEST(MatrixTest, RotateMatrix6_3) {
         },
 
     };
-    const auto q = RotationVectorToQuaternion({0., M_PI / 4., 0.});
-    const auto m_act = RotateMatrix6(m, q);
+    const auto q = math::RotationVectorToQuaternion({0., M_PI / 4., 0.});
+    const auto m_act = math::RotateMatrix6(m, q);
     for (auto i = 0U; i < 6U; ++i) {
         for (auto j = 0U; j < 6U; ++j) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);

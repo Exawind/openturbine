@@ -82,8 +82,8 @@ TEST(ModelTest, ModelCreateState) {
     Model model;
 
     // Rotation of 1 radian around x
-    auto R1 = RotationVectorToQuaternion({1., 0., 0.});
-    auto R2 = RotationVectorToQuaternion({0., 1., 0.});
+    auto R1 = math::RotationVectorToQuaternion({1., 0., 0.});
+    auto R2 = math::RotationVectorToQuaternion({0., 1., 0.});
 
     // Create node with initial position and displacement from initial position
     static_cast<void>(model.AddNode()
@@ -111,7 +111,7 @@ TEST(ModelTest, ModelCreateState) {
     }
 
     // Verify current position (initial position plus displacement)
-    auto Rt = QuaternionCompose(R2, R1);
+    auto Rt = math::QuaternionCompose(R2, R1);
     const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
     for (auto i = 0U; i < 7U; ++i) {
@@ -123,8 +123,8 @@ TEST(ModelTest, ModelCreateSystem) {
     Model model;
 
     // Rotation of 1 radian around x
-    auto R1 = RotationVectorToQuaternion({1., 0., 0.});
-    auto R2 = RotationVectorToQuaternion({0., 1., 0.});
+    auto R1 = math::RotationVectorToQuaternion({1., 0., 0.});
+    auto R2 = math::RotationVectorToQuaternion({0., 1., 0.});
 
     // Create node with initial position and displacement from initial position
     static_cast<void>(model.AddNode()
@@ -150,7 +150,7 @@ TEST(ModelTest, ModelCreateSystem) {
     }
 
     // Verify current position (initial position plus displacement)
-    auto Rt = QuaternionCompose(R2, R1);
+    auto Rt = math::QuaternionCompose(R2, R1);
     const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
     for (auto i = 0U; i < 7U; ++i) {
