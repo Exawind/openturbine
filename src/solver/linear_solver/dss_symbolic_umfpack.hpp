@@ -9,7 +9,7 @@
 namespace openturbine::dss {
 template <typename CrsMatrixType>
 struct SymbolicFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
-    static void symbolic(DSSHandle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
+    static void symbolic(Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
 
