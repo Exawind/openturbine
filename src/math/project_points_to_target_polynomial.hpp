@@ -49,4 +49,4 @@ inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
     return output_points;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

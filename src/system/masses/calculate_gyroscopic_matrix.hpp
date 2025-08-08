@@ -46,14 +46,14 @@ struct CalculateGyroscopicMatrix {
         auto Guu_12 = subview(Guu, make_pair(0, 3), make_pair(3, 6));
         KokkosBlas::serial_axpy(mass, eta, V1);
         Gemv::invoke(1., omega_tilde, V1, 0., V2);
-	math::VecTilde(V2, M1);
+        math::VecTilde(V2, M1);
         CopyMatrixTranspose::invoke(M1, Guu_12);
 
-	math::VecTilde(V1, M1);
+        math::VecTilde(V1, M1);
         GemmNT::invoke(1., omega_tilde, M1, 1., Guu_12);
         // Guu_22 = omega.tilde() * rho - (rho * omega).tilde()
         Gemv::invoke(1., rho, omega, 0., V1);
-	math::VecTilde(V1, M1);
+        math::VecTilde(V1, M1);
         auto Guu_22 = subview(Guu, make_pair(3, 6), make_pair(3, 6));
         CopyMatrix::invoke(M1, Guu_22);
         GemmNN::invoke(1., omega_tilde, rho, -1., Guu_22);

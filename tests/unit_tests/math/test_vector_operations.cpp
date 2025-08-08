@@ -67,7 +67,8 @@ void test_DotProduct_View() {
     auto b = Create1DView<3>({4., 5., 6.});
     auto c = 0.;
     Kokkos::parallel_reduce(
-        "DotProduct_View", 1, KOKKOS_LAMBDA(int, double& result) { result = math::DotProduct(a, b); }, c
+        "DotProduct_View", 1,
+        KOKKOS_LAMBDA(int, double& result) { result = math::DotProduct(a, b); }, c
     );
     ASSERT_EQ(c, 32.);
 }

@@ -181,4 +181,4 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     return result;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

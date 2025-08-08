@@ -73,4 +73,4 @@ constexpr std::array<double, 3> UnitVector(const std::array<double, 3>& v) {
         v[2] / norm,
     };
 }
-}  // namespace openturbine
+}  // namespace openturbine::math

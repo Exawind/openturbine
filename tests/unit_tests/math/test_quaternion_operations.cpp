@@ -97,7 +97,8 @@ Kokkos::View<double[3]> TestRotateVectorByQuaternion(
 ) {
     auto v_rot = Kokkos::View<double[3]>("v_rot");
     Kokkos::parallel_for(
-        "RotateVectorBoyQuaternion", 1, KOKKOS_LAMBDA(int) { math::RotateVectorByQuaternion(q, v, v_rot); }
+        "RotateVectorBoyQuaternion", 1,
+        KOKKOS_LAMBDA(int) { math::RotateVectorByQuaternion(q, v, v_rot); }
     );
     return v_rot;
 }

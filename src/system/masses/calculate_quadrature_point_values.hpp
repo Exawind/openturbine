@@ -83,7 +83,7 @@ struct CalculateQuadraturePointValues {
             const auto xr = View<double[4]>(xr_data.data());
 
             CopyMatrix::invoke(subview(qp_Mstar, element, ALL, ALL), Mstar);
-	    math::QuaternionCompose(r, r0, xr);
+            math::QuaternionCompose(r, r0, xr);
             math::VecTilde(omega, omega_tilde);
             math::VecTilde(omega_dot, omega_dot_tilde);
 
@@ -104,7 +104,7 @@ struct CalculateQuadraturePointValues {
 
             const auto mass = Muu(0, 0);
 
-	    math::VecTilde(eta, eta_tilde);
+            math::VecTilde(eta, eta_tilde);
 
             CalculateGravityForce<DeviceType>::invoke(mass, gravity, eta_tilde, Fg);
             CalculateInertialForce<DeviceType>::invoke(

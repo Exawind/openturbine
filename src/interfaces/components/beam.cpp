@@ -92,8 +92,9 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
         const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto gll_points = GenerateGLLPoints(n_geometry_pts - 1);
         const auto phi_kn_geometry = math::ComputeShapeFunctionValues(kp_xi, gll_points);
-        const auto geometry_points =
-            math::PerformLeastSquaresFitting(n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates);
+        const auto geometry_points = math::PerformLeastSquaresFitting(
+            n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
+        );
         const auto node_coords =
             math::ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
 

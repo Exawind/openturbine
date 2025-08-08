@@ -117,7 +117,8 @@ struct Node {
         // Orientation, x(3:6)
         //----------------------------------------------------
         // Compose q with initial orientation to get rotated orientation
-        auto q_new = math::QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
+        auto q_new =
+            math::QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
 
         // Update the orientation
         this->x0[3] = q_new[0];
@@ -243,7 +244,8 @@ struct Node {
         // Calculate translational acceleration contribution from angular velocity
         const auto alpha = std::array{acceleration[3], acceleration[4], acceleration[5]};
         const auto alpha_cross_r = math::CrossProduct(alpha, r);
-        const auto omega_cross_omega_cross_r = math::CrossProduct(omega, math::CrossProduct(omega, r));
+        const auto omega_cross_omega_cross_r =
+            math::CrossProduct(omega, math::CrossProduct(omega, r));
 
         // Set node translational acceleration
         this->vd[0] = acceleration[0] + alpha_cross_r[0] + omega_cross_omega_cross_r[0];

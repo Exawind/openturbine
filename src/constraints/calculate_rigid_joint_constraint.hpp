@@ -69,7 +69,7 @@ struct CalculateRigidJointConstraint {
         }
 
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-	math::QuaternionCompose(R2, R1t, R2_R1t);
+        math::QuaternionCompose(R2, R1t, R2_R1t);
         math::QuaternionToRotationMatrix(R2_R1t, C);
         math::AxialVectorOfMatrix(C, V3);
         for (auto component = 0; component < 3; ++component) {
@@ -87,7 +87,7 @@ struct CalculateRigidJointConstraint {
         }
 
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-	math::AX_Matrix(C, A);
+        math::AX_Matrix(C, A);
         CopyMatrixTranspose::invoke(
             A, subview(target_gradient_terms, make_pair(3, 6), make_pair(3, 6))
         );
@@ -99,11 +99,11 @@ struct CalculateRigidJointConstraint {
         }
 
         // B(0:3,3:6) = tilde(R1*X0)
-	math::VecTilde(R1_X0, A);
+        math::VecTilde(R1_X0, A);
         CopyMatrix::invoke(A, subview(base_gradient_terms, make_pair(0, 3), make_pair(3, 6)));
 
         // B(3:6,3:6) = -AX(R2*inv(RC)*inv(R1))
-	math::AX_Matrix(C, A);
+        math::AX_Matrix(C, A);
         for (auto component_1 = 0; component_1 < 3; ++component_1) {
             for (auto component_2 = 0; component_2 < 3; ++component_2) {
                 base_gradient_terms(component_1 + 3, component_2 + 3) = -A(component_1, component_2);

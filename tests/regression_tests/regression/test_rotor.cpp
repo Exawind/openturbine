@@ -282,7 +282,8 @@ TEST(RotorTest, IEA15RotorController) {
     for (const auto& beam_elem : model.GetBeamElements()) {
         const auto rotation_fraction =
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
-        const auto q_root = math::RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
+        const auto q_root =
+            math::RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
         const auto pitch_axis = math::RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
@@ -300,7 +301,8 @@ TEST(RotorTest, IEA15RotorController) {
         const double t = step_size * static_cast<double>(i + 1);
 
         // Calculate hub rotation for this time step
-        const auto q_hub = math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto q_hub =
+            math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};

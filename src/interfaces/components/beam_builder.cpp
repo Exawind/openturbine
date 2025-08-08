@@ -31,7 +31,8 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
     }
     if (ref_axis == ReferenceAxisOrientation::Z) {
         const auto q_z_to_x = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
-        input.ref_axis.coordinates.emplace_back(math::RotateVectorByQuaternion(q_z_to_x, coordinates));
+        input.ref_axis.coordinates.emplace_back(math::RotateVectorByQuaternion(q_z_to_x, coordinates)
+        );
         return *this;
     }
     throw std::invalid_argument("Invalid reference axis orientation");

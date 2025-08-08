@@ -87,4 +87,4 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
     return mo;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

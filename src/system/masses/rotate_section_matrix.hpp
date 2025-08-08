@@ -30,7 +30,7 @@ struct RotateSectionMatrix {
 
         auto RR0_data = Array<double, 9>{};
         auto RR0 = View<double[3][3]>(RR0_data.data());
-	math::QuaternionToRotationMatrix(xr, RR0);
+        math::QuaternionToRotationMatrix(xr, RR0);
 
         const auto Cstar_top = subview(Cstar, make_pair(0, 3), ALL);
         const auto Cstar_bottom = subview(Cstar, make_pair(3, 6), ALL);

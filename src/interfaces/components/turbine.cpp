@@ -161,7 +161,8 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
 
         // Calculate azimuth angle rotation quaternion (rotate about x-axis)
         const auto q_azimuth =
-            math::RotationVectorToQuaternion({static_cast<double>(beam) * blade_angle_delta, 0., 0.});
+            math::RotationVectorToQuaternion({static_cast<double>(beam) * blade_angle_delta, 0., 0.}
+            );
 
         // Rotate blade nodes (including apex node) -> cone angle -> azimuth angle
         for (const auto& node_id : current_blade_node_ids) {

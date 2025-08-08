@@ -102,7 +102,7 @@ struct CalculateStiffnessQuadraturePointValues {
             qp_jacobian(qp), subview(shape_interp, ALL, qp), subview(shape_deriv, ALL, qp), node_u,
             u, r, u_prime, r_prime
         );
-	math::QuaternionCompose(r, r0, xr);
+        math::QuaternionCompose(r, r0, xr);
 
         masses::RotateSectionMatrix<DeviceType>::invoke(xr, Cstar, Cuu);
 
@@ -111,8 +111,8 @@ struct CalculateStiffnessQuadraturePointValues {
         beams::CalculateForceFC<DeviceType>::invoke(Cuu, strain, FC);
         beams::CalculateForceFD<DeviceType>::invoke(x0pupSS, FC, FD);
 
-	math::VecTilde(subview(FC, make_pair(0, 3)), N_tilde);
-	math::VecTilde(subview(FC, make_pair(3, 6)), M_tilde);
+        math::VecTilde(subview(FC, make_pair(0, 3)), N_tilde);
+        math::VecTilde(subview(FC, make_pair(3, 6)), M_tilde);
 
         beams::CalculateOuu<DeviceType>::invoke(Cuu, x0pupSS, M_tilde, N_tilde, Ouu);
         beams::CalculatePuu<DeviceType>::invoke(Cuu, x0pupSS, N_tilde, Puu);

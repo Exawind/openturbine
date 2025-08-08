@@ -57,7 +57,7 @@ struct CalculatePrescribedBCConstraint {
         //----------------------------------------------------------------------
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
-	math::QuaternionInverse(R1, R1t);
+        math::QuaternionInverse(R1, R1t);
         math::RotateVectorByQuaternion(R1, X0, R1_X0);
         for (auto component = 0; component < 3; ++component) {
             residual_terms(component) =
@@ -66,7 +66,7 @@ struct CalculatePrescribedBCConstraint {
 
         // Angular residual
         // Phi(3:6) = axial(R2*inv(RC)*inv(R1))
-	math::QuaternionCompose(R2, R1t, R2_R1t);
+        math::QuaternionCompose(R2, R1t, R2_R1t);
         math::QuaternionToRotationMatrix(R2_R1t, C);
         math::AxialVectorOfMatrix(C, V3);
         CopyVector::invoke(V3, subview(residual_terms, make_pair(3, 6)));
@@ -85,7 +85,7 @@ struct CalculatePrescribedBCConstraint {
         }
 
         // B(3:6,3:6) = AX(R1*RC*inv(R2)) = transpose(AX(R2*inv(RC)*inv(R1)))
-	math::AX_Matrix(C, A);
+        math::AX_Matrix(C, A);
         CopyTransposeMatrix::invoke(
             A, subview(target_gradient_terms, make_pair(3, 6), make_pair(3, 6))
         );

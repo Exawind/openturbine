@@ -73,7 +73,8 @@ TEST(NodeTest, DisplacedPosition_TranslationAndRotation) {
     constexpr auto init_position = std::array{1., 0., 0.};
     constexpr auto init_orientation = std::array{1., 0., 0., 0.};
     constexpr auto disp_position = std::array{1., 2., 3.};
-    const auto disp_rotation = math::RotationVectorToQuaternion({0., M_PI / 3., 0.});  // 60° around y axis
+    const auto disp_rotation =
+        math::RotationVectorToQuaternion({0., M_PI / 3., 0.});  // 60° around y axis
 
     auto node_id = model.AddNode()
                        .SetPosition(

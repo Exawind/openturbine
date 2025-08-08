@@ -206,7 +206,8 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         const auto t{static_cast<double>(i) * time_step};
 
         // Calculate root displacement from initial position and apply
-        const auto u_rot = math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto u_rot =
+            math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
         const auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
         const auto u_trans =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
