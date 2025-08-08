@@ -8,6 +8,7 @@ var searchData=
   ['openturbine_3a_3ainterfaces_3a_3acomponents_5',['components',['../namespaceopenturbine_1_1interfaces_1_1components.html',1,'openturbine::interfaces']]],
   ['openturbine_3a_3amasses_6',['masses',['../namespaceopenturbine_1_1masses.html',1,'openturbine']]],
   ['openturbine_3a_3amath_7',['math',['../namespaceopenturbine_1_1math.html',1,'openturbine']]],
-  ['openturbine_3a_3asprings_8',['springs',['../namespaceopenturbine_1_1springs.html',1,'openturbine']]],
-  ['openturbine_3a_3autil_9',['util',['../namespaceopenturbine_1_1util.html',1,'openturbine']]]
+  ['openturbine_3a_3asolver_8',['solver',['../namespaceopenturbine_1_1solver.html',1,'openturbine']]],
+  ['openturbine_3a_3asprings_9',['springs',['../namespaceopenturbine_1_1springs.html',1,'openturbine']]],
+  ['openturbine_3a_3autil_10',['util',['../namespaceopenturbine_1_1util.html',1,'openturbine']]]
 ];

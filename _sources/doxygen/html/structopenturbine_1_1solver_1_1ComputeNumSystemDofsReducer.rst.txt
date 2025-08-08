@@ -1,0 +1,14 @@
+.. meta::fa55127417879ab7b35254e67569f70d2408992d2ac0183fcb66969afcf1c99de63e43b628bbffbdeb3d62a98be7b2775ee953497edc610a1d4235cd75e778ef
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::solver::ComputeNumSystemDofsReducer&lt; DeviceType &gt; Struct Template Reference
+
+ComputeNumSystemDofsReducer&lt; DeviceType &gt; Struct Template Reference
+=========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1solver_1_1ComputeNumSystemDofsReducer.html

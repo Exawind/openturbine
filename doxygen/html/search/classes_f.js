@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['unconditionsolution_0',['UnconditionSolution',['../structopenturbine_1_1UnconditionSolution.html',1,'openturbine']]],
+  ['unconditionsolution_0',['UnconditionSolution',['../structopenturbine_1_1solver_1_1UnconditionSolution.html',1,'openturbine::solver']]],
   ['updatealgorithmicacceleration_1',['UpdateAlgorithmicAcceleration',['../structopenturbine_1_1UpdateAlgorithmicAcceleration.html',1,'openturbine']]],
   ['updatedynamicprediction_2',['UpdateDynamicPrediction',['../structopenturbine_1_1UpdateDynamicPrediction.html',1,'openturbine']]],
   ['updateglobalposition_3',['UpdateGlobalPosition',['../structopenturbine_1_1UpdateGlobalPosition.html',1,'openturbine']]],

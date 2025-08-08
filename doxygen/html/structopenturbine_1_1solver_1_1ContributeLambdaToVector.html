@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::solver::ContributeLambdaToVector&amp;lt; DeviceType &amp;gt; Struct Template Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::solver::ContributeLambdaToVector&amp;lt; DeviceType &amp;gt; Struct Template Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1solver_1_1ContributeLambdaToVector.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="contributelambdatovector-lt-devicetype-gt-struct-template-reference">
+<h1>ContributeLambdaToVector&amp;lt; DeviceType &amp;gt; Struct Template Reference<a class="headerlink" href="#contributelambdatovector-lt-devicetype-gt-struct-template-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::solver::ContributeLambdaToVector&lt; DeviceType &gt; Struct Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1solver.html">solver</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">ContributeLambdaToVector</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1solver_1_1ContributeLambdaToVector-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::solver::ContributeLambdaToVector&lt; DeviceType &gt; Struct Template Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>A kernel which contributes the constraint Lagrange multiplier terms to the correct locations in the global RHS vector.  
+ <a href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="contribute__lambda__to__vector_8hpp_source.html">contribute_lambda_to_vector.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:acb236b30fc73eea96016341533874548" id="r_acb236b30fc73eea96016341533874548"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:acb236b30fc73eea96016341533874548"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:acb236b30fc73eea96016341533874548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69e6b57e484d041dc951059bc8bdb732" id="r_a69e6b57e484d041dc951059bc8bdb732"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a69e6b57e484d041dc951059bc8bdb732"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a> = <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">::const_type</a></td></tr>
+<tr class="separator:a69e6b57e484d041dc951059bc8bdb732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff4552cdaecb917e255bb1fa7d7a314" id="r_a3ff4552cdaecb917e255bb1fa7d7a314"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a3ff4552cdaecb917e255bb1fa7d7a314"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a3ff4552cdaecb917e255bb1fa7d7a314">LeftView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutLeft, DeviceType &gt;</td></tr>
+<tr class="separator:a3ff4552cdaecb917e255bb1fa7d7a314"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a0eff619f6fd5b0ed511d818e1c1af3be" id="r_a0eff619f6fd5b0ed511d818e1c1af3be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a0eff619f6fd5b0ed511d818e1c1af3be">operator()</a> (<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a> constraint) <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">const</a></td></tr>
+<tr class="separator:a0eff619f6fd5b0ed511d818e1c1af3be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a376e83c87fe2b0078be57df8816716df" id="r_a376e83c87fe2b0078be57df8816716df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a376e83c87fe2b0078be57df8816716df">base_node_freedom_signature</a></td></tr>
+<tr class="separator:a376e83c87fe2b0078be57df8816716df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7681ad7f5974dca63804ac6fcf99ea1" id="r_ae7681ad7f5974dca63804ac6fcf99ea1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#ae7681ad7f5974dca63804ac6fcf99ea1">target_node_freedom_signature</a></td></tr>
+<tr class="separator:ae7681ad7f5974dca63804ac6fcf99ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0faa3db3e40f2dbda4e511cf8fc93443" id="r_a0faa3db3e40f2dbda4e511cf8fc93443"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a0faa3db3e40f2dbda4e511cf8fc93443">base_node_freedom_table</a></td></tr>
+<tr class="separator:a0faa3db3e40f2dbda4e511cf8fc93443"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f05c228f957ee4622fa0a4c3820acb" id="r_a38f05c228f957ee4622fa0a4c3820acb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a38f05c228f957ee4622fa0a4c3820acb">target_node_freedom_table</a></td></tr>
+<tr class="separator:a38f05c228f957ee4622fa0a4c3820acb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e0001ae0d7ab699b16a4992976f957" id="r_a73e0001ae0d7ab699b16a4992976f957"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a73e0001ae0d7ab699b16a4992976f957">base_lambda_residual_terms</a></td></tr>
+<tr class="separator:a73e0001ae0d7ab699b16a4992976f957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7e51d03a436a409d8fc941ae39744f9" id="r_ae7e51d03a436a409d8fc941ae39744f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#ae7e51d03a436a409d8fc941ae39744f9">target_lambda_residual_terms</a></td></tr>
+<tr class="separator:ae7e51d03a436a409d8fc941ae39744f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a9fd112bab0293e7a6f3bdd5851325" id="r_a30a9fd112bab0293e7a6f3bdd5851325"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a3ff4552cdaecb917e255bb1fa7d7a314">LeftView</a>&lt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a> *[1]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a30a9fd112bab0293e7a6f3bdd5851325">R</a></td></tr>
+<tr class="separator:a30a9fd112bab0293e7a6f3bdd5851325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType&gt;<br />
+struct openturbine::solver::ContributeLambdaToVector&lt; DeviceType &gt;</div><p>A kernel which contributes the constraint Lagrange multiplier terms to the correct locations in the global RHS vector. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a69e6b57e484d041dc951059bc8bdb732" name="a69e6b57e484d041dc951059bc8bdb732"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69e6b57e484d041dc951059bc8bdb732">&#9670;&#160;</a></span>ConstView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ff4552cdaecb917e255bb1fa7d7a314" name="a3ff4552cdaecb917e255bb1fa7d7a314"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ff4552cdaecb917e255bb1fa7d7a314">&#9670;&#160;</a></span>LeftView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::LeftView =  Kokkos::View&lt;ValueType, Kokkos::LayoutLeft, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb236b30fc73eea96016341533874548" name="acb236b30fc73eea96016341533874548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb236b30fc73eea96016341533874548">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">using</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0eff619f6fd5b0ed511d818e1c1af3be" name="a0eff619f6fd5b0ed511d818e1c1af3be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eff619f6fd5b0ed511d818e1c1af3be">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">void</a> <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">::operator</a>() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a73e0001ae0d7ab699b16a4992976f957" name="a73e0001ae0d7ab699b16a4992976f957"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e0001ae0d7ab699b16a4992976f957">&#9670;&#160;</a></span>base_lambda_residual_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_lambda_residual_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a376e83c87fe2b0078be57df8816716df" name="a376e83c87fe2b0078be57df8816716df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a376e83c87fe2b0078be57df8816716df">&#9670;&#160;</a></span>base_node_freedom_signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_signature</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0faa3db3e40f2dbda4e511cf8fc93443" name="a0faa3db3e40f2dbda4e511cf8fc93443"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0faa3db3e40f2dbda4e511cf8fc93443">&#9670;&#160;</a></span>base_node_freedom_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a>* [6]&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::base_node_freedom_table</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30a9fd112bab0293e7a6f3bdd5851325" name="a30a9fd112bab0293e7a6f3bdd5851325"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30a9fd112bab0293e7a6f3bdd5851325">&#9670;&#160;</a></span>R</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a3ff4552cdaecb917e255bb1fa7d7a314">LeftView</a>&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a>* [1]&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::R</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7e51d03a436a409d8fc941ae39744f9" name="ae7e51d03a436a409d8fc941ae39744f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7e51d03a436a409d8fc941ae39744f9">&#9670;&#160;</a></span>target_lambda_residual_terms</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_lambda_residual_terms</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7681ad7f5974dca63804ac6fcf99ea1" name="ae7681ad7f5974dca63804ac6fcf99ea1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7681ad7f5974dca63804ac6fcf99ea1">&#9670;&#160;</a></span>target_node_freedom_signature</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>*&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_signature</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a38f05c228f957ee4622fa0a4c3820acb" name="a38f05c228f957ee4622fa0a4c3820acb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38f05c228f957ee4622fa0a4c3820acb">&#9670;&#160;</a></span>target_node_freedom_table</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#a69e6b57e484d041dc951059bc8bdb732">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html#acb236b30fc73eea96016341533874548">size_t</a>* [6]&gt; <a class="el" href="structopenturbine_1_1solver_1_1ContributeLambdaToVector.html">openturbine::solver::ContributeLambdaToVector</a>&lt; DeviceType &gt;::target_node_freedom_table</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/solver/<a class="el" href="contribute__lambda__to__vector_8hpp_source.html">contribute_lambda_to_vector.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
