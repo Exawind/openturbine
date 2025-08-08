@@ -42,7 +42,7 @@ struct NumericFunction {
 namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType>
-void numeric(DSSHandleType& dss_handle, CrsMatrixType& A) {
+void numeric_factorization(DSSHandleType& dss_handle, CrsMatrixType& A) {
     NumericFunction<DSSHandleType, CrsMatrixType>::numeric(dss_handle, A);
 }
 

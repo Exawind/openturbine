@@ -42,7 +42,7 @@ struct SymbolicFunction {
 namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType>
-void symbolic(DSSHandleType& dss_handle, CrsMatrixType& A) {
+void symbolic_factorization(DSSHandleType& dss_handle, CrsMatrixType& A) {
     SymbolicFunction<DSSHandleType, CrsMatrixType>::symbolic(dss_handle, A);
 }
 
