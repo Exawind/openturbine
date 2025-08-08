@@ -1,0 +1,14 @@
+.. meta::034c80a88b490e5bf590b3b8b0610f2794c00b496322203b9e744f90b18d06d4461c9cfda5251f7b487e9419a41efe347afa91bfad77c38cd33229a767a73b60
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dss::NumericFunction&lt; Handle&lt; Algorithm::SUPERLU &gt;, CrsMatrixType &gt; Struct Template Reference
+
+SUPERLU &gt;, CrsMatrixType &gt; Struct Template Reference
+==========================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1dss_1_1NumericFunction_3_01Handle_3_01Algorithm_1_1SUPERLU_01_4_00_01CrsMatrixType_01_4.html

@@ -16,7 +16,7 @@ var searchData=
   ['kinit_13',['kInit',['../structopenturbine_1_1util_1_1VTKSettings.html#afc466a8ba489e329fc1a03f01c6a3243ab217b1cb58a6ee4ef35a6c84cf367659',1,'openturbine::util::VTKSettings']]],
   ['kinputfiles_14',['kInputFiles',['../structopenturbine_1_1util_1_1SimulationControls.html#a8d2bce2991c8360ca54e62c2714efe08a4040db3385da12d7dfbf28b8ea02435b',1,'openturbine::util::SimulationControls']]],
   ['kline_15',['kLine',['../structopenturbine_1_1util_1_1VTKSettings.html#aea9e768b4eea1c082339c3479eba8fa9aee669fa7b5a35d96a396d4ed648afb45',1,'openturbine::util::VTKSettings']]],
-  ['klu_16',['KLU',['../namespaceopenturbine.html#ac0b08ab0fe95ca731068f06eae062b5bad4dcdada1c05a280bb7e95da2874fa97',1,'openturbine']]],
+  ['klu_16',['KLU',['../namespaceopenturbine_1_1dss.html#a56956acfdbaef719a4cb4ad0dc1fb573ad4dcdada1c05a280bb7e95da2874fa97',1,'openturbine::dss']]],
   ['kmaxgeometrypoints_17',['kMaxGeometryPoints',['../classopenturbine_1_1interfaces_1_1components_1_1Beam.html#afc81598422cdea806934ce9ef33be416',1,'openturbine::interfaces::components::Beam']]],
   ['kmaxiterations_18',['kMaxIterations',['../namespaceopenturbine.html#a48906c8285184b9678d6334ad3458ef3',1,'openturbine']]],
   ['kminhubdiameter_19',['kMinHubDiameter',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#af22c70a475e04541bd6699d918d69939',1,'openturbine::interfaces::components::Turbine']]],

@@ -1,0 +1,14 @@
+.. meta::fc36a2dba2cb20e6fc9c1eb21a1b0bf021235174cbd0836bef4331c93080b9b988f0d37d1eb1eaf51d9332f03ca8c5af18abe2f1017e4d923dd40f80c7987412
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dss::Handle&lt; Algorithm &gt; Class Template Reference
+
+Handle&lt; Algorithm &gt; Class Template Reference
+==================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1dss_1_1Handle.html

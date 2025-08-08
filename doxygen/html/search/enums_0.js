@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['constrainttype_0',['ConstraintType',['../namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d',1,'openturbine']]]
+  ['algorithm_0',['Algorithm',['../namespaceopenturbine_1_1dss.html#a56956acfdbaef719a4cb4ad0dc1fb573',1,'openturbine::dss']]]
 ];

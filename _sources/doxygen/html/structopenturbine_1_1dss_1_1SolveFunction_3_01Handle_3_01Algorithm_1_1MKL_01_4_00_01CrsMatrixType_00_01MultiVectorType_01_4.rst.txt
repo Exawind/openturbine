@@ -1,0 +1,14 @@
+.. meta::d9b5ea4008c4ba171be0f91a43442f14019abd861837dae8b14ddb04c378518dbaa32e0173cc9bb2b145f409b127a7f821fa4a8056f5d359434eb067c7a50562
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dss::SolveFunction&lt; Handle&lt; Algorithm::MKL &gt;, CrsMatrixType, MultiVectorType &gt; Struct Template Reference
+
+MKL &gt;, CrsMatrixType, MultiVectorType &gt; Struct Template Reference
+=======================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1dss_1_1SolveFunction_3_01Handle_3_01Algorithm_1_1MKL_01_4_00_01CrsMatrixType_00_01MultiVectorType_01_4.html

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['freedomsignature_0',['FreedomSignature',['../namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c',1,'openturbine']]]
+  ['errorlevel_0',['ErrorLevel',['../structopenturbine_1_1util_1_1ErrorHandling.html#ab23ec7239ee96f0457f272754b87a856',1,'openturbine::util::ErrorHandling']]]
 ];

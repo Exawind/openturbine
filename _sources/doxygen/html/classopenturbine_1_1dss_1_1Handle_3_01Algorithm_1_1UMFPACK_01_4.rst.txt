@@ -1,0 +1,14 @@
+.. meta::965fae175399db288117a4b3eb1306c64be6eec18890af538127d38e2cae8f81418df56d27a1c826b31e7f05b04fe64ef7395997125cd505ba59ee1c8d661817
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dss::Handle&lt; Algorithm::UMFPACK &gt; Class Reference
+
+UMFPACK &gt; Class Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1UMFPACK_01_4.html
