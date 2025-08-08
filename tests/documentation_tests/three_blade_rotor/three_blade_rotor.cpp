@@ -84,7 +84,7 @@ int main() {
                 }
             );
             auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
-            auto rotation_quaternion = openturbine::RotationVectorToQuaternion(
+            auto rotation_quaternion = openturbine::math::RotationVectorToQuaternion(
                 {0., 0., 2. * M_PI * blade_number / num_blades}
             );
             model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
@@ -141,7 +141,7 @@ int main() {
         // For this problem, we will prescribe a rotation on the hub boundary condition, which will
         // be transmitted to the blades through their respective constraints.
         for (auto i = 0U; i < num_steps; ++i) {
-            const auto q_hub = openturbine::RotationVectorToQuaternion(
+            const auto q_hub = openturbine::math::RotationVectorToQuaternion(
                 {step_size * (i + 1) * velocity[3], step_size * (i + 1) * velocity[4],
                  step_size * (i + 1) * velocity[5]}
             );
