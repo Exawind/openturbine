@@ -42,4 +42,4 @@ public:
     double* get_control() { return umfpack_dss_handle->Control.data(); }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

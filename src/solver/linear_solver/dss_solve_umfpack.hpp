@@ -32,4 +32,4 @@ struct SolveFunction<Handle<DSSAlgorithm::UMFPACK>, CrsMatrixType, MultiVectorTy
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

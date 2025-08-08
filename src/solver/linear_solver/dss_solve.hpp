@@ -9,7 +9,7 @@ struct SolveFunction {
     SolveFunction() = delete;
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_solve_cusolversp.hpp"
@@ -46,4 +46,4 @@ void solve(DSSHandleType& dss_handle, CrsMatrixType& A, MultiVectorType& b, Mult
     SolveFunction<DSSHandleType, CrsMatrixType, MultiVectorType>::solve(dss_handle, A, b, x);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

@@ -25,4 +25,4 @@ struct SymbolicFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
         );
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

@@ -47,4 +47,4 @@ struct SymbolicFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

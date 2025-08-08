@@ -52,4 +52,4 @@ public:
     std::vector<int>& get_etree() { return superlu_dss_handle->etree; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

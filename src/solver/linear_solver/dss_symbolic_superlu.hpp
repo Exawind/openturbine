@@ -37,4 +37,4 @@ struct SymbolicFunction<Handle<Algorithm::SUPERLU>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

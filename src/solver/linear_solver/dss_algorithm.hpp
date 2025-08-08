@@ -14,4 +14,4 @@ enum class Algorithm : std::uint8_t {
     NONE,
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

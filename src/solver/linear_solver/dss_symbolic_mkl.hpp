@@ -30,4 +30,4 @@ struct SymbolicFunction<Handle<Algorithm::MKL>, CrsMatrixType> {
         dss_reorder(handle, reorder_opt, perm.data());
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

@@ -9,7 +9,7 @@ struct SymbolicFunction {
     SymbolicFunction() = delete;
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_symbolic_cusolversp.hpp"
@@ -46,4 +46,4 @@ void symbolic(DSSHandleType& dss_handle, CrsMatrixType& A) {
     SymbolicFunction<DSSHandleType, CrsMatrixType>::symbolic(dss_handle, A);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

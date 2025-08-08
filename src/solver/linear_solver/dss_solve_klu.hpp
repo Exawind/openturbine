@@ -10,8 +10,7 @@ namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
 struct SolveFunction<Handle<Algorithm::KLU>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        Handle<Algorithm::KLU>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
-        MultiVectorType& x
+        Handle<Algorithm::KLU>& dss_handle, CrsMatrixType& A, MultiVectorType& b, MultiVectorType& x
     ) {
         const auto num_rows = A.numRows();
 
@@ -27,4 +26,4 @@ struct SolveFunction<Handle<Algorithm::KLU>, CrsMatrixType, MultiVectorType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

@@ -43,4 +43,4 @@ public:
     Kokkos::View<char*>& get_buffer() { return cusolver_dss_handle->buffer; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

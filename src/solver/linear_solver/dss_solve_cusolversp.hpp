@@ -33,4 +33,4 @@ struct SolveFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType, MultiVectorT
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

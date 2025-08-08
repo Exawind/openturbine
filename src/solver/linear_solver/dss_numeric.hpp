@@ -9,7 +9,7 @@ struct NumericFunction {
     NumericFunction() = delete;
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_numeric_cusolversp.hpp"
@@ -46,4 +46,4 @@ void numeric(DSSHandleType& dss_handle, CrsMatrixType& A) {
     NumericFunction<DSSHandleType, CrsMatrixType>::numeric(dss_handle, A);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

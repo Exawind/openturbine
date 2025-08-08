@@ -119,7 +119,7 @@ struct Solver {
           )),
           b(Kokkos::view_alloc("b", Kokkos::WithoutInitializing), num_dofs),
           x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_dofs) {
-	  dss::symbolic(handle, A);
+        dss::symbolic(handle, A);
     }
 };
 

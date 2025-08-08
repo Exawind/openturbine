@@ -43,4 +43,4 @@ public:
     bool is_initial_factorization() const { return cudss_dss_handle->is_first_factorization; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

@@ -44,4 +44,4 @@ public:
     klu_common& get_common() { return klu_dss_handle->Common; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

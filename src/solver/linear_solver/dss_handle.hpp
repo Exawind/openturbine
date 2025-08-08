@@ -11,7 +11,7 @@ class Handle {
 public:
     Handle() = delete;
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_handle_cusolversp.hpp"

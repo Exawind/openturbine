@@ -51,4 +51,4 @@ struct NumericFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
         cudssMatrixDestroy(x_cudss);
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

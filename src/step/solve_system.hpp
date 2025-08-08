@@ -26,7 +26,7 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
 
     {
         auto solve_region = Kokkos::Profiling::ScopedRegion("Linear Solve");
-	dss::numeric(solver.handle, solver.A);
+        dss::numeric(solver.handle, solver.A);
         dss::solve(solver.handle, solver.A, solver.b, solver.x);
     }
 

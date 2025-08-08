@@ -39,4 +39,4 @@ public:
 
     std::vector<MKL_INT>& get_perm() { return mkl_dss_handle->perm; }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

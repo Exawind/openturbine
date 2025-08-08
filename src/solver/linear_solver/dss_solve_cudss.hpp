@@ -49,4 +49,4 @@ struct SolveFunction<Handle<Algorithm::CUDSS>, CrsMatrixType, MultiVectorType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

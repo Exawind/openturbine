@@ -35,4 +35,4 @@ struct SolveFunction<Handle<DSSAlgorithm::SUPERLU_MT>, CrsMatrixType, MultiVecto
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

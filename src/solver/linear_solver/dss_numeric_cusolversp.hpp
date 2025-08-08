@@ -47,4 +47,4 @@ struct NumericFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

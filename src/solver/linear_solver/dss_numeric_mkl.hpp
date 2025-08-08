@@ -20,4 +20,4 @@ struct NumericFunction<Handle<Algorithm::MKL>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

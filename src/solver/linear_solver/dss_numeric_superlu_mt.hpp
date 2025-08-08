@@ -41,4 +41,4 @@ struct NumericFunction<DSSHandle<Algorithm::SUPERLU_MT>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

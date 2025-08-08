@@ -31,4 +31,4 @@ struct NumericFunction<Handle<Algorithm::KLU>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

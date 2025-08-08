@@ -30,4 +30,4 @@ struct SymbolicFunction<Handle<Algorithm::KLU>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

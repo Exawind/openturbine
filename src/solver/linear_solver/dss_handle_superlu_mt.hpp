@@ -63,4 +63,4 @@ public:
     std::vector<char>& get_work() { return superlu_dss_handle->work; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
