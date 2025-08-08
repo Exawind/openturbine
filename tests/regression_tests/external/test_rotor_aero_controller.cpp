@@ -253,9 +253,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     std::vector<std::array<double, 4>> q_roots;
     q_roots.reserve(n_blades);
     for (auto i = 0U; i < n_blades; ++i) {
-        q_roots.emplace_back(
-            math::RotationVectorToQuaternion({d_theta * static_cast<double>(i) + azimuth_init, 0., 0.})
-        );
+        q_roots.emplace_back(math::RotationVectorToQuaternion(
+            {d_theta * static_cast<double>(i) + azimuth_init, 0., 0.}
+        ));
     }
 
     constexpr auto omega = std::array{
