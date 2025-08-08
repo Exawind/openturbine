@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::math {
 
 /// Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result
 template <typename VectorType, typename MatrixType>
@@ -73,4 +73,4 @@ constexpr std::array<double, 3> UnitVector(const std::array<double, 3>& v) {
         v[2] / norm,
     };
 }
-}  // namespace openturbine
+}  // namespace openturbine::math

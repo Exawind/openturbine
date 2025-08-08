@@ -89,13 +89,14 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
 
     if (n_geometry_pts < n_nodes) {
         // We need to project from n_geometry_pts -> element_order
-        const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
+        const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
         const auto gll_points = GenerateGLLPoints(n_geometry_pts - 1);
-        const auto phi_kn_geometry = ComputeShapeFunctionValues(kp_xi, gll_points);
-        const auto geometry_points =
-            PerformLeastSquaresFitting(n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates);
+        const auto phi_kn_geometry = math::ComputeShapeFunctionValues(kp_xi, gll_points);
+        const auto geometry_points = math::PerformLeastSquaresFitting(
+            n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
+        );
         const auto node_coords =
-            ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
+            math::ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
 
         this->node_coordinates.clear();
         this->node_coordinates.reserve(node_coords.size());
@@ -104,10 +105,10 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
         );
     } else {
         // Fit node coordinates to key points
-        const std::vector<double> kp_xi(MapGeometricLocations(input.ref_axis.coordinate_grid));
-        const auto phi_kn = ComputeShapeFunctionValues(kp_xi, this->node_xi);
+        const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
+        const auto phi_kn = math::ComputeShapeFunctionValues(kp_xi, this->node_xi);
         this->node_coordinates =
-            PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
+            math::PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
     }
 
     // Calculate tangent vectors at each node
@@ -119,7 +120,7 @@ void Beam::CreateBeamElement(const BeamInput& input, Model& model) {
     std::vector<size_t> node_ids;
     for (auto node = 0U; node < this->node_xi.size(); ++node) {
         const auto& pos = this->node_coordinates[node];
-        const auto q_rot = TangentTwistToQuaternion(this->node_tangents[node], 0.);
+        const auto q_rot = math::TangentTwistToQuaternion(this->node_tangents[node], 0.);
         const auto node_id =
             model.AddNode()
                 .SetElemLocation((this->node_xi[node] + 1.) / 2.)
@@ -180,8 +181,8 @@ void Beam::CalcNodeTangents() {
     const auto n_nodes{this->node_coordinates.size()};
 
     // Calculate the derivative shape function matrix for the nodes
-    const auto phi = ComputeShapeFunctionValues(this->node_xi, this->node_xi);
-    const auto phi_prime = ComputeShapeFunctionDerivatives(this->node_xi, this->node_xi);
+    const auto phi = math::ComputeShapeFunctionValues(this->node_xi, this->node_xi);
+    const auto phi_prime = math::ComputeShapeFunctionDerivatives(this->node_xi, this->node_xi);
 
     // Calculate tangent vectors for each node
     this->node_tangents.resize(n_nodes, {0., 0., 0.});
@@ -199,7 +200,7 @@ void Beam::CalcNodeTangents() {
     std::transform(
         this->node_tangents.begin(), this->node_tangents.end(), this->node_tangents.begin(),
         [](std::array<double, 3>& tangent) {
-            const auto norm = Norm(tangent);
+            const auto norm = math::Norm(tangent);
             std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {
                 return v / norm;
             });
@@ -215,10 +216,10 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
     // Add first section after rotating matrices to account for twist
     auto twist =
         LinearInterp(input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist);
-    auto q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+    auto q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
     sections.emplace_back(
-        input.sections[0].location, RotateMatrix6(input.sections[0].mass_matrix, q_twist),
-        RotateMatrix6(input.sections[0].stiffness_matrix, q_twist)
+        input.sections[0].location, math::RotateMatrix6(input.sections[0].mass_matrix, q_twist),
+        math::RotateMatrix6(input.sections[0].stiffness_matrix, q_twist)
     );
 
     // Loop through remaining section locations
@@ -258,19 +259,19 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
             twist = LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
 
             // Add refinement section
-            q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+            q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
             sections.emplace_back(
-                grid_value, RotateMatrix6(mass_matrix, q_twist),
-                RotateMatrix6(stiffness_matrix, q_twist)
+                grid_value, math::RotateMatrix6(mass_matrix, q_twist),
+                math::RotateMatrix6(stiffness_matrix, q_twist)
             );
         }
 
         // Add ending section
         twist = LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
-        q_twist = RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+        q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
         sections.emplace_back(
-            section_location, RotateMatrix6(section_mass_matrix, q_twist),
-            RotateMatrix6(section_stiffness_matrix, q_twist)
+            section_location, math::RotateMatrix6(section_mass_matrix, q_twist),
+            math::RotateMatrix6(section_stiffness_matrix, q_twist)
         );
     }
 

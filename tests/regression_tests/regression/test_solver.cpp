@@ -95,8 +95,8 @@ inline void SetUpSolverAndAssemble() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
-    auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+    auto u_rot = math::RotationVectorToQuaternion({0., 0., omega * step_size});
+    auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
     auto u_trans =
         std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
     constraints.UpdateDisplacement(
@@ -326,8 +326,8 @@ inline void SetupAndTakeNoSteps() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    auto u_rot = RotationVectorToQuaternion({0., 0., omega * step_size});
-    auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+    auto u_rot = math::RotationVectorToQuaternion({0., 0., omega * step_size});
+    auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
     auto u_trans =
         std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
     constraints.UpdateDisplacement(
@@ -525,7 +525,7 @@ inline auto SetupAndTakeTwoSteps() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    auto q = RotationVectorToQuaternion({0., 0., omega * step_size});
+    auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size});
     constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
 
     Step(parameters, solver, elements, state, constraints);

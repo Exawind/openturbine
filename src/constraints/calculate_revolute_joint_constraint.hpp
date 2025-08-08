@@ -62,21 +62,21 @@ struct CalculateRevoluteJointConstraint {
         //----------------------------------------------------------------------
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
-        QuaternionInverse(R1, R1t);
-        RotateVectorByQuaternion(R1, X0, R1_X0);
+        math::QuaternionInverse(R1, R1t);
+        math::RotateVectorByQuaternion(R1, X0, R1_X0);
         for (auto component = 0; component < 3; ++component) {
             residual_terms(component) =
                 u2(component) + X0(component) - u1(component) - R1_X0(component);
         }
 
         // Angular residual
-        RotateVectorByQuaternion(R1, x0, x);
-        RotateVectorByQuaternion(R2, y0, y);
-        RotateVectorByQuaternion(R2, z0, z);
+        math::RotateVectorByQuaternion(R1, x0, x);
+        math::RotateVectorByQuaternion(R2, y0, y);
+        math::RotateVectorByQuaternion(R2, z0, z);
         // Phi(3) = dot(R2 * z0_hat, R1 * x0_hat)
-        residual_terms(3) = DotProduct(z, x);
+        residual_terms(3) = math::DotProduct(z, x);
         // Phi(4) = dot(R2 * y0_hat, R1 * x0_hat)
-        residual_terms(4) = DotProduct(y, x);
+        residual_terms(4) = math::DotProduct(y, x);
 
         //----------------------------------------------------------------------
         // Constraint Gradient Matrix, B
@@ -90,9 +90,9 @@ struct CalculateRevoluteJointConstraint {
         }
 
         // B(3, 3:6) = -cross(R1 * x0_hat, transpose(R2 * z0_hat))
-        CrossProduct(x, z, xcz);
+        math::CrossProduct(x, z, xcz);
         // B(4, 3:6) = -cross(R1 * x0_hat, transpose(R2 * y0_hat))
-        CrossProduct(x, y, xcy);
+        math::CrossProduct(x, y, xcy);
         for (auto component = 0; component < 3; ++component) {
             target_gradient_terms(3, component + 3) = -xcz(component);
             target_gradient_terms(4, component + 3) = -xcy(component);

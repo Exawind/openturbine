@@ -73,7 +73,7 @@ struct CalculateRotationControlConstraint {
         //----------------------------------------------------------------------
 
         // Phi(0:3) = ut + X0 - ub - Rb*X0
-        RotateVectorByQuaternion(Rb, X0, Rb_X0);
+        math::RotateVectorByQuaternion(Rb, X0, Rb_X0);
         for (auto i = 0; i < 3; ++i) {
             residual_terms(i) = ut(i) + X0(i) - ub(i) - Rb_X0(i);
         }
@@ -91,15 +91,15 @@ struct CalculateRotationControlConstraint {
         }
 
         // Convert scaled axis to quaternion and calculate inverse
-        RotationVectorToQuaternion(RV, Rc);
-        QuaternionInverse(Rc, RcT);
+        math::RotationVectorToQuaternion(RV, Rc);
+        math::QuaternionInverse(Rc, RcT);
 
         // Phi(3:6) = axial(Rt*inv(Rc)*inv(Rb))
-        QuaternionInverse(Rb, RbT);
-        QuaternionCompose(Rt, RcT, Rt_RcT);
-        QuaternionCompose(Rt_RcT, RbT, Rt_RcT_RbT);
-        QuaternionToRotationMatrix(Rt_RcT_RbT, C);
-        AxialVectorOfMatrix(C, V3);
+        math::QuaternionInverse(Rb, RbT);
+        math::QuaternionCompose(Rt, RcT, Rt_RcT);
+        math::QuaternionCompose(Rt_RcT, RbT, Rt_RcT_RbT);
+        math::QuaternionToRotationMatrix(Rt_RcT_RbT, C);
+        math::AxialVectorOfMatrix(C, V3);
         CopyVector::invoke(V3, subview(residual_terms, make_pair(3, 6)));
 
         //----------------------------------------------------------------------
@@ -115,7 +115,7 @@ struct CalculateRotationControlConstraint {
         }
 
         // B(3:6,3:6) = AX(Rb*Rc*inv(Rt)) = transpose(AX(Rt*inv(Rc)*inv(Rb)))
-        AX_Matrix(C, A);
+        math::AX_Matrix(C, A);
         CopyMatrixTranspose::invoke(
             A, subview(target_gradient_terms, make_pair(3, 6), make_pair(3, 6))
         );
@@ -129,11 +129,11 @@ struct CalculateRotationControlConstraint {
         }
 
         // B(0:3,3:6) = tilde(Rb*X0)
-        VecTilde(Rb_X0, A);
+        math::VecTilde(Rb_X0, A);
         CopyMatrix::invoke(A, subview(base_gradient_terms, make_pair(0, 3), make_pair(3, 6)));
 
         // B(3:6,3:6) = -AX(Rt*inv(Rc)*inv(Rb))
-        AX_Matrix(C, A);
+        math::AX_Matrix(C, A);
         for (auto component_1 = 0; component_1 < 3; ++component_1) {
             for (auto component_2 = 0; component_2 < 3; ++component_2) {
                 base_gradient_terms(component_1 + 3, component_2 + 3) = -A(component_1, component_2);

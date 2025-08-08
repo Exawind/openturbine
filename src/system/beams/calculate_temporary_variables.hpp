@@ -24,7 +24,7 @@ struct CalculateTemporaryVariables {
         const auto x0pup = View<double[3]>(x0pup_data.data());
 
         KokkosBlas::serial_axpy(1., u_prime, x0pup);
-        VecTilde(x0pup, x0pupSS);
+        math::VecTilde(x0pup, x0pupSS);
     }
 };
 }  // namespace openturbine::beams

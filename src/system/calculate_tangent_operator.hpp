@@ -55,7 +55,7 @@ struct CalculateTangentOperator {
         const auto tmp1 = (phi > 1.e-16) ? (Kokkos::cos(phi) - 1.) / (phi * phi) : 0.;
         const auto tmp2 = (phi > 1.e-16) ? (1. - Kokkos::sin(phi) / phi) / (phi * phi) : 0.;
 
-        VecTilde(rv, m2);
+        math::VecTilde(rv, m2);
         CopyMatrix::invoke(m2, m1);
         Gemm::invoke(tmp2, m2, m2, tmp1, m1);
 

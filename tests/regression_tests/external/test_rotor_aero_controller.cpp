@@ -229,7 +229,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Blade nodes and elements
     //--------------------------------------------------------------------------
 
-    auto base_rot = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+    auto base_rot = math::RotationVectorToQuaternion({0., -M_PI / 2., 0.});
 
     // Number of nodes and quadrature points in each blade
     constexpr auto n_blade_nodes = node_xi.size();
@@ -253,9 +253,9 @@ TEST(Milestone, IEA15RotorAeroController) {
     std::vector<std::array<double, 4>> q_roots;
     q_roots.reserve(n_blades);
     for (auto i = 0U; i < n_blades; ++i) {
-        q_roots.emplace_back(
-            RotationVectorToQuaternion({d_theta * static_cast<double>(i) + azimuth_init, 0., 0.})
-        );
+        q_roots.emplace_back(math::RotationVectorToQuaternion(
+            {d_theta * static_cast<double>(i) + azimuth_init, 0., 0.}
+        ));
     }
 
     constexpr auto omega = std::array{
@@ -267,7 +267,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elem_ids),
         [&](const size_t i) {
             // Define root rotation about x-axis
-            const auto q_root = QuaternionCompose(q_roots[i], base_rot);
+            const auto q_root = math::QuaternionCompose(q_roots[i], base_rot);
 
             // Declare vector of beam nodes
             std::vector<size_t> beam_node_ids;
@@ -275,14 +275,14 @@ TEST(Milestone, IEA15RotorAeroController) {
             // Loop through nodes in blade
             for (auto j = 0U; j < n_blade_nodes; ++j) {
                 // Calculate node position and orientation for this blade
-                const auto rot = QuaternionCompose(
+                const auto rot = math::QuaternionCompose(
                     q_root,
                     {node_coords[j][3], node_coords[j][4], node_coords[j][5], node_coords[j][6]}
                 );
-                auto pos = RotateVectorByQuaternion(
+                auto pos = math::RotateVectorByQuaternion(
                     q_root, {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                 );
-                const auto v = CrossProduct(omega, pos);
+                const auto v = math::CrossProduct(omega, pos);
 
                 // Add hub overhang and hub height to position after calculating node velocity
                 pos[0] += hub_overhang;
@@ -312,13 +312,13 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Blade root nodes
     std::vector<size_t> root_node_ids;
     for (auto i = 0U; i < n_blades; ++i) {
-        const auto q_root = QuaternionCompose(q_roots[i], base_rot);
+        const auto q_root = math::QuaternionCompose(q_roots[i], base_rot);
 
         // Calculate node position and orientation for this blade
-        auto pos = RotateVectorByQuaternion(
+        auto pos = math::RotateVectorByQuaternion(
             q_root, {node_coords[0][0] + hub_radius, node_coords[0][1], node_coords[0][2]}
         );
-        const auto v = CrossProduct(omega, pos);
+        const auto v = math::CrossProduct(omega, pos);
 
         // Add hub overhang and hub height to position after calculating node velocity
         pos[0] += hub_overhang;

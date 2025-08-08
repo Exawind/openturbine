@@ -50,8 +50,8 @@ struct CalculateRigidJoint3DOFConstraint {
         //----------------------------------------------------------------------
 
         // Phi(0:3) = u2 + X0 - u1 - R1*X0
-        QuaternionInverse(R1, R1t);
-        RotateVectorByQuaternion(R1, X0, R1_X0);
+        math::QuaternionInverse(R1, R1t);
+        math::RotateVectorByQuaternion(R1, X0, R1_X0);
         for (auto constraint = 0; constraint < 3; ++constraint) {
             residual_terms(constraint) =
                 u2(constraint) + X0(constraint) - u1(constraint) - R1_X0(constraint);
@@ -74,7 +74,7 @@ struct CalculateRigidJoint3DOFConstraint {
         }
 
         // B(0:3,3:6) = tilde(R1*X0)
-        VecTilde(R1_X0, A);
+        math::VecTilde(R1_X0, A);
         CopyMatrix::invoke(A, subview(base_gradient_terms, make_pair(0, 3), make_pair(3, 6)));
     }
 };

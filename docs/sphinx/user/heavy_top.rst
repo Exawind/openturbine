@@ -43,7 +43,7 @@ Now, we define the mass matrix and initial position, velocity, and acceleration.
     constexpr auto inertia = std::array{0.234375, 0.46875, 0.234375};
     const auto x = std::array{0., 1., 0.};
     const auto omega = std::array{0., 150., -4.61538};
-    const auto x_dot = openturbine::CrossProduct(omega, x);
+    const auto x_dot = openturbine::math::CrossProduct(omega, x);
     const auto omega_dot = std::array{661.3461692307691919, 0., 0.};
     const auto x_ddot = std::array{0., -21.3017325444000001, -30.9608307692308244};
 
