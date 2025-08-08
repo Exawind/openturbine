@@ -8,7 +8,7 @@
 
 namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct SolveFunction<Handle<DSSAlgorithm::UMFPACK>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType, MultiVectorType> {
     static void solve(
         Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
         MultiVectorType& x

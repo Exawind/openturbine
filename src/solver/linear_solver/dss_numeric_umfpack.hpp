@@ -6,7 +6,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_umfpack.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
 struct NumericFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
     static void numeric(Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
