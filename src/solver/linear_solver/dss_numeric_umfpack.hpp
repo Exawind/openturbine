@@ -24,4 +24,4 @@ struct NumericFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
