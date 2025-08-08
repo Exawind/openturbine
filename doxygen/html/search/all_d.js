@@ -4,7 +4,7 @@ var searchData=
   ['m_5fstar_1',['m_star',['../structopenturbine_1_1BeamSection.html#adf618cb28f46948e13bd5a097b5821a3',1,'openturbine::BeamSection::M_star'],['../structopenturbine_1_1MassElement.html#a83cfd999000b3c3670c71ece62ca1b33',1,'openturbine::MassElement::M_star']]],
   ['main_2',['main',['../namespacegenerate__vtk__output.html#ac3ecc6b23a613699892f3700ff9eb153',1,'generate_vtk_output.main()'],['../namespacewindio.html#a6e0ba4007de8520898b47d45cf729884',1,'windio.main()']]],
   ['mainpage_2emd_3',['mainpage.md',['../mainpage_8md.html',1,'']]],
-  ['mapgeometriclocations_4',['MapGeometricLocations',['../namespaceopenturbine.html#a0205ddd45198a3c2892ebfb251c18be6',1,'openturbine']]],
+  ['mapgeometriclocations_4',['MapGeometricLocations',['../namespaceopenturbine_1_1math.html#a849ac33ab7e9c85db54979da386a86b3',1,'openturbine::math']]],
   ['mapnodepositions_5',['MapNodePositions',['../namespaceopenturbine.html#a45278089c85b116e991de15af3ac44ce',1,'openturbine']]],
   ['mapsectionpositions_6',['MapSectionPositions',['../namespaceopenturbine.html#aeaadd42bbad5c5402c33c5dbdb445179',1,'openturbine']]],
   ['mass_5felement_2ehpp_7',['mass_element.hpp',['../mass__element_8hpp.html',1,'']]],

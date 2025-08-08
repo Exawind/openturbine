@@ -2,7 +2,7 @@ var searchData=
 [
   ['discon_0',['DISCON',['../namespaceopenturbine_1_1util.html#a893b448b5a61ba4f253795dd8f99aef7',1,'openturbine::util']]],
   ['displacedposition_1',['DisplacedPosition',['../structopenturbine_1_1Node.html#ac00076d30516a991ecb212c913327ed1',1,'openturbine::Node']]],
-  ['dotproduct_2',['dotproduct',['../namespaceopenturbine.html#a93fd260429a217254a1f7fefd06f1d0c',1,'openturbine::DotProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)'],['../namespaceopenturbine.html#acb204ad9bcd513584bec614a7f8bad51',1,'openturbine::DotProduct(const AVectorType &amp;a, const BVectorType &amp;b)']]],
+  ['dotproduct_2',['dotproduct',['../namespaceopenturbine_1_1math.html#a96441ca8896cef279392158a7c28d4c0',1,'openturbine::math::DotProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)'],['../namespaceopenturbine_1_1math.html#aabad90ed81b7cccb8353070890a93350',1,'openturbine::math::DotProduct(const AVectorType &amp;a, const BVectorType &amp;b)']]],
   ['dss_5fnumeric_3',['dss_numeric',['../namespaceopenturbine.html#ab7ca657b6802690caf59a751895988b7',1,'openturbine']]],
   ['dss_5fsolve_4',['dss_solve',['../namespaceopenturbine.html#ab6218493b464b10ca4569eb0e85971e9',1,'openturbine']]],
   ['dss_5fsymbolic_5',['dss_symbolic',['../namespaceopenturbine.html#a5faae3763d2c59be117c6fb7a48e8289',1,'openturbine']]],

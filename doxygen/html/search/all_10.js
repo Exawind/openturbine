@@ -3,7 +3,7 @@ var searchData=
   ['packinternalstatetofile_0',['PackInternalStateToFile',['../namespaceopenturbine_1_1util.html#a200656442bd337d1e7ae645ccbf8d0d9',1,'openturbine::util']]],
   ['parameters_1',['parameters',['../classopenturbine_1_1cfd_1_1Interface.html#a5164868dbd5935dfd637a5a990e8877b',1,'openturbine::cfd::Interface::parameters'],['../structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html#abadb7132493730a0f3851c8d8c39b17d',1,'openturbine::interfaces::components::SolutionInput::Parameters()']]],
   ['path_2',['path',['../classwindio_1_1Schema.html#a1583d4418da3ccccbcd8d15379e3a5fd',1,'windio.Schema.path'],['../classwindio_1_1Field.html#aeec042a40c37ba82c69f39672c1b96c7',1,'windio.Field.path']]],
-  ['performleastsquaresfitting_3',['PerformLeastSquaresFitting',['../namespaceopenturbine.html#a55ac2ab5492e98dbb225554c19dc9935',1,'openturbine']]],
+  ['performleastsquaresfitting_3',['PerformLeastSquaresFitting',['../namespaceopenturbine_1_1math.html#aa28f6851b2c27725639a10687266fe2c',1,'openturbine::math']]],
   ['pitch_5factuator_5ftype_5freq_4',['pitch_actuator_type_req',['../structopenturbine_1_1util_1_1ControllerIO.html#a2399ee85baf71ed3ec563a44a7a19a9e',1,'openturbine::util::ControllerIO']]],
   ['pitch_5fblade1_5factual_5',['pitch_blade1_actual',['../structopenturbine_1_1util_1_1ControllerIO.html#affb747b902bb9f92a2a6aa7448b51bca',1,'openturbine::util::ControllerIO']]],
   ['pitch_5fblade1_5fcommand_6',['pitch_blade1_command',['../structopenturbine_1_1util_1_1ControllerIO.html#a59f83a2e9fc415d0330879204cebf147',1,'openturbine::util::ControllerIO']]],
@@ -39,6 +39,6 @@ var searchData=
   ['prescribedbc3dofs_36',['PrescribedBC3DOFs',['../namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18da1a186c7997146fe73e33c92f2559b1e1',1,'openturbine']]],
   ['prescribedrootmotion_37',['PrescribedRootMotion',['../classopenturbine_1_1interfaces_1_1components_1_1BeamBuilder.html#aec80a67054f66e493103fcafcf6b88d6',1,'openturbine::interfaces::components::BeamBuilder']]],
   ['project_5fpoints_5fto_5ftarget_5fpolynomial_2ehpp_38',['project_points_to_target_polynomial.hpp',['../project__points__to__target__polynomial_8hpp.html',1,'']]],
-  ['projectpointstotargetpolynomial_39',['ProjectPointsToTargetPolynomial',['../namespaceopenturbine.html#ac477866f341264e321869bc6d75c0852',1,'openturbine']]],
+  ['projectpointstotargetpolynomial_39',['ProjectPointsToTargetPolynomial',['../namespaceopenturbine_1_1math.html#ac735d623ac57ef3b42250b19b7fa6778',1,'openturbine::math']]],
   ['properties_40',['properties',['../classwindio_1_1Schema.html#a074b8fba20cd3bad77af2bd63d8b9c4e',1,'windio::Schema']]]
 ];

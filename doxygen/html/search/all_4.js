@@ -18,7 +18,7 @@ var searchData=
   ['displacedposition_15',['DisplacedPosition',['../structopenturbine_1_1Node.html#ac00076d30516a991ecb212c913327ed1',1,'openturbine::Node']]],
   ['displacement_16',['displacement',['../structopenturbine_1_1cfd_1_1NodeData.html#aafb0c26f9fa166ea4a2bf64f0db487e0',1,'openturbine::cfd::NodeData::displacement'],['../structopenturbine_1_1interfaces_1_1NodeData.html#a1b556a5f3a72afc1941f989a7e65c25f',1,'openturbine::interfaces::NodeData::displacement']]],
   ['documentation_17',['OpenTurbine API documentation',['../index.html',1,'']]],
-  ['dotproduct_18',['dotproduct',['../namespaceopenturbine.html#acb204ad9bcd513584bec614a7f8bad51',1,'openturbine::DotProduct(const AVectorType &amp;a, const BVectorType &amp;b)'],['../namespaceopenturbine.html#a93fd260429a217254a1f7fefd06f1d0c',1,'openturbine::DotProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)']]],
+  ['dotproduct_18',['dotproduct',['../namespaceopenturbine_1_1math.html#aabad90ed81b7cccb8353070890a93350',1,'openturbine::math::DotProduct(const AVectorType &amp;a, const BVectorType &amp;b)'],['../namespaceopenturbine_1_1math.html#a96441ca8896cef279392158a7c28d4c0',1,'openturbine::math::DotProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)']]],
   ['dss_5falgorithm_2ehpp_19',['dss_algorithm.hpp',['../dss__algorithm_8hpp.html',1,'']]],
   ['dss_5fhandle_2ehpp_20',['dss_handle.hpp',['../dss__handle_8hpp.html',1,'']]],
   ['dss_5fhandle_5fcudss_2ehpp_21',['dss_handle_cudss.hpp',['../dss__handle__cudss_8hpp.html',1,'']]],

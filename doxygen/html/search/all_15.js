@@ -5,7 +5,7 @@ var searchData=
   ['unconditionsolution_2',['UnconditionSolution',['../structopenturbine_1_1UnconditionSolution.html',1,'openturbine']]],
   ['undeformed_5flength_3',['undeformed_length',['../structopenturbine_1_1cfd_1_1MooringLineInput.html#a5e0a521363ddca22c8ac60633ae89a36',1,'openturbine::cfd::MooringLineInput::undeformed_length'],['../structopenturbine_1_1SpringElement.html#a0658d458e84f1e6588a279f30fad90a2',1,'openturbine::SpringElement::undeformed_length']]],
   ['unit_4',['unit',['../classwindio_1_1Schema.html#ae0e3b57fb627b07ef0cb1cce0e30cf62',1,'windio::Schema']]],
-  ['unitvector_5',['UnitVector',['../namespaceopenturbine.html#adee5cd7f43dea8ac0f9a706cca255e62',1,'openturbine']]],
+  ['unitvector_5',['UnitVector',['../namespaceopenturbine_1_1math.html#a595412a71fe487827aecc076a386f021',1,'openturbine::math']]],
   ['unpackinternalstatefromfile_6',['UnpackInternalStateFromFile',['../namespaceopenturbine_1_1util.html#ab52dcec4fe4cfea85eb3d5203b3c8455',1,'openturbine::util']]],
   ['update_5falgorithmic_5facceleration_2ehpp_7',['update_algorithmic_acceleration.hpp',['../update__algorithmic__acceleration_8hpp.html',1,'']]],
   ['update_5fconstraint_5fprediction_2ehpp_8',['update_constraint_prediction.hpp',['../update__constraint__prediction_8hpp.html',1,'']]],

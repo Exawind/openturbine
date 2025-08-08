@@ -1,0 +1,14 @@
+.. meta::983f25ab664fe3b5d4ad24f78a33d352676db59db7c42bb4e3ccf81a4294f046e538d9b39ee89a290313618ffa2af0f18df3fa1874adfef567c861742ecc860d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::math Namespace Reference
+
+math Namespace Reference
+========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: namespaceopenturbine_1_1math.html

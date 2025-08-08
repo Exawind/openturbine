@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['tangenttwisttoquaternion_0',['TangentTwistToQuaternion',['../namespaceopenturbine.html#a09592817ae601310d569910e7603cc4a',1,'openturbine']]],
+  ['tangenttwisttoquaternion_0',['TangentTwistToQuaternion',['../namespaceopenturbine_1_1math.html#a7eadf29df03133ba74b611b10376d607',1,'openturbine::math']]],
   ['targetcontainsnode_1',['targetcontainsnode',['../structopenturbine_1_1ComputeSystemColInds.html#aff231d5388fe4f35c473e54375986a4c',1,'openturbine::ComputeSystemColInds::TargetContainsNode()'],['../structopenturbine_1_1ComputeSystemRowEntries.html#a4b0eee4f5eeeead21aa1afb201d2f393',1,'openturbine::ComputeSystemRowEntries::TargetContainsNode()']]],
   ['timeserieswriter_2',['TimeSeriesWriter',['../classopenturbine_1_1util_1_1TimeSeriesWriter.html#aa879ae9dfd9803aa0a9a809aa1de786c',1,'openturbine::util::TimeSeriesWriter']]],
   ['tower_3',['Tower',['../classopenturbine_1_1interfaces_1_1components_1_1TurbineBuilder.html#aa3c943eb534daeab86473ec9d8dfd9be',1,'openturbine::interfaces::components::TurbineBuilder']]],

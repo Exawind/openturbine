@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::math Namespace Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::math Namespace Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/namespaceopenturbine_1_1math.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="math-namespace-reference">
+<h1>math Namespace Reference<a class="headerlink" href="#math-namespace-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::math Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1math.html">math</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::math Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a849ac33ab7e9c85db54979da386a86b3" id="r_a849ac33ab7e9c85db54979da386a86b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a849ac33ab7e9c85db54979da386a86b3">MapGeometricLocations</a> (const std::vector&lt; double &gt; &amp;geom_locations)</td></tr>
+<tr class="memdesc:a849ac33ab7e9c85db54979da386a86b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
+<tr class="separator:a849ac33ab7e9c85db54979da386a86b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d63a1f07e43a74085ddfe04d5b30c6" id="r_a45d63a1f07e43a74085ddfe04d5b30c6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a45d63a1f07e43a74085ddfe04d5b30c6">ComputeShapeFunctionValues</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
+<tr class="memdesc:a45d63a1f07e43a74085ddfe04d5b30c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
+<tr class="separator:a45d63a1f07e43a74085ddfe04d5b30c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31c1e8ea84281ea43366b683db817798" id="r_a31c1e8ea84281ea43366b683db817798"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a31c1e8ea84281ea43366b683db817798">ComputeShapeFunctionDerivatives</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
+<tr class="memdesc:a31c1e8ea84281ea43366b683db817798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
+<tr class="separator:a31c1e8ea84281ea43366b683db817798"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa28f6851b2c27725639a10687266fe2c" id="r_aa28f6851b2c27725639a10687266fe2c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aa28f6851b2c27725639a10687266fe2c">PerformLeastSquaresFitting</a> (size_t p, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
+<tr class="memdesc:aa28f6851b2c27725639a10687266fe2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
+<tr class="separator:aa28f6851b2c27725639a10687266fe2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47a5e27cbb6e623ac5f2e4a8d3328174" id="r_a47a5e27cbb6e623ac5f2e4a8d3328174"><td class="memTemplParams" colspan="2">template&lt;typename Matrix &gt; </td></tr>
+<tr class="memitem:a47a5e27cbb6e623ac5f2e4a8d3328174"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a47a5e27cbb6e623ac5f2e4a8d3328174">AX_Matrix</a> (const Matrix &amp;A, const Matrix &amp;AX_A)</td></tr>
+<tr class="memdesc:a47a5e27cbb6e623ac5f2e4a8d3328174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes AX(A) of a square matrix.  <br /></td></tr>
+<tr class="separator:a47a5e27cbb6e623ac5f2e4a8d3328174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e72e111aafb461e0a0f547ac4d2593d" id="r_a9e72e111aafb461e0a0f547ac4d2593d"><td class="memTemplParams" colspan="2">template&lt;typename Matrix , typename Vector &gt; </td></tr>
+<tr class="memitem:a9e72e111aafb461e0a0f547ac4d2593d"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a9e72e111aafb461e0a0f547ac4d2593d">AxialVectorOfMatrix</a> (const Matrix &amp;m, const Vector &amp;v)</td></tr>
+<tr class="memdesc:a9e72e111aafb461e0a0f547ac4d2593d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix.  <br /></td></tr>
+<tr class="separator:a9e72e111aafb461e0a0f547ac4d2593d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d803f232cb79f8c8f7a6b8b90553476" id="r_a4d803f232cb79f8c8f7a6b8b90553476"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a4d803f232cb79f8c8f7a6b8b90553476">RotateMatrix6</a> (const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;m, const std::array&lt; double, 4 &gt; &amp;q)</td></tr>
+<tr class="separator:a4d803f232cb79f8c8f7a6b8b90553476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac735d623ac57ef3b42250b19b7fa6778" id="r_ac735d623ac57ef3b42250b19b7fa6778"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ac735d623ac57ef3b42250b19b7fa6778">ProjectPointsToTargetPolynomial</a> (size_t num_inputs, size_t num_outputs, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;input_points)</td></tr>
+<tr class="memdesc:ac735d623ac57ef3b42250b19b7fa6778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Projects 3D points from a given (lower) polynomial representation to a target (higher) polynomial representation.  <br /></td></tr>
+<tr class="separator:ac735d623ac57ef3b42250b19b7fa6778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ef117dad744e4194b6083d3e3328e3" id="r_aa0ef117dad744e4194b6083d3e3328e3"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename RotationMatrix &gt; </td></tr>
+<tr class="memitem:aa0ef117dad744e4194b6083d3e3328e3"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aa0ef117dad744e4194b6083d3e3328e3">QuaternionToRotationMatrix</a> (const Quaternion &amp;q, const RotationMatrix &amp;R)</td></tr>
+<tr class="memdesc:aa0ef117dad744e4194b6083d3e3328e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.  <br /></td></tr>
+<tr class="separator:aa0ef117dad744e4194b6083d3e3328e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa98d0244ac705a6e2fff19b3db7e68b6" id="r_aa98d0244ac705a6e2fff19b3db7e68b6"><td class="memItemLeft" align="right" valign="top">std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aa98d0244ac705a6e2fff19b3db7e68b6">QuaternionToRotationMatrix</a> (const std::array&lt; double, 4 &gt; &amp;q)</td></tr>
+<tr class="memdesc:aa98d0244ac705a6e2fff19b3db7e68b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result.  <br /></td></tr>
+<tr class="separator:aa98d0244ac705a6e2fff19b3db7e68b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee814e27e119257620e11faefd31be15" id="r_aee814e27e119257620e11faefd31be15"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aee814e27e119257620e11faefd31be15">RotationMatrixToQuaternion</a> (const std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; &amp;m)</td></tr>
+<tr class="memdesc:aee814e27e119257620e11faefd31be15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result, see <a href="https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/">https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/</a> for implementation details.  <br /></td></tr>
+<tr class="separator:aee814e27e119257620e11faefd31be15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4ee8d5182c7770383629011ad8be530" id="r_ae4ee8d5182c7770383629011ad8be530"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename View1 , typename View2 &gt; </td></tr>
+<tr class="memitem:ae4ee8d5182c7770383629011ad8be530"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ae4ee8d5182c7770383629011ad8be530">RotateVectorByQuaternion</a> (const Quaternion &amp;q, const View1 &amp;v, const View2 &amp;v_rot)</td></tr>
+<tr class="memdesc:ae4ee8d5182c7770383629011ad8be530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates provided vector by provided <em>unit</em> quaternion and returns the result.  <br /></td></tr>
+<tr class="separator:ae4ee8d5182c7770383629011ad8be530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6156c5ab354fe52f3fae428fcb879553" id="r_a6156c5ab354fe52f3fae428fcb879553"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a6156c5ab354fe52f3fae428fcb879553">RotateVectorByQuaternion</a> (const std::array&lt; double, 4 &gt; &amp;q, const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:a6156c5ab354fe52f3fae428fcb879553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates provided vector by provided <em>unit</em> quaternion and returns the result.  <br /></td></tr>
+<tr class="separator:a6156c5ab354fe52f3fae428fcb879553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ed1d5a9ce3a81f52284d503138645d4" id="r_a8ed1d5a9ce3a81f52284d503138645d4"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename Matrix &gt; </td></tr>
+<tr class="memitem:a8ed1d5a9ce3a81f52284d503138645d4"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a8ed1d5a9ce3a81f52284d503138645d4">QuaternionDerivative</a> (const Quaternion &amp;q, const Matrix &amp;m)</td></tr>
+<tr class="memdesc:a8ed1d5a9ce3a81f52284d503138645d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the derivative of a quaternion and stores the result in a 3x4 matrix.  <br /></td></tr>
+<tr class="separator:a8ed1d5a9ce3a81f52284d503138645d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02ceedba19eac58a0d18a8e53491650e" id="r_a02ceedba19eac58a0d18a8e53491650e"><td class="memTemplParams" colspan="2">template&lt;typename QuaternionInput , typename QuaternionOutput &gt; </td></tr>
+<tr class="memitem:a02ceedba19eac58a0d18a8e53491650e"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a02ceedba19eac58a0d18a8e53491650e">QuaternionInverse</a> (const QuaternionInput &amp;q_in, const QuaternionOutput &amp;q_out)</td></tr>
+<tr class="memdesc:a02ceedba19eac58a0d18a8e53491650e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the inverse of a quaternion.  <br /></td></tr>
+<tr class="separator:a02ceedba19eac58a0d18a8e53491650e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4d1d7726386a6cbe88840d9486519c5" id="r_ad4d1d7726386a6cbe88840d9486519c5"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion1 , typename Quaternion2 , typename QuaternionN &gt; </td></tr>
+<tr class="memitem:ad4d1d7726386a6cbe88840d9486519c5"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ad4d1d7726386a6cbe88840d9486519c5">QuaternionCompose</a> (const Quaternion1 &amp;q1, const Quaternion2 &amp;q2, QuaternionN &amp;qn)</td></tr>
+<tr class="memdesc:ad4d1d7726386a6cbe88840d9486519c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion.  <br /></td></tr>
+<tr class="separator:ad4d1d7726386a6cbe88840d9486519c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c024dc83142c1d93acfdc5d10ce2fe7" id="r_a6c024dc83142c1d93acfdc5d10ce2fe7"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a6c024dc83142c1d93acfdc5d10ce2fe7">QuaternionCompose</a> (const std::array&lt; double, 4 &gt; &amp;q1, const std::array&lt; double, 4 &gt; &amp;q2)</td></tr>
+<tr class="memdesc:a6c024dc83142c1d93acfdc5d10ce2fe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composes (i.e. multiplies) two quaternions and returns the result.  <br /></td></tr>
+<tr class="separator:a6c024dc83142c1d93acfdc5d10ce2fe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a928a2cb47e93ddbbe352da3e1dcf0cf8" id="r_a928a2cb47e93ddbbe352da3e1dcf0cf8"><td class="memTemplParams" colspan="2">template&lt;typename Vector , typename Quaternion &gt; </td></tr>
+<tr class="memitem:a928a2cb47e93ddbbe352da3e1dcf0cf8"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a928a2cb47e93ddbbe352da3e1dcf0cf8">RotationVectorToQuaternion</a> (const Vector &amp;phi, const Quaternion &amp;quaternion)</td></tr>
+<tr class="memdesc:a928a2cb47e93ddbbe352da3e1dcf0cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map.  <br /></td></tr>
+<tr class="separator:a928a2cb47e93ddbbe352da3e1dcf0cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38d23e2b10dabb70010a2d5dce440bf6" id="r_a38d23e2b10dabb70010a2d5dce440bf6"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename Vector &gt; </td></tr>
+<tr class="memitem:a38d23e2b10dabb70010a2d5dce440bf6"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a38d23e2b10dabb70010a2d5dce440bf6">QuaternionToRotationVector</a> (const Quaternion &amp;quaternion, const Vector &amp;phi)</td></tr>
+<tr class="memdesc:a38d23e2b10dabb70010a2d5dce440bf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 3-D rotation vector from provided 4-D quaternion, i.e. the logarithmic map.  <br /></td></tr>
+<tr class="separator:a38d23e2b10dabb70010a2d5dce440bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b9b0ee833bfd0f6665542a7ef79cfac" id="r_a7b9b0ee833bfd0f6665542a7ef79cfac"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a7b9b0ee833bfd0f6665542a7ef79cfac">QuaternionToRotationVector</a> (const std::array&lt; double, 4 &gt; &amp;quaternion)</td></tr>
+<tr class="memdesc:a7b9b0ee833bfd0f6665542a7ef79cfac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 3-D rotation vector from provided 4-D quaternion.  <br /></td></tr>
+<tr class="separator:a7b9b0ee833bfd0f6665542a7ef79cfac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16500c72fb2421b665038d53fd1c489" id="r_ac16500c72fb2421b665038d53fd1c489"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ac16500c72fb2421b665038d53fd1c489">RotationVectorToQuaternion</a> (const std::array&lt; double, 3 &gt; &amp;phi)</td></tr>
+<tr class="memdesc:ac16500c72fb2421b665038d53fd1c489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map.  <br /></td></tr>
+<tr class="separator:ac16500c72fb2421b665038d53fd1c489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c8443b9171fb0fb7161f15d2aa880f1" id="r_a3c8443b9171fb0fb7161f15d2aa880f1"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION Kokkos::Array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a3c8443b9171fb0fb7161f15d2aa880f1">NormalizeQuaternion</a> (const Kokkos::Array&lt; double, 4 &gt; &amp;q)</td></tr>
+<tr class="memdesc:a3c8443b9171fb0fb7161f15d2aa880f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalizes a quaternion to ensure it is a unit quaternion.  <br /></td></tr>
+<tr class="separator:a3c8443b9171fb0fb7161f15d2aa880f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eadf29df03133ba74b611b10376d607" id="r_a7eadf29df03133ba74b611b10376d607"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a7eadf29df03133ba74b611b10376d607">TangentTwistToQuaternion</a> (const std::array&lt; double, 3 &gt; &amp;tangent, const double twist)</td></tr>
+<tr class="memdesc:a7eadf29df03133ba74b611b10376d607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent.  <br /></td></tr>
+<tr class="separator:a7eadf29df03133ba74b611b10376d607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7b929525a2902e9f1a4a939f8d3df7f" id="r_ac7b929525a2902e9f1a4a939f8d3df7f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ac7b929525a2902e9f1a4a939f8d3df7f">IsIdentityQuaternion</a> (const std::array&lt; double, 4 &gt; &amp;q, double tolerance=1e-12)</td></tr>
+<tr class="memdesc:ac7b929525a2902e9f1a4a939f8d3df7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0].  <br /></td></tr>
+<tr class="separator:ac7b929525a2902e9f1a4a939f8d3df7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0794bc6db3982d991fd113254242f029" id="r_a0794bc6db3982d991fd113254242f029"><td class="memTemplParams" colspan="2">template&lt;typename VectorType , typename MatrixType &gt; </td></tr>
+<tr class="memitem:a0794bc6db3982d991fd113254242f029"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a0794bc6db3982d991fd113254242f029">VecTilde</a> (const VectorType &amp;vector, const MatrixType &amp;matrix)</td></tr>
+<tr class="memdesc:a0794bc6db3982d991fd113254242f029"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result.  <br /></td></tr>
+<tr class="separator:a0794bc6db3982d991fd113254242f029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabad90ed81b7cccb8353070890a93350" id="r_aabad90ed81b7cccb8353070890a93350"><td class="memTemplParams" colspan="2">template&lt;typename AVectorType , typename BVectorType &gt; </td></tr>
+<tr class="memitem:aabad90ed81b7cccb8353070890a93350"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aabad90ed81b7cccb8353070890a93350">DotProduct</a> (const AVectorType &amp;a, const BVectorType &amp;b)</td></tr>
+<tr class="memdesc:aabad90ed81b7cccb8353070890a93350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
+<tr class="separator:aabad90ed81b7cccb8353070890a93350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96441ca8896cef279392158a7c28d4c0" id="r_a96441ca8896cef279392158a7c28d4c0"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a96441ca8896cef279392158a7c28d4c0">DotProduct</a> (const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)</td></tr>
+<tr class="memdesc:a96441ca8896cef279392158a7c28d4c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the dot product between two vector views.  <br /></td></tr>
+<tr class="separator:a96441ca8896cef279392158a7c28d4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc06a689874a1f4e54b7a7e9d1338e8e" id="r_adc06a689874a1f4e54b7a7e9d1338e8e"><td class="memTemplParams" colspan="2">template&lt;typename VectorType &gt; </td></tr>
+<tr class="memitem:adc06a689874a1f4e54b7a7e9d1338e8e"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#adc06a689874a1f4e54b7a7e9d1338e8e">CrossProduct</a> (const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)</td></tr>
+<tr class="memdesc:adc06a689874a1f4e54b7a7e9d1338e8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cross product between two vector views.  <br /></td></tr>
+<tr class="separator:adc06a689874a1f4e54b7a7e9d1338e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7461b765eab16de2ffd3453e9765b8a6" id="r_a7461b765eab16de2ffd3453e9765b8a6"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a7461b765eab16de2ffd3453e9765b8a6">CrossProduct</a> (const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)</td></tr>
+<tr class="memdesc:a7461b765eab16de2ffd3453e9765b8a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cross product between two vectors.  <br /></td></tr>
+<tr class="separator:a7461b765eab16de2ffd3453e9765b8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7dc67c14b4601045e313f6ee0e06110" id="r_ae7dc67c14b4601045e313f6ee0e06110"><td class="memItemLeft" align="right" valign="top">constexpr double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ae7dc67c14b4601045e313f6ee0e06110">Norm</a> (const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:ae7dc67c14b4601045e313f6ee0e06110"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the norm of a given vector.  <br /></td></tr>
+<tr class="separator:ae7dc67c14b4601045e313f6ee0e06110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a595412a71fe487827aecc076a386f021" id="r_a595412a71fe487827aecc076a386f021"><td class="memItemLeft" align="right" valign="top">constexpr std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a595412a71fe487827aecc076a386f021">UnitVector</a> (const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:a595412a71fe487827aecc076a386f021"><td class="mdescLeft">&#160;</td><td class="mdescRight">UnitVector returns the unit vector of the given vector.  <br /></td></tr>
+<tr class="separator:a595412a71fe487827aecc076a386f021"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a47a5e27cbb6e623ac5f2e4a8d3328174" name="a47a5e27cbb6e623ac5f2e4a8d3328174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47a5e27cbb6e623ac5f2e4a8d3328174">&#9670;&#160;</a></span>AX_Matrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Matrix &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::AX_Matrix </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>AX_A</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes AX(A) of a square matrix. </p>
+<p>AX(A) = tr(A)/2 * I - A/2, where I is the identity matrix </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>Input square matrix </td></tr>
+    <tr><td class="paramname">AX_A</td><td>Output matrix containing the result </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9e72e111aafb461e0a0f547ac4d2593d" name="a9e72e111aafb461e0a0f547ac4d2593d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e72e111aafb461e0a0f547ac4d2593d">&#9670;&#160;</a></span>AxialVectorOfMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Matrix , typename Vector &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::AxialVectorOfMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Vector &amp;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes the axial vector (also known as the vector representation) of a 3x3 skew-symmetric matrix. </p>
+<p>The axial vector is defined as [w₁, w₂, w₃]ᵀ where: w₁ = (m₃₂ - m₂₃)/2 w₂ = (m₁₃ - m₃₁)/2 w₃ = (m₂₁ - m₁₂)/2 </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Input 3x3 rotation matrix </td></tr>
+    <tr><td class="paramname">v</td><td>Output vector to store the result </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section pre"><dt>Precondition</dt><dd>Matrix m must be 3x3 and vector v must have size 3 </dd></dl>
+
+</div>
+</div>
+<a id="a31c1e8ea84281ea43366b683db817798" name="a31c1e8ea84281ea43366b683db817798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31c1e8ea84281ea43366b683db817798">&#9670;&#160;</a></span>ComputeShapeFunctionDerivatives()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; openturbine::math::ComputeShapeFunctionDerivatives </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>input_points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>output_points</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input_points</td><td>Input points, ξb, in [-1, 1] </td></tr>
+    <tr><td class="paramname">output_points</td><td>Output points, ξg, in [-1, 1] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Shape function derivative matrix </dd></dl>
+
+</div>
+</div>
+<a id="a45d63a1f07e43a74085ddfe04d5b30c6" name="a45d63a1f07e43a74085ddfe04d5b30c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45d63a1f07e43a74085ddfe04d5b30c6">&#9670;&#160;</a></span>ComputeShapeFunctionValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::vector&lt; double &gt; &gt; openturbine::math::ComputeShapeFunctionValues </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>input_points</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>output_points</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input_points</td><td>Input points, ξb, in [-1, 1] </td></tr>
+    <tr><td class="paramname">output_points</td><td>Output points, ξg, in [-1, 1] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Shape function matrix </dd></dl>
+
+</div>
+</div>
+<a id="a7461b765eab16de2ffd3453e9765b8a6" name="a7461b765eab16de2ffd3453e9765b8a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7461b765eab16de2ffd3453e9765b8a6">&#9670;&#160;</a></span>CrossProduct() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::array&lt; double, 3 &gt; openturbine::math::CrossProduct </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the cross product between two vectors. </p>
+
+</div>
+</div>
+<a id="adc06a689874a1f4e54b7a7e9d1338e8e" name="adc06a689874a1f4e54b7a7e9d1338e8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc06a689874a1f4e54b7a7e9d1338e8e">&#9670;&#160;</a></span>CrossProduct() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VectorType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::CrossProduct </td>
+          <td>(</td>
+          <td class="paramtype">const VectorType &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const VectorType &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const VectorType &amp;&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate the cross product between two vector views. </p>
+
+</div>
+</div>
+<a id="aabad90ed81b7cccb8353070890a93350" name="aabad90ed81b7cccb8353070890a93350"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabad90ed81b7cccb8353070890a93350">&#9670;&#160;</a></span>DotProduct() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AVectorType , typename BVectorType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION double openturbine::math::DotProduct </td>
+          <td>(</td>
+          <td class="paramtype">const AVectorType &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const BVectorType &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculate the dot product between two vector views. </p>
+
+</div>
+</div>
+<a id="a96441ca8896cef279392158a7c28d4c0" name="a96441ca8896cef279392158a7c28d4c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96441ca8896cef279392158a7c28d4c0">&#9670;&#160;</a></span>DotProduct() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double openturbine::math::DotProduct </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the dot product between two vector views. </p>
+
+</div>
+</div>
+<a id="ac7b929525a2902e9f1a4a939f8d3df7f" name="ac7b929525a2902e9f1a4a939f8d3df7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7b929525a2902e9f1a4a939f8d3df7f">&#9670;&#160;</a></span>IsIdentityQuaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool openturbine::math::IsIdentityQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>tolerance</em> = <code>1e-12</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0]. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>The quaternion to check </td></tr>
+    <tr><td class="paramname">tolerance</td><td>The tolerance for the comparison (default: 1e-12) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the quaternion is approximately the identity quaternion, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a849ac33ab7e9c85db54979da386a86b3" name="a849ac33ab7e9c85db54979da386a86b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a849ac33ab7e9c85db54979da386a86b3">&#9670;&#160;</a></span>MapGeometricLocations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::math::MapGeometricLocations </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>geom_locations</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Maps input geometric locations -&gt; normalized domain using linear mapping. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">geom_locations</td><td>Input geometric locations (typically in domain [0, 1]), sorted in ascending order </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;double&gt; Mapped/normalized evaluation points in domain [-1, 1] </dd></dl>
+
+</div>
+</div>
+<a id="ae7dc67c14b4601045e313f6ee0e06110" name="ae7dc67c14b4601045e313f6ee0e06110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7dc67c14b4601045e313f6ee0e06110">&#9670;&#160;</a></span>Norm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr double openturbine::math::Norm </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculate the norm of a given vector. </p>
+
+</div>
+</div>
+<a id="a3c8443b9171fb0fb7161f15d2aa880f1" name="a3c8443b9171fb0fb7161f15d2aa880f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c8443b9171fb0fb7161f15d2aa880f1">&#9670;&#160;</a></span>NormalizeQuaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION Kokkos::Array&lt; double, 4 &gt; openturbine::math::NormalizeQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const Kokkos::Array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Normalizes a quaternion to ensure it is a unit quaternion. </p>
+<p>If the length of the quaternion is zero, it returns a default unit quaternion. Otherwise, it normalizes the quaternion and returns the result.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>The input quaternion as a Kokkos::Array&lt;double, 4&gt; </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Kokkos::Array&lt;double, 4&gt; The normalized quaternion </dd></dl>
+
+</div>
+</div>
+<a id="aa28f6851b2c27725639a10687266fe2c" name="aa28f6851b2c27725639a10687266fe2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa28f6851b2c27725639a10687266fe2c">&#9670;&#160;</a></span>PerformLeastSquaresFitting()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::array&lt; double, 3 &gt; &gt; openturbine::math::PerformLeastSquaresFitting </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>shape_functions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>points_to_fit</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Performs least squares fitting to determine interpolation coefficients. </p>
+<p>Performs least squares fitting to determine interpolation coefficients by solving a dense linear system [A][X] = [B], where [A] is the shape function matrix (p x n), [B] is the input points (n x 3), and [X] is the interpolation coefficients (p x 3)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>Number of points representing the polynomial of order p-1 </td></tr>
+    <tr><td class="paramname">shape_functions</td><td>Shape function matrix (p x n) </td></tr>
+    <tr><td class="paramname">points_to_fit</td><td>x,y,z coordinates of the points to fit (n x 3) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Interpolation coefficients (p x 3) </dd></dl>
+
+</div>
+</div>
+<a id="ac735d623ac57ef3b42250b19b7fa6778" name="ac735d623ac57ef3b42250b19b7fa6778"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac735d623ac57ef3b42250b19b7fa6778">&#9670;&#160;</a></span>ProjectPointsToTargetPolynomial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::array&lt; double, 3 &gt; &gt; openturbine::math::ProjectPointsToTargetPolynomial </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_inputs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_outputs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>input_points</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Projects 3D points from a given (lower) polynomial representation to a target (higher) polynomial representation. </p>
+<p>This function maps a set of 3D points defined at nodes of a polynomial of order source_order to corresponding points at nodes of a polynomial of order target_order (typically higher than the source order) using Least-Squares Finite Element (LSFE) shape functions.</p>
+<p>Primary use case: The primary application of this function is to increase the number of points from a lower-order geometric representation to the higher-order representation required for spectral finite element analysis. This enables the use of high-order methods while allowing geometry to be defined with fewer points initially.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">num_inputs</td><td>Number of points in the source polynomial representation </td></tr>
+    <tr><td class="paramname">num_outputs</td><td>Number of points in the target polynomial representation </td></tr>
+    <tr><td class="paramname">input_points</td><td>3D coordinates of points in the source representation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::array&lt;double, 3&gt;&gt;<ul>
+<li>Coordinates of the projected 3D points at the target polynomial nodes </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="ad4d1d7726386a6cbe88840d9486519c5" name="ad4d1d7726386a6cbe88840d9486519c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4d1d7726386a6cbe88840d9486519c5">&#9670;&#160;</a></span>QuaternionCompose() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Quaternion1 , typename Quaternion2 , typename QuaternionN &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::QuaternionCompose </td>
+          <td>(</td>
+          <td class="paramtype">const Quaternion1 &amp;&#160;</td>
+          <td class="paramname"><em>q1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Quaternion2 &amp;&#160;</td>
+          <td class="paramname"><em>q2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QuaternionN &amp;&#160;</td>
+          <td class="paramname"><em>qn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion. </p>
+
+</div>
+</div>
+<a id="a6c024dc83142c1d93acfdc5d10ce2fe7" name="a6c024dc83142c1d93acfdc5d10ce2fe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c024dc83142c1d93acfdc5d10ce2fe7">&#9670;&#160;</a></span>QuaternionCompose() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 4 &gt; openturbine::math::QuaternionCompose </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Composes (i.e. multiplies) two quaternions and returns the result. </p>
+
+</div>
+</div>
+<a id="a8ed1d5a9ce3a81f52284d503138645d4" name="a8ed1d5a9ce3a81f52284d503138645d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ed1d5a9ce3a81f52284d503138645d4">&#9670;&#160;</a></span>QuaternionDerivative()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Quaternion , typename Matrix &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::QuaternionDerivative </td>
+          <td>(</td>
+          <td class="paramtype">const Quaternion &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Matrix &amp;&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes the derivative of a quaternion and stores the result in a 3x4 matrix. </p>
+
+</div>
+</div>
+<a id="a02ceedba19eac58a0d18a8e53491650e" name="a02ceedba19eac58a0d18a8e53491650e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02ceedba19eac58a0d18a8e53491650e">&#9670;&#160;</a></span>QuaternionInverse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename QuaternionInput , typename QuaternionOutput &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::QuaternionInverse </td>
+          <td>(</td>
+          <td class="paramtype">const QuaternionInput &amp;&#160;</td>
+          <td class="paramname"><em>q_in</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QuaternionOutput &amp;&#160;</td>
+          <td class="paramname"><em>q_out</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Computes the inverse of a quaternion. </p>
+
+</div>
+</div>
+<a id="aa0ef117dad744e4194b6083d3e3328e3" name="aa0ef117dad744e4194b6083d3e3328e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0ef117dad744e4194b6083d3e3328e3">&#9670;&#160;</a></span>QuaternionToRotationMatrix() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Quaternion , typename RotationMatrix &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::QuaternionToRotationMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const Quaternion &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RotationMatrix &amp;&#160;</td>
+          <td class="paramname"><em>R</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result. </p>
+
+</div>
+</div>
+<a id="aa98d0244ac705a6e2fff19b3db7e68b6" name="aa98d0244ac705a6e2fff19b3db7e68b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa98d0244ac705a6e2fff19b3db7e68b6">&#9670;&#160;</a></span>QuaternionToRotationMatrix() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; openturbine::math::QuaternionToRotationMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result. </p>
+
+</div>
+</div>
+<a id="a38d23e2b10dabb70010a2d5dce440bf6" name="a38d23e2b10dabb70010a2d5dce440bf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38d23e2b10dabb70010a2d5dce440bf6">&#9670;&#160;</a></span>QuaternionToRotationVector() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Quaternion , typename Vector &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::QuaternionToRotationVector </td>
+          <td>(</td>
+          <td class="paramtype">const Quaternion &amp;&#160;</td>
+          <td class="paramname"><em>quaternion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Vector &amp;&#160;</td>
+          <td class="paramname"><em>phi</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a 3-D rotation vector from provided 4-D quaternion, i.e. the logarithmic map. </p>
+
+</div>
+</div>
+<a id="a7b9b0ee833bfd0f6665542a7ef79cfac" name="a7b9b0ee833bfd0f6665542a7ef79cfac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b9b0ee833bfd0f6665542a7ef79cfac">&#9670;&#160;</a></span>QuaternionToRotationVector() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 3 &gt; openturbine::math::QuaternionToRotationVector </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>quaternion</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a 3-D rotation vector from provided 4-D quaternion. </p>
+
+</div>
+</div>
+<a id="a4d803f232cb79f8c8f7a6b8b90553476" name="a4d803f232cb79f8c8f7a6b8b90553476"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d803f232cb79f8c8f7a6b8b90553476">&#9670;&#160;</a></span>RotateMatrix6()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; openturbine::math::RotateMatrix6 </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4ee8d5182c7770383629011ad8be530" name="ae4ee8d5182c7770383629011ad8be530"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4ee8d5182c7770383629011ad8be530">&#9670;&#160;</a></span>RotateVectorByQuaternion() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Quaternion , typename View1 , typename View2 &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::RotateVectorByQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const Quaternion &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View1 &amp;&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const View2 &amp;&#160;</td>
+          <td class="paramname"><em>v_rot</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Rotates provided vector by provided <em>unit</em> quaternion and returns the result. </p>
+
+</div>
+</div>
+<a id="a6156c5ab354fe52f3fae428fcb879553" name="a6156c5ab354fe52f3fae428fcb879553"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6156c5ab354fe52f3fae428fcb879553">&#9670;&#160;</a></span>RotateVectorByQuaternion() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 3 &gt; openturbine::math::RotateVectorByQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 4 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Rotates provided vector by provided <em>unit</em> quaternion and returns the result. </p>
+
+</div>
+</div>
+<a id="aee814e27e119257620e11faefd31be15" name="aee814e27e119257620e11faefd31be15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee814e27e119257620e11faefd31be15">&#9670;&#160;</a></span>RotationMatrixToQuaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 4 &gt; openturbine::math::RotationMatrixToQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; std::array&lt; double, 3 &gt;, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a 3x3 rotation matrix to a 4x1 quaternion and returns the result, see <a href="https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/">https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/</a> for implementation details. </p>
+
+</div>
+</div>
+<a id="ac16500c72fb2421b665038d53fd1c489" name="ac16500c72fb2421b665038d53fd1c489"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac16500c72fb2421b665038d53fd1c489">&#9670;&#160;</a></span>RotationVectorToQuaternion() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 4 &gt; openturbine::math::RotationVectorToQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>phi</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map. </p>
+
+</div>
+</div>
+<a id="a928a2cb47e93ddbbe352da3e1dcf0cf8" name="a928a2cb47e93ddbbe352da3e1dcf0cf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a928a2cb47e93ddbbe352da3e1dcf0cf8">&#9670;&#160;</a></span>RotationVectorToQuaternion() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Vector , typename Quaternion &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::RotationVectorToQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const Vector &amp;&#160;</td>
+          <td class="paramname"><em>phi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Quaternion &amp;&#160;</td>
+          <td class="paramname"><em>quaternion</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a 4-D quaternion from provided 3-D rotation vector, i.e. the exponential map. </p>
+
+</div>
+</div>
+<a id="a7eadf29df03133ba74b611b10376d607" name="a7eadf29df03133ba74b611b10376d607"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eadf29df03133ba74b611b10376d607">&#9670;&#160;</a></span>TangentTwistToQuaternion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 4 &gt; openturbine::math::TangentTwistToQuaternion </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tangent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>twist</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent. </p>
+
+</div>
+</div>
+<a id="a595412a71fe487827aecc076a386f021" name="a595412a71fe487827aecc076a386f021"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a595412a71fe487827aecc076a386f021">&#9670;&#160;</a></span>UnitVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::array&lt; double, 3 &gt; openturbine::math::UnitVector </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>UnitVector returns the unit vector of the given vector. </p>
+
+</div>
+</div>
+<a id="a0794bc6db3982d991fd113254242f029" name="a0794bc6db3982d991fd113254242f029"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0794bc6db3982d991fd113254242f029">&#9670;&#160;</a></span>VecTilde()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename VectorType , typename MatrixType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">KOKKOS_INLINE_FUNCTION void openturbine::math::VecTilde </td>
+          <td>(</td>
+          <td class="paramtype">const VectorType &amp;&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const MatrixType &amp;&#160;</td>
+          <td class="paramname"><em>matrix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result. </p>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

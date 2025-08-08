@@ -27,8 +27,8 @@ var searchData=
   ['computeentriesinelement_24',['ComputeEntriesInElement',['../structopenturbine_1_1ComputeSystemRowEntries.html#ad435a4c96c608bda8a840ba0ac34a21f',1,'openturbine::ComputeSystemRowEntries']]],
   ['computemax_25',['ComputeMax',['../structopenturbine_1_1BeamsInput.html#ad7b09f37de360ff755a9dde5f185d197',1,'openturbine::BeamsInput']]],
   ['computenumsystemdofs_26',['ComputeNumSystemDofs',['../namespaceopenturbine.html#aba456c8b86c4960edec901de54f9c62e',1,'openturbine']]],
-  ['computeshapefunctionderivatives_27',['ComputeShapeFunctionDerivatives',['../namespaceopenturbine.html#a4cd2e5475f8dbe9b31462d40b246ea9c',1,'openturbine']]],
-  ['computeshapefunctionvalues_28',['ComputeShapeFunctionValues',['../namespaceopenturbine.html#acaebb059748c7ce168f6805f1d5dffaf',1,'openturbine']]],
+  ['computeshapefunctionderivatives_27',['ComputeShapeFunctionDerivatives',['../namespaceopenturbine_1_1math.html#a31c1e8ea84281ea43366b683db817798',1,'openturbine::math']]],
+  ['computeshapefunctionvalues_28',['ComputeShapeFunctionValues',['../namespaceopenturbine_1_1math.html#a45d63a1f07e43a74085ddfe04d5b30c6',1,'openturbine::math']]],
   ['computesum_29',['ComputeSum',['../structopenturbine_1_1BeamsInput.html#a743a1e076b79fc2f35065c8e427a3ce0',1,'openturbine::BeamsInput']]],
   ['constraint_30',['Constraint',['../structopenturbine_1_1Constraint.html#addc1b0a4392f0827b170fd3a5eeaa577',1,'openturbine::Constraint']]],
   ['constraintcontainsnode_31',['constraintcontainsnode',['../structopenturbine_1_1ComputeSystemColInds.html#a68d29bdbef4eaca4cdc999c3006273cc',1,'openturbine::ComputeSystemColInds::ConstraintContainsNode()'],['../structopenturbine_1_1ComputeSystemRowEntries.html#ad7511989d32d83967d7516cc66dae7d5',1,'openturbine::ComputeSystemRowEntries::ConstraintContainsNode()']]],
@@ -56,5 +56,5 @@ var searchData=
   ['createsystemwithsolver_53',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#aaaaf33e11bcf34ee3fb40448385335c2',1,'openturbine::Model']]],
   ['createtrapezoidalquadrature_54',['CreateTrapezoidalQuadrature',['../namespaceopenturbine.html#a828012f9e18e6714c1f9ca3ba44d9e5f',1,'openturbine']]],
   ['createturbine_55',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
-  ['crossproduct_56',['crossproduct',['../namespaceopenturbine.html#a11e9b029e366a7f2939f8e4b6368e6f1',1,'openturbine::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine.html#a85674de16e16e900744aea882cd70c77',1,'openturbine::CrossProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)']]]
+  ['crossproduct_56',['crossproduct',['../namespaceopenturbine_1_1math.html#adc06a689874a1f4e54b7a7e9d1338e8e',1,'openturbine::math::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine_1_1math.html#a7461b765eab16de2ffd3453e9765b8a6',1,'openturbine::math::CrossProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)']]]
 ];

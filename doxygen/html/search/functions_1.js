@@ -29,6 +29,6 @@ var searchData=
   ['assembleconstraintsresidual_26',['AssembleConstraintsResidual',['../namespaceopenturbine.html#a8a5e2795cf65aea8db173b3fd1396e65',1,'openturbine']]],
   ['assemblesystemmatrix_27',['AssembleSystemMatrix',['../namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4',1,'openturbine']]],
   ['assemblesystemresidual_28',['AssembleSystemResidual',['../namespaceopenturbine.html#a36566437e3b617bfdc718e6d33f273c6',1,'openturbine']]],
-  ['ax_5fmatrix_29',['AX_Matrix',['../namespaceopenturbine.html#a498f87995034d11d49febc2ade533d52',1,'openturbine']]],
-  ['axialvectorofmatrix_30',['AxialVectorOfMatrix',['../namespaceopenturbine.html#af11ae3045eb70cfa713334bbfdb9221b',1,'openturbine']]]
+  ['ax_5fmatrix_29',['AX_Matrix',['../namespaceopenturbine_1_1math.html#a47a5e27cbb6e623ac5f2e4a8d3328174',1,'openturbine::math']]],
+  ['axialvectorofmatrix_30',['AxialVectorOfMatrix',['../namespaceopenturbine_1_1math.html#a9e72e111aafb461e0a0f547ac4d2593d',1,'openturbine::math']]]
 ];
