@@ -6,9 +6,9 @@
 #include "dss_algorithm.hpp"
 #include "slu_ddefs.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <>
-class DSSHandle<DSSAlgorithm::SUPERLU> {
+class Handle<Algorithm::SUPERLU> {
     struct superluDssHandleType {
         superlu_options_t options{};
         SuperLUStat_t stat{};
@@ -34,7 +34,7 @@ class DSSHandle<DSSAlgorithm::SUPERLU> {
     std::shared_ptr<superluDssHandleType> superlu_dss_handle;
 
 public:
-    DSSHandle() : superlu_dss_handle(std::make_shared<superluDssHandleType>()) {}
+    Handle() : superlu_dss_handle(std::make_shared<superluDssHandleType>()) {}
 
     superlu_options_t& get_options() { return superlu_dss_handle->options; }
 

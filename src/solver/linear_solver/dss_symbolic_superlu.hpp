@@ -6,10 +6,10 @@
 #include "dss_handle_superlu.hpp"
 #include "slu_ddefs.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType> {
-    static void symbolic(DSSHandle<DSSAlgorithm::SUPERLU>& dss_handle, CrsMatrixType& A) {
+struct SymbolicFunction<Handle<Algorithm::SUPERLU>, CrsMatrixType> {
+    static void symbolic(Handle<Algorithm::SUPERLU>& dss_handle, CrsMatrixType& A) {
         auto num_rows = A.numRows();
         auto num_cols = A.numCols();
         auto num_non_zero = A.nnz();

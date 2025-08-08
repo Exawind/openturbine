@@ -6,10 +6,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_klu.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType> {
-    static void symbolic(DSSHandle<DSSAlgorithm::KLU>& dss_handle, CrsMatrixType& A) {
+struct SymbolicFunction<Handle<Algorithm::KLU>, CrsMatrixType> {
+    static void symbolic(Handle<Algorithm::KLU>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
 
         auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);

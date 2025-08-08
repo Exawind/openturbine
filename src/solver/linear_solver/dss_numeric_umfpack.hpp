@@ -8,8 +8,8 @@
 
 namespace openturbine {
 template <typename CrsMatrixType>
-struct DSSNumericFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
-    static void numeric(DSSHandle<DSSAlgorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
+struct NumericFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
+    static void numeric(Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
         auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
         auto row_ptrs = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.row_map);
         auto col_inds = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.graph.entries);

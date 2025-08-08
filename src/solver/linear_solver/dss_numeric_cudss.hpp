@@ -5,10 +5,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cudss.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSNumericFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {
-    static void numeric(DSSHandle<DSSAlgorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
+struct NumericFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
+    static void numeric(Handle<Algorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
         const auto num_non_zero = A.nnz();

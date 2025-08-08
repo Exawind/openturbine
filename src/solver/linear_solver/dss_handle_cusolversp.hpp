@@ -6,9 +6,9 @@
 
 #include "dss_algorithm.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <>
-class DSSHandle<DSSAlgorithm::CUSOLVER_SP> {
+class Handle<Algorithm::CUSOLVER_SP> {
     struct cuSolverDssHandleType {
         cusolverSpHandle_t handle;
         cusparseMatDescr_t description;
@@ -32,7 +32,7 @@ class DSSHandle<DSSAlgorithm::CUSOLVER_SP> {
     std::shared_ptr<cuSolverDssHandleType> cusolver_dss_handle;
 
 public:
-    DSSHandle() : cusolver_dss_handle(std::make_shared<cuSolverDssHandleType>()) {}
+    Handle() : cusolver_dss_handle(std::make_shared<cuSolverDssHandleType>()) {}
 
     cusolverSpHandle_t& get_handle() { return cusolver_dss_handle->handle; }
 

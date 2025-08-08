@@ -6,10 +6,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cusolversp.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSNumericFunction<DSSHandle<DSSAlgorithm::CUSOLVER_SP>, CrsMatrixType> {
-    static void numeric(DSSHandle<DSSAlgorithm::CUSOLVER_SP>& dss_handle, CrsMatrixType& A) {
+struct NumericFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType> {
+    static void numeric(Handle<Algorithm::CUSOLVER_SP>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
         const auto num_non_zero = A.nnz();

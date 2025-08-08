@@ -6,11 +6,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cudss.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::CUDSS>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::CUDSS>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
+        Handle<Algorithm::CUDSS>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
         MultiVectorType& x
     ) {
         const auto num_rows = A.numRows();

@@ -6,10 +6,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_mkl.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType> {
-    static void symbolic(DSSHandle<DSSAlgorithm::MKL>& dss_handle, CrsMatrixType& A) {
+struct SymbolicFunction<Handle<Algorithm::MKL>, CrsMatrixType> {
+    static void symbolic(Handle<Algorithm::MKL>& dss_handle, CrsMatrixType& A) {
         auto& handle = dss_handle.get_handle();
         constexpr MKL_INT opt = MKL_DSS_NON_SYMMETRIC;
 

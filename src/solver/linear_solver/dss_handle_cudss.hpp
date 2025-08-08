@@ -4,9 +4,9 @@
 
 #include "dss_algorithm.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <>
-class DSSHandle<DSSAlgorithm::CUDSS> {
+class Handle<Algorithm::CUDSS> {
     struct cudssDssHandleType {
         cudssHandle_t handle;
         cudssConfig_t solverConfig;
@@ -30,7 +30,7 @@ class DSSHandle<DSSAlgorithm::CUDSS> {
     std::shared_ptr<cudssDssHandleType> cudss_dss_handle;
 
 public:
-    DSSHandle() : cudss_dss_handle(std::make_shared<cudssDssHandleType>()) {}
+    Handle() : cudss_dss_handle(std::make_shared<cudssDssHandleType>()) {}
 
     cudssHandle_t& get_handle() { return cudss_dss_handle->handle; }
 

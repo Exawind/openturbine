@@ -2,11 +2,11 @@
 
 #include "OpenTurbine_config.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType>
-struct DSSSymbolicFunction {
-    DSSSymbolicFunction() = delete;
+struct SymbolicFunction {
+    SymbolicFunction() = delete;
 };
 
 }  // namespace openturbine
@@ -39,11 +39,11 @@ struct DSSSymbolicFunction {
 #include "dss_symbolic_superlu_mt.hpp"
 #endif
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType>
-void dss_symbolic(DSSHandleType& dss_handle, CrsMatrixType& A) {
-    DSSSymbolicFunction<DSSHandleType, CrsMatrixType>::symbolic(dss_handle, A);
+void symbolic(DSSHandleType& dss_handle, CrsMatrixType& A) {
+    SymbolicFunction<DSSHandleType, CrsMatrixType>::symbolic(dss_handle, A);
 }
 
 }  // namespace openturbine

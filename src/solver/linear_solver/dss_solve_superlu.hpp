@@ -6,11 +6,11 @@
 #include "dss_handle_superlu.hpp"
 #include "slu_ddefs.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::SUPERLU>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::SUPERLU>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::SUPERLU>& dss_handle, CrsMatrixType&, MultiVectorType& b,
+        Handle<Algorithm::SUPERLU>& dss_handle, CrsMatrixType&, MultiVectorType& b,
         MultiVectorType& x
     ) {
         auto& stat = dss_handle.get_stat();

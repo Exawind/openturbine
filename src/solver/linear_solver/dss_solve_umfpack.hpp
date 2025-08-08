@@ -6,11 +6,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_umfpack.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<DSSAlgorithm::UMFPACK>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::UMFPACK>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
+        Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
         MultiVectorType& x
     ) {
         auto values = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), A.values);
