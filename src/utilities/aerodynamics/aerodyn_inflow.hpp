@@ -170,7 +170,7 @@ inline void SetPositionAndOrientation(
     }
 
     // Set orientation (converts last 4 elements i.e. quaternion -> 3x3 rotation matrix)
-    orientation = QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
+    orientation = math::QuaternionToRotationMatrix({data[3], data[4], data[5], data[6]});
 }
 
 /**
@@ -393,13 +393,13 @@ struct TurbineData {
         }
 
         // Rotation to convert blade orientation
-        const auto r_x2z = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto r_x2z = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
 
         // Original orientation
         const std::array<double, 4> r{position[3], position[4], position[5], position[6]};
 
         // Converted orientation
-        const auto r_adi = QuaternionCompose(r, r_x2z);
+        const auto r_adi = math::QuaternionCompose(r, r_x2z);
 
         // Position with new orientation
         const std::array<double, 7> position_new{position[0], position[1], position[2], r_adi[0],
@@ -430,13 +430,13 @@ struct TurbineData {
         }
 
         // Rotation to convert blade orientation
-        const auto r_x2z = RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto r_x2z = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
 
         // Original orientation
         const auto r = std::array{position[3], position[4], position[5], position[6]};
 
         // Converted orientation
-        const auto r_adi = QuaternionCompose(r, r_x2z);
+        const auto r_adi = math::QuaternionCompose(r, r_x2z);
 
         // Position with new orientation
         const auto position_new = std::array{position[0], position[1], position[2], r_adi[0],
