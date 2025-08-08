@@ -6,12 +6,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_mkl.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::MKL>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::MKL>& dss_handle, CrsMatrixType&, MultiVectorType& b,
-        MultiVectorType& x
+        Handle<Algorithm::MKL>& dss_handle, CrsMatrixType&, MultiVectorType& b, MultiVectorType& x
     ) {
         auto& handle = dss_handle.get_handle();
         constexpr MKL_INT opt = 0;
@@ -26,4 +25,4 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType, MultiVector
         Kokkos::deep_copy(x, x_host);
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

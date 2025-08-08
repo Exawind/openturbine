@@ -5,9 +5,9 @@
 #include "dss_algorithm.hpp"
 #include "klu.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <>
-class DSSHandle<DSSAlgorithm::KLU> {
+class Handle<Algorithm::KLU> {
     struct kluDssHandleType {
         klu_symbolic* Symbolic = nullptr;
         klu_numeric* Numeric = nullptr;
@@ -35,7 +35,7 @@ class DSSHandle<DSSAlgorithm::KLU> {
     std::shared_ptr<kluDssHandleType> klu_dss_handle;
 
 public:
-    DSSHandle() : klu_dss_handle(std::make_shared<kluDssHandleType>()) {}
+    Handle() : klu_dss_handle(std::make_shared<kluDssHandleType>()) {}
 
     klu_symbolic*& get_symbolic() { return klu_dss_handle->Symbolic; }
 
@@ -44,4 +44,4 @@ public:
     klu_common& get_common() { return klu_dss_handle->Common; }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

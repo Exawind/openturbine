@@ -6,10 +6,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_umfpack.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
-    static void symbolic(DSSHandle<DSSAlgorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
+struct SymbolicFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType> {
+    static void symbolic(Handle<Algorithm::UMFPACK>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
 
@@ -25,4 +25,4 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::UMFPACK>, CrsMatrixType> {
         );
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss

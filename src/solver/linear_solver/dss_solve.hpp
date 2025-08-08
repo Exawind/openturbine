@@ -2,14 +2,14 @@
 
 #include "OpenTurbine_config.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction {
-    DSSSolveFunction() = delete;
+struct SolveFunction {
+    SolveFunction() = delete;
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_solve_cusolversp.hpp"
@@ -39,11 +39,11 @@ struct DSSSolveFunction {
 #include "dss_solve_superlu_mt.hpp"
 #endif
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType, typename MultiVectorType>
-void dss_solve(DSSHandleType& dss_handle, CrsMatrixType& A, MultiVectorType& b, MultiVectorType& x) {
-    DSSSolveFunction<DSSHandleType, CrsMatrixType, MultiVectorType>::solve(dss_handle, A, b, x);
+void solve(DSSHandleType& dss_handle, CrsMatrixType& A, MultiVectorType& b, MultiVectorType& x) {
+    SolveFunction<DSSHandleType, CrsMatrixType, MultiVectorType>::solve(dss_handle, A, b, x);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

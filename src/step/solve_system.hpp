@@ -26,8 +26,8 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
 
     {
         auto solve_region = Kokkos::Profiling::ScopedRegion("Linear Solve");
-        dss_numeric(solver.handle, solver.A);
-        dss_solve(solver.handle, solver.A, solver.b, solver.x);
+        dss::numeric_factorization(solver.handle, solver.A);
+        dss::solve(solver.handle, solver.A, solver.b, solver.x);
     }
 
     Kokkos::parallel_for(

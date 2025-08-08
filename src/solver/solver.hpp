@@ -25,39 +25,39 @@ struct Solver {
     static constexpr bool use_device =
         std::is_same<typename DeviceType::execution_space, Kokkos::Cuda>::value;
 #if defined(OpenTurbine_ENABLE_CUDSS)
-    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::CUDSS;
+    static constexpr dss::Algorithm algorithm_device = dss::Algorithm::CUDSS;
 #elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
-    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::CUSOLVER_SP;
+    static constexpr dss::Algorithm algorithm_device = dss::Algorithm::CUSOLVER_SP;
 #else
-    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::NONE;
+    static constexpr dss::Algorithm algorithm_device = dss::Algorithm::NONE;
 #endif
 #else
     static constexpr bool use_device = false;
-    static constexpr DSSAlgorithm algorithm_device = DSSAlgorithm::NONE;
+    static constexpr dss::Algorithm algorithm_device = dss::Algorithm::NONE;
 #endif
 
 #if defined(OpenTurbine_ENABLE_KLU)
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::KLU;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::KLU;
 #elif defined(OpenTurbine_ENABLE_SUPERLU)
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::SUPERLU;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::SUPERLU;
 #elif defined(OpenTurbine_ENABLE_MKL)
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::MKL;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::MKL;
 #elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::SUPERLU_MT;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::SUPERLU_MT;
 #elif defined(OpenTurbine_ENABLE_UMFPACK)
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::UMFPACK;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::UMFPACK;
 #else
-    static constexpr DSSAlgorithm algorithm_host = DSSAlgorithm::NONE;
+    static constexpr dss::Algorithm algorithm_host = dss::Algorithm::NONE;
 #endif
 
-    static constexpr DSSAlgorithm algorithm =
-        (use_device && algorithm_device != DSSAlgorithm::NONE) ? algorithm_device : algorithm_host;
+    static constexpr dss::Algorithm algorithm =
+        (use_device && algorithm_device != dss::Algorithm::NONE) ? algorithm_device : algorithm_host;
 
-    static_assert(algorithm != DSSAlgorithm::NONE);
+    static_assert(algorithm != dss::Algorithm::NONE);
 
-    using HandleType = DSSHandle<algorithm>;
+    using HandleType = dss::Handle<algorithm>;
 #if defined(OpenTurbine_ENABLE_MKL)
-    using IndexType = std::conditional<algorithm == DSSAlgorithm::MKL, MKL_INT, int>;
+    using IndexType = std::conditional<algorithm == dss::Algorithm::MKL, MKL_INT, int>;
 #else
     using IndexType = int;
 #endif
@@ -119,7 +119,7 @@ struct Solver {
           )),
           b(Kokkos::view_alloc("b", Kokkos::WithoutInitializing), num_dofs),
           x(Kokkos::view_alloc("x", Kokkos::WithoutInitializing), num_dofs) {
-        dss_symbolic(handle, A);
+        dss::symbolic_factorization(handle, A);
     }
 };
 

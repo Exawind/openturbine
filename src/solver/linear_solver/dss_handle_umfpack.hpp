@@ -7,9 +7,9 @@
 
 #include "dss_algorithm.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <>
-class DSSHandle<DSSAlgorithm::UMFPACK> {
+class Handle<Algorithm::UMFPACK> {
     struct umfpackDssHandleType {
         void* Symbolic = nullptr;
         void* Numeric = nullptr;
@@ -33,7 +33,7 @@ class DSSHandle<DSSAlgorithm::UMFPACK> {
     std::shared_ptr<umfpackDssHandleType> umfpack_dss_handle;
 
 public:
-    DSSHandle() : umfpack_dss_handle(std::make_shared<umfpackDssHandleType>()) {}
+    Handle() : umfpack_dss_handle(std::make_shared<umfpackDssHandleType>()) {}
 
     void*& get_symbolic() { return umfpack_dss_handle->Symbolic; }
 
@@ -42,4 +42,4 @@ public:
     double* get_control() { return umfpack_dss_handle->Control.data(); }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
