@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief A Kernel which sums the system residual contributions for a constraint's target
@@ -41,4 +41,4 @@ struct ContributeConstraintsSystemResidualToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

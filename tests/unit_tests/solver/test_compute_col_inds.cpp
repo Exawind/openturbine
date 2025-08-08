@@ -8,7 +8,7 @@
 
 #include "solver/compute_col_inds.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::solver::tests {
 
 template <typename ValueType, typename DataType>
 typename Kokkos::View<ValueType>::const_type CreateView(
@@ -401,4 +401,4 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::solver::tests

@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief Kernel to compute the elements' contribution to the row pointers of the CRS matrix
@@ -102,4 +102,4 @@ struct ComputeSystemRowEntries {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

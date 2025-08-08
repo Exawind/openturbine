@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
 /**
  * @brief A Kernel which sums the residual contributions computed at a mass element's node
@@ -38,4 +38,4 @@ struct ContributeMassesToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver
