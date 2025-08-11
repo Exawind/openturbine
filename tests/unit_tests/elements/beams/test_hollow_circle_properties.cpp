@@ -7,7 +7,7 @@
 #include "elements/beams/beam_section.hpp"
 #include "elements/beams/hollow_circle_properties.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 class HollowCirclePropertiesTest : public ::testing::Test {
 protected:
@@ -133,4 +133,4 @@ TEST_F(HollowCirclePropertiesTest, SectionalMatrices_Uncoupled) {
     ExpectMatrixEqual(beam_section.M_star, expected_mass);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

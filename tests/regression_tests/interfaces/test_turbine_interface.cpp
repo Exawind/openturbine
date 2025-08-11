@@ -190,7 +190,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
     for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
         // Create section mass and stiffness matrices
-        const auto section = GenerateHollowCircleSection(
+        const auto section = beams::GenerateHollowCircleSection(
             t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
             t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
             t_material["nu"].as<double>()

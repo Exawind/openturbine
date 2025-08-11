@@ -3,9 +3,9 @@
 
 #include <gtest/gtest.h>
 
-#include "elements/beams/interpolation.hpp"
+#include "math/interpolation.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::math::tests {
 
 constexpr auto tol = 1.e-12;
 
@@ -354,4 +354,4 @@ TEST(InterpolationTest, GenerateGLLPoints_SixthOrderElement) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::math::tests

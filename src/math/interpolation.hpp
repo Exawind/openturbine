@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace openturbine {
+namespace openturbine::math {
 
 /**
  * @brief Computes weights for linear interpolation
@@ -165,12 +165,6 @@ inline double LegendrePolynomial(const size_t n, const double x) {
     return p_n;
 }
 
-/// Maximum number of iterations allowed for Newton's method
-static constexpr size_t kMaxIterations{1000};
-
-/// Tolerance for Newton's method to machine precision
-static constexpr double kConvergenceTolerance{std::numeric_limits<double>::epsilon()};
-
 /**
  * @brief Generates Gauss-Lobatto-Legendre (GLL) points for spectral element discretization
  * @details Computes the GLL points, i.e. roots of the Legendre polynomial, using
@@ -183,6 +177,9 @@ static constexpr double kConvergenceTolerance{std::numeric_limits<double>::epsil
  * @throws std::runtime_error if Newton-Raphson iteration fails to converge
  */
 inline std::vector<double> GenerateGLLPoints(const size_t order) {
+    constexpr auto max_iterations = 1000U;
+    constexpr auto convergence_tolerance = std::numeric_limits<double>::epsilon();
+
     if (order < 1) {
         throw std::invalid_argument("Polynomial order must be >= 1");
     }
@@ -202,7 +199,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
         auto x_it = -std::cos(static_cast<double>(i) * M_PI / static_cast<double>(order));
 
         bool converged{false};
-        for (auto it = 0U; it < kMaxIterations; ++it) {
+        for (auto it = 0U; it < max_iterations; ++it) {
             const auto x_old = x_it;
 
             // Compute Legendre polynomials up to order n
@@ -216,7 +213,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
             x_it -= numerator / denominator;
 
             // Check for convergence
-            if (std::abs(x_it - x_old) <= kConvergenceTolerance) {
+            if (std::abs(x_it - x_old) <= convergence_tolerance) {
                 converged = true;
                 break;
             }
@@ -235,4 +232,4 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     return gll_points;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

@@ -3,8 +3,8 @@
 #include <stdexcept>
 
 #include "elements/beams/beam_quadrature.hpp"
-#include "elements/beams/interpolation.hpp"
 #include "interfaces/components/beam_input.hpp"
+#include "math/interpolation.hpp"
 #include "math/least_squares_fit.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/project_points_to_target_polynomial.hpp"
@@ -25,7 +25,7 @@ Beam::Beam(const BeamInput& input, Model& model) {
 std::vector<double> Beam::GetNodeWeights(double s) const {
     std::vector<double> weights(this->node_xi.size());
     auto xi = 2. * s - 1.;
-    LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
+    math::LagrangePolynomialDerivWeights(xi, this->node_xi, weights);
     return weights;
 }
 
@@ -79,7 +79,7 @@ void Beam::ValidateInput(const BeamInput& input) {
 
 void Beam::SetupNodeLocations(const BeamInput& input) {
     // Generate node locations within element [-1,1]
-    this->node_xi = GenerateGLLPoints(input.element_order);
+    this->node_xi = math::GenerateGLLPoints(input.element_order);
 }
 
 void Beam::CreateNodeGeometry(const BeamInput& input) {
@@ -90,7 +90,7 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
     if (n_geometry_pts < n_nodes) {
         // We need to project from n_geometry_pts -> element_order
         const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
-        const auto gll_points = GenerateGLLPoints(n_geometry_pts - 1);
+        const auto gll_points = math::GenerateGLLPoints(n_geometry_pts - 1);
         const auto phi_kn_geometry = math::ComputeShapeFunctionValues(kp_xi, gll_points);
         const auto geometry_points = math::PerformLeastSquaresFitting(
             n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
@@ -138,7 +138,7 @@ void Beam::CreateBeamElement(const BeamInput& input, Model& model) {
     });
 
     // Calculate trapezoidal quadrature based on section locations
-    const auto trapezoidal_quadrature = CreateTrapezoidalQuadrature(section_grid);
+    const auto trapezoidal_quadrature = beams::CreateTrapezoidalQuadrature(section_grid);
 
     // Add beam element and get ID
     this->beam_element_id = model.AddBeamElement(node_ids, sections, trapezoidal_quadrature);
@@ -214,8 +214,9 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
     std::vector<BeamSection> sections;
 
     // Add first section after rotating matrices to account for twist
-    auto twist =
-        LinearInterp(input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist);
+    auto twist = math::LinearInterp(
+        input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
+    );
     auto q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
     sections.emplace_back(
         input.sections[0].location, math::RotateMatrix6(input.sections[0].mass_matrix, q_twist),
@@ -256,7 +257,9 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
             }
 
             // Calculate twist at current section location via linear interpolation
-            twist = LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
+            twist = math::LinearInterp(
+                section_location, input.ref_axis.twist_grid, input.ref_axis.twist
+            );
 
             // Add refinement section
             q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
@@ -267,7 +270,8 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
         }
 
         // Add ending section
-        twist = LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
+        twist =
+            math::LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
         q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
         sections.emplace_back(
             section_location, math::RotateMatrix6(section_mass_matrix, q_twist),

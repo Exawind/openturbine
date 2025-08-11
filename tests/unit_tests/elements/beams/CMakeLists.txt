@@ -8,5 +8,4 @@ target_sources(
     test_hollow_circle_properties.cpp
     test_interpolate_QP_state.cpp
     test_interpolate_QP_vector.cpp
-    test_interpolation.cpp
 )

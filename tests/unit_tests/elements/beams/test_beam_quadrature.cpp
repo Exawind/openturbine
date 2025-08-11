@@ -4,7 +4,7 @@
 
 #include "elements/beams/beam_quadrature.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 TEST(BeamQuadratureTest, CheckCreateTrapezoidalQuadrature_1) {
     const auto q_act = CreateTrapezoidalQuadrature({0., 0.2, 0.4, 0.6, 0.8, 1.0});
@@ -30,4 +30,4 @@ TEST(BeamQuadratureTest, CheckCreateTrapezoidalQuadrature_2) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

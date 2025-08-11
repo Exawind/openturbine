@@ -234,7 +234,7 @@ int main() {
             // Create section mass and stiffness matrices
             // OpenTurbine provides the helper function GenerateHollowCircleSection to create the
             // inertia and stiffness matrices (M_star and C_star) needed to represent the tower
-            const auto section = openturbine::GenerateHollowCircleSection(
+            const auto section = openturbine::beams::GenerateHollowCircleSection(
                 t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
                 t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
                 t_material["nu"].as<double>()

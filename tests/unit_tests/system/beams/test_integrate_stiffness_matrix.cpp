@@ -10,7 +10,7 @@
 #include "system/beams/integrate_stiffness_matrix.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 void TestIntegrateStiffnessMatrix_1Element1Node1QP(
     const Kokkos::View<double[1][6][6]>::const_type& qp_Kuu,
@@ -500,4 +500,4 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu) {
     TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu();
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

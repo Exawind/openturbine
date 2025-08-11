@@ -12,9 +12,11 @@
 namespace {
 
 void TestCalculateForceCoefficient1_ThreeElements() {
-    const auto k = openturbine::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
-    const auto l_ref = openturbine::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
-    const auto l = openturbine::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
+    const auto k =
+        openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
+    const auto l_ref =
+        openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
+    const auto l = openturbine::beams::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
 
     const auto c1 = Kokkos::View<double[3]>("c1");
 
@@ -33,13 +35,15 @@ void TestCalculateForceCoefficient1_ThreeElements() {
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(c1_exact_data.data());
 
     const auto c1_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), c1);
-    openturbine::tests::CompareWithExpected(c1_result, c1_exact);
+    openturbine::beams::tests::CompareWithExpected(c1_result, c1_exact);
 }
 
 void TestCalculateForceCoefficient2_ThreeElements() {
-    const auto k = openturbine::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
-    const auto l_ref = openturbine::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
-    const auto l = openturbine::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
+    const auto k =
+        openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
+    const auto l_ref =
+        openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
+    const auto l = openturbine::beams::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
 
     const auto c2 = Kokkos::View<double[3]>("c2");
 
@@ -58,7 +62,7 @@ void TestCalculateForceCoefficient2_ThreeElements() {
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(c2_exact_data.data());
 
     const auto c2_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), c2);
-    openturbine::tests::CompareWithExpected(c2_result, c2_exact);
+    openturbine::beams::tests::CompareWithExpected(c2_result, c2_exact);
 }
 }  // namespace
 

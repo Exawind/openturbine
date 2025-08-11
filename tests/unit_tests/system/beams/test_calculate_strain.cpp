@@ -13,12 +13,13 @@ namespace {
 
 void TestCalculateStrain() {
     const auto x0_prime =
-        openturbine::tests::CreateView<double[3]>("x0_prime", std::array{1., 2., 3.});
+        openturbine::beams::tests::CreateView<double[3]>("x0_prime", std::array{1., 2., 3.});
     const auto u_prime =
-        openturbine::tests::CreateView<double[3]>("u_prime", std::array{4., 5., 6.});
-    const auto r = openturbine::tests::CreateView<double[4]>("r", std::array{7., 8., 9., 10.});
+        openturbine::beams::tests::CreateView<double[3]>("u_prime", std::array{4., 5., 6.});
+    const auto r =
+        openturbine::beams::tests::CreateView<double[4]>("r", std::array{7., 8., 9., 10.});
     const auto r_prime =
-        openturbine::tests::CreateView<double[4]>("r_prime", std::array{11., 12., 13., 14.});
+        openturbine::beams::tests::CreateView<double[4]>("r_prime", std::array{11., 12., 13., 14.});
 
     const auto strain = Kokkos::View<double[6]>("strain");
 
@@ -36,7 +37,7 @@ void TestCalculateStrain() {
         Kokkos::View<const double[6], Kokkos::HostSpace>(strain_exact_data.data());
 
     const auto strain_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), strain);
-    openturbine::tests::CompareWithExpected(strain_mirror, strain_exact);
+    openturbine::beams::tests::CompareWithExpected(strain_mirror, strain_exact);
 }
 
 }  // namespace

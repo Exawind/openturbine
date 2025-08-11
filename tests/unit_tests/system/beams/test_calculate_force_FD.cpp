@@ -12,11 +12,12 @@
 namespace {
 
 void TestCalculateForceFD() {
-    const auto x0pupSS = openturbine::tests::CreateView<double[3][3]>(
+    const auto x0pupSS = openturbine::beams::tests::CreateView<double[3][3]>(
         "x0pupSS", std::array{1., 2., 3., 4., 5., 6., 7., 8., 9.}
     );
-    const auto FC =
-        openturbine::tests::CreateView<double[6]>("FC", std::array{10., 11., 12., 13., 14., 15.});
+    const auto FC = openturbine::beams::tests::CreateView<double[6]>(
+        "FC", std::array{10., 11., 12., 13., 14., 15.}
+    );
 
     const auto FD = Kokkos::View<double[6]>("FD");
 
@@ -34,7 +35,7 @@ void TestCalculateForceFD() {
         Kokkos::View<double[6], Kokkos::HostSpace>::const_type(FD_exact_data.data());
 
     const auto FD_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), FD);
-    openturbine::tests::CompareWithExpected(FD_mirror, FD_exact);
+    openturbine::beams::tests::CompareWithExpected(FD_mirror, FD_exact);
 }
 
 }  // namespace

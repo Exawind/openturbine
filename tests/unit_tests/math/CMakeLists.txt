@@ -2,6 +2,7 @@
 target_sources(
     openturbine_unit_tests
     PRIVATE
+    test_interpolation.cpp
     test_least_squares_fit.cpp
     test_matrix_operations.cpp
     test_project_points_to_target_polynomial.cpp
