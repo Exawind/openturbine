@@ -309,7 +309,7 @@ Step 2: Advance the OpenTurbine solution to
 substeps, use force values linearly interpolated between those at :math:`t^{n+1}` and :math:`t^n`.  
 
 
-Step 3; Update the locations of the aerodynamic centers; i.e., calculate :math:`\underline{x}^{\mathrm{fl},n+1}_j` following :ref:`sec:fsi-motion`
+Step 3: Update the locations and velocities of the aerodynamic centers; i.e., calculate :math:`\underline{x}^{\mathrm{fl},n+1}_j` and :math:`\dot{\underline{u}}^{\mathrm{fl},n+1}_j` following :ref:`sec:fsi-motion`
 
 
 Step 4: Interpolate from :math:`t^{n}` and :math:`t^{n+1}` the positions of the 
@@ -438,8 +438,7 @@ Force and Moment transfer: Fluid to structure
 We have a set of :math:`n^\mathrm{force}` forces and moments,
 :math:`\underline{f}^\mathrm{force}_i` and
 :math:`\underline{m}^\mathrm{force}_i`, with reference locations
-:math:`\underline{x}_i^{\mathrm{force},\mathrm{r}}`. Note that in CFD
-coupling, the applied moments will be zero.
+:math:`\underline{x}_i^{\mathrm{force},\mathrm{r}}`. 
 
 We need the orientations:
 
