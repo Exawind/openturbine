@@ -2,7 +2,7 @@ var searchData=
 [
   ['calculateaxes_0',['CalculateAxes',['../structopenturbine_1_1Constraints.html#ad568bb5814a16dc1646d6d2a2196082f',1,'openturbine::Constraints']]],
   ['calculatebaseinds_1',['CalculateBaseInds',['../structopenturbine_1_1solver_1_1ComputeConstraintsColInds.html#a4f1914f545eab0f021da1b766e77d925',1,'openturbine::solver::ComputeConstraintsColInds']]],
-  ['calculateconvergenceerror_2',['CalculateConvergenceError',['../namespaceopenturbine.html#a81f75a93db6a6068eb5759ec7125ac8d',1,'openturbine']]],
+  ['calculateconvergenceerror_2',['CalculateConvergenceError',['../namespaceopenturbine_1_1step.html#a3f463b9c667d3802ff71dbfb58ed6fa8',1,'openturbine::step']]],
   ['calculateeta_3',['CalculateEta',['../namespaceopenturbine_1_1masses.html#a56389a0cf61407f6778d387f5bbe50c3',1,'openturbine::masses']]],
   ['calculateforcecoefficient1_4',['CalculateForceCoefficient1',['../namespaceopenturbine_1_1springs.html#a7d1b88b428546bdb264ee4928e28ef2e',1,'openturbine::springs']]],
   ['calculateforcecoefficient2_5',['CalculateForceCoefficient2',['../namespaceopenturbine_1_1springs.html#a642618ddc2c68699ae109c555252de5c',1,'openturbine::springs']]],

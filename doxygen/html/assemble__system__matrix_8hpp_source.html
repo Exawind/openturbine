@@ -186,11 +186,11 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="solver_8hpp.html">solver/solver.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="step__parameters_8hpp.html">step_parameters.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1step.html">openturbine::step</a> {</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00016" data-start="{" data-end="}">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4">   16</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4">AssembleSystemMatrix</a>(</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1step.html#a27a54cdb36832f8af4ae01ae347c7eaa">   16</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1step.html#a27a54cdb36832f8af4ae01ae347c7eaa">AssembleSystemMatrix</a>(</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_struct" href="structopenturbine_1_1StepParameters.html">StepParameters</a>&amp; parameters, <a class="code hl_struct" href="structopenturbine_1_1Solver.html">Solver&lt;DeviceType&gt;</a>&amp; solver, <a class="code hl_struct" href="structopenturbine_1_1Elements.html">Elements&lt;DeviceType&gt;</a>&amp; elements</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>) {</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">auto</span> region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Assemble System Matrix&quot;</span>);</div>
@@ -232,13 +232,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
 </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}  <span class="comment">// namespace openturbine::step</span></div>
 <div class="ttc" id="acontribute__beams__to__sparse__matrix_8hpp_html"><div class="ttname"><a href="contribute__beams__to__sparse__matrix_8hpp.html">contribute_beams_to_sparse_matrix.hpp</a></div></div>
 <div class="ttc" id="acontribute__masses__to__sparse__matrix_8hpp_html"><div class="ttname"><a href="contribute__masses__to__sparse__matrix_8hpp.html">contribute_masses_to_sparse_matrix.hpp</a></div></div>
 <div class="ttc" id="acontribute__springs__to__sparse__matrix_8hpp_html"><div class="ttname"><a href="contribute__springs__to__sparse__matrix_8hpp.html">contribute_springs_to_sparse_matrix.hpp</a></div></div>
 <div class="ttc" id="aelements_8hpp_html"><div class="ttname"><a href="elements_8hpp.html">elements.hpp</a></div></div>
-<div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a0e59612cdaf821fd088101c76db997c4"><div class="ttname"><a href="namespaceopenturbine.html#a0e59612cdaf821fd088101c76db997c4">openturbine::AssembleSystemMatrix</a></div><div class="ttdeci">void AssembleSystemMatrix(StepParameters &amp;parameters, Solver&lt; DeviceType &gt; &amp;solver, Elements&lt; DeviceType &gt; &amp;elements)</div><div class="ttdef"><b>Definition</b> assemble_system_matrix.hpp:16</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1step_html"><div class="ttname"><a href="namespaceopenturbine_1_1step.html">openturbine::step</a></div><div class="ttdef"><b>Definition</b> assemble_constraints_matrix.hpp:11</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1step_html_a27a54cdb36832f8af4ae01ae347c7eaa"><div class="ttname"><a href="namespaceopenturbine_1_1step.html#a27a54cdb36832f8af4ae01ae347c7eaa">openturbine::step::AssembleSystemMatrix</a></div><div class="ttdeci">void AssembleSystemMatrix(StepParameters &amp;parameters, Solver&lt; DeviceType &gt; &amp;solver, Elements&lt; DeviceType &gt; &amp;elements)</div><div class="ttdef"><b>Definition</b> assemble_system_matrix.hpp:16</div></div>
 <div class="ttc" id="asolver_8hpp_html"><div class="ttname"><a href="solver_8hpp.html">solver.hpp</a></div></div>
 <div class="ttc" id="astep__parameters_8hpp_html"><div class="ttname"><a href="step__parameters_8hpp.html">step_parameters.hpp</a></div></div>
 <div class="ttc" id="astructopenturbine_1_1Elements_html"><div class="ttname"><a href="structopenturbine_1_1Elements.html">openturbine::Elements</a></div><div class="ttdoc">A container providing handle to all structural elements present in the model.</div><div class="ttdef"><b>Definition</b> elements.hpp:20</div></div>

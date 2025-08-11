@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::step Namespace Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::step Namespace Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/namespaceopenturbine_1_1step.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="step-namespace-reference">
+<h1>step Namespace Reference<a class="headerlink" href="#step-namespace-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::step Namespace Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1step.html">step</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::step Namespace Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa8bd23242323271425241aea3156d9b8" id="r_aa8bd23242323271425241aea3156d9b8"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aa8bd23242323271425241aea3156d9b8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#aa8bd23242323271425241aea3156d9b8">AssembleConstraintsMatrix</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:aa8bd23242323271425241aea3156d9b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25ff35c8fc767bf78127d2160c9156a4" id="r_a25ff35c8fc767bf78127d2160c9156a4"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a25ff35c8fc767bf78127d2160c9156a4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a25ff35c8fc767bf78127d2160c9156a4">AssembleConstraintsResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a25ff35c8fc767bf78127d2160c9156a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27a54cdb36832f8af4ae01ae347c7eaa" id="r_a27a54cdb36832f8af4ae01ae347c7eaa"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a27a54cdb36832f8af4ae01ae347c7eaa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a27a54cdb36832f8af4ae01ae347c7eaa">AssembleSystemMatrix</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements)</td></tr>
+<tr class="separator:a27a54cdb36832f8af4ae01ae347c7eaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c2500afa61d23726847e2e0ffdf4efd" id="r_a1c2500afa61d23726847e2e0ffdf4efd"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a1c2500afa61d23726847e2e0ffdf4efd"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a1c2500afa61d23726847e2e0ffdf4efd">AssembleSystemResidual</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a1c2500afa61d23726847e2e0ffdf4efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f463b9c667d3802ff71dbfb58ed6fa8" id="r_a3f463b9c667d3802ff71dbfb58ed6fa8"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a3f463b9c667d3802ff71dbfb58ed6fa8"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a3f463b9c667d3802ff71dbfb58ed6fa8">CalculateConvergenceError</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="memdesc:a3f463b9c667d3802ff71dbfb58ed6fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculation based on Table 1 of DOI: 10.1115/1.4033441.  <br /></td></tr>
+<tr class="separator:a3f463b9c667d3802ff71dbfb58ed6fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe1663623e91f4bbd500c7b1786602c0" id="r_afe1663623e91f4bbd500c7b1786602c0"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:afe1663623e91f4bbd500c7b1786602c0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#afe1663623e91f4bbd500c7b1786602c0">PredictNextState</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:afe1663623e91f4bbd500c7b1786602c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a997e528669546dcc1415fb9dc5a89244" id="r_a997e528669546dcc1415fb9dc5a89244"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a997e528669546dcc1415fb9dc5a89244"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a997e528669546dcc1415fb9dc5a89244">ResetConstraints</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a997e528669546dcc1415fb9dc5a89244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5aa688590cc8fb07ee0a65e415c025e" id="r_ae5aa688590cc8fb07ee0a65e415c025e"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ae5aa688590cc8fb07ee0a65e415c025e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#ae5aa688590cc8fb07ee0a65e415c025e">ResetSolver</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver)</td></tr>
+<tr class="separator:ae5aa688590cc8fb07ee0a65e415c025e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeea40e232c4f84279a5bfb69ad33f93d" id="r_aeea40e232c4f84279a5bfb69ad33f93d"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aeea40e232c4f84279a5bfb69ad33f93d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#aeea40e232c4f84279a5bfb69ad33f93d">SolveSystem</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver)</td></tr>
+<tr class="separator:aeea40e232c4f84279a5bfb69ad33f93d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31edd0f1b282899bcf67fe3081a6d02" id="r_aa31edd0f1b282899bcf67fe3081a6d02"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:aa31edd0f1b282899bcf67fe3081a6d02"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#aa31edd0f1b282899bcf67fe3081a6d02">UpdateConstraintPrediction</a> (<a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:aa31edd0f1b282899bcf67fe3081a6d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ec029e90dae97ddc6b15ae63b6ec430" id="r_a3ec029e90dae97ddc6b15ae63b6ec430"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a3ec029e90dae97ddc6b15ae63b6ec430"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a3ec029e90dae97ddc6b15ae63b6ec430">UpdateConstraintVariables</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
+<tr class="separator:a3ec029e90dae97ddc6b15ae63b6ec430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0a597c06e7fe8e2dcda948f9fac6313" id="r_ad0a597c06e7fe8e2dcda948f9fac6313"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ad0a597c06e7fe8e2dcda948f9fac6313"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#ad0a597c06e7fe8e2dcda948f9fac6313">UpdateStatePrediction</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;solver, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="memdesc:ad0a597c06e7fe8e2dcda948f9fac6313"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the predicted next state values, based on computed solver solution, solver.x.  <br /></td></tr>
+<tr class="separator:ad0a597c06e7fe8e2dcda948f9fac6313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ddcfccae0af10e607c4c912e01b1119" id="r_a0ddcfccae0af10e607c4c912e01b1119"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a0ddcfccae0af10e607c4c912e01b1119"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a0ddcfccae0af10e607c4c912e01b1119">UpdateSystemVariables</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a0ddcfccae0af10e607c4c912e01b1119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b5cc4687f960ce5d6a8ebb020c9bc81" id="r_a7b5cc4687f960ce5d6a8ebb020c9bc81"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a7b5cc4687f960ce5d6a8ebb020c9bc81"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a7b5cc4687f960ce5d6a8ebb020c9bc81">UpdateSystemVariablesBeams</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt; &amp;beams, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a7b5cc4687f960ce5d6a8ebb020c9bc81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7930be6b10656ec2e8680d2caa06f050" id="r_a7930be6b10656ec2e8680d2caa06f050"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a7930be6b10656ec2e8680d2caa06f050"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a7930be6b10656ec2e8680d2caa06f050">UpdateSystemVariablesMasses</a> (const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt; &amp;masses, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a7930be6b10656ec2e8680d2caa06f050"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ea4c24a0b435314dbf7ad51bac62c0" id="r_a48ea4c24a0b435314dbf7ad51bac62c0"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:a48ea4c24a0b435314dbf7ad51bac62c0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#a48ea4c24a0b435314dbf7ad51bac62c0">UpdateSystemVariablesSprings</a> (const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt; &amp;springs, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:a48ea4c24a0b435314dbf7ad51bac62c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0aa80ce6eb1259e34e50e9cbfd54f92" id="r_ae0aa80ce6eb1259e34e50e9cbfd54f92"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
+<tr class="memitem:ae0aa80ce6eb1259e34e50e9cbfd54f92"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1step.html#ae0aa80ce6eb1259e34e50e9cbfd54f92">UpdateTangentOperator</a> (<a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;parameters, <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
+<tr class="separator:ae0aa80ce6eb1259e34e50e9cbfd54f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aa8bd23242323271425241aea3156d9b8" name="aa8bd23242323271425241aea3156d9b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8bd23242323271425241aea3156d9b8">&#9670;&#160;</a></span>AssembleConstraintsMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::AssembleConstraintsMatrix </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a25ff35c8fc767bf78127d2160c9156a4" name="a25ff35c8fc767bf78127d2160c9156a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25ff35c8fc767bf78127d2160c9156a4">&#9670;&#160;</a></span>AssembleConstraintsResidual()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::AssembleConstraintsResidual </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a27a54cdb36832f8af4ae01ae347c7eaa" name="a27a54cdb36832f8af4ae01ae347c7eaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27a54cdb36832f8af4ae01ae347c7eaa">&#9670;&#160;</a></span>AssembleSystemMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::AssembleSystemMatrix </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>elements</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c2500afa61d23726847e2e0ffdf4efd" name="a1c2500afa61d23726847e2e0ffdf4efd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c2500afa61d23726847e2e0ffdf4efd">&#9670;&#160;</a></span>AssembleSystemResidual()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::AssembleSystemResidual </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>elements</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3f463b9c667d3802ff71dbfb58ed6fa8" name="a3f463b9c667d3802ff71dbfb58ed6fa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f463b9c667d3802ff71dbfb58ed6fa8">&#9670;&#160;</a></span>CalculateConvergenceError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::step::CalculateConvergenceError </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Calculation based on Table 1 of DOI: 10.1115/1.4033441. </p>
+
+</div>
+</div>
+<a id="afe1663623e91f4bbd500c7b1786602c0" name="afe1663623e91f4bbd500c7b1786602c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe1663623e91f4bbd500c7b1786602c0">&#9670;&#160;</a></span>PredictNextState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::PredictNextState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a997e528669546dcc1415fb9dc5a89244" name="a997e528669546dcc1415fb9dc5a89244"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a997e528669546dcc1415fb9dc5a89244">&#9670;&#160;</a></span>ResetConstraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::ResetConstraints </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae5aa688590cc8fb07ee0a65e415c025e" name="ae5aa688590cc8fb07ee0a65e415c025e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5aa688590cc8fb07ee0a65e415c025e">&#9670;&#160;</a></span>ResetSolver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::ResetSolver </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeea40e232c4f84279a5bfb69ad33f93d" name="aeea40e232c4f84279a5bfb69ad33f93d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeea40e232c4f84279a5bfb69ad33f93d">&#9670;&#160;</a></span>SolveSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::SolveSystem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa31edd0f1b282899bcf67fe3081a6d02" name="aa31edd0f1b282899bcf67fe3081a6d02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa31edd0f1b282899bcf67fe3081a6d02">&#9670;&#160;</a></span>UpdateConstraintPrediction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateConstraintPrediction </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ec029e90dae97ddc6b15ae63b6ec430" name="a3ec029e90dae97ddc6b15ae63b6ec430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ec029e90dae97ddc6b15ae63b6ec430">&#9670;&#160;</a></span>UpdateConstraintVariables()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateConstraintVariables </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>constraints</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad0a597c06e7fe8e2dcda948f9fac6313" name="ad0a597c06e7fe8e2dcda948f9fac6313"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0a597c06e7fe8e2dcda948f9fac6313">&#9670;&#160;</a></span>UpdateStatePrediction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateStatePrediction </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Solver.html">Solver</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the predicted next state values, based on computed solver solution, solver.x. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where the solver and state data structures reside</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parameters</td><td>A struct containing the control parameters for time stepping </td></tr>
+    <tr><td class="paramname">solver</td><td>A struct containing the linear system, already solved for this iteration </td></tr>
+    <tr><td class="paramname">state</td><td>A struct containing the state information at each node </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0ddcfccae0af10e607c4c912e01b1119" name="a0ddcfccae0af10e607c4c912e01b1119"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ddcfccae0af10e607c4c912e01b1119">&#9670;&#160;</a></span>UpdateSystemVariables()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateSystemVariables </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>elements</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b5cc4687f960ce5d6a8ebb020c9bc81" name="a7b5cc4687f960ce5d6a8ebb020c9bc81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b5cc4687f960ce5d6a8ebb020c9bc81">&#9670;&#160;</a></span>UpdateSystemVariablesBeams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateSystemVariablesBeams </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>beams</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7930be6b10656ec2e8680d2caa06f050" name="a7930be6b10656ec2e8680d2caa06f050"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7930be6b10656ec2e8680d2caa06f050">&#9670;&#160;</a></span>UpdateSystemVariablesMasses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateSystemVariablesMasses </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Masses.html">Masses</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>masses</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a48ea4c24a0b435314dbf7ad51bac62c0" name="a48ea4c24a0b435314dbf7ad51bac62c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48ea4c24a0b435314dbf7ad51bac62c0">&#9670;&#160;</a></span>UpdateSystemVariablesSprings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateSystemVariablesSprings </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Springs.html">Springs</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>springs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae0aa80ce6eb1259e34e50e9cbfd54f92" name="ae0aa80ce6eb1259e34e50e9cbfd54f92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0aa80ce6eb1259e34e50e9cbfd54f92">&#9670;&#160;</a></span>UpdateTangentOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::step::UpdateTangentOperator </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1StepParameters.html">StepParameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>parameters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
