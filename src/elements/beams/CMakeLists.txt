@@ -16,7 +16,6 @@ install(FILES
         interpolate_QP_state.hpp
         interpolate_QP_vector.hpp
         interpolate_to_quadrature_points.hpp
-        interpolation.hpp
         interpolation_operations.hpp
         populate_element_views.hpp
         DESTINATION include/OpenTurbine/elements/beams/

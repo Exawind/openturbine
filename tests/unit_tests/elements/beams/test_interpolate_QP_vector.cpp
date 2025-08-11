@@ -8,7 +8,7 @@
 #include "elements/beams/interpolate_QP_vector.hpp"
 #include "test_interpolate_QP.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 inline auto create_node_u_dot_OneNode() {
     return CreateView<double[1][1][6]>("node_u_dot", std::array{1., 2., 3., 4., 5., 6.});

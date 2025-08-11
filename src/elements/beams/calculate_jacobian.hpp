@@ -4,7 +4,7 @@
 
 #include "interpolation_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Functor to calculate Jacobians and unit tangent vectors at quadrature points for beam

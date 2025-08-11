@@ -6,7 +6,7 @@
 #include "beam_section.hpp"
 #include "generate_sectional_properties.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Struct containing geometric properties for a hollow circular cross-section

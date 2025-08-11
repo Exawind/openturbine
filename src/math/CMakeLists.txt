@@ -1,6 +1,7 @@
 target_sources(openturbine_library PRIVATE)
 
 install(FILES
+        interpolation.hpp
         least_squares_fit.hpp
         matrix_operations.hpp
         project_points_to_target_polynomial.hpp

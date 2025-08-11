@@ -4,7 +4,7 @@
 
 #include "interpolation_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief A Kernel which interpolates a rotation quaternion on a given element from its nodes

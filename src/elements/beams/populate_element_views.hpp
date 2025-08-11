@@ -3,10 +3,10 @@
 #include <vector>
 
 #include "beam_element.hpp"
-#include "interpolation.hpp"
+#include "math/interpolation.hpp"
 #include "model/node.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /// @brief Populate the node initial position and orientation
 inline void PopulateNodeX0(
@@ -52,7 +52,7 @@ inline void PopulateShapeFunctionValues(
     for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
         auto qp_xi = elem.quadrature[qp][0];
 
-        LagrangePolynomialInterpWeights(qp_xi, node_xi, weights);
+        math::LagrangePolynomialInterpWeights(qp_xi, node_xi, weights);
         for (auto node = 0U; node < node_xi.size(); ++node) {
             shape_interp(node, qp) = weights[node];
         }
@@ -70,7 +70,7 @@ inline void PopulateShapeFunctionDerivatives(
     for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
         auto qp_xi = elem.quadrature[qp][0];
 
-        LagrangePolynomialDerivWeights(qp_xi, node_xi, weights);
+        math::LagrangePolynomialDerivWeights(qp_xi, node_xi, weights);
         for (auto node = 0U; node < node_xi.size(); ++node) {
             shape_deriv(node, qp) = weights[node];
         }
@@ -96,7 +96,7 @@ inline void PopulateQPMstar(
 
     for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
         auto qp_xi = elem.quadrature[qp][0];
-        LinearInterpWeights(qp_xi, section_xi, weights);
+        math::LinearInterpWeights(qp_xi, section_xi, weights);
         for (auto component_1 = 0; component_1 < 6; ++component_1) {
             for (auto component_2 = 0; component_2 < 6; ++component_2) {
                 qp_Mstar(qp, component_1, component_2) = 0.;
@@ -123,7 +123,7 @@ inline void PopulateQPCstar(
 
     for (auto qp = 0U; qp < elem.quadrature.size(); ++qp) {
         auto qp_xi = elem.quadrature[qp][0];
-        LinearInterpWeights(qp_xi, section_xi, weights);
+        math::LinearInterpWeights(qp_xi, section_xi, weights);
         for (auto component_1 = 0; component_1 < 6; ++component_1) {
             for (auto component_2 = 0; component_2 < 6; ++component_2) {
                 qp_Cstar(qp, component_1, component_2) = 0.;

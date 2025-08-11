@@ -4,7 +4,7 @@
 #include <array>
 #include <vector>
 
-namespace openturbine {
+namespace openturbine::beams {
 
 inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(const std::vector<double>& grid
 ) {

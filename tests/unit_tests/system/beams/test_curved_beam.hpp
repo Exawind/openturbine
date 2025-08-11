@@ -6,7 +6,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::tests::curved_beam {
+namespace openturbine::beams::tests {
 
 //--------------------------------------------------------------------------
 // FEA inputs/settings for curved beam

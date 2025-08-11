@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Interpolates quadrature point positions from nodal positions using shape functions

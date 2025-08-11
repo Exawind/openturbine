@@ -9,7 +9,7 @@
 #include "elements/beams/interpolate_QP_state.hpp"
 #include "test_interpolate_QP.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 inline auto create_node_u_OneNode() {
     return CreateView<double[1][1][7]>("node_u", std::array{1., 2., 3., 4., 5., 6., 7.});

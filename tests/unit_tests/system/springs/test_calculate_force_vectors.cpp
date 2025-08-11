@@ -32,7 +32,7 @@ void TestCalculateForceVectors_ThreeElements_1() {
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f0_exact_data.data());
 
     const auto f0_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), f0);
-    openturbine::tests::CompareWithExpected(f0_result, f0_exact);
+    openturbine::beams::tests::CompareWithExpected(f0_result, f0_exact);
 }
 
 void TestCalculateForceVectors_ThreeElements_2() {
@@ -56,7 +56,7 @@ void TestCalculateForceVectors_ThreeElements_2() {
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f1_exact_data.data());
 
     const auto f1_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), f1);
-    openturbine::tests::CompareWithExpected(f1_result, f1_exact);
+    openturbine::beams::tests::CompareWithExpected(f1_result, f1_exact);
 }
 
 void TestCalculateForceVectors_ThreeElements_3() {
@@ -80,7 +80,7 @@ void TestCalculateForceVectors_ThreeElements_3() {
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(f2_exact_data.data());
 
     const auto f2_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), f2);
-    openturbine::tests::CompareWithExpected(f2_result, f2_exact);
+    openturbine::beams::tests::CompareWithExpected(f2_result, f2_exact);
 }
 }  // namespace
 

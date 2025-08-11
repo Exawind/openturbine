@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief A  Kernel which interpolates a vector quantity from nodes on a given element

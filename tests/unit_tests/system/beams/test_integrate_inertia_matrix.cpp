@@ -10,7 +10,7 @@
 #include "system/beams/integrate_inertia_matrix.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     constexpr auto number_of_nodes = size_t{1U};

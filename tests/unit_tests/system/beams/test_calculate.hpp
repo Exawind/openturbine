@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 constexpr double kTolerance = 1e-15;
 

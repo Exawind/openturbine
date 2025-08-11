@@ -3,7 +3,7 @@
 #include <array>
 #include <cmath>
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Generates a 6x6 cross-sectional stiffness matrix for use in beam elements

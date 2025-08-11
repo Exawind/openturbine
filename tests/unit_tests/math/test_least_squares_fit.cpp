@@ -55,7 +55,7 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
     const size_t n{3};                               // Number of pts to fit
     const size_t p{2};                               // Polynomial order + 1
     const std::vector<double> xi_g = {-1., 0., 1.};  // Evaluation points
-    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto gll_pts = math::GenerateGLLPoints(p - 1);
     const auto phi_g = math::ComputeShapeFunctionValues(xi_g, gll_pts);
     const auto dphi_g = math::ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
@@ -102,7 +102,7 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
 TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
     const size_t p{3};                                          // Polynomial order + 1
     const std::vector<double> xi_g = {-1., -0.5, 0., 0.5, 1.};  // Evaluation points
-    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto gll_pts = math::GenerateGLLPoints(p - 1);
     const auto phi_g = math::ComputeShapeFunctionValues(xi_g, gll_pts);
     const auto dphi_g = math::ComputeShapeFunctionDerivatives(xi_g, gll_pts);
 
@@ -167,7 +167,7 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
 
     // Step 2: Generate shape function matrices (using p = 4 i.e. cubic interpolation)
     const size_t p = 4;
-    const auto gll_pts = GenerateGLLPoints(p - 1);
+    const auto gll_pts = math::GenerateGLLPoints(p - 1);
     const auto phi_g = math::ComputeShapeFunctionValues(mapped_locations, gll_pts);
     const auto dphi_g = math::ComputeShapeFunctionDerivatives(mapped_locations, gll_pts);
 

@@ -7,7 +7,7 @@
 #include "elements/beams/beam_section.hpp"
 #include "elements/beams/hollow_circle_properties.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 class HollowCirclePropertiesTest : public ::testing::Test {
 protected:

@@ -66,26 +66,26 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         }
 
         // Populate views for this element
-        PopulateNodeX0(
+        beams::PopulateNodeX0(
             beams_input.elements[element], nodes,
             subview(host_node_x0, element, make_pair(0UL, num_nodes), ALL)
         );
-        PopulateQPWeight(
+        beams::PopulateQPWeight(
             beams_input.elements[element], subview(host_qp_weight, element, make_pair(0UL, num_qps))
         );
-        PopulateShapeFunctionValues(
+        beams::PopulateShapeFunctionValues(
             beams_input.elements[element], nodes,
             subview(host_shape_interp, element, make_pair(0UL, num_nodes), make_pair(0UL, num_qps))
         );
-        PopulateShapeFunctionDerivatives(
+        beams::PopulateShapeFunctionDerivatives(
             beams_input.elements[element], nodes,
             subview(host_shape_deriv, element, make_pair(0UL, num_nodes), make_pair(0UL, num_qps))
         );
-        PopulateQPMstar(
+        beams::PopulateQPMstar(
             beams_input.elements[element],
             subview(host_qp_Mstar, element, make_pair(0UL, num_qps), ALL, ALL)
         );
-        PopulateQPCstar(
+        beams::PopulateQPCstar(
             beams_input.elements[element],
             subview(host_qp_Cstar, element, make_pair(0UL, num_qps), ALL, ALL)
         );
@@ -112,7 +112,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
 
     parallel_for(
         "InterpolateQPPosition", range_policy,
-        InterpolateQPPosition<DeviceType>{
+        beams::InterpolateQPPosition<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_x0
         }
@@ -120,7 +120,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
 
     parallel_for(
         "InterpolateQPRotation", range_policy,
-        InterpolateQPRotation<DeviceType>{
+        beams::InterpolateQPRotation<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.node_x0, beams.qp_r0
         }
@@ -128,7 +128,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
 
     parallel_for(
         "CalculateJacobian", range_policy,
-        CalculateJacobian<DeviceType>{
+        beams::CalculateJacobian<DeviceType>{
             beams.num_nodes_per_element,
             beams.num_qps_per_element,
             beams.shape_deriv,
@@ -142,7 +142,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
 
     parallel_for(
         "InterpolateToQuadraturePoints", team_policy,
-        InterpolateToQuadraturePoints<DeviceType>{
+        beams::InterpolateToQuadraturePoints<DeviceType>{
             beams.num_nodes_per_element, beams.num_qps_per_element, beams.shape_interp,
             beams.shape_deriv, beams.qp_jacobian, beams.node_u, beams.node_u_dot, beams.node_u_ddot,
             beams.qp_x0, beams.qp_r0, beams.qp_u, beams.qp_u_prime, beams.qp_r, beams.qp_r_prime,

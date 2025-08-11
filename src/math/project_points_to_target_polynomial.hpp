@@ -3,7 +3,7 @@
 #include <array>
 #include <vector>
 
-#include "elements/beams/interpolation.hpp"
+#include "interpolation.hpp"
 #include "least_squares_fit.hpp"
 
 namespace openturbine::math {

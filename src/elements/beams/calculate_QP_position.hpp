@@ -4,7 +4,7 @@
 
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Functor to calculate current position and orientation at quadrature points

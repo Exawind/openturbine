@@ -12,7 +12,7 @@ namespace lapack {
 }  // namespace lapack
 /// @endcond
 
-#include "elements/beams/interpolation.hpp"
+#include "interpolation.hpp"
 
 namespace openturbine::math {
 
@@ -66,7 +66,7 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
         num_output_points, std::vector<double>(num_input_points, 0.)
     );
     for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
-        LagrangePolynomialInterpWeights(input_points[input_point], output_points, weights);
+        math::LagrangePolynomialInterpWeights(input_points[input_point], output_points, weights);
         for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
             shape_functions[output_point][input_point] = weights[output_point];
         }
@@ -99,7 +99,7 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionDerivatives(
         num_output_points, std::vector<double>(num_input_points, 0.)
     );
     for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
-        LagrangePolynomialDerivWeights(input_points[input_point], output_points, weights);
+        math::LagrangePolynomialDerivWeights(input_points[input_point], output_points, weights);
         for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
             derivative_functions[output_point][input_point] = weights[output_point];
         }

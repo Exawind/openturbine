@@ -6,7 +6,7 @@
 #include "interpolate_QP_state.hpp"
 #include "interpolate_QP_vector.hpp"
 
-namespace openturbine {
+namespace openturbine::beams {
 
 /**
  * @brief Interpolates various quantities from nodes to quadrature points for beam elements

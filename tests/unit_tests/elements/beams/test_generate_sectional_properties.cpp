@@ -5,7 +5,7 @@
 
 #include "elements/beams/generate_sectional_properties.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 class GenerateSectionalMatricesTest : public ::testing::Test {
 protected:

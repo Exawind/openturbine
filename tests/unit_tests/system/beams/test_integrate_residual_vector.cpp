@@ -9,7 +9,7 @@
 #include "system/beams/integrate_residual_vector.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::beams::tests {
 
 TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
     constexpr auto number_of_nodes = size_t{1U};

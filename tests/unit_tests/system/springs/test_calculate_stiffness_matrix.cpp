@@ -43,7 +43,7 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
     const auto a_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), a);
     Kokkos::deep_copy(a_result, a);
 
-    openturbine::tests::CompareWithExpected(a_result, a_exact);
+    openturbine::beams::tests::CompareWithExpected(a_result, a_exact);
 }
 
 }  // namespace

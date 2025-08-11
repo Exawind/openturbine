@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "elements/beams/calculate_jacobian.hpp"
-#include "elements/beams/interpolation.hpp"
+#include "math/interpolation.hpp"
 #include "system/beams/calculate_Ouu.hpp"
 #include "system/beams/calculate_Puu.hpp"
 #include "system/beams/calculate_Quu.hpp"
@@ -53,13 +53,13 @@
  * Ref: https://github.com/michaelasprague/OpenTurbineTheory/tree/main/mathematica
  */
 
-namespace openturbine::tests::curved_beam {
+namespace openturbine::beams::tests {
 
 TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQPs) {
     std::vector<double> weights;
     // Test interpolation weights at each QP against expected data from Mathematica script
     for (auto qp = 0U; qp < kNumQPs; ++qp) {
-        LagrangePolynomialInterpWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
+        math::LagrangePolynomialInterpWeights(kGaussQuadraturePoints[qp], kGLLNodes, weights);
         ASSERT_EQ(weights.size(), kNumNodes);
         EXPECT_NEAR(weights[0], kExpectedInterpWeights[qp][0], kDefaultTolerance);
         EXPECT_NEAR(weights[1], kExpectedInterpWeights[qp][1], kDefaultTolerance);
@@ -71,7 +71,7 @@ TEST(CurvedBeamTests, LagrangePolynomialDerivWeight_SecondOrder_AtSpecifiedQPs) 
     std::vector<double> deriv_weights;
     // Test derivative weights at each QP against expected data from Mathematica script
     for (auto qp = 0U; qp < kNumQPs; ++qp) {
-        LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, deriv_weights);
+        math::LagrangePolynomialDerivWeights(kGaussQuadraturePoints[qp], kGLLNodes, deriv_weights);
         ASSERT_EQ(deriv_weights.size(), kNumNodes);
         EXPECT_NEAR(deriv_weights[0], kExpectedDerivWeights[qp][0], kDefaultTolerance);
         EXPECT_NEAR(deriv_weights[1], kExpectedDerivWeights[qp][1], kDefaultTolerance);
@@ -93,7 +93,7 @@ TEST(CurvedBeamTests, CalculateJacobianForCurvedBeam) {
     const auto qp_position_derivative =
         Kokkos::View<double[kNumElems][kNumQPs][3]>("position_derivative");
     const auto qp_jacobian = Kokkos::View<double[kNumElems][kNumQPs]>("jacobian");
-    const auto calculate_jacobian = CalculateJacobian<Kokkos::DefaultExecutionSpace>{
+    const auto calculate_jacobian = beams::CalculateJacobian<Kokkos::DefaultExecutionSpace>{
         kNumNodes_per_elem,     kNumQPs_per_elem,       shape_derivative,
         node_position_rotation, qp_position_derivative, qp_jacobian
     };
