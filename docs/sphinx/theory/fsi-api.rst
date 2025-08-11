@@ -287,13 +287,11 @@ Step 1: Predict with first-order extrapolation the fluid forces and moments on s
 
 .. math::
 
-   \begin{aligned}
    \underline{f}_i^{n+1} \approx \underline{f}_i^{n} 
    + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{f}^{n}_i - \underline{f}^{n-1}_i \right)\\
    \underline{m}_i^{n+1} \approx \underline{m}_i^{n} 
    + \frac{\Delta t^{n+1}}{\Delta t^n} \left( \underline{m}^{n}_i - \underline{m}^{n-1}_i \right)\\
   \forall i \in \{1,\ldots,P\}
-   \end{aligned}
 
 .. math::
 
