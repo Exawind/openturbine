@@ -7,7 +7,7 @@
 #include "constraints/constraints.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void UpdateConstraintVariables(
@@ -36,4 +36,4 @@ inline void UpdateConstraintVariables(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

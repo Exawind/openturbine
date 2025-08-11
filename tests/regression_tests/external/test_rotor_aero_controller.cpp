@@ -394,7 +394,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver();
 
     // Transfer initial state to beams for writing output
-    UpdateSystemVariables(parameters, elements, state);
+    step::UpdateSystemVariables(parameters, elements, state);
 
     // Create mirrors for accessing node data
     auto host_state_x = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.x);

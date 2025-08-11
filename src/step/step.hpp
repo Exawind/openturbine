@@ -46,8 +46,8 @@ inline bool Step(
 ) {
     auto region = Kokkos::Profiling::ScopedRegion("Step");
 
-    PredictNextState(parameters, state);
-    ResetConstraints(constraints);
+    step::PredictNextState(parameters, state);
+    step::ResetConstraints(constraints);
 
     solver.convergence_err.clear();
     double err{1000.};
@@ -55,31 +55,31 @@ inline bool Step(
         if (iter >= parameters.max_iter) {
             return false;
         }
-        ResetSolver(solver);
+        step::ResetSolver(solver);
 
-        UpdateTangentOperator(parameters, state);
+        step::UpdateTangentOperator(parameters, state);
 
-        UpdateSystemVariables(parameters, elements, state);
+        step::UpdateSystemVariables(parameters, elements, state);
 
-        AssembleSystemResidual(solver, elements, state);
+        step::AssembleSystemResidual(solver, elements, state);
 
-        AssembleSystemMatrix(parameters, solver, elements);
+        step::AssembleSystemMatrix(parameters, solver, elements);
 
-        UpdateConstraintVariables(state, constraints);
+        step::UpdateConstraintVariables(state, constraints);
 
-        AssembleConstraintsMatrix(solver, constraints);
+        step::AssembleConstraintsMatrix(solver, constraints);
 
-        AssembleConstraintsResidual(solver, constraints);
+        step::AssembleConstraintsResidual(solver, constraints);
 
-        SolveSystem(parameters, solver);
+        step::SolveSystem(parameters, solver);
 
-        err = CalculateConvergenceError(parameters, solver, state, constraints);
+        err = step::CalculateConvergenceError(parameters, solver, state, constraints);
 
         solver.convergence_err.push_back(err);
 
-        UpdateStatePrediction(parameters, solver, state);
+        step::UpdateStatePrediction(parameters, solver, state);
 
-        UpdateConstraintPrediction(solver, constraints);
+        step::UpdateConstraintPrediction(solver, constraints);
     }
 
     using RangePolicy = Kokkos::RangePolicy<typename DeviceType::execution_space>;

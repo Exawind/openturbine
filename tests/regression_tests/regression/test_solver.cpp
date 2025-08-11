@@ -104,18 +104,18 @@ inline void SetUpSolverAndAssemble() {
     );
 
     // Predict the next state for the solver
-    PredictNextState(parameters, state);
-    ResetConstraints(constraints);
-    ResetSolver(solver);
+    step::PredictNextState(parameters, state);
+    step::ResetConstraints(constraints);
+    step::ResetSolver(solver);
 
     // Update beam elements state from solvers
-    UpdateSystemVariables(parameters, elements, state);
-    AssembleSystemMatrix(parameters, solver, elements);
-    AssembleSystemResidual(solver, elements, state);
+    step::UpdateSystemVariables(parameters, elements, state);
+    step::AssembleSystemMatrix(parameters, solver, elements);
+    step::AssembleSystemResidual(solver, elements, state);
 
-    UpdateConstraintVariables(state, constraints);
-    AssembleConstraintsMatrix(solver, constraints);
-    AssembleConstraintsResidual(solver, constraints);
+    step::UpdateConstraintVariables(state, constraints);
+    step::AssembleConstraintsMatrix(solver, constraints);
+    step::AssembleConstraintsResidual(solver, constraints);
 
     expect_kokkos_view_2D_equal(constraints.lambda, {{0., 0., 0., 0., 0., 0.}});
     expect_kokkos_view_2D_equal(

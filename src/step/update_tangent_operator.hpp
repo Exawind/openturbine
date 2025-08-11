@@ -7,7 +7,7 @@
 #include "step_parameters.hpp"
 #include "system/calculate_tangent_operator.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>& state) {
@@ -25,4 +25,4 @@ inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>&
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

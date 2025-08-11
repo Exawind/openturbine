@@ -5,7 +5,7 @@
 
 #include "constraints/constraints.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void ResetConstraints(Constraints<DeviceType>& constraints) {
@@ -14,4 +14,4 @@ inline void ResetConstraints(Constraints<DeviceType>& constraints) {
     Kokkos::deep_copy(constraints.system_residual_terms, 0.);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

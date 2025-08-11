@@ -11,7 +11,7 @@
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void AssembleSystemResidual(
@@ -63,4 +63,4 @@ inline void AssembleSystemResidual(
     Kokkos::fence();
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step
