@@ -103,4 +103,4 @@ inline void CompareWithExpected(
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

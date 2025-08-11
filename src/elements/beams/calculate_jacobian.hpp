@@ -76,4 +76,4 @@ struct CalculateJacobian {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

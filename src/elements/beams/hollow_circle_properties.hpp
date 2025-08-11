@@ -118,4 +118,4 @@ static BeamSection GenerateHollowCircleSection(
     return {s, mass, stiffness};
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

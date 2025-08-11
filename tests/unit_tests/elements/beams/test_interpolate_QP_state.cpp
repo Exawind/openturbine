@@ -289,4 +289,4 @@ TEST(InterpolateQPStateTests, rprime_TwoNodeTwoQP) {
     EXPECT_NEAR(qp_rprime_mirror(0, 1, 3), 91., tolerance);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

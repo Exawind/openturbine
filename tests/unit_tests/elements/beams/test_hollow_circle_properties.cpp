@@ -133,4 +133,4 @@ TEST_F(HollowCirclePropertiesTest, SectionalMatrices_Uncoupled) {
     ExpectMatrixEqual(beam_section.M_star, expected_mass);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

@@ -396,4 +396,4 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
     CompareWithExpected(residual_vector_terms_mirror, resid_exact);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

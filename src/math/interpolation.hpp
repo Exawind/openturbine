@@ -232,4 +232,4 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     return gll_points;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

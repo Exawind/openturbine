@@ -49,4 +49,4 @@ inline auto create_shape_deriv_TwoNodeTwoQP() {
     return CreateView<double[1][2][2]>("shape_deriv", std::array{4., 9., 8., 15.});
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

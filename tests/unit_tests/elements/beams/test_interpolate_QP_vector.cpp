@@ -88,4 +88,4 @@ TEST(InterpolateQPVectorTests, TwoNodeTwoQP) {
     EXPECT_NEAR(qp_u_dot_mirror(0, 1, 2), 54., tolerance);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

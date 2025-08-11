@@ -44,4 +44,4 @@ struct InterpolateQPRotation {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

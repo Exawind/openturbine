@@ -3,8 +3,8 @@
 #include <stdexcept>
 
 #include "elements/beams/beam_quadrature.hpp"
-#include "math/interpolation.hpp"
 #include "interfaces/components/beam_input.hpp"
+#include "math/interpolation.hpp"
 #include "math/least_squares_fit.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/project_points_to_target_polynomial.hpp"
@@ -214,8 +214,9 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
     std::vector<BeamSection> sections;
 
     // Add first section after rotating matrices to account for twist
-    auto twist =
-        math::LinearInterp(input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist);
+    auto twist = math::LinearInterp(
+        input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
+    );
     auto q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
     sections.emplace_back(
         input.sections[0].location, math::RotateMatrix6(input.sections[0].mass_matrix, q_twist),
@@ -256,7 +257,9 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
             }
 
             // Calculate twist at current section location via linear interpolation
-            twist = math::LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
+            twist = math::LinearInterp(
+                section_location, input.ref_axis.twist_grid, input.ref_axis.twist
+            );
 
             // Add refinement section
             q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
@@ -267,7 +270,8 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
         }
 
         // Add ending section
-        twist = math::LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
+        twist =
+            math::LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
         q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
         sections.emplace_back(
             section_location, math::RotateMatrix6(section_mass_matrix, q_twist),

@@ -169,4 +169,4 @@ static std::array<std::array<double, 6>, 6> GenerateMassMatrix(
     return mass_matrix;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

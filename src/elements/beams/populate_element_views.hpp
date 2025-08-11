@@ -139,4 +139,4 @@ inline void PopulateQPCstar(
         }
     }
 }
-}  // namespace openturbine
+}  // namespace openturbine::beams

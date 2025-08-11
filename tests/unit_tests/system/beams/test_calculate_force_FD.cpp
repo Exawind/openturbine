@@ -15,8 +15,9 @@ void TestCalculateForceFD() {
     const auto x0pupSS = openturbine::beams::tests::CreateView<double[3][3]>(
         "x0pupSS", std::array{1., 2., 3., 4., 5., 6., 7., 8., 9.}
     );
-    const auto FC =
-        openturbine::beams::tests::CreateView<double[6]>("FC", std::array{10., 11., 12., 13., 14., 15.});
+    const auto FC = openturbine::beams::tests::CreateView<double[6]>(
+        "FC", std::array{10., 11., 12., 13., 14., 15.}
+    );
 
     const auto FD = Kokkos::View<double[6]>("FD");
 

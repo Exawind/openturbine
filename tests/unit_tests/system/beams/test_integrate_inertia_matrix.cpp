@@ -265,4 +265,4 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFacto
     IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor();
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

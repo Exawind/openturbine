@@ -135,4 +135,4 @@ struct InterpolateQPState_rprime {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

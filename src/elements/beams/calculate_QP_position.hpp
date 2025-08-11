@@ -58,4 +58,4 @@ struct CalculateQPPosition {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

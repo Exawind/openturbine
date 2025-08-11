@@ -317,4 +317,4 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
     CompareWithExpected(stiffness_matrix_terms_mirror, kExpectedStiffnessMatrix, 1e-7);
 }
 
-}  // namespace openturbine::tests::curved_beam
+}  // namespace openturbine::beams::tests

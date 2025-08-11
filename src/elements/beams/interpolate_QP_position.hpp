@@ -49,4 +49,4 @@ struct InterpolateQPPosition {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

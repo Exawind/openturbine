@@ -91,4 +91,4 @@ KOKKOS_INLINE_FUNCTION void InterpVector4Deriv(
     }
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

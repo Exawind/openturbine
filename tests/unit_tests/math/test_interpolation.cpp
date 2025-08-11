@@ -354,4 +354,4 @@ TEST(InterpolationTest, GenerateGLLPoints_SixthOrderElement) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::math::tests

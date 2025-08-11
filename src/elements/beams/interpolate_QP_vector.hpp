@@ -41,4 +41,4 @@ struct InterpolateQPVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

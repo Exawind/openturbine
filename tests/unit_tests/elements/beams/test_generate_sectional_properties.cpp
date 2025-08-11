@@ -172,4 +172,4 @@ TEST_F(GenerateSectionalMatricesTest, MassMatrix_CGOffsetCoupling) {
     ExpectMatrixEqual(result, expected);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

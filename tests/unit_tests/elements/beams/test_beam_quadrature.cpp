@@ -30,4 +30,4 @@ TEST(BeamQuadratureTest, CheckCreateTrapezoidalQuadrature_2) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

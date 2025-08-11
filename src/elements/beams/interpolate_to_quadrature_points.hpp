@@ -116,4 +116,4 @@ struct InterpolateToQuadraturePoints {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

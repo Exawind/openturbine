@@ -500,4 +500,4 @@ TEST(IntegrateStiffnessMatrixTests, OneElementOneNodeTwoQPs_Quu) {
     TestIntegrateStiffnessMatrix_1Element1Node2QPs_Quu();
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::beams::tests

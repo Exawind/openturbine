@@ -23,4 +23,4 @@ inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(const std:
     return quadrature;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::beams

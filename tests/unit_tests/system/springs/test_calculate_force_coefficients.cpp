@@ -12,8 +12,10 @@
 namespace {
 
 void TestCalculateForceCoefficient1_ThreeElements() {
-    const auto k = openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
-    const auto l_ref = openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
+    const auto k =
+        openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
+    const auto l_ref =
+        openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
     const auto l = openturbine::beams::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
 
     const auto c1 = Kokkos::View<double[3]>("c1");
@@ -37,8 +39,10 @@ void TestCalculateForceCoefficient1_ThreeElements() {
 }
 
 void TestCalculateForceCoefficient2_ThreeElements() {
-    const auto k = openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
-    const auto l_ref = openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
+    const auto k =
+        openturbine::beams::tests::CreateView<double[3]>("k", std::array{100., 200., 300.});
+    const auto l_ref =
+        openturbine::beams::tests::CreateView<double[3]>("l_ref", std::array{1., 5., 3.});
     const auto l = openturbine::beams::tests::CreateView<double[3]>("l", std::array{2., 4., 6.});
 
     const auto c2 = Kokkos::View<double[3]>("c2");
