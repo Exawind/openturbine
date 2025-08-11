@@ -6,12 +6,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_klu.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::KLU>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::KLU>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
-        MultiVectorType& x
+        Handle<Algorithm::KLU>& dss_handle, CrsMatrixType& A, MultiVectorType& b, MultiVectorType& x
     ) {
         const auto num_rows = A.numRows();
 
@@ -27,4 +26,4 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::KLU>, CrsMatrixType, MultiVector
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

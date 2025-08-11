@@ -7,7 +7,7 @@
 
 #include "vector_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::math {
 
 /**
  * @brief Converts a 4x1 quaternion to a 3x3 rotation matrix and returns the result
@@ -354,4 +354,4 @@ inline bool IsIdentityQuaternion(const std::array<double, 4>& q, double toleranc
            std::abs(q[2]) <= tolerance && std::abs(q[3]) <= tolerance;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

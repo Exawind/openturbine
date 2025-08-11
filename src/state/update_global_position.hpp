@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to update the absolute position of each node based on the solver's current
+ * state and the initial absolute position.
+ */
 template <typename DeviceType>
 struct UpdateGlobalPosition {
     template <typename ValueType>
@@ -31,7 +35,7 @@ struct UpdateGlobalPosition {
         // Calculate global orientation
         auto node_x_data = Array<double, 4>{};
         const auto node_x = View<double[4]>{node_x_data.data()};
-        QuaternionCompose(
+        math::QuaternionCompose(
             subview(q, node, make_pair(3, 7)), subview(x0, node, make_pair(3, 7)), node_x
         );
         x(node, 3) = node_x(0);

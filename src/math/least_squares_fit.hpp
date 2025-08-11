@@ -14,7 +14,7 @@ namespace lapack {
 
 #include "elements/beams/interpolation.hpp"
 
-namespace openturbine {
+namespace openturbine::math {
 
 /**
  * @brief Maps input geometric locations -> normalized domain using linear mapping
@@ -181,4 +181,4 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     return result;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::math

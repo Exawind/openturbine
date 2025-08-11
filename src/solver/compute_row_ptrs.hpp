@@ -6,8 +6,12 @@
 #include "compute_system_row_entries.hpp"
 #include "scan_row_entries.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief Top level function object for calculating the row pointers of the CRS matrix to be solved
+ * during each nonlinear iteration.
+ */
 template <typename RowPtrType>
 struct ComputeRowPtrs {
     using DeviceType = typename RowPtrType::device_type;
@@ -65,4 +69,4 @@ struct ComputeRowPtrs {
         return row_ptrs;
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::solver

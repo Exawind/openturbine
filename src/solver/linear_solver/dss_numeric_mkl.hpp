@@ -6,11 +6,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_mkl.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename CrsMatrixType>
-struct DSSNumericFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType> {
-    static void numeric(DSSHandle<DSSAlgorithm::MKL>& dss_handle, CrsMatrixType& A) {
+struct NumericFunction<Handle<Algorithm::MKL>, CrsMatrixType> {
+    static void numeric(Handle<Algorithm::MKL>& dss_handle, CrsMatrixType& A) {
         auto& handle = dss_handle.get_handle();
         constexpr MKL_INT opt = MKL_DSS_INDEFINITE;
 
@@ -20,4 +20,4 @@ struct DSSNumericFunction<DSSHandle<DSSAlgorithm::MKL>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

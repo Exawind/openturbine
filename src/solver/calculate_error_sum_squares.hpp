@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief Reduction Kernel which calculates the sum of the square of the errors for each
+ * node in the system for use in computing the system convergence.
+ */
 template <typename DeviceType>
 struct CalculateSystemErrorSumSquares {
     using value_type = double;
@@ -39,6 +43,10 @@ struct CalculateSystemErrorSumSquares {
     }
 };
 
+/**
+ * @brief Reduction Kernel which calculates the sum of the squares of the error
+ * for each constraint for use in computing system convergence
+ */
 template <typename DeviceType>
 struct CalculateConstraintsErrorSumSquares {
     using value_type = double;
@@ -71,4 +79,4 @@ struct CalculateConstraintsErrorSumSquares {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

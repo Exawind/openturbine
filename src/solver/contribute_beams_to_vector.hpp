@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel which sums the residual contributions computed at each node in a beam
+ * into the correct location of the global RHS vector.
+ */
 template <typename DeviceType>
 struct ContributeBeamsToVector {
     using TeamPolicy = Kokkos::TeamPolicy<typename DeviceType::execution_space>;
@@ -43,4 +47,4 @@ struct ContributeBeamsToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

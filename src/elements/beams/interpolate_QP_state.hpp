@@ -97,7 +97,7 @@ struct InterpolateQPState_r {
         }
 
         for (auto component = 0U; component < 4U; ++component) {
-            qp_r(element, qp, component) = NormalizeQuaternion(local_total)[component];
+            qp_r(element, qp, component) = math::NormalizeQuaternion(local_total)[component];
         }
     }
 };

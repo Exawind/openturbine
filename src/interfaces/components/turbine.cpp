@@ -98,10 +98,10 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
 
     // Calculate rotation quaternion to align a component from x-axis to z-axis (i.e.
     // rotate about y-axis by -90 degrees)
-    const auto q_x_to_z = RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+    const auto q_x_to_z = math::RotationVectorToQuaternion({0., -M_PI / 2., 0.});
 
     // Calculate cone angle rotation quaternion (rotate about y-axis by -cone angle)
-    const auto q_cone = RotationVectorToQuaternion({0., -input.cone_angle, 0.});
+    const auto q_cone = math::RotationVectorToQuaternion({0., -input.cone_angle, 0.});
 
     //--------------------------------------------------------------------------
     // Position tower
@@ -161,7 +161,8 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
 
         // Calculate azimuth angle rotation quaternion (rotate about x-axis)
         const auto q_azimuth =
-            RotationVectorToQuaternion({static_cast<double>(beam) * blade_angle_delta, 0., 0.});
+            math::RotationVectorToQuaternion({static_cast<double>(beam) * blade_angle_delta, 0., 0.}
+            );
 
         // Rotate blade nodes (including apex node) -> cone angle -> azimuth angle
         for (const auto& node_id : current_blade_node_ids) {
@@ -176,7 +177,7 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Create shaft rotation quaternion
-    const auto q_shaft_tilt = RotationVectorToQuaternion({0., input.shaft_tilt_angle, 0.});
+    const auto q_shaft_tilt = math::RotationVectorToQuaternion({0., input.shaft_tilt_angle, 0.});
 
     // Rotate rotor nodes by shaft tilt angle and translate to apex position
     for (const auto& node_id : this->rotor_node_ids) {
@@ -425,7 +426,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
         };
 
         // Create rotation vector about the pitch axis
-        const auto pitch_axis_unit = UnitVector(pitch_axis);
+        const auto pitch_axis_unit = math::UnitVector(pitch_axis);
         const auto rotation_vector = std::array{
             input.blade_pitch_angle * pitch_axis_unit[0],
             input.blade_pitch_angle * pitch_axis_unit[1],
@@ -433,7 +434,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
         };
 
         // Calculate pitch rotation quaternion
-        const auto q_pitch = RotationVectorToQuaternion(rotation_vector);
+        const auto q_pitch = math::RotationVectorToQuaternion(rotation_vector);
 
         // Use apex node position as rotation center
         const auto pitch_center = std::array{apex_node.x0[0], apex_node.x0[1], apex_node.x0[2]};
@@ -454,7 +455,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
         const auto& tower_top_node = model.GetNode(this->tower.nodes.back().id);
 
         // Create yaw rotation quaternion (rotation about tower Z-axis)
-        const auto q_yaw = RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
+        const auto q_yaw = math::RotationVectorToQuaternion({0., 0., input.nacelle_yaw_angle});
 
         // Rotate all nacelle components about tower top position
         for (const auto& node_id : this->nacelle_node_ids) {
@@ -485,8 +486,8 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     };
 
     // Apply tower base displacement if displacement is non-zero or rotation is non-identity
-    if (Norm(tower_base_displacement) > kZeroTolerance ||
-        !IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
+    if (math::Norm(tower_base_displacement) > kZeroTolerance ||
+        !math::IsIdentityQuaternion(tower_base_orientation, kZeroTolerance)) {
         // Apply displacement to all turbine nodes
         for (const auto& node_id : this->all_turbine_node_ids) {
             // first rotate about original tower base position
@@ -510,7 +511,7 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
     // Calculate shaft axis in current configuration
     const auto hub_position = model.GetNode(this->hub_node.id).DisplacedPosition();
     const auto shaft_base_position = model.GetNode(this->shaft_base_node.id).DisplacedPosition();
-    const auto shaft_axis = UnitVector(
+    const auto shaft_axis = math::UnitVector(
         {hub_position[0] - shaft_base_position[0], hub_position[1] - shaft_base_position[1],
          hub_position[2] - shaft_base_position[2]}
     );

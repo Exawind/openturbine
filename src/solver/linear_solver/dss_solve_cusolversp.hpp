@@ -7,11 +7,11 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cusolversp.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
-struct DSSSolveFunction<DSSHandle<DSSAlgorithm::CUSOLVER_SP>, CrsMatrixType, MultiVectorType> {
+struct SolveFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType, MultiVectorType> {
     static void solve(
-        DSSHandle<DSSAlgorithm::CUSOLVER_SP>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
+        Handle<Algorithm::CUSOLVER_SP>& dss_handle, CrsMatrixType& A, MultiVectorType& b,
         MultiVectorType& x
     ) {
         const auto num_rows = A.numRows();
@@ -33,4 +33,4 @@ struct DSSSolveFunction<DSSHandle<DSSAlgorithm::CUSOLVER_SP>, CrsMatrixType, Mul
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

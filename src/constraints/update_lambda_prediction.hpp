@@ -4,6 +4,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief A Kernel to update the predicted constraint Lagrange multiplier values at each
+ * nonlinear iteration
+ */
 template <typename DeviceType>
 struct UpdateLambdaPrediction {
     template <typename ValueType>

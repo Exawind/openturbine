@@ -4,14 +4,14 @@
 
 #include "OpenTurbine_config.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 
-template <DSSAlgorithm>
-class DSSHandle {
+template <Algorithm>
+class Handle {
 public:
-    DSSHandle() = delete;
+    Handle() = delete;
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_handle_cusolversp.hpp"

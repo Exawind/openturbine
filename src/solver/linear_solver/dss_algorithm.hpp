@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
 
-namespace openturbine {
+namespace openturbine::dss {
 
-enum class DSSAlgorithm : std::uint8_t {
+enum class Algorithm : std::uint8_t {
     CUSOLVER_SP,
     CUDSS,
     KLU,
@@ -14,4 +14,4 @@ enum class DSSAlgorithm : std::uint8_t {
     NONE,
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

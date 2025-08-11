@@ -105,18 +105,15 @@ TEST(RotatingBeamTest, StepConvergence) {
     std::transform(
         std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            const auto x = 10 * s + x0_root[0];
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetDisplacement(0., 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element
+    // Add beam element and set its position and velocity
     model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {x0_root[0], 0., 0.});
+    model.SetBeamVelocityAboutPoint(0, {0., 0., 0., 0., 0., omega}, {0., 0., 0.});
 
     // Add prescribed boundary condition on first node of beam
     model.AddPrescribedBC(node_ids[0]);
@@ -135,8 +132,8 @@ TEST(RotatingBeamTest, StepConvergence) {
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
-        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        const auto x_root = RotateVectorByQuaternion(q, x0_root);
+        const auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        const auto x_root = math::RotateVectorByQuaternion(q, x0_root);
         const auto u_root =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         constraints.UpdateDisplacement(0, {u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]});
@@ -175,46 +172,35 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     // Gravity vector
     model.SetGravity(0., 0., 0.);
 
-    // Rotor angular velocity in rad/s
-    constexpr auto omega = std::array{0., 0., 1.};
-
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
-    constexpr auto num_blades = 2U;
-    constexpr auto blade_list = std::array<int, num_blades>{};
-    std::vector<size_t> blade_elem_ids;
+    constexpr auto num_blades = 2;
+    constexpr auto velocity = std::array{0., 0., 0., 0., 0., 1.};
+    constexpr auto origin = std::array{0., 0., 0.};
+    constexpr auto hub_radius = 2.;
+    for (auto blade_number = 0; blade_number < num_blades; ++blade_number) {
+        auto beam_node_ids = std::vector<size_t>(node_s.size());
+        std::transform(
+            std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
+            [&](auto s) {
+                return model.AddNode()
+                    .SetElemLocation(s)
+                    .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
+                    .Build();
+            }
+        );
+        auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
+        auto rotation_quaternion = std::array{1., 0., 0., 0.};
+        model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
+        model.RotateBeamAboutPoint(blade_elem_id, rotation_quaternion, origin);
+        model.SetBeamVelocityAboutPoint(blade_elem_id, velocity, origin);
+    }
 
-    // Loop through blades
-    std::transform(
-        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(blade_elem_ids),
-        [&](size_t) {
-            // Define root rotation
-            constexpr auto q_root = std::array{1., 0., 0., 0.};
-
-            // Declare list of element nodes
-            std::vector<size_t> beam_node_ids(node_s.size());
-            std::transform(
-                std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
-                [&](auto s) {
-                    const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
-                    const auto v = CrossProduct(omega, pos);
-                    return model.AddNode()
-                        .SetElemLocation(s)
-                        .SetPosition(
-                            pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2], q_root[3]
-                        )
-                        .SetVelocity(v[0], v[1], v[2], omega[0], omega[1], omega[2])
-                        .Build();
-                }
-            );
-            // Set constraint nodes
-            model.AddPrescribedBC(beam_node_ids[0]);
-
-            // Add beam element
-            return model.AddBeamElement(beam_node_ids, sections, quadrature);
-        }
-    );
+    // Add a prescribed BC for each root node
+    for (const auto& beam_element : model.GetBeamElements()) {
+        model.AddPrescribedBC(beam_element.node_ids.front());
+    }
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -228,9 +214,9 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Calculate hub rotation for this time step
-    const auto q_hub =
-        RotationVectorToQuaternion({step_size * omega[0], step_size * omega[1], step_size * omega[2]}
-        );
+    const auto q_hub = math::RotationVectorToQuaternion(
+        {step_size * velocity[3], step_size * velocity[4], step_size * velocity[5]}
+    );
 
     // Define hub translation/rotation displacement
     const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
@@ -270,47 +256,36 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Gravity vector
     model.SetGravity(0., 0., 9.81);
 
-    // Rotor angular velocity in rad/s
-    const auto omega = std::array{0., 0., 1.};
-
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 1 rad/s angular velocity around the z axis
-    constexpr auto num_blades = 3U;
-    auto blade_list = std::array<int, num_blades>{};
-    std::iota(std::begin(blade_list), std::end(blade_list), 0);
+    constexpr auto num_blades = 3;
+    constexpr auto velocity = std::array{0., 0., 0., 0., 0., 1.};
+    constexpr auto origin = std::array{0., 0., 0.};
+    constexpr auto hub_radius = 2.;
+    for (auto blade_number = 0; blade_number < num_blades; ++blade_number) {
+        auto beam_node_ids = std::vector<size_t>(node_s.size());
+        std::transform(
+            std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
+            [&](auto s) {
+                return model.AddNode()
+                    .SetElemLocation(s)
+                    .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
+                    .Build();
+            }
+        );
+        auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
+        auto rotation_quaternion =
+            math::RotationVectorToQuaternion({0., 0., 2. * M_PI * blade_number / num_blades});
+        model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
+        model.RotateBeamAboutPoint(blade_elem_id, rotation_quaternion, origin);
+        model.SetBeamVelocityAboutPoint(blade_elem_id, velocity, origin);
+    }
 
-    std::vector<size_t> blade_elem_ids;
-    std::transform(
-        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(blade_elem_ids),
-        [&](auto i) {
-            // Define root rotation
-            const auto q_root = RotationVectorToQuaternion({0., 0., 2. * M_PI * i / num_blades});
-
-            // Declare list of element nodes
-            std::vector<size_t> beam_node_ids(node_s.size());
-            std::transform(
-                std::cbegin(node_s), std::cend(node_s), std::begin(beam_node_ids),
-                [&](auto s) {
-                    const auto pos = RotateVectorByQuaternion(q_root, {10. * s + 2., 0., 0.});
-                    auto v = CrossProduct(omega, pos);
-                    return model.AddNode()
-                        .SetElemLocation(s)
-                        .SetPosition(
-                            pos[0], pos[1], pos[2], q_root[0], q_root[1], q_root[2], q_root[3]
-                        )
-                        .SetVelocity(v[0], v[1], v[2], omega[0], omega[1], omega[2])
-                        .Build();
-                }
-            );
-
-            // Set constraint nodes
-            model.AddPrescribedBC(beam_node_ids[0]);
-
-            // Add beam element and return ID
-            return model.AddBeamElement(beam_node_ids, sections, quadrature);
-        }
-    );
+    // Add a prescribed BC for each root node
+    for (const auto& beam_element : model.GetBeamElements()) {
+        model.AddPrescribedBC(beam_element.node_ids.front());
+    }
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -328,9 +303,9 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
-            {step_size * (i + 1) * omega[0], step_size * (i + 1) * omega[1],
-             step_size * (i + 1) * omega[2]}
+        const auto q_hub = math::RotationVectorToQuaternion(
+            {step_size * (i + 1) * velocity[3], step_size * (i + 1) * velocity[4],
+             step_size * (i + 1) * velocity[5]}
         );
 
         // Define hub translation/rotation displacement
@@ -358,26 +333,25 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     // Build vector of nodes (straight along x axis, no rotation)
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
-    const double omega = 0.1;
-    std::vector<size_t> beam_node_ids;
+    constexpr double omega = 0.1;
+    constexpr double hub_size = 2.;
+    std::vector<size_t> node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            auto x = 10 * s + 2.;
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element to model
-    model.AddBeamElement(beam_node_ids, sections, quadrature);
+    // Add beam element and set its position and velocity
+    model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {hub_size, 0., 0.});
+    model.SetBeamVelocityAboutPoint(0, {0., 0., 0., 0., 0., omega}, {0., 0., 0.});
 
     // Add hub node and associated constraints
     auto hub_node_id_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRigidJointConstraint({hub_node_id_id, beam_node_ids[0]});
+    model.AddRigidJointConstraint({hub_node_id_id, node_ids.front()});
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id_id);
 
     // Solution parameters
@@ -394,7 +368,7 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     // Perform 10 time steps and check for convergence within max_iter iterations
     for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
-        const auto q = RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
+        const auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
@@ -427,24 +401,24 @@ TEST(RotatingBeamTest, RotationControlConstraint) {
     model.SetGravity(0., 0., 0.);
 
     // Build vector of nodes (straight along x axis, no rotation)
-    std::vector<size_t> beam_node_ids;
+    constexpr double hub_size = 2.;
+    std::vector<size_t> node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(10 * s + 2., 0., 0., 1., 0., 0., 0.)
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element
-    model.AddBeamElement(beam_node_ids, sections, quadrature);
+    // Add beam element and set its position and velocity
+    model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {hub_size, 0., 0.});
 
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRotationControl({hub_node_id, beam_node_ids[0]}, {1., 0., 0.}, &pitch);
+    model.AddRotationControl({hub_node_id, node_ids.front()}, {1., 0., 0.}, &pitch);
     model.AddFixedBC(hub_node_id);
 
     // Solution parameters
@@ -498,24 +472,24 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
     model.SetGravity(0., 0., 0.);
 
     // Build vector of nodes (straight along x axis, no rotation)
-    std::vector<size_t> beam_node_ids;
+    constexpr double hub_size = 2.;
+    std::vector<size_t> node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(10 * s + 2., 0., 0., 1., 0., 0., 0.)
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element
-    model.AddBeamElement(beam_node_ids, sections, quadrature);
+    // Add beam element and set its position and velocity
+    model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {hub_size, 0., 0.});
 
     // Add hub node and associated constraints
     auto pitch = 0.;
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
-    model.AddRotationControl({hub_node_id, beam_node_ids[0]}, {1., 0., 0.}, &pitch);
+    model.AddRotationControl({hub_node_id, node_ids[0]}, {1., 0., 0.}, &pitch);
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
     // Solution parameters
@@ -536,14 +510,14 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         const auto t = step_size * static_cast<double>(i + 1);
         pitch = t * M_PI / 2.;
         azimuth = 0.5 * t * M_PI / 2.;
-        auto q = RotationVectorToQuaternion({0., 0., azimuth});
+        auto q = math::RotationVectorToQuaternion({0., 0., azimuth});
         constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
 
     auto q = kokkos_view_2D_to_vector(state.q);
-    auto rv = QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
+    auto rv = math::QuaternionToRotationVector({q[0][3], q[0][4], q[0][5], q[0][6]});
 
     // Same as euler rotation xz [azimuth, pitch]
     EXPECT_NEAR(rv[0], 1.482189821649821, 1e-8);
@@ -561,21 +535,20 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     // Calculate displacement, velocity, acceleration assuming a
     // 0.1 rad/s angular velocity around the z axis
     const double omega = 0.1;
-    std::vector<size_t> beam_node_ids;
+    constexpr double hub_size = 2.;
+    std::vector<size_t> node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element
-    model.AddBeamElement(beam_node_ids, sections, quadrature);
+    // Add beam element and set its position and velocity
+    model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {hub_size, 0., 0.});
+    model.SetBeamVelocityAboutPoint(0, {0., 0., 0., 0., 0., omega}, {0., 0., 0.});
 
     // Add hub node and ground node
     auto hub_node_id = model.AddNode().SetPosition(0., 0., 0., 1., 0., 0., 0.).Build();
@@ -589,7 +562,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     model.AddRevoluteJointConstraint({ground_node_id, hub_node_id}, {0., 0., 0.}, &torque);
 
     // Hub node is rigidly connected
-    model.AddRigidJointConstraint({hub_node_id, beam_node_ids[0]});
+    model.AddRigidJointConstraint({hub_node_id, node_ids.front()});
 
     // Solution parameters
     const bool is_dynamic_solve(true);
@@ -642,26 +615,23 @@ void GeneratorTorqueWithAxisTilt(
     model.SetGravity(0., 0., 0.);
 
     // Calculate tilt about x axis as a quaternion
-    auto node_tilt = RotationVectorToQuaternion({tilt, 0., 0.});
+    auto node_tilt = math::RotationVectorToQuaternion({tilt, 0., 0.});
 
     // Build vector of nodes (straight along x axis, no rotation)
-    std::vector<size_t> beam_node_ids;
+    constexpr double hub_size = 2.;
+    std::vector<size_t> node_ids;
     std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+        std::cbegin(node_s), std::cend(node_s), std::back_inserter(node_ids),
         [&](auto s) {
-            const auto x = 10 * s + 2.;
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(
-                    x, std::sin(tilt), std::cos(tilt), node_tilt[0], node_tilt[1], node_tilt[2],
-                    node_tilt[3]
-                )
-                .Build();
+            const auto x = 10 * s;
+            return model.AddNode().SetElemLocation(s).SetPosition(x, 0., 0., 1., 0., 0., 0.).Build();
         }
     );
 
-    // Add beam element
-    model.AddBeamElement(beam_node_ids, sections, quadrature);
+    // Add beam element and set its position and velocity
+    model.AddBeamElement(node_ids, sections, quadrature);
+    model.TranslateBeam(0, {hub_size, 0., 0.});
+    model.RotateBeamAboutPoint(0, node_tilt, {0., 0., 0.});
 
     // Add shaft base, azimuth, and hub nodes as massless points
     auto shaft_base_node_id = model.AddNode().SetPosition(0, 0., 0., 1., 0., 0., 0.).Build();
@@ -682,7 +652,7 @@ void GeneratorTorqueWithAxisTilt(
     model.AddRigidJointConstraint({azimuth_node_id, hub_node_id});
 
     // Beam is rigidly attached to hub
-    model.AddRigidJointConstraint({hub_node_id, beam_node_ids[0]});
+    model.AddRigidJointConstraint({hub_node_id, node_ids.front()});
 
     // Solution parameters
     const bool is_dynamic_solve(true);

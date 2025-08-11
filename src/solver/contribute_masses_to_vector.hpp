@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel which sums the residual contributions computed at a mass element's node
+ * into the correct location of the global RHS vector.
+ */
 template <typename DeviceType>
 struct ContributeMassesToVector {
     template <typename ValueType>
@@ -34,4 +38,4 @@ struct ContributeMassesToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Scanning Kernel which calculates the row pointers from a list of the number
+ * of entries in each row.
+ */
 template <typename RowPtrType>
 struct ScanRowEntries {
     using ValueType = typename RowPtrType::value_type;
@@ -19,4 +23,4 @@ struct ScanRowEntries {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

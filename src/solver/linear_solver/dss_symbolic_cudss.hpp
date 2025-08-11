@@ -6,10 +6,10 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cudss.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 template <typename CrsMatrixType>
-struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {
-    static void symbolic(DSSHandle<DSSAlgorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
+struct SymbolicFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
+    static void symbolic(Handle<Algorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
         const auto num_rows = A.numRows();
         const auto num_cols = A.numCols();
         const auto num_non_zero = A.nnz();
@@ -47,4 +47,4 @@ struct DSSSymbolicFunction<DSSHandle<DSSAlgorithm::CUDSS>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

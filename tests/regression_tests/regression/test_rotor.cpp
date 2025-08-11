@@ -36,41 +36,36 @@ Model CreateIEA15Blades(const std::array<double, 3>& omega) {
     constexpr auto num_nodes = node_loc.size();
 
     // Hub radius (meters)
-    constexpr double hub_rad{3.97};
+    constexpr auto hub_rad = std::array{3.97, 0., 0.};
+    const auto velocity = std::array{0., 0., 0., omega[0], omega[1], omega[2]};
+    constexpr auto origin = std::array{0., 0., 0.};
 
-    for (auto i = 0UL; i < num_blades; ++i) {
-        // Define root rotation
-        const auto q_root = RotationVectorToQuaternion(
-            {0., 0., -2. * M_PI * static_cast<double>(i) / static_cast<double>(num_blades)}
+    for (auto blade_number = 0U; blade_number < num_blades; ++blade_number) {
+        const auto rotation_quaternion = math::RotationVectorToQuaternion(
+            {0., 0., -2. * M_PI * static_cast<double>(blade_number) / static_cast<double>(num_blades)
+            }
         );
 
-        // Declare vector of beam nodes
-        std::vector<size_t> beam_node_ids;
+        auto beam_node_ids = std::vector<size_t>(num_nodes);
 
         auto node_list = std::array<size_t, num_nodes>{};
         std::iota(std::begin(node_list), std::end(node_list), 0);
         std::transform(
-            std::cbegin(node_list), std::cend(node_list), std::back_inserter(beam_node_ids),
+            std::cbegin(node_list), std::cend(node_list), std::begin(beam_node_ids),
             [&](const size_t j) {
-                // Calculate node position and orientation for this blade
-                const auto pos = RotateVectorByQuaternion(
-                    q_root, {node_coords[j][0] + hub_rad, node_coords[j][1], node_coords[j][2]}
-                );
-                const auto rot = QuaternionCompose(q_root, node_rotation[j]);
-                const auto v = CrossProduct(omega, pos);
-
-                // Create model node
                 return model.AddNode()
                     .SetElemLocation(node_loc[j])
-                    .SetPosition(pos[0], pos[1], pos[2], rot[0], rot[1], rot[2], rot[3])
-                    .SetVelocity(v[0], v[1], v[2], omega[0], omega[1], omega[2])
+                    .SetPosition({node_coords[j]})
                     .Build();
             }
         );
-
-        // Add beam element
-        model.AddBeamElement(beam_node_ids, material_sections, trapz_quadrature);
+        auto blade_elem_id =
+            model.AddBeamElement(beam_node_ids, material_sections, trapz_quadrature);
+        model.TranslateBeam(blade_elem_id, hub_rad);
+        model.RotateBeamAboutPoint(blade_elem_id, rotation_quaternion, origin);
+        model.SetBeamVelocityAboutPoint(blade_elem_id, velocity, origin);
     }
+
     return model;
 }
 
@@ -124,7 +119,7 @@ TEST(RotorTest, IEA15Rotor) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}
@@ -142,6 +137,58 @@ TEST(RotorTest, IEA15Rotor) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
+
+    const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
+
+    // Check root nodes
+    EXPECT_NEAR(q(0, 0), 0., 1.e-13);
+    EXPECT_NEAR(q(0, 1), 0., 1.e-13);
+    EXPECT_NEAR(q(0, 2), 0., 1.e-13);
+    EXPECT_NEAR(q(0, 3), 0.99905468165654443, 1.e-13);
+    EXPECT_NEAR(q(0, 4), 0., 1.e-13);
+    EXPECT_NEAR(q(0, 5), 0., 1.e-13);
+    EXPECT_NEAR(q(0, 6), -0.043471175048988092, 1.e-13);
+
+    EXPECT_NEAR(q(11, 0), q(0, 0), 1.e-13);
+    EXPECT_NEAR(q(11, 1), q(0, 1), 1.e-13);
+    EXPECT_NEAR(q(11, 2), q(0, 2), 1.e-13);
+    EXPECT_NEAR(q(11, 3), q(0, 3), 1.e-13);
+    EXPECT_NEAR(q(11, 4), q(0, 4), 1.e-13);
+    EXPECT_NEAR(q(11, 5), q(0, 5), 1.e-13);
+    EXPECT_NEAR(q(11, 6), q(0, 6), 1.e-13);
+
+    EXPECT_NEAR(q(22, 0), q(0, 0), 1.e-13);
+    EXPECT_NEAR(q(22, 1), q(0, 1), 1.e-13);
+    EXPECT_NEAR(q(22, 2), q(0, 2), 1.e-13);
+    EXPECT_NEAR(q(22, 3), q(0, 3), 1.e-13);
+    EXPECT_NEAR(q(22, 4), q(0, 4), 1.e-13);
+    EXPECT_NEAR(q(22, 5), q(0, 5), 1.e-13);
+    EXPECT_NEAR(q(22, 6), q(0, 6), 1.e-13);
+
+    // Tip Node
+    EXPECT_NEAR(q(10, 0), -0.46734512264502198, 1.e-13);
+    EXPECT_NEAR(q(10, 1), -10.510711492795387, 1.e-13);
+    EXPECT_NEAR(q(10, 2), -0.067517209683264995, 1.e-13);
+    EXPECT_NEAR(q(10, 3), 0.99897571548945407, 1.e-13);
+    EXPECT_NEAR(q(10, 4), -0.0037457241431271423, 1.e-13);
+    EXPECT_NEAR(q(10, 5), 0.0040838058169996218, 1.e-13);
+    EXPECT_NEAR(q(10, 6), -0.044908929435304161, 1.e-13);
+
+    EXPECT_NEAR(q(21, 0), -8.9078971370783169, 1.e-13);
+    EXPECT_NEAR(q(21, 1), 5.685448601681232, 1.e-13);
+    EXPECT_NEAR(q(21, 2), -0.075564876118098229, 1.e-13);
+    EXPECT_NEAR(q(21, 3), 0.99897027934209304, 1.e-13);
+    EXPECT_NEAR(q(21, 4), 0.0056252825720437376, 1.e-13);
+    EXPECT_NEAR(q(21, 5), 0.0014726673754152763, 1.e-13);
+    EXPECT_NEAR(q(21, 6), -0.044995204610788583, 1.e-13);
+
+    EXPECT_NEAR(q(32, 0), 9.2903477400425523, 1.e-13);
+    EXPECT_NEAR(q(32, 1), 4.8313504492042556, 1.e-13);
+    EXPECT_NEAR(q(32, 2), -0.074844967147025251, 1.e-13);
+    EXPECT_NEAR(q(32, 3), 0.99897383015202312, 1.e-13);
+    EXPECT_NEAR(q(32, 4), -0.0015569045486905323, 1.e-13);
+    EXPECT_NEAR(q(32, 5), -0.005622374121860842, 1.e-13);
+    EXPECT_NEAR(q(32, 6), -0.044913824473725598, 1.e-13);
 }
 
 TEST(RotorTest, IEA15RotorHub) {
@@ -178,7 +225,7 @@ TEST(RotorTest, IEA15RotorHub) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}
@@ -235,8 +282,9 @@ TEST(RotorTest, IEA15RotorController) {
     for (const auto& beam_elem : model.GetBeamElements()) {
         const auto rotation_fraction =
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
-        const auto q_root = RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
-        const auto pitch_axis = RotateVectorByQuaternion(q_root, {1., 0., 0.});
+        const auto q_root =
+            math::RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
+        const auto pitch_axis = math::RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
         );
@@ -253,7 +301,8 @@ TEST(RotorTest, IEA15RotorController) {
         const double t = step_size * static_cast<double>(i + 1);
 
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto q_hub =
+            math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
@@ -309,7 +358,7 @@ TEST(RotorTest, IEA15RotorHost) {
     // Perform time steps and check for convergence within max_iter iterations
     for (auto i = 0U; i < num_steps; ++i) {
         // Calculate hub rotation for this time step
-        const auto q_hub = RotationVectorToQuaternion(
+        const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
              omega[1] * step_size * static_cast<double>(i + 1),
              omega[2] * step_size * static_cast<double>(i + 1)}

@@ -5,7 +5,12 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
+
+/**
+ * @brief A Kernel which copies the transpose gradient matrix contributions for the
+ * base and target node of a constraint to the correct location in the global CRS matrix.
+ */
 template <typename CrsMatrixType>
 struct CopyConstraintsTransposeToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
@@ -92,4 +97,4 @@ struct CopyConstraintsTransposeToSparseMatrix {
         );
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::solver

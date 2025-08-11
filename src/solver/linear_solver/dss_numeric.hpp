@@ -2,14 +2,14 @@
 
 #include "OpenTurbine_config.h"
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSHandleType, typename CrsMatrixType>
-struct DSSNumericFunction {
-    DSSNumericFunction() = delete;
+struct NumericFunction {
+    NumericFunction() = delete;
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::dss
 
 #ifdef OpenTurbine_ENABLE_CUSOLVERSP
 #include "dss_numeric_cusolversp.hpp"
@@ -39,11 +39,11 @@ struct DSSNumericFunction {
 #include "dss_numeric_superlu_mt.hpp"
 #endif
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <typename DSSHandleType, typename CrsMatrixType>
-void dss_numeric(DSSHandleType& dss_handle, CrsMatrixType& A) {
-    DSSNumericFunction<DSSHandleType, CrsMatrixType>::numeric(dss_handle, A);
+void numeric_factorization(DSSHandleType& dss_handle, CrsMatrixType& A) {
+    NumericFunction<DSSHandleType, CrsMatrixType>::numeric(dss_handle, A);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dss

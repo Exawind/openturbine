@@ -4,7 +4,7 @@
 
 namespace openturbine {
 
-/*
+/**
  * @brief Represents a node in the finite element model
  *
  * @details A node is a point in 3D space that can have position, orientation, displacement,
@@ -67,7 +67,7 @@ struct Node {
         displaced_position[2] = this->x0[2] + this->u[2];
 
         // Compose quaternions for orientation (w, i, j, k)
-        auto q_displaced = QuaternionCompose(
+        auto q_displaced = math::QuaternionCompose(
             {this->x0[3], this->x0[4], this->x0[5], this->x0[6]},  // initial orientation
             {this->u[3], this->u[4], this->u[5], this->u[6]}       // displacement orientation
         );
@@ -106,7 +106,7 @@ struct Node {
             std::array{this->x0[0] - point[0], this->x0[1] - point[1], this->x0[2] - point[2]};
 
         // Rotate the vector r using the provided quaternion q
-        const auto rotated_r = RotateVectorByQuaternion(q, r);
+        const auto rotated_r = math::RotateVectorByQuaternion(q, r);
 
         // Update the position by adding the rotated vector to the reference point
         this->x0[0] = rotated_r[0] + point[0];
@@ -117,7 +117,8 @@ struct Node {
         // Orientation, x(3:6)
         //----------------------------------------------------
         // Compose q with initial orientation to get rotated orientation
-        auto q_new = QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
+        auto q_new =
+            math::QuaternionCompose(q, {this->x0[3], this->x0[4], this->x0[5], this->x0[6]});
 
         // Update the orientation
         this->x0[3] = q_new[0];
@@ -130,7 +131,7 @@ struct Node {
 
     /// Rotate node by a rotation vector about the given point
     Node& RotateAboutPoint(const std::array<double, 3>& rv, const std::array<double, 3>& point) {
-        const auto q = RotationVectorToQuaternion(rv);
+        const auto q = math::RotationVectorToQuaternion(rv);
         this->RotateAboutPoint(q, point);
         return *this;
     }
@@ -162,7 +163,7 @@ struct Node {
         };
 
         // Rotate the vector r using the provided quaternion q
-        const auto rotated_r = RotateVectorByQuaternion(q, r);
+        const auto rotated_r = math::RotateVectorByQuaternion(q, r);
 
         // Update the displacement position by adding the rotated vector to the reference point
         // and subtracting the initial position
@@ -174,7 +175,7 @@ struct Node {
         // Displacement orientation, u(3:6)
         //----------------------------------------------------
         // Compose q with initial displacement orientation to get rotated displacement orientation
-        auto q_new = QuaternionCompose(q, {this->u[3], this->u[4], this->u[5], this->u[6]});
+        auto q_new = math::QuaternionCompose(q, {this->u[3], this->u[4], this->u[5], this->u[6]});
 
         // Update the displacement orientation
         this->u[3] = q_new[0];
@@ -189,7 +190,7 @@ struct Node {
     Node& RotateDisplacementAboutPoint(
         const std::array<double, 3>& rv, const std::array<double, 3>& point
     ) {
-        const auto q = RotationVectorToQuaternion(rv);
+        const auto q = math::RotationVectorToQuaternion(rv);
         this->RotateDisplacementAboutPoint(q, point);
         return *this;
     }
@@ -211,7 +212,7 @@ struct Node {
 
         // Calculate velocity contribution from angular velocity
         const auto omega = std::array{velocity[3], velocity[4], velocity[5]};
-        const auto omega_cross_r = CrossProduct(omega, r);
+        const auto omega_cross_r = math::CrossProduct(omega, r);
 
         // Set node translational velocity
         this->v[0] = velocity[0] + omega_cross_r[0];
@@ -242,8 +243,9 @@ struct Node {
 
         // Calculate translational acceleration contribution from angular velocity
         const auto alpha = std::array{acceleration[3], acceleration[4], acceleration[5]};
-        const auto alpha_cross_r = CrossProduct(alpha, r);
-        const auto omega_cross_omega_cross_r = CrossProduct(omega, CrossProduct(omega, r));
+        const auto alpha_cross_r = math::CrossProduct(alpha, r);
+        const auto omega_cross_omega_cross_r =
+            math::CrossProduct(omega, math::CrossProduct(omega, r));
 
         // Set node translational acceleration
         this->vd[0] = acceleration[0] + alpha_cross_r[0] + omega_cross_omega_cross_r[0];

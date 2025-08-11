@@ -6,6 +6,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the force applied to the system residual as the result of
+ * a revolute joint constraint
+ */
 template <typename DeviceType>
 struct CalculateRevoluteJointForce {
     template <typename ValueType>
@@ -33,7 +37,7 @@ struct CalculateRevoluteJointForce {
         //----------------------------------------------------------------------
 
         // Extract residual rows relevant to this constraint
-        RotateVectorByQuaternion(R2, X0, R2_X0);
+        math::RotateVectorByQuaternion(R2, X0, R2_X0);
 
         // Take axis_x and rotate it to right orientation
         system_residual_terms(3) = R2_X0(0) * inputs(0);

@@ -62,15 +62,13 @@ template <
 }
 
 /**
- * @brief Struct to define a turbine model with nodes, elements, and constraints
+ * @brief Struct to define the connectivity structure of elements, nodes, and constraints defining
+ * an OpenTurbine problem.
  *
  * @details A model is a collection of nodes, elements, and constraints that define the geometry and
- * relationships between components in a turbine
- * - Nodes represent points in space with position, displacement, velocity, and acceleration
- * - Elements represent components in the turbine with mass (beams, rigid bodies) and stiffness
- * matrices (beams)
- * - Constraints represent relationships between nodes that restrict their relative motion in some
- * way
+ * relationships between components in an OpenTurbine problem.
+ * Model also provides methods to consistantly manipulate the nodes associated with a given element
+ * (for example, rotating all nodes in a beam) to ease the process of defining problems.
  */
 class Model {
 public:

@@ -15,7 +15,7 @@ TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
     };
 
     const auto output_points =
-        ProjectPointsToTargetPolynomial(num_input_pts, num_output_pts, input_points);
+        math::ProjectPointsToTargetPolynomial(num_input_pts, num_output_pts, input_points);
 
     // Expected projected points from Mathematica
     const std::vector<std::array<double, 3>> expected_projected_points = {

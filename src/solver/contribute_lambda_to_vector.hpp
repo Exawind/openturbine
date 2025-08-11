@@ -4,8 +4,12 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A kernel which contributes the constraint Lagrange multiplier terms to the correct
+ * locations in the global RHS vector.
+ */
 template <typename DeviceType>
 struct ContributeLambdaToVector {
     template <typename ValueType>
@@ -47,4 +51,4 @@ struct ContributeLambdaToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

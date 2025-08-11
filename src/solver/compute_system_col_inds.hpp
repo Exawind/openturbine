@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel for computing the system elements' contribution to the
+ * column indicies for the CRS matrix to be solved at each nonlinear iteration
+ */
 template <typename RowPtrType, typename IndicesType>
 struct ComputeSystemColInds {
     using RowPtrValueType = typename RowPtrType::value_type;
@@ -127,4 +131,4 @@ struct ComputeSystemColInds {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

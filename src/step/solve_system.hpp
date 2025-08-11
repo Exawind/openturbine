@@ -19,20 +19,22 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
 
     Kokkos::parallel_for(
         "ConditionR", RangePolicy(0, solver.num_system_dofs),
-        ConditionR<DeviceType>{parameters.conditioner, solver.b}
+        solver::ConditionR<DeviceType>{parameters.conditioner, solver.b}
     );
 
     KokkosBlas::scal(solver.b, -1., solver.b);
 
     {
         auto solve_region = Kokkos::Profiling::ScopedRegion("Linear Solve");
-        dss_numeric(solver.handle, solver.A);
-        dss_solve(solver.handle, solver.A, solver.b, solver.x);
+        dss::numeric_factorization(solver.handle, solver.A);
+        dss::solve(solver.handle, solver.A, solver.b, solver.x);
     }
 
     Kokkos::parallel_for(
         "UnconditionSolution", RangePolicy(0, solver.num_dofs - solver.num_system_dofs),
-        UnconditionSolution<DeviceType>{solver.num_system_dofs, parameters.conditioner, solver.x}
+        solver::UnconditionSolution<DeviceType>{
+            solver.num_system_dofs, parameters.conditioner, solver.x
+        }
     );
 }
 

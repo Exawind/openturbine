@@ -4,8 +4,11 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel which sums the nodal forces into the global RHS vector
+ */
 template <typename DeviceType>
 struct ContributeForcesToVector {
     template <typename ValueType>
@@ -45,4 +48,4 @@ struct ContributeForcesToVector {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

@@ -22,7 +22,7 @@ inline void AssembleConstraintsMatrix(
 
     Kokkos::parallel_for(
         "CopyConstraintsToSparseMatrix", constraint_policy,
-        CopyConstraintsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
+        solver::CopyConstraintsToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_terms,
@@ -32,7 +32,7 @@ inline void AssembleConstraintsMatrix(
 
     Kokkos::parallel_for(
         "CopyConstraintsTransposeToSparseMatrix", constraint_policy,
-        CopyConstraintsTransposeToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
+        solver::CopyConstraintsTransposeToSparseMatrix<typename Solver<DeviceType>::CrsMatrixType>{
             solver.num_system_dofs, constraints.row_range, constraints.base_node_freedom_signature,
             constraints.target_node_freedom_signature, constraints.base_node_freedom_table,
             constraints.target_node_freedom_table, constraints.base_gradient_transpose_terms,

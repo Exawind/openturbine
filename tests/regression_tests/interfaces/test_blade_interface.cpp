@@ -128,7 +128,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     const auto time_step{0.01};
     const auto omega = std::array{0., 0., 1.};
     const auto x0_root = std::array{2., 0., 0.};
-    const auto root_vel = CrossProduct(omega, x0_root);
+    const auto root_vel = math::CrossProduct(omega, x0_root);
     const auto write_output{false};
 
     // Create interface builder
@@ -206,8 +206,9 @@ TEST(BladeInterfaceTest, RotatingBeam) {
         const auto t{static_cast<double>(i) * time_step};
 
         // Calculate root displacement from initial position and apply
-        const auto u_rot = RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
-        const auto x_root = RotateVectorByQuaternion(u_rot, x0_root);
+        const auto u_rot =
+            math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
+        const auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
         const auto u_trans =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
         interface.SetRootDisplacement(

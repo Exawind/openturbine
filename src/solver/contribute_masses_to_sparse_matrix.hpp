@@ -5,8 +5,12 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel which sums the system matrix contributions computed at a mass element's node
+ * into the correct location of the global CRS matrix.
+ */
 template <typename CrsMatrixType>
 struct ContributeMassesToSparseMatrix {
     using DeviceType = typename CrsMatrixType::device_type;
@@ -55,4 +59,4 @@ struct ContributeMassesToSparseMatrix {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

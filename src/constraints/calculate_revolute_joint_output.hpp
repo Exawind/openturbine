@@ -7,6 +7,10 @@
 
 namespace openturbine {
 
+/**
+ * @brief Kernel for calculating the output for a revolute joint constraint for feedback to
+ * controllers
+ */
 template <typename DeviceType>
 struct CalculateRevoluteJointOutput {
     template <typename ValueType>
@@ -48,12 +52,12 @@ struct CalculateRevoluteJointOutput {
         // Calculate current orientation
         auto RR0_data = Array<double, 4>{};
         auto RR0 = View<double[4]>(RR0_data.data());
-        QuaternionCompose(R, R0, RR0);
+        math::QuaternionCompose(R, R0, RR0);
 
         // Calculate rotational displacement as rotation vector
         auto RotVec_data = Array<double, 3>{};
         auto RotVec = View<double[3]>(RotVec_data.data());
-        QuaternionToRotationVector(R, RotVec);
+        math::QuaternionToRotationVector(R, RotVec);
 
         // Target node rotational velocity vector
         const auto omega_data =
@@ -68,16 +72,16 @@ struct CalculateRevoluteJointOutput {
         // Calculate joint axis in current configuration
         auto joint_axis_data = Array<double, 3>{};
         auto joint_axis = View<double[3]>{joint_axis_data.data()};
-        RotateVectorByQuaternion(R, joint_axis0, joint_axis);
+        math::RotateVectorByQuaternion(R, joint_axis0, joint_axis);
 
         // Calculate rotation about shaft axis
-        auto angular_rotation = DotProduct(joint_axis, RotVec);
+        auto angular_rotation = math::DotProduct(joint_axis, RotVec);
 
         // Angular velocity about joint axis (rad/s)
-        auto angular_velocity = DotProduct(joint_axis, omega);
+        auto angular_velocity = math::DotProduct(joint_axis, omega);
 
         // Angular acceleration about joint axis (rad/s)
-        auto angular_acceleration = DotProduct(joint_axis, omega_dot);
+        auto angular_acceleration = math::DotProduct(joint_axis, omega_dot);
 
         // Save outputs
         outputs(constraint, 0) = angular_rotation;

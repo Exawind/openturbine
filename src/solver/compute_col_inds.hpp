@@ -5,8 +5,12 @@
 #include "compute_constraints_col_inds.hpp"
 #include "compute_system_col_inds.hpp"
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief The top level function object for computing the column indicies for the CRS matrix
+ * to be solved at each nonlinear iteration
+ */
 template <typename RowPtrType, typename IndicesType>
 struct ComputeColInds {
     template <typename ValueType>
@@ -55,4 +59,4 @@ struct ComputeColInds {
         return col_inds;
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::solver

@@ -2,8 +2,12 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::solver {
 
+/**
+ * @brief A Kernel which sums the residual contributions computed at each of the nodes in a spring
+ * element into the correct location of the global RHS vector.
+ */
 template <typename DeviceType>
 struct ContributeSpringsToVector {
     template <typename ValueType>
@@ -41,4 +45,4 @@ struct ContributeSpringsToVector {
     };
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::solver

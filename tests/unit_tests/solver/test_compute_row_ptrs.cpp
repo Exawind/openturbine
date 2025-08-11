@@ -7,7 +7,7 @@
 
 #include "solver/compute_row_ptrs.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::solver::tests {
 
 template <typename ValueType, typename DataType>
 typename Kokkos::View<ValueType>::const_type CreateView(
@@ -233,4 +233,4 @@ TEST(ComputeRowPtrs, OneElementOneNode_TwoConstraint) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::solver::tests

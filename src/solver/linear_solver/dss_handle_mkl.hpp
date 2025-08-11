@@ -7,10 +7,10 @@
 
 #include "dss_algorithm.hpp"
 
-namespace openturbine {
+namespace openturbine::dss {
 
 template <>
-class DSSHandle<DSSAlgorithm::MKL> {
+class Handle<Algorithm::MKL> {
     struct mklDssHandleType {
         _MKL_DSS_HANDLE_t handle{};
         std::vector<MKL_INT> perm;
@@ -33,10 +33,10 @@ class DSSHandle<DSSAlgorithm::MKL> {
     std::shared_ptr<mklDssHandleType> mkl_dss_handle;
 
 public:
-    DSSHandle() : mkl_dss_handle(std::make_shared<mklDssHandleType>()) {}
+    Handle() : mkl_dss_handle(std::make_shared<mklDssHandleType>()) {}
 
     _MKL_DSS_HANDLE_t& get_handle() { return mkl_dss_handle->handle; }
 
     std::vector<MKL_INT>& get_perm() { return mkl_dss_handle->perm; }
 };
-}  // namespace openturbine
+}  // namespace openturbine::dss
