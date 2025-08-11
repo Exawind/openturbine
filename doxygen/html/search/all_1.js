@@ -47,7 +47,7 @@ var searchData=
   ['apex_5fnodes_44',['apex_nodes',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#a052dd7c93555df61a6335fe1c11440b3',1,'openturbine::interfaces::components::Turbine']]],
   ['apex_5fto_5fhub_45',['apex_to_hub',['../classopenturbine_1_1interfaces_1_1components_1_1Turbine.html#acc03f3d1b905668b03382a5d8cdf4e1b',1,'openturbine::interfaces::components::Turbine']]],
   ['api_20documentation_46',['OpenTurbine API documentation',['../index.html',1,'']]],
-  ['area_47',['area',['../structopenturbine_1_1HollowCircleProperties.html#ab27ed32186e91c1d16a38ca0d8cb9d27',1,'openturbine::HollowCircleProperties']]],
+  ['area_47',['area',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html#acedfcd073c6b1c5ea151f2299ff1de25',1,'openturbine::beams::HollowCircleProperties']]],
   ['assemble_5fconstraints_5fmatrix_2ehpp_48',['assemble_constraints_matrix.hpp',['../assemble__constraints__matrix_8hpp.html',1,'']]],
   ['assemble_5fconstraints_5fresidual_2ehpp_49',['assemble_constraints_residual.hpp',['../assemble__constraints__residual_8hpp.html',1,'']]],
   ['assemble_5fnode_5ffreedom_5fallocation_5ftable_50',['assemble_node_freedom_allocation_table',['../namespaceopenturbine.html#a932a665948376539c8aa98265a8e8257',1,'openturbine']]],

@@ -6,7 +6,7 @@ var searchData=
   ['calculateeta_3',['CalculateEta',['../namespaceopenturbine_1_1masses.html#a56389a0cf61407f6778d387f5bbe50c3',1,'openturbine::masses']]],
   ['calculateforcecoefficient1_4',['CalculateForceCoefficient1',['../namespaceopenturbine_1_1springs.html#a7d1b88b428546bdb264ee4928e28ef2e',1,'openturbine::springs']]],
   ['calculateforcecoefficient2_5',['CalculateForceCoefficient2',['../namespaceopenturbine_1_1springs.html#a642618ddc2c68699ae109c555252de5c',1,'openturbine::springs']]],
-  ['calculatehollowcircleproperties_6',['CalculateHollowCircleProperties',['../namespaceopenturbine.html#a01b0000c5534a6d45904580d6de55850',1,'openturbine']]],
+  ['calculatehollowcircleproperties_6',['CalculateHollowCircleProperties',['../namespaceopenturbine_1_1beams.html#a6d72bd234bcdccccc4bf8c95ec1273fd',1,'openturbine::beams']]],
   ['calculatelength_7',['CalculateLength',['../namespaceopenturbine_1_1springs.html#a35c25bc1ffa377485762f757cea266ac',1,'openturbine::springs']]],
   ['calculateoutput_8',['CalculateOutput',['../classopenturbine_1_1util_1_1AeroDynInflowLibrary.html#ac6fda0e0b0175942d8033497673cd23c',1,'openturbine::util::AeroDynInflowLibrary']]],
   ['calculaterho_9',['CalculateRho',['../namespaceopenturbine_1_1masses.html#a7873d230c5ef716f583a0c8904a5441b',1,'openturbine::masses']]],
@@ -54,7 +54,7 @@ var searchData=
   ['createstate_51',['CreateState',['../classopenturbine_1_1Model.html#af38055ba13dbc299ecf3ccf5516915d4',1,'openturbine::Model']]],
   ['createsystem_52',['CreateSystem',['../classopenturbine_1_1Model.html#a6804ea3df001f29b05ad5f1c43179e33',1,'openturbine::Model']]],
   ['createsystemwithsolver_53',['CreateSystemWithSolver',['../classopenturbine_1_1Model.html#aaaaf33e11bcf34ee3fb40448385335c2',1,'openturbine::Model']]],
-  ['createtrapezoidalquadrature_54',['CreateTrapezoidalQuadrature',['../namespaceopenturbine.html#a828012f9e18e6714c1f9ca3ba44d9e5f',1,'openturbine']]],
+  ['createtrapezoidalquadrature_54',['CreateTrapezoidalQuadrature',['../namespaceopenturbine_1_1beams.html#ac97769f4673710a5aa2083aaa5429264',1,'openturbine::beams']]],
   ['createturbine_55',['CreateTurbine',['../namespaceopenturbine_1_1cfd.html#a82ac195aae999409d37792a37ae7f1f5',1,'openturbine::cfd']]],
   ['crossproduct_56',['crossproduct',['../namespaceopenturbine_1_1math.html#adc06a689874a1f4e54b7a7e9d1338e8e',1,'openturbine::math::CrossProduct(const VectorType &amp;a, const VectorType &amp;b, const VectorType &amp;c)'],['../namespaceopenturbine_1_1math.html#a7461b765eab16de2ffd3453e9765b8a6',1,'openturbine::math::CrossProduct(const std::array&lt; double, 3 &gt; &amp;a, const std::array&lt; double, 3 &gt; &amp;b)']]]
 ];

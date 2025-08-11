@@ -1,11 +1,11 @@
-.. meta::67c4d36c15c6360788546082f576bb737a9ee307820fe40edd520572d3859894d7ac5e3fecb9dd0792e678f7d77eb5cc067de8f48e9f85691c48ba64d8cda605
+.. meta::3a234d915afbbe849d4193f6291da6b05541c25f540784bae39f76ca5f8783defb484696a3e6aec1fd19f7e840561d74c7580173be1a930183039ee9e075597c
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolation.hpp Source File
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/interpolation.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolation.hpp Source File
-======================================================================================================
+/home/runner/work/openturbine/openturbine/openturbine/src/math/interpolation.hpp Source File
+============================================================================================
 
 .. container:: doxygen-content
 

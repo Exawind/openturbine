@@ -14,7 +14,7 @@ var searchData=
   ['has_5fsymbol_11',['has_symbol',['../classopenturbine_1_1util_1_1dylib.html#abe184bea79af69518e02ed934b08bc86',1,'openturbine::util::dylib::has_symbol(const std::string &amp;symbol) const noexcept'],['../classopenturbine_1_1util_1_1dylib.html#a268b929e73c218571162e6baf867237b',1,'openturbine::util::dylib::has_symbol(const char *symbol_name) const noexcept']]],
   ['hh_5fvel_12',['hh_vel',['../structopenturbine_1_1util_1_1TurbineData.html#a445f611ba7b171ba7eb57afb2ac39033',1,'openturbine::util::TurbineData']]],
   ['hollow_5fcircle_5fproperties_2ehpp_13',['hollow_circle_properties.hpp',['../hollow__circle__properties_8hpp.html',1,'']]],
-  ['hollowcircleproperties_14',['HollowCircleProperties',['../structopenturbine_1_1HollowCircleProperties.html',1,'openturbine']]],
+  ['hollowcircleproperties_14',['HollowCircleProperties',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html',1,'openturbine::beams']]],
   ['horizontal_5fwind_5fspeed_15',['horizontal_wind_speed',['../structopenturbine_1_1util_1_1ControllerIO.html#a06e9882b23fcf85073284b2616b8f395',1,'openturbine::util::ControllerIO']]],
   ['host_5finput_16',['host_input',['../structopenturbine_1_1Constraints.html#a00e14bf2376cf135bc712fba84ec0525',1,'openturbine::Constraints']]],
   ['host_5foutput_17',['host_output',['../structopenturbine_1_1Constraints.html#ad084e244f064a51ae426b5253acf0eec',1,'openturbine::Constraints']]],

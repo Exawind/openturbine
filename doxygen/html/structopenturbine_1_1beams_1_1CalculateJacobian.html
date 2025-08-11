@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::beams::CalculateJacobian&amp;lt; DeviceType &amp;gt; Struct Template Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::beams::CalculateJacobian&amp;lt; DeviceType &amp;gt; Struct Template Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1beams_1_1CalculateJacobian.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculatejacobian-lt-devicetype-gt-struct-template-reference">
+<h1>CalculateJacobian&amp;lt; DeviceType &amp;gt; Struct Template Reference<a class="headerlink" href="#calculatejacobian-lt-devicetype-gt-struct-template-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::beams::CalculateJacobian&lt; DeviceType &gt; Struct Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1beams.html">beams</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">CalculateJacobian</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1beams_1_1CalculateJacobian-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::beams::CalculateJacobian&lt; DeviceType &gt; Struct Template Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Functor to calculate Jacobians and unit tangent vectors at quadrature points for beam elements.  
+ <a href="structopenturbine_1_1beams_1_1CalculateJacobian.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="calculate__jacobian_8hpp_source.html">calculate_jacobian.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:adc81d4de5cd2e4b68503477a49bf03ad" id="r_adc81d4de5cd2e4b68503477a49bf03ad"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:adc81d4de5cd2e4b68503477a49bf03ad"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:adc81d4de5cd2e4b68503477a49bf03ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a778677b90c59cd62131ec76885e2440e" id="r_a778677b90c59cd62131ec76885e2440e"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a778677b90c59cd62131ec76885e2440e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a> = <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">::const_type</a></td></tr>
+<tr class="separator:a778677b90c59cd62131ec76885e2440e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:af8420f09ff67f9226094216cf1421b52" id="r_af8420f09ff67f9226094216cf1421b52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#af8420f09ff67f9226094216cf1421b52">operator()</a> (<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">int</a> element) <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">const</a></td></tr>
+<tr class="separator:af8420f09ff67f9226094216cf1421b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a9b208f11e1d88a1a9af2c235be54d8cd" id="r_a9b208f11e1d88a1a9af2c235be54d8cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a9b208f11e1d88a1a9af2c235be54d8cd">num_nodes_per_element</a></td></tr>
+<tr class="separator:a9b208f11e1d88a1a9af2c235be54d8cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73dca1d675d88ed2bb8a8ddbaeb9875d" id="r_a73dca1d675d88ed2bb8a8ddbaeb9875d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a73dca1d675d88ed2bb8a8ddbaeb9875d">num_qps_per_element</a></td></tr>
+<tr class="separator:a73dca1d675d88ed2bb8a8ddbaeb9875d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9183d2b88b7a8213183dddf8ac4bf004" id="r_a9183d2b88b7a8213183dddf8ac4bf004"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a> *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a9183d2b88b7a8213183dddf8ac4bf004">shape_derivative</a></td></tr>
+<tr class="separator:a9183d2b88b7a8213183dddf8ac4bf004"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a336e64bd95427a22286ac4d3f8b93bca" id="r_a336e64bd95427a22286ac4d3f8b93bca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a> **[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a336e64bd95427a22286ac4d3f8b93bca">node_position_rotation</a></td></tr>
+<tr class="separator:a336e64bd95427a22286ac4d3f8b93bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca352c73b1f2b090fd555e5bee1ac603" id="r_aca352c73b1f2b090fd555e5bee1ac603"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a> **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#aca352c73b1f2b090fd555e5bee1ac603">qp_position_derivative</a></td></tr>
+<tr class="separator:aca352c73b1f2b090fd555e5bee1ac603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467ea4b11cd3ed09fdb0833532cd2d45" id="r_a467ea4b11cd3ed09fdb0833532cd2d45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a> ** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a467ea4b11cd3ed09fdb0833532cd2d45">qp_jacobian</a></td></tr>
+<tr class="separator:a467ea4b11cd3ed09fdb0833532cd2d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType&gt;<br />
+struct openturbine::beams::CalculateJacobian&lt; DeviceType &gt;</div><p>Functor to calculate Jacobians and unit tangent vectors at quadrature points for beam elements. </p>
+<p>This functor performs two main operations for a provided element:</p><ul>
+<li>Calculates the Jacobian (J = |dx/dξ|) at each quadrature point, which represents the mapping between parametric (ξ) and physical (x) space</li>
+<li>Computes normalized position derivatives to obtain unit tangent vectors</li>
+</ul>
+<dl class="section note"><dt>Note</dt><dd>The functor modifies qp_position_derivative in place, normalizing it to create unit tangent vectors </dd></dl>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a778677b90c59cd62131ec76885e2440e" name="a778677b90c59cd62131ec76885e2440e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a778677b90c59cd62131ec76885e2440e">&#9670;&#160;</a></span>ConstView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">using</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc81d4de5cd2e4b68503477a49bf03ad" name="adc81d4de5cd2e4b68503477a49bf03ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc81d4de5cd2e4b68503477a49bf03ad">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">using</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="af8420f09ff67f9226094216cf1421b52" name="af8420f09ff67f9226094216cf1421b52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8420f09ff67f9226094216cf1421b52">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">void</a> <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">::operator</a>() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">int</a>&#160;</td>
+          <td class="paramname"><em>element</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a336e64bd95427a22286ac4d3f8b93bca" name="a336e64bd95427a22286ac4d3f8b93bca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a336e64bd95427a22286ac4d3f8b93bca">&#9670;&#160;</a></span>node_position_rotation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a>** [7]&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::node_position_rotation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b208f11e1d88a1a9af2c235be54d8cd" name="a9b208f11e1d88a1a9af2c235be54d8cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b208f11e1d88a1a9af2c235be54d8cd">&#9670;&#160;</a></span>num_nodes_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::num_nodes_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a73dca1d675d88ed2bb8a8ddbaeb9875d" name="a73dca1d675d88ed2bb8a8ddbaeb9875d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73dca1d675d88ed2bb8a8ddbaeb9875d">&#9670;&#160;</a></span>num_qps_per_element</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::num_qps_per_element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a467ea4b11cd3ed09fdb0833532cd2d45" name="a467ea4b11cd3ed09fdb0833532cd2d45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a467ea4b11cd3ed09fdb0833532cd2d45">&#9670;&#160;</a></span>qp_jacobian</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a>**&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::qp_jacobian</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca352c73b1f2b090fd555e5bee1ac603" name="aca352c73b1f2b090fd555e5bee1ac603"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca352c73b1f2b090fd555e5bee1ac603">&#9670;&#160;</a></span>qp_position_derivative</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">View</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a>** [3]&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::qp_position_derivative</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9183d2b88b7a8213183dddf8ac4bf004" name="a9183d2b88b7a8213183dddf8ac4bf004"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9183d2b88b7a8213183dddf8ac4bf004">&#9670;&#160;</a></span>shape_derivative</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#a778677b90c59cd62131ec76885e2440e">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html#adc81d4de5cd2e4b68503477a49bf03ad">double</a>***&gt; <a class="el" href="structopenturbine_1_1beams_1_1CalculateJacobian.html">openturbine::beams::CalculateJacobian</a>&lt; DeviceType &gt;::shape_derivative</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/<a class="el" href="calculate__jacobian_8hpp_source.html">calculate_jacobian.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

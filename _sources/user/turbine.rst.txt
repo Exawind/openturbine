@@ -231,7 +231,7 @@ This acts much like the Blade builder class, but there is only one Tower.
     const auto t_diameter_values = t_diameter["values"].as<std::vector<double>>();
     const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
    for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
-        const auto section = openturbine::GenerateHollowCircleSection(
+        const auto section = openturbine::beams::GenerateHollowCircleSection(
             t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
             t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
             t_material["nu"].as<double>()

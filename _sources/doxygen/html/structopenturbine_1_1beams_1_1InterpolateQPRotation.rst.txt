@@ -1,0 +1,14 @@
+.. meta::b91852241d96500e32d29a740b2674fa2814c01e52bad384b5180c93a8e411f096c80985289c2ac5f74282ed86439d28b5c718027335126dd3e8a94a8be52cea
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::beams::InterpolateQPRotation&lt; DeviceType &gt; Struct Template Reference
+
+InterpolateQPRotation&lt; DeviceType &gt; Struct Template Reference
+===================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1beams_1_1InterpolateQPRotation.html

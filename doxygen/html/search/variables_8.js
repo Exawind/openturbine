@@ -15,6 +15,6 @@ var searchData=
   ['is_5fdynamic_5fsolve_12',['is_dynamic_solve',['../structopenturbine_1_1StepParameters.html#a17db32936a726c2d8a5ad6e2b9a3b3c2',1,'openturbine::StepParameters']]],
   ['is_5fhorizontal_5faxis_13',['is_horizontal_axis',['../structopenturbine_1_1util_1_1TurbineConfig.html#a1cb671095764da28dc8eca1b5ee6dd87',1,'openturbine::util::TurbineConfig']]],
   ['items_14',['items',['../classwindio_1_1Schema.html#a37518ca28cc54221de8476a08fc31a49',1,'windio::Schema']]],
-  ['ixx_15',['Ixx',['../structopenturbine_1_1HollowCircleProperties.html#a13b8eb3e324818ee09d06002683e1740',1,'openturbine::HollowCircleProperties']]],
-  ['iyy_16',['Iyy',['../structopenturbine_1_1HollowCircleProperties.html#a145cf653c7e3225174fb79f2e4f07f5e',1,'openturbine::HollowCircleProperties']]]
+  ['ixx_15',['Ixx',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html#aa9c97a29840fd5d4a4ec2db3708c94bd',1,'openturbine::beams::HollowCircleProperties']]],
+  ['iyy_16',['Iyy',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html#a9393fa29b7a64ab1e6aa1a706431b907',1,'openturbine::beams::HollowCircleProperties']]]
 ];

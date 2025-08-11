@@ -1,10 +1,10 @@
 var searchData=
 [
   ['generate_5fvisualization_0',['generate_visualization',['../classgenerate__vtk__output_1_1VTKOutput.html#aab8ef32148338a52245fea3ba945b592',1,'generate_vtk_output::VTKOutput']]],
-  ['generategllpoints_1',['GenerateGLLPoints',['../namespaceopenturbine.html#aeb44d63028c659a18ee7fd14ac650550',1,'openturbine']]],
-  ['generatehollowcirclesection_2',['GenerateHollowCircleSection',['../namespaceopenturbine.html#aba008b3bc6e6267dedceab420db6a548',1,'openturbine']]],
-  ['generatemassmatrix_3',['GenerateMassMatrix',['../namespaceopenturbine.html#a2c12adbb0f9038c2bdd440d524ea57f6',1,'openturbine']]],
-  ['generatestiffnessmatrix_4',['GenerateStiffnessMatrix',['../namespaceopenturbine.html#ac8826904598850172d0f547e9ec05c38',1,'openturbine']]],
+  ['generategllpoints_1',['GenerateGLLPoints',['../namespaceopenturbine_1_1math.html#ab7008731532fdd8fa54000f6e719576d',1,'openturbine::math']]],
+  ['generatehollowcirclesection_2',['GenerateHollowCircleSection',['../namespaceopenturbine_1_1beams.html#a094648d9da28bec2794468955f8de208',1,'openturbine::beams']]],
+  ['generatemassmatrix_3',['GenerateMassMatrix',['../namespaceopenturbine_1_1beams.html#a2b002e423ce27826a3b8a3f0ba50922d',1,'openturbine::beams']]],
+  ['generatestiffnessmatrix_4',['GenerateStiffnessMatrix',['../namespaceopenturbine_1_1beams.html#a1aa48516b3b7def3617477e406b96c9c',1,'openturbine::beams']]],
   ['get_5fbuffer_5',['get_buffer',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1CUSOLVER__SP_01_4.html#a26a4676de22f2a3bc97961a1e3f20983',1,'openturbine::dss::Handle&lt; Algorithm::CUSOLVER_SP &gt;']]],
   ['get_5fcolcnt_5fh_6',['get_colcnt_h',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1SUPERLU__MT_01_4.html#a195789c3b1b9b9319b6f83573dd2db37',1,'openturbine::dss::Handle&lt; Algorithm::SUPERLU_MT &gt;']]],
   ['get_5fcommon_7',['get_common',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1KLU_01_4.html#aee10eb1bf0cda365d9aad7c6e86a3d13',1,'openturbine::dss::Handle&lt; Algorithm::KLU &gt;']]],

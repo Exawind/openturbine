@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['j_0',['J',['../structopenturbine_1_1HollowCircleProperties.html#a07b2d0987caea439edcf4380f7694ba4',1,'openturbine::HollowCircleProperties']]]
+  ['j_0',['J',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html#aef2ea93ecb41d0027a45d492e95687f1',1,'openturbine::beams::HollowCircleProperties']]]
 ];

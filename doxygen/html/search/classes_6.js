@@ -9,6 +9,6 @@ var searchData=
   ['handle_3c_20algorithm_3a_3asuperlu_20_3e_6',['Handle&lt; Algorithm::SUPERLU &gt;',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1SUPERLU_01_4.html',1,'openturbine::dss']]],
   ['handle_3c_20algorithm_3a_3asuperlu_5fmt_20_3e_7',['Handle&lt; Algorithm::SUPERLU_MT &gt;',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1SUPERLU__MT_01_4.html',1,'openturbine::dss']]],
   ['handle_3c_20algorithm_3a_3aumfpack_20_3e_8',['Handle&lt; Algorithm::UMFPACK &gt;',['../classopenturbine_1_1dss_1_1Handle_3_01Algorithm_1_1UMFPACK_01_4.html',1,'openturbine::dss']]],
-  ['hollowcircleproperties_9',['HollowCircleProperties',['../structopenturbine_1_1HollowCircleProperties.html',1,'openturbine']]],
+  ['hollowcircleproperties_9',['HollowCircleProperties',['../structopenturbine_1_1beams_1_1HollowCircleProperties.html',1,'openturbine::beams']]],
   ['hoststate_10',['HostState',['../structopenturbine_1_1interfaces_1_1HostState.html',1,'openturbine::interfaces']]]
 ];

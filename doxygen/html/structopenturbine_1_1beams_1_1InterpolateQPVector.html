@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::beams::InterpolateQPVector&amp;lt; DeviceType &amp;gt; Struct Template Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::beams::InterpolateQPVector&amp;lt; DeviceType &amp;gt; Struct Template Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1beams_1_1InterpolateQPVector.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="interpolateqpvector-lt-devicetype-gt-struct-template-reference">
+<h1>InterpolateQPVector&amp;lt; DeviceType &amp;gt; Struct Template Reference<a class="headerlink" href="#interpolateqpvector-lt-devicetype-gt-struct-template-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::beams::InterpolateQPVector&lt; DeviceType &gt; Struct Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1beams.html">beams</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">InterpolateQPVector</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1beams_1_1InterpolateQPVector-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::beams::InterpolateQPVector&lt; DeviceType &gt; Struct Template Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>A Kernel which interpolates a vector quantity from nodes on a given element to a quadrature point given a basis function.  
+ <a href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="interpolate__QP__vector_8hpp_source.html">interpolate_QP_vector.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af2aca0e84f3e9abe1f57636667bc094a" id="r_af2aca0e84f3e9abe1f57636667bc094a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:af2aca0e84f3e9abe1f57636667bc094a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:af2aca0e84f3e9abe1f57636667bc094a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d7f97733f036bf9bd6b76599cbce03b" id="r_a1d7f97733f036bf9bd6b76599cbce03b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a1d7f97733f036bf9bd6b76599cbce03b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a1d7f97733f036bf9bd6b76599cbce03b">ConstView</a> = <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">::const_type</a></td></tr>
+<tr class="separator:a1d7f97733f036bf9bd6b76599cbce03b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a748536fcf7f2b482db65b486ebfbcaa1" id="r_a748536fcf7f2b482db65b486ebfbcaa1"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a748536fcf7f2b482db65b486ebfbcaa1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a748536fcf7f2b482db65b486ebfbcaa1">StrideView</a> = Kokkos::View&lt; ValueType, Kokkos::LayoutStride, DeviceType &gt;</td></tr>
+<tr class="separator:a748536fcf7f2b482db65b486ebfbcaa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7278365c9d175c3a608ce77f2b47348" id="r_ab7278365c9d175c3a608ce77f2b47348"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ab7278365c9d175c3a608ce77f2b47348"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#ab7278365c9d175c3a608ce77f2b47348">ConstStrideView</a> = <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a748536fcf7f2b482db65b486ebfbcaa1">StrideView</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">::const_type</a></td></tr>
+<tr class="separator:ab7278365c9d175c3a608ce77f2b47348"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:abb377bbb1100748736793c97ea9fcb7a" id="r_abb377bbb1100748736793c97ea9fcb7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#abb377bbb1100748736793c97ea9fcb7a">operator()</a> (<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">qp</a>) <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">const</a></td></tr>
+<tr class="separator:abb377bbb1100748736793c97ea9fcb7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a7a43d40864cdd6ac4a57ffd01116ccd1" id="r_a7a43d40864cdd6ac4a57ffd01116ccd1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a7a43d40864cdd6ac4a57ffd01116ccd1">element</a></td></tr>
+<tr class="separator:a7a43d40864cdd6ac4a57ffd01116ccd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93870c5cfa8bdd38f0b9a95667dada4b" id="r_a93870c5cfa8bdd38f0b9a95667dada4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a93870c5cfa8bdd38f0b9a95667dada4b">num_nodes</a></td></tr>
+<tr class="separator:a93870c5cfa8bdd38f0b9a95667dada4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04bb65ed3404d0b6c266563d2fbca5f6" id="r_a04bb65ed3404d0b6c266563d2fbca5f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a1d7f97733f036bf9bd6b76599cbce03b">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a> *** &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a04bb65ed3404d0b6c266563d2fbca5f6">shape_interp</a></td></tr>
+<tr class="separator:a04bb65ed3404d0b6c266563d2fbca5f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16bec632c62963cd1b37eb40b15a6bec" id="r_a16bec632c62963cd1b37eb40b15a6bec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#ab7278365c9d175c3a608ce77f2b47348">ConstStrideView</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a> **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a16bec632c62963cd1b37eb40b15a6bec">node_vector</a></td></tr>
+<tr class="separator:a16bec632c62963cd1b37eb40b15a6bec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1ee08abdb8da5dc7643356006f3f596" id="r_ad1ee08abdb8da5dc7643356006f3f596"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">View</a>&lt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a> **[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#ad1ee08abdb8da5dc7643356006f3f596">qp_vector</a></td></tr>
+<tr class="separator:ad1ee08abdb8da5dc7643356006f3f596"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType&gt;<br />
+struct openturbine::beams::InterpolateQPVector&lt; DeviceType &gt;</div><p>A Kernel which interpolates a vector quantity from nodes on a given element to a quadrature point given a basis function. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ab7278365c9d175c3a608ce77f2b47348" name="ab7278365c9d175c3a608ce77f2b47348"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7278365c9d175c3a608ce77f2b47348">&#9670;&#160;</a></span>ConstStrideView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::ConstStrideView =  <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a748536fcf7f2b482db65b486ebfbcaa1">StrideView</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1d7f97733f036bf9bd6b76599cbce03b" name="a1d7f97733f036bf9bd6b76599cbce03b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d7f97733f036bf9bd6b76599cbce03b">&#9670;&#160;</a></span>ConstView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a748536fcf7f2b482db65b486ebfbcaa1" name="a748536fcf7f2b482db65b486ebfbcaa1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a748536fcf7f2b482db65b486ebfbcaa1">&#9670;&#160;</a></span>StrideView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::StrideView =  Kokkos::View&lt;ValueType, Kokkos::LayoutStride, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2aca0e84f3e9abe1f57636667bc094a" name="af2aca0e84f3e9abe1f57636667bc094a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2aca0e84f3e9abe1f57636667bc094a">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">using</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abb377bbb1100748736793c97ea9fcb7a" name="abb377bbb1100748736793c97ea9fcb7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb377bbb1100748736793c97ea9fcb7a">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">void</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">::operator</a>() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a>&#160;</td>
+          <td class="paramname"><em>qp</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a7a43d40864cdd6ac4a57ffd01116ccd1" name="a7a43d40864cdd6ac4a57ffd01116ccd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a43d40864cdd6ac4a57ffd01116ccd1">&#9670;&#160;</a></span>element</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::element</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16bec632c62963cd1b37eb40b15a6bec" name="a16bec632c62963cd1b37eb40b15a6bec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16bec632c62963cd1b37eb40b15a6bec">&#9670;&#160;</a></span>node_vector</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#ab7278365c9d175c3a608ce77f2b47348">ConstStrideView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a>** [3]&gt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::node_vector</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a93870c5cfa8bdd38f0b9a95667dada4b" name="a93870c5cfa8bdd38f0b9a95667dada4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93870c5cfa8bdd38f0b9a95667dada4b">&#9670;&#160;</a></span>num_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">size_t</a> <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::num_nodes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1ee08abdb8da5dc7643356006f3f596" name="ad1ee08abdb8da5dc7643356006f3f596"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1ee08abdb8da5dc7643356006f3f596">&#9670;&#160;</a></span>qp_vector</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">View</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a>** [3]&gt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::qp_vector</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a04bb65ed3404d0b6c266563d2fbca5f6" name="a04bb65ed3404d0b6c266563d2fbca5f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04bb65ed3404d0b6c266563d2fbca5f6">&#9670;&#160;</a></span>shape_interp</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#a1d7f97733f036bf9bd6b76599cbce03b">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html#af2aca0e84f3e9abe1f57636667bc094a">double</a>***&gt; <a class="el" href="structopenturbine_1_1beams_1_1InterpolateQPVector.html">openturbine::beams::InterpolateQPVector</a>&lt; DeviceType &gt;::shape_interp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/<a class="el" href="interpolate__QP__vector_8hpp_source.html">interpolate_QP_vector.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

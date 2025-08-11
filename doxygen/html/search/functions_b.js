@@ -2,8 +2,8 @@ var searchData=
 [
   ['main_0',['main',['../namespacewindio.html#a6e0ba4007de8520898b47d45cf729884',1,'windio.main()'],['../namespacegenerate__vtk__output.html#ac3ecc6b23a613699892f3700ff9eb153',1,'generate_vtk_output.main()']]],
   ['mapgeometriclocations_1',['MapGeometricLocations',['../namespaceopenturbine_1_1math.html#a849ac33ab7e9c85db54979da386a86b3',1,'openturbine::math']]],
-  ['mapnodepositions_2',['MapNodePositions',['../namespaceopenturbine.html#a45278089c85b116e991de15af3ac44ce',1,'openturbine']]],
-  ['mapsectionpositions_3',['MapSectionPositions',['../namespaceopenturbine.html#aeaadd42bbad5c5402c33c5dbdb445179',1,'openturbine']]],
+  ['mapnodepositions_2',['MapNodePositions',['../namespaceopenturbine_1_1beams.html#ada8460b249e7b3429de6ab03f7afe53f',1,'openturbine::beams']]],
+  ['mapsectionpositions_3',['MapSectionPositions',['../namespaceopenturbine_1_1beams.html#a4b5714a3b037fbd9a74d10adb07ad772',1,'openturbine::beams']]],
   ['masselement_4',['MassElement',['../structopenturbine_1_1MassElement.html#ad00c86d3b7ca9cf36b9a62353021f982',1,'openturbine::MassElement']]],
   ['masses_5',['Masses',['../structopenturbine_1_1Masses.html#a885b376e180e5a54abb14eae567b4b93',1,'openturbine::Masses']]],
   ['massesinput_6',['MassesInput',['../structopenturbine_1_1MassesInput.html#a326399872ec836517c5a111690ab42f7',1,'openturbine::MassesInput']]],
