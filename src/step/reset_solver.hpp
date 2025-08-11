@@ -5,7 +5,7 @@
 
 #include "solver/solver.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void ResetSolver(Solver<DeviceType>& solver) {
@@ -14,4 +14,4 @@ inline void ResetSolver(Solver<DeviceType>& solver) {
     Kokkos::deep_copy(solver.b, 0.);
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

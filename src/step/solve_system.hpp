@@ -9,7 +9,7 @@
 #include "solver/solver.hpp"
 #include "step_parameters.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) {
@@ -38,4 +38,4 @@ inline void SolveSystem(StepParameters& parameters, Solver<DeviceType>& solver) 
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

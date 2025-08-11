@@ -38,7 +38,7 @@ inline auto SetUpMasses() {
     auto state = model.CreateState<DeviceType>();
 
     auto parameters = StepParameters(false, 0, 0., 0.);
-    UpdateSystemVariablesMasses(parameters, masses, state);
+    step::UpdateSystemVariablesMasses(parameters, masses, state);
 
     return masses;
 }

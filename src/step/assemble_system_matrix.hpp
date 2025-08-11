@@ -10,7 +10,7 @@
 #include "solver/solver.hpp"
 #include "step_parameters.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 
 template <typename DeviceType>
 inline void AssembleSystemMatrix(
@@ -54,4 +54,4 @@ inline void AssembleSystemMatrix(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::step

@@ -8,7 +8,7 @@
 #include "solver/copy_constraints_transpose_to_sparse_matrix.hpp"
 #include "solver/solver.hpp"
 
-namespace openturbine {
+namespace openturbine::step {
 template <typename DeviceType>
 inline void AssembleConstraintsMatrix(
     Solver<DeviceType>& solver, Constraints<DeviceType>& constraints
@@ -40,4 +40,4 @@ inline void AssembleConstraintsMatrix(
         }
     );
 }
-}  // namespace openturbine
+}  // namespace openturbine::step
