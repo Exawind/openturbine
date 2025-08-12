@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::dof {
 
 /**
  * @brief Represents the active degrees of freedom for a node

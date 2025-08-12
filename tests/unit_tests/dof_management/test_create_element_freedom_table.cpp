@@ -11,7 +11,7 @@
 #include "elements/springs/springs.hpp"
 #include "state/state.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =

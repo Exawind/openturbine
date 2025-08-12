@@ -3,7 +3,7 @@
 #include "dof_management/assemble_node_freedom_allocation_table.hpp"
 #include "dof_management/create_constraint_freedom_table.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     using DeviceType =

@@ -59,7 +59,7 @@ openturbine::State<DeviceType> CreateTestState() {
     auto state = openturbine::State<DeviceType>(num_system_nodes);
     Kokkos::deep_copy(state.ID, 1UL);
     Kokkos::deep_copy(
-        state.node_freedom_allocation_table, openturbine::FreedomSignature::AllComponents
+        state.node_freedom_allocation_table, openturbine::dof::FreedomSignature::AllComponents
     );
     Kokkos::deep_copy(state.node_freedom_map_table, 3UL);
     Kokkos::deep_copy(state.x0, 4.);

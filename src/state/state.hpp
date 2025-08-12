@@ -22,7 +22,7 @@ struct State {
     size_t time_step{0};
     size_t num_system_nodes;
     View<size_t*> ID;
-    View<FreedomSignature*> node_freedom_allocation_table;
+    View<dof::FreedomSignature*> node_freedom_allocation_table;
     View<size_t*> active_dofs;
     View<size_t*> node_freedom_map_table;
 

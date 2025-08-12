@@ -5,7 +5,7 @@
 #include "freedom_signature.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace openturbine::dof {
 
 /**
  * @brief A Scanning Kernel which to convert the number of active degrees of freedom per node to

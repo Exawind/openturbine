@@ -5,7 +5,7 @@
 #include "constraints/constraints.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace openturbine::dof {
 
 /**
  * @brief A Kernel that creates the node freedom tables for each the target and base nodes

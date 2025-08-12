@@ -24,7 +24,7 @@ struct ContributeMassesToSparseMatrix {
     using ConstView = typename View<ValueType>::const_type;
 
     double conditioner{};
-    ConstView<FreedomSignature*> element_freedom_signature;
+    ConstView<dof::FreedomSignature*> element_freedom_signature;
     ConstView<size_t* [6]> element_freedom_table;
     ConstView<double* [6][6]> dense;
     CrsMatrixType sparse;

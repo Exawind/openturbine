@@ -8,7 +8,7 @@
 #include "dof_management/freedom_signature.hpp"
 #include "state/state.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestComputeNodeFreedomMapTable, OneNode) {
     using DeviceType =

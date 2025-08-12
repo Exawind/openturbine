@@ -2,7 +2,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestFreedomSignature, CombineSignatures_NoOverlap) {
     const auto x = FreedomSignature::JustPosition;

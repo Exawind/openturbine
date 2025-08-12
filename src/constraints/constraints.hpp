@@ -41,8 +41,8 @@ struct Constraints {
 
     // DOF management
     View<Kokkos::pair<size_t, size_t>*> row_range;
-    View<FreedomSignature*> base_node_freedom_signature;
-    View<FreedomSignature*> target_node_freedom_signature;
+    View<dof::FreedomSignature*> base_node_freedom_signature;
+    View<dof::FreedomSignature*> target_node_freedom_signature;
     View<size_t*> base_active_dofs;
     View<size_t*> target_active_dofs;
     View<size_t* [6]> base_node_freedom_table;
@@ -179,29 +179,29 @@ struct Constraints {
 
             // Set the freedom signature from the constraint types
             if (c.type == ConstraintType::FixedBC || c.type == ConstraintType::PrescribedBC) {
-                host_base_freedom(constraint) = FreedomSignature::NoComponents;
-                host_target_freedom(constraint) = FreedomSignature::AllComponents;
+                host_base_freedom(constraint) = dof::FreedomSignature::NoComponents;
+                host_target_freedom(constraint) = dof::FreedomSignature::AllComponents;
 
                 host_base_active_dofs(constraint) = 0UL;
                 host_target_active_dofs(constraint) = 6UL;
             } else if (c.type == ConstraintType::RigidJoint ||
                        c.type == ConstraintType::RevoluteJoint ||
                        c.type == ConstraintType::RotationControl) {
-                host_base_freedom(constraint) = FreedomSignature::AllComponents;
-                host_target_freedom(constraint) = FreedomSignature::AllComponents;
+                host_base_freedom(constraint) = dof::FreedomSignature::AllComponents;
+                host_target_freedom(constraint) = dof::FreedomSignature::AllComponents;
 
                 host_base_active_dofs(constraint) = 6UL;
                 host_target_active_dofs(constraint) = 6UL;
             } else if (c.type == ConstraintType::FixedBC3DOFs ||
                        c.type == ConstraintType::PrescribedBC3DOFs) {
-                host_base_freedom(constraint) = FreedomSignature::NoComponents;
-                host_target_freedom(constraint) = FreedomSignature::JustPosition;
+                host_base_freedom(constraint) = dof::FreedomSignature::NoComponents;
+                host_target_freedom(constraint) = dof::FreedomSignature::JustPosition;
 
                 host_base_active_dofs(constraint) = 0UL;
                 host_target_active_dofs(constraint) = 3UL;
             } else if (c.type == ConstraintType::RigidJoint6DOFsTo3DOFs) {
-                host_base_freedom(constraint) = FreedomSignature::AllComponents;
-                host_target_freedom(constraint) = FreedomSignature::JustPosition;
+                host_base_freedom(constraint) = dof::FreedomSignature::AllComponents;
+                host_target_freedom(constraint) = dof::FreedomSignature::JustPosition;
 
                 host_base_active_dofs(constraint) = 6UL;
                 host_target_active_dofs(constraint) = 3UL;

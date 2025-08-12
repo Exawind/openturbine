@@ -30,7 +30,7 @@ struct Beams {
     View<size_t*> num_nodes_per_element;
     View<size_t*> num_qps_per_element;
     View<size_t**> node_state_indices;  // State row index for each node
-    View<FreedomSignature**> element_freedom_signature;
+    View<dof::FreedomSignature**> element_freedom_signature;
     View<size_t** [6]> element_freedom_table;
 
     View<double[3]> gravity;
@@ -176,7 +176,7 @@ struct Beams {
               Kokkos::view_alloc("deriv_interp", Kokkos::WithoutInitializing), num_elems,
               max_elem_nodes, max_elem_qps
           ) {
-        Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
+        Kokkos::deep_copy(element_freedom_signature, dof::FreedomSignature::AllComponents);
     }
 };
 

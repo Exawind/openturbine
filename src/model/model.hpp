@@ -41,10 +41,10 @@ template <
 [[nodiscard]] inline Solver<DeviceType> CreateSolver(
     State<DeviceType>& state, Elements<DeviceType>& elements, Constraints<DeviceType>& constraints
 ) {
-    assemble_node_freedom_allocation_table(state, elements, constraints);
-    compute_node_freedom_map_table(state);
-    create_element_freedom_table(elements, state);
-    create_constraint_freedom_table(constraints, state);
+    dof::assemble_node_freedom_allocation_table(state, elements, constraints);
+    dof::compute_node_freedom_map_table(state);
+    dof::create_element_freedom_table(elements, state);
+    dof::create_constraint_freedom_table(constraints, state);
 
     return {
         state.ID,

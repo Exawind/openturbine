@@ -18,7 +18,7 @@ struct ContributeForcesToVector {
     template <typename ValueType>
     using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
-    ConstView<FreedomSignature*> node_freedom_allocation_table;
+    ConstView<dof::FreedomSignature*> node_freedom_allocation_table;
     ConstView<size_t*> node_freedom_map_table;
     ConstView<double**> node_loads;
     LeftView<double* [1]> vector;
@@ -27,20 +27,20 @@ struct ContributeForcesToVector {
     void operator()(size_t node) const {
         const auto this_node_freedom_signature = node_freedom_allocation_table(node);
         const auto dof_index = node_freedom_map_table(node);
-        if (this_node_freedom_signature == FreedomSignature::NoComponents) {
+        if (this_node_freedom_signature == dof::FreedomSignature::NoComponents) {
             return;
-        } else if (this_node_freedom_signature == FreedomSignature::AllComponents) {
+        } else if (this_node_freedom_signature == dof::FreedomSignature::AllComponents) {
             vector(dof_index + 0, 0) -= node_loads(node, 0);
             vector(dof_index + 1, 0) -= node_loads(node, 1);
             vector(dof_index + 2, 0) -= node_loads(node, 2);
             vector(dof_index + 3, 0) -= node_loads(node, 3);
             vector(dof_index + 4, 0) -= node_loads(node, 4);
             vector(dof_index + 5, 0) -= node_loads(node, 5);
-        } else if (this_node_freedom_signature == FreedomSignature::JustPosition) {
+        } else if (this_node_freedom_signature == dof::FreedomSignature::JustPosition) {
             vector(dof_index + 0, 0) -= node_loads(node, 0);
             vector(dof_index + 1, 0) -= node_loads(node, 1);
             vector(dof_index + 2, 0) -= node_loads(node, 2);
-        } else if (this_node_freedom_signature == FreedomSignature::JustRotation) {
+        } else if (this_node_freedom_signature == dof::FreedomSignature::JustRotation) {
             vector(dof_index + 0, 0) -= node_loads(node, 3);
             vector(dof_index + 1, 0) -= node_loads(node, 4);
             vector(dof_index + 2, 0) -= node_loads(node, 5);

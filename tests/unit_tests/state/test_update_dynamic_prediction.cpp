@@ -28,7 +28,7 @@ TEST(UpdateDynamicPrediction, OneNode) {
     constexpr auto gamma_prime = 3.;
 
     const auto node_freedom_allocation_table =
-        CreateView<FreedomSignature[1]>("nfat", std::array{FreedomSignature::AllComponents});
+        CreateView<dof::FreedomSignature[1]>("nfat", std::array{dof::FreedomSignature::AllComponents});
     const auto node_freedom_map_table = CreateView<size_t[1]>("nfmt", std::array{0UL});
     const auto x_delta = CreateLeftView<double[6][1]>("x_delta", std::array{1., 2., 3., 4., 5., 6.});
 

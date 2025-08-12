@@ -25,8 +25,8 @@ struct CopyConstraintsToSparseMatrix {
 
     size_t num_system_rows{};
     ConstView<Kokkos::pair<size_t, size_t>*> row_range;
-    ConstView<FreedomSignature*> base_node_freedom_signature;
-    ConstView<FreedomSignature*> target_node_freedom_signature;
+    ConstView<dof::FreedomSignature*> base_node_freedom_signature;
+    ConstView<dof::FreedomSignature*> target_node_freedom_signature;
     ConstView<size_t* [6]> base_node_freedom_table;
     ConstView<size_t* [6]> target_node_freedom_table;
     ConstView<double* [6][6]> base_dense;

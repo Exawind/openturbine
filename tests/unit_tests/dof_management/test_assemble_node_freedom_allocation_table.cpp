@@ -2,7 +2,7 @@
 
 #include "dof_management/assemble_node_freedom_allocation_table.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =
