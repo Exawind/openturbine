@@ -17,7 +17,7 @@ struct ExecuteCalculateRevoluteJointConstraint {
 
     KOKKOS_FUNCTION
     void operator()(int) const {
-        CalculateRevoluteJointConstraint<Kokkos::DefaultExecutionSpace>::invoke(
+        constraints::CalculateRevoluteJointConstraint<Kokkos::DefaultExecutionSpace>::invoke(
             X0, axes, base_node_u, target_node_u, residual_terms, base_gradient_terms,
             target_gradient_terms
         );

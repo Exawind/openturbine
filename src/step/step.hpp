@@ -107,7 +107,7 @@ inline bool Step(
     auto constraints_range = RangePolicy(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "CalculateConstraintOutput", constraints_range,
-        CalculateConstraintOutput<DeviceType>{
+        constraints::CalculateConstraintOutput<DeviceType>{
             constraints.type,
             constraints.target_node_index,
             constraints.axes,
