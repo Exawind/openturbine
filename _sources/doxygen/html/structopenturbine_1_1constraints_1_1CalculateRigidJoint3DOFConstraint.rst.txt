@@ -1,0 +1,14 @@
+.. meta::4e11ba601a11872691ebdbc8275fea5929ccb349e7cdad01348401a581dfec3d7003afa04806816738e5aae1aaf336a5705c67f237d610720bad5cdcdc8f2c69
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints::CalculateRigidJoint3DOFConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRigidJoint3DOFConstraint&lt; DeviceType &gt; Struct Template Reference
+===============================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateRigidJoint3DOFConstraint.html

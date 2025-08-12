@@ -1,0 +1,14 @@
+.. meta::d5db6dd45eb22682b42dfcf5df84f064103e1aa93d0b6ffd4241ab628a54aec27c1bb925056cee17804384cb1ffbf9d6cd0964341e2d5ca91e941fd917c7702b
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints::CalculateConstraintResidualGradient&lt; DeviceType &gt; Struct Template Reference
+
+CalculateConstraintResidualGradient&lt; DeviceType &gt; Struct Template Reference
+=================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html

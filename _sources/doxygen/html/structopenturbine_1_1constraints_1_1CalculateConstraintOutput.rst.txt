@@ -1,0 +1,14 @@
+.. meta::ea42f97e03de3ffe15a9b7d6cd97e640d119d221cdb2a49be3f1d4f6d93fba5d5a98d1f9201461135d31ef01ca8a7c85d0f28b431ed277e8d3f061f0a76863a1
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints::CalculateConstraintOutput&lt; DeviceType &gt; Struct Template Reference
+
+CalculateConstraintOutput&lt; DeviceType &gt; Struct Template Reference
+=======================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateConstraintOutput.html

@@ -1,0 +1,14 @@
+.. meta::4b6048ee00feffc86140afdf5abef5649280c9c6be2495d03d5679ef99a6ad812be9edc99479cae6eff2bf98d5df1ec5e0e746bf493ebffee250fb7ff03e509f
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints Namespace Reference
+
+constraints Namespace Reference
+===============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: namespaceopenturbine_1_1constraints.html

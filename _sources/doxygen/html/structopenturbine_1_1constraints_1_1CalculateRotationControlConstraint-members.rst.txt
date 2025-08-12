@@ -1,0 +1,14 @@
+.. meta::a093452ff3f23894ece73e06ff9f273d83df7bedb2657ed74ca844ad3212c172b62bf1e9637a6049cd448eb73815eb17f75f7a54d5fd63daf4e0850e2b1b83ee
+
+:orphan:
+
+.. title:: OpenTurbine API: Member List
+
+Member List
+===========
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateRotationControlConstraint-members.html

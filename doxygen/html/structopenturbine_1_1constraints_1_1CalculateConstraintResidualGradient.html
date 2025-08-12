@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::constraints::CalculateConstraintResidualGradient&amp;lt; DeviceType &amp;gt; Struct Template Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::constraints::CalculateConstraintResidualGradient&amp;lt; DeviceType &amp;gt; Struct Template Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="calculateconstraintresidualgradient-lt-devicetype-gt-struct-template-reference">
+<h1>CalculateConstraintResidualGradient&amp;lt; DeviceType &amp;gt; Struct Template Reference<a class="headerlink" href="#calculateconstraintresidualgradient-lt-devicetype-gt-struct-template-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::constraints::CalculateConstraintResidualGradient&lt; DeviceType &gt; Struct Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1constraints.html">constraints</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">CalculateConstraintResidualGradient</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::constraints::CalculateConstraintResidualGradient&lt; DeviceType &gt; Struct Template Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Top level kernel which calculates the residual and gradient contributions of a constraint.  
+ <a href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="calculate__constraint__residual__gradient_8hpp_source.html">calculate_constraint_residual_gradient.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af0a84186c5a29b01dc2a6444ec87b83d" id="r_af0a84186c5a29b01dc2a6444ec87b83d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#af0a84186c5a29b01dc2a6444ec87b83d">TransposeMatrix</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::Transpose &gt;</td></tr>
+<tr class="separator:af0a84186c5a29b01dc2a6444ec87b83d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a232fd28dcd72ac353785a697a4d612e7" id="r_a232fd28dcd72ac353785a697a4d612e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a232fd28dcd72ac353785a697a4d612e7">Gemm</a> = KokkosBatched::SerialGemm&lt; KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default &gt;</td></tr>
+<tr class="separator:a232fd28dcd72ac353785a697a4d612e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8d65a840f0f267e86b25c6a96f2effa" id="r_ad8d65a840f0f267e86b25c6a96f2effa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ad8d65a840f0f267e86b25c6a96f2effa">CopyVector</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::NoTranspose, 1 &gt;</td></tr>
+<tr class="separator:ad8d65a840f0f267e86b25c6a96f2effa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45a6958024a4060046f68323ee3e782b" id="r_a45a6958024a4060046f68323ee3e782b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a45a6958024a4060046f68323ee3e782b">CopyMatrix</a> = KokkosBatched::SerialCopy&lt; KokkosBatched::Trans::NoTranspose, 2 &gt;</td></tr>
+<tr class="separator:a45a6958024a4060046f68323ee3e782b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada8fe1fabddd7c9b407cc7e06c4df5d5" id="r_ada8fe1fabddd7c9b407cc7e06c4df5d5"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:ada8fe1fabddd7c9b407cc7e06c4df5d5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a> = Kokkos::View&lt; ValueType, DeviceType &gt;</td></tr>
+<tr class="separator:ada8fe1fabddd7c9b407cc7e06c4df5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eb40cfd3319614cccb4b1b69450348a" id="r_a9eb40cfd3319614cccb4b1b69450348a"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> ValueType &gt; </td></tr>
+<tr class="memitem:a9eb40cfd3319614cccb4b1b69450348a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a> = <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; ValueType &gt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">::const_type</a></td></tr>
+<tr class="separator:a9eb40cfd3319614cccb4b1b69450348a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a377c4ce0a76746e23fd71c0e8cf23d28" id="r_a377c4ce0a76746e23fd71c0e8cf23d28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a377c4ce0a76746e23fd71c0e8cf23d28">FixedBC</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:a377c4ce0a76746e23fd71c0e8cf23d28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1adcb48ac225478e305ccc50e4c4f2c" id="r_ac1adcb48ac225478e305ccc50e4c4f2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ac1adcb48ac225478e305ccc50e4c4f2c">FixedBC3DOF</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:ac1adcb48ac225478e305ccc50e4c4f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6a6755ae59e1c92d2f5aafcbcaf0823" id="r_ab6a6755ae59e1c92d2f5aafcbcaf0823"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ab6a6755ae59e1c92d2f5aafcbcaf0823">PrescribedBC</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:ab6a6755ae59e1c92d2f5aafcbcaf0823"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5be486c288f72a5de0fc9a0bd5daebec" id="r_a5be486c288f72a5de0fc9a0bd5daebec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a5be486c288f72a5de0fc9a0bd5daebec">PrescribedBC3DOF</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:a5be486c288f72a5de0fc9a0bd5daebec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa1063c309f28c22d8932f81477abc20" id="r_aaa1063c309f28c22d8932f81477abc20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#aaa1063c309f28c22d8932f81477abc20">RigidJoint</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:aaa1063c309f28c22d8932f81477abc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcc3a349d186ce7895929197e79f4cad" id="r_abcc3a349d186ce7895929197e79f4cad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#abcc3a349d186ce7895929197e79f4cad">RigidJoint3DOF</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:abcc3a349d186ce7895929197e79f4cad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33411c3afc06fd27eb1a7f3400ed2e42" id="r_a33411c3afc06fd27eb1a7f3400ed2e42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a33411c3afc06fd27eb1a7f3400ed2e42">RevoluteJoint</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:a33411c3afc06fd27eb1a7f3400ed2e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89da507a8e8fda5e58899d4db410c54e" id="r_a89da507a8e8fda5e58899d4db410c54e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a89da507a8e8fda5e58899d4db410c54e">RotationControl</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:a89da507a8e8fda5e58899d4db410c54e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f18178288d183d4cd9eb1caed994abb" id="r_a6f18178288d183d4cd9eb1caed994abb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a6f18178288d183d4cd9eb1caed994abb">operator()</a> (<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> constraint) <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">const</a></td></tr>
+<tr class="separator:a6f18178288d183d4cd9eb1caed994abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a51f92f0549911cf6ee1dc192cc26bca3" id="r_a51f92f0549911cf6ee1dc192cc26bca3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a51f92f0549911cf6ee1dc192cc26bca3">type_</a></td></tr>
+<tr class="separator:a51f92f0549911cf6ee1dc192cc26bca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefb3b4d0585c289e41708f1500d5873f" id="r_aefb3b4d0585c289e41708f1500d5873f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#aefb3b4d0585c289e41708f1500d5873f">base_node_index_</a></td></tr>
+<tr class="separator:aefb3b4d0585c289e41708f1500d5873f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a948409ea635fdcdf8c48e8aec76fa24c" id="r_a948409ea635fdcdf8c48e8aec76fa24c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a948409ea635fdcdf8c48e8aec76fa24c">target_node_index_</a></td></tr>
+<tr class="separator:a948409ea635fdcdf8c48e8aec76fa24c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a160d7877728ff3d4a126b4edea933282" id="r_a160d7877728ff3d4a126b4edea933282"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a160d7877728ff3d4a126b4edea933282">X0_</a></td></tr>
+<tr class="separator:a160d7877728ff3d4a126b4edea933282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99646b2731aa3915020600b78d09ef91" id="r_a99646b2731aa3915020600b78d09ef91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[3][3]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a99646b2731aa3915020600b78d09ef91">axes_</a></td></tr>
+<tr class="separator:a99646b2731aa3915020600b78d09ef91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa8a48b6c2ee8a3fdc6ebb756121e27a" id="r_afa8a48b6c2ee8a3fdc6ebb756121e27a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#afa8a48b6c2ee8a3fdc6ebb756121e27a">constraint_inputs_</a></td></tr>
+<tr class="separator:afa8a48b6c2ee8a3fdc6ebb756121e27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d988ad293472dbcc576c996ea2b890a" id="r_a6d988ad293472dbcc576c996ea2b890a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a6d988ad293472dbcc576c996ea2b890a">lambda_</a></td></tr>
+<tr class="separator:a6d988ad293472dbcc576c996ea2b890a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad02199a4559f742d320583a2530fa5f4" id="r_ad02199a4559f742d320583a2530fa5f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ad02199a4559f742d320583a2530fa5f4">tangent_</a></td></tr>
+<tr class="separator:ad02199a4559f742d320583a2530fa5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96b50d9b36ae2501a232bd839f98e75a" id="r_a96b50d9b36ae2501a232bd839f98e75a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[7]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a96b50d9b36ae2501a232bd839f98e75a">node_u_</a></td></tr>
+<tr class="separator:a96b50d9b36ae2501a232bd839f98e75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a47c08a3debd38caabe1cf43da8af92" id="r_a5a47c08a3debd38caabe1cf43da8af92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a5a47c08a3debd38caabe1cf43da8af92">res_</a></td></tr>
+<tr class="separator:a5a47c08a3debd38caabe1cf43da8af92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae84fcdda9f842c85b4b379d28c890c18" id="r_ae84fcdda9f842c85b4b379d28c890c18"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ae84fcdda9f842c85b4b379d28c890c18">b_lambda_res_</a></td></tr>
+<tr class="separator:ae84fcdda9f842c85b4b379d28c890c18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bb2544310eef4f46932221053b0ec94" id="r_a5bb2544310eef4f46932221053b0ec94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a5bb2544310eef4f46932221053b0ec94">t_lambda_res_</a></td></tr>
+<tr class="separator:a5bb2544310eef4f46932221053b0ec94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc3a3465da98f20e8c0274181cd5c344" id="r_abc3a3465da98f20e8c0274181cd5c344"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#abc3a3465da98f20e8c0274181cd5c344">system_res_</a></td></tr>
+<tr class="separator:abc3a3465da98f20e8c0274181cd5c344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6d377057629c1eddcc52e65ff381638" id="r_ad6d377057629c1eddcc52e65ff381638"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ad6d377057629c1eddcc52e65ff381638">b_grad_</a></td></tr>
+<tr class="separator:ad6d377057629c1eddcc52e65ff381638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24b64abc0d74bf934046de81b93a2331" id="r_a24b64abc0d74bf934046de81b93a2331"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a24b64abc0d74bf934046de81b93a2331">t_grad_</a></td></tr>
+<tr class="separator:a24b64abc0d74bf934046de81b93a2331"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a809c4929240e72fd2f5cd8d5d5c63605" id="r_a809c4929240e72fd2f5cd8d5d5c63605"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a809c4929240e72fd2f5cd8d5d5c63605">b_grad_trans_</a></td></tr>
+<tr class="separator:a809c4929240e72fd2f5cd8d5d5c63605"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9be2ecc6a3f4bf89565a98b44c4e0a14" id="r_a9be2ecc6a3f4bf89565a98b44c4e0a14"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a> *[6][6]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9be2ecc6a3f4bf89565a98b44c4e0a14">t_grad_trans_</a></td></tr>
+<tr class="separator:a9be2ecc6a3f4bf89565a98b44c4e0a14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType&gt;<br />
+struct openturbine::constraints::CalculateConstraintResidualGradient&lt; DeviceType &gt;</div><p>Top level kernel which calculates the residual and gradient contributions of a constraint. </p>
+<p>This Kernel performs the action of identifying the constraint's type, loading the required input variables into local variables, and then calling specialized kernels that perform the actual calculations. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a9eb40cfd3319614cccb4b1b69450348a" name="a9eb40cfd3319614cccb4b1b69450348a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9eb40cfd3319614cccb4b1b69450348a">&#9670;&#160;</a></span>ConstView</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::ConstView =  <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;ValueType&gt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">::const_type</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a45a6958024a4060046f68323ee3e782b" name="a45a6958024a4060046f68323ee3e782b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45a6958024a4060046f68323ee3e782b">&#9670;&#160;</a></span>CopyMatrix</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::CopyMatrix =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::NoTranspose, 2&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad8d65a840f0f267e86b25c6a96f2effa" name="ad8d65a840f0f267e86b25c6a96f2effa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8d65a840f0f267e86b25c6a96f2effa">&#9670;&#160;</a></span>CopyVector</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::CopyVector =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::NoTranspose, 1&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a232fd28dcd72ac353785a697a4d612e7" name="a232fd28dcd72ac353785a697a4d612e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a232fd28dcd72ac353785a697a4d612e7">&#9670;&#160;</a></span>Gemm</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::Gemm =  KokkosBatched::SerialGemm&lt; KokkosBatched::Trans::NoTranspose, KokkosBatched::Trans::NoTranspose, KokkosBatched::Algo::Gemm::Default&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af0a84186c5a29b01dc2a6444ec87b83d" name="af0a84186c5a29b01dc2a6444ec87b83d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0a84186c5a29b01dc2a6444ec87b83d">&#9670;&#160;</a></span>TransposeMatrix</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::TransposeMatrix =  KokkosBatched::SerialCopy&lt;KokkosBatched::Trans::Transpose&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ada8fe1fabddd7c9b407cc7e06c4df5d5" name="ada8fe1fabddd7c9b407cc7e06c4df5d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada8fe1fabddd7c9b407cc7e06c4df5d5">&#9670;&#160;</a></span>View</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> ValueType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">using</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::View =  Kokkos::View&lt;ValueType, DeviceType&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a377c4ce0a76746e23fd71c0e8cf23d28" name="a377c4ce0a76746e23fd71c0e8cf23d28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a377c4ce0a76746e23fd71c0e8cf23d28">&#9670;&#160;</a></span>FixedBC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::FixedBC </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac1adcb48ac225478e305ccc50e4c4f2c" name="ac1adcb48ac225478e305ccc50e4c4f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1adcb48ac225478e305ccc50e4c4f2c">&#9670;&#160;</a></span>FixedBC3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::FixedBC3DOF </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f18178288d183d4cd9eb1caed994abb" name="a6f18178288d183d4cd9eb1caed994abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f18178288d183d4cd9eb1caed994abb">&#9670;&#160;</a></span>operator()()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">::operator</a>() </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6a6755ae59e1c92d2f5aafcbcaf0823" name="ab6a6755ae59e1c92d2f5aafcbcaf0823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6a6755ae59e1c92d2f5aafcbcaf0823">&#9670;&#160;</a></span>PrescribedBC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::PrescribedBC </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5be486c288f72a5de0fc9a0bd5daebec" name="a5be486c288f72a5de0fc9a0bd5daebec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5be486c288f72a5de0fc9a0bd5daebec">&#9670;&#160;</a></span>PrescribedBC3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::PrescribedBC3DOF </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a33411c3afc06fd27eb1a7f3400ed2e42" name="a33411c3afc06fd27eb1a7f3400ed2e42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33411c3afc06fd27eb1a7f3400ed2e42">&#9670;&#160;</a></span>RevoluteJoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::RevoluteJoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaa1063c309f28c22d8932f81477abc20" name="aaa1063c309f28c22d8932f81477abc20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa1063c309f28c22d8932f81477abc20">&#9670;&#160;</a></span>RigidJoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::RigidJoint </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abcc3a349d186ce7895929197e79f4cad" name="abcc3a349d186ce7895929197e79f4cad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcc3a349d186ce7895929197e79f4cad">&#9670;&#160;</a></span>RigidJoint3DOF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::RigidJoint3DOF </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a89da507a8e8fda5e58899d4db410c54e" name="a89da507a8e8fda5e58899d4db410c54e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89da507a8e8fda5e58899d4db410c54e">&#9670;&#160;</a></span>RotationControl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">KOKKOS_FUNCTION</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">void</a> <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::RotationControl </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>&#160;</td>
+          <td class="paramname"><em>constraint</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a99646b2731aa3915020600b78d09ef91" name="a99646b2731aa3915020600b78d09ef91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99646b2731aa3915020600b78d09ef91">&#9670;&#160;</a></span>axes_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [3][3]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::axes_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6d377057629c1eddcc52e65ff381638" name="ad6d377057629c1eddcc52e65ff381638"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6d377057629c1eddcc52e65ff381638">&#9670;&#160;</a></span>b_grad_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::b_grad_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a809c4929240e72fd2f5cd8d5d5c63605" name="a809c4929240e72fd2f5cd8d5d5c63605"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a809c4929240e72fd2f5cd8d5d5c63605">&#9670;&#160;</a></span>b_grad_trans_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::b_grad_trans_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae84fcdda9f842c85b4b379d28c890c18" name="ae84fcdda9f842c85b4b379d28c890c18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae84fcdda9f842c85b4b379d28c890c18">&#9670;&#160;</a></span>b_lambda_res_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::b_lambda_res_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aefb3b4d0585c289e41708f1500d5873f" name="aefb3b4d0585c289e41708f1500d5873f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefb3b4d0585c289e41708f1500d5873f">&#9670;&#160;</a></span>base_node_index_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::base_node_index_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afa8a48b6c2ee8a3fdc6ebb756121e27a" name="afa8a48b6c2ee8a3fdc6ebb756121e27a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa8a48b6c2ee8a3fdc6ebb756121e27a">&#9670;&#160;</a></span>constraint_inputs_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::constraint_inputs_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d988ad293472dbcc576c996ea2b890a" name="a6d988ad293472dbcc576c996ea2b890a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d988ad293472dbcc576c996ea2b890a">&#9670;&#160;</a></span>lambda_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::lambda_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96b50d9b36ae2501a232bd839f98e75a" name="a96b50d9b36ae2501a232bd839f98e75a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96b50d9b36ae2501a232bd839f98e75a">&#9670;&#160;</a></span>node_u_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [7]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::node_u_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a47c08a3debd38caabe1cf43da8af92" name="a5a47c08a3debd38caabe1cf43da8af92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a47c08a3debd38caabe1cf43da8af92">&#9670;&#160;</a></span>res_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::res_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abc3a3465da98f20e8c0274181cd5c344" name="abc3a3465da98f20e8c0274181cd5c344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc3a3465da98f20e8c0274181cd5c344">&#9670;&#160;</a></span>system_res_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::system_res_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a24b64abc0d74bf934046de81b93a2331" name="a24b64abc0d74bf934046de81b93a2331"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24b64abc0d74bf934046de81b93a2331">&#9670;&#160;</a></span>t_grad_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::t_grad_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9be2ecc6a3f4bf89565a98b44c4e0a14" name="a9be2ecc6a3f4bf89565a98b44c4e0a14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9be2ecc6a3f4bf89565a98b44c4e0a14">&#9670;&#160;</a></span>t_grad_trans_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::t_grad_trans_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5bb2544310eef4f46932221053b0ec94" name="a5bb2544310eef4f46932221053b0ec94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bb2544310eef4f46932221053b0ec94">&#9670;&#160;</a></span>t_lambda_res_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">View</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::t_lambda_res_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad02199a4559f742d320583a2530fa5f4" name="ad02199a4559f742d320583a2530fa5f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad02199a4559f742d320583a2530fa5f4">&#9670;&#160;</a></span>tangent_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [6][6]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::tangent_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a948409ea635fdcdf8c48e8aec76fa24c" name="a948409ea635fdcdf8c48e8aec76fa24c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a948409ea635fdcdf8c48e8aec76fa24c">&#9670;&#160;</a></span>target_node_index_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">size_t</a>*&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::target_node_index_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51f92f0549911cf6ee1dc192cc26bca3" name="a51f92f0549911cf6ee1dc192cc26bca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51f92f0549911cf6ee1dc192cc26bca3">&#9670;&#160;</a></span>type_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a>*&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::type_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a160d7877728ff3d4a126b4edea933282" name="a160d7877728ff3d4a126b4edea933282"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a160d7877728ff3d4a126b4edea933282">&#9670;&#160;</a></span>X0_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">typename</a> DeviceType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a9eb40cfd3319614cccb4b1b69450348a">ConstView</a>&lt;<a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ada8fe1fabddd7c9b407cc7e06c4df5d5">double</a>* [3]&gt; <a class="el" href="structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html">openturbine::constraints::CalculateConstraintResidualGradient</a>&lt; DeviceType &gt;::X0_</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/constraints/<a class="el" href="calculate__constraint__residual__gradient_8hpp_source.html">calculate_constraint_residual_gradient.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

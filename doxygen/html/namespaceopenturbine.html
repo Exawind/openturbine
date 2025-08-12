@@ -177,6 +177,8 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1cfd" id="r_namespaceopenturbine_1_1cfd"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1cfd.html">cfd</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceopenturbine_1_1constraints" id="r_namespaceopenturbine_1_1constraints"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1constraints.html">constraints</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1dss" id="r_namespaceopenturbine_1_1dss"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1dss.html">dss</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1interfaces" id="r_namespaceopenturbine_1_1interfaces"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></td></tr>
@@ -220,47 +222,11 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the input data for creating flexible beams.  <a href="structopenturbine_1_1BeamsInput.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintOutput.html">CalculateConstraintOutput</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel that calculates the output for a constraints, for use as feedback to controllers.  <a href="structopenturbine_1_1CalculateConstraintOutput.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateConstraintResidualGradient.html">CalculateConstraintResidualGradient</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top level kernel which calculates the residual and gradient contributions of a constraint.  <a href="structopenturbine_1_1CalculateConstraintResidualGradient.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateDisplacement.html">CalculateDisplacement</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying the computed change in state (displacement) to the previous state to get an estimate for the current state.  <a href="structopenturbine_1_1CalculateDisplacement.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateFixedBC3DOFConstraint.html">CalculateFixedBC3DOFConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Fix BC constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculateFixedBC3DOFConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateFixedBCConstraint.html">CalculateFixedBCConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Fix BC constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculateFixedBCConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateNextState.html">CalculateNextState</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to predict the next state values before nonlinear iteration begins for a given time step.  <a href="structopenturbine_1_1CalculateNextState.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculatePrescribedBC3DOFConstraint.html">CalculatePrescribedBC3DOFConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Prescribed BC constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculatePrescribedBC3DOFConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculatePrescribedBCConstraint.html">CalculatePrescribedBCConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a Prescribed BC constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculatePrescribedBCConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointConstraint.html">CalculateRevoluteJointConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a revolute joint constraint.  <a href="structopenturbine_1_1CalculateRevoluteJointConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointForce.html">CalculateRevoluteJointForce</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the force applied to the system residual as the result of a revolute joint constraint.  <a href="structopenturbine_1_1CalculateRevoluteJointForce.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRevoluteJointOutput.html">CalculateRevoluteJointOutput</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the output for a revolute joint constraint for feedback to controllers.  <a href="structopenturbine_1_1CalculateRevoluteJointOutput.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJoint3DOFConstraint.html">CalculateRigidJoint3DOFConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a rigid joint constraint with three degrees of freedom.  <a href="structopenturbine_1_1CalculateRigidJoint3DOFConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRigidJointConstraint.html">CalculateRigidJointConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel for calculating the residual and system gradient for a rigid joint constraint with six degrees of freedom.  <a href="structopenturbine_1_1CalculateRigidJointConstraint.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateRotationControlConstraint.html">CalculateRotationControlConstraint</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel which calculates the residual and gradient contributions of a rotation control constraint.  <a href="structopenturbine_1_1CalculateRotationControlConstraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for calculating the tangent operator at each node.  <a href="structopenturbine_1_1CalculateTangentOperator.html#details">More...</a><br /></td></tr>
@@ -336,9 +302,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateGlobalPosition.html">UpdateGlobalPosition</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the absolute position of each node based on the solver's current state and the initial absolute position.  <a href="structopenturbine_1_1UpdateGlobalPosition.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateLambdaPrediction.html">UpdateLambdaPrediction</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the predicted constraint Lagrange multiplier values at each nonlinear iteration.  <a href="structopenturbine_1_1UpdateLambdaPrediction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1UpdateStaticPrediction.html">UpdateStaticPrediction</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel to update the change in state at a node for a static problem.  <a href="structopenturbine_1_1UpdateStaticPrediction.html#details">More...</a><br /></td></tr>

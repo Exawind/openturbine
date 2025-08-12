@@ -11,6 +11,6 @@ var searchData=
   ['output_5fformat_8',['output_format',['../structopenturbine_1_1util_1_1SimulationControls.html#adddcbc88744ec02d120992da00e58a84',1,'openturbine::util::SimulationControls']]],
   ['output_5froot_5fname_9',['output_root_name',['../structopenturbine_1_1util_1_1SimulationControls.html#ac3a7b7fd7f90be9d30c5f88a677d443b',1,'openturbine::util::SimulationControls']]],
   ['output_5ftime_5fstep_10',['output_time_step',['../structopenturbine_1_1util_1_1SimulationControls.html#a94cd89c3294406eede8f7b34b5495a0f',1,'openturbine::util::SimulationControls']]],
-  ['outputs_11',['outputs',['../structopenturbine_1_1CalculateConstraintOutput.html#a81a8583791596a2e8fc701c5c61e2386',1,'openturbine::CalculateConstraintOutput::outputs'],['../structopenturbine_1_1CalculateRevoluteJointOutput.html#a0d1e43b189e7828bc69d52b98177e644',1,'openturbine::CalculateRevoluteJointOutput::outputs']]],
+  ['outputs_11',['outputs',['../structopenturbine_1_1constraints_1_1CalculateConstraintOutput.html#a6cc19878b3f34a5a405487596532624e',1,'openturbine::constraints::CalculateConstraintOutput::outputs'],['../structopenturbine_1_1constraints_1_1CalculateRevoluteJointOutput.html#aec36ad95df08cddeefe3e96706080168',1,'openturbine::constraints::CalculateRevoluteJointOutput::outputs']]],
   ['outputs_5f_12',['outputs_',['../classopenturbine_1_1cfd_1_1Interface.html#a684817cce91bb1eed2f51c9405cf9a3a',1,'openturbine::cfd::Interface']]]
 ];

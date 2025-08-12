@@ -1,0 +1,14 @@
+.. meta::2f4557aad55d312776a3416b71553ae058d3794ead4cc21cdc9bb00a84c24da2e58d0d32b5f0cc192511808b61f00f763c2afe4cfa954c27e6721f8f14e94afb
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints::CalculateRevoluteJointOutput&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRevoluteJointOutput&lt; DeviceType &gt; Struct Template Reference
+==========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateRevoluteJointOutput.html

@@ -1,0 +1,14 @@
+.. meta::fdb821671acadb3fcd6f49e6326c0f41c6f953e3bb972ffd25bc994ba2fabf84917ca321266e1a3f46a27d8a4e175aebf05a169d9a50c72c5582265487ed6c04
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::constraints::CalculateFixedBCConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateFixedBCConstraint&lt; DeviceType &gt; Struct Template Reference
+========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1constraints_1_1CalculateFixedBCConstraint.html
