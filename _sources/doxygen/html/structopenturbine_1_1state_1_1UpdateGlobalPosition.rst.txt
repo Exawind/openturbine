@@ -1,0 +1,14 @@
+.. meta::e134ec2c340bc0efc8d43914847e3e2aec19e51482e644d869ca8e3404b0fdc11945c6c41a357d73153ae73a592311f9d911558233699704ab7322dba141ade2
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::state::UpdateGlobalPosition&lt; DeviceType &gt; Struct Template Reference
+
+UpdateGlobalPosition&lt; DeviceType &gt; Struct Template Reference
+==================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1state_1_1UpdateGlobalPosition.html

@@ -1,0 +1,14 @@
+.. meta::18ab617cb19ca81d41f3d9f9b06aac02e559ed15fc6117516c145d6598f18ebfcd6494424c64794f7bc81970bdef7626d0fe507f4d4ec262324929a39a5dc52b
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::state::UpdateAlgorithmicAcceleration&lt; DeviceType &gt; Struct Template Reference
+
+UpdateAlgorithmicAcceleration&lt; DeviceType &gt; Struct Template Reference
+===========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1state_1_1UpdateAlgorithmicAcceleration.html
