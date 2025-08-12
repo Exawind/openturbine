@@ -4,7 +4,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace openturbine::state {
 
 /**
  * @brief A Kernel to update the velocity, acceleration, and change in state at a node for
@@ -44,4 +44,4 @@ struct UpdateDynamicPrediction {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::state

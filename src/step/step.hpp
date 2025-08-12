@@ -87,7 +87,7 @@ inline bool Step(
     auto system_range = RangePolicy(0, solver.num_system_nodes);
     Kokkos::parallel_for(
         "UpdateAlgorithmicAcceleration", system_range,
-        UpdateAlgorithmicAcceleration<DeviceType>{
+        state::UpdateAlgorithmicAcceleration<DeviceType>{
             state.a,
             state.vd,
             parameters.alpha_f,
@@ -97,7 +97,7 @@ inline bool Step(
 
     Kokkos::parallel_for(
         "UpdateGlobalPosition", system_range,
-        UpdateGlobalPosition<DeviceType>{
+        state::UpdateGlobalPosition<DeviceType>{
             state.q,
             state.x0,
             state.x,

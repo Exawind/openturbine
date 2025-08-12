@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::state {
 
 /**
  * @brief A Kernel to update the algorithmic acceleration based on the acceleration and
@@ -23,4 +23,4 @@ struct UpdateAlgorithmicAcceleration {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::state

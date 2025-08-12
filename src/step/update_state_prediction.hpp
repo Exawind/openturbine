@@ -31,7 +31,7 @@ inline void UpdateStatePrediction(
     if (parameters.is_dynamic_solve) {
         Kokkos::parallel_for(
             "UpdateDynamicPrediction", range_policy,
-            UpdateDynamicPrediction<DeviceType>{
+            state::UpdateDynamicPrediction<DeviceType>{
                 parameters.h,
                 parameters.beta_prime,
                 parameters.gamma_prime,
@@ -46,7 +46,7 @@ inline void UpdateStatePrediction(
     } else {
         Kokkos::parallel_for(
             "UpdateStaticPrediction", range_policy,
-            UpdateStaticPrediction<DeviceType>{
+            state::UpdateStaticPrediction<DeviceType>{
                 parameters.h,
                 state.node_freedom_allocation_table,
                 state.node_freedom_map_table,
@@ -58,7 +58,7 @@ inline void UpdateStatePrediction(
 
     Kokkos::parallel_for(
         "CalculateDisplacement", range_policy,
-        CalculateDisplacement<DeviceType>{
+        state::CalculateDisplacement<DeviceType>{
             parameters.h,
             state.q_delta,
             state.q_prev,

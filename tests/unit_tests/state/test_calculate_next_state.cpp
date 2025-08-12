@@ -35,7 +35,7 @@ TEST(CalculateNextState, OneNode) {
 
     Kokkos::parallel_for(
         "CalculateNextState", 1,
-        CalculateNextState<Kokkos::DefaultExecutionSpace>{
+        state::CalculateNextState<Kokkos::DefaultExecutionSpace>{
             h, alpha_f, alpha_m, beta, gamma, q_delta, v, vd, a
         }
     );

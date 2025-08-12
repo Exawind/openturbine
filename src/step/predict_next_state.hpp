@@ -20,7 +20,7 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
 
     Kokkos::parallel_for(
         "CalculateNextState", RangePolicy(0, state.v.extent(0)),
-        CalculateNextState<DeviceType>{
+        state::CalculateNextState<DeviceType>{
             parameters.h,
             parameters.alpha_f,
             parameters.alpha_m,
@@ -35,7 +35,7 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
 
     Kokkos::parallel_for(
         "CalculateDisplacement", RangePolicy(0, state.q.extent(0)),
-        CalculateDisplacement<DeviceType>{
+        state::CalculateDisplacement<DeviceType>{
             parameters.h,
             state.q_delta,
             state.q_prev,
