@@ -8,7 +8,7 @@
 #include "dof_management/freedom_signature.hpp"
 #include "state/state.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestComputeNodeFreedomMapTable, OneNode) {
     using DeviceType =
@@ -52,4 +52,4 @@ TEST(TestComputeNodeFreedomMapTable, FourNodes) {
     EXPECT_EQ(host_node_freedom_map_table(3), 12);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::dof::tests

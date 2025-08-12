@@ -24,7 +24,7 @@ struct ContributeSpringsToSparseMatrix {
     using ConstView = typename View<ValueType>::const_type;
 
     double conditioner{};
-    ConstView<FreedomSignature* [2]> element_freedom_signature;
+    ConstView<dof::FreedomSignature* [2]> element_freedom_signature;
     ConstView<size_t* [2][3]> element_freedom_table;
     ConstView<double* [2][2][3][3]> dense;  //< Element Stiffness matrices
     CrsMatrixType sparse;                   //< Global sparse stiffness matrix

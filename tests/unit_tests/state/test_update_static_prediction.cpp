@@ -13,8 +13,9 @@ namespace openturbine::tests {
 TEST(UpdateStaticPrediction, TwoNodes) {
     constexpr auto h = 2.;
 
-    const auto node_freedom_allocation_table = CreateView<FreedomSignature[2]>(
-        "nfat", std::array{FreedomSignature::AllComponents, FreedomSignature::AllComponents}
+    const auto node_freedom_allocation_table = CreateView<dof::FreedomSignature[2]>(
+        "nfat",
+        std::array{dof::FreedomSignature::AllComponents, dof::FreedomSignature::AllComponents}
     );
     const auto node_freedom_map_table = CreateView<size_t[2]>("nfmt", std::array{0UL, 6UL});
     const auto x_delta = CreateLeftView<double[12][1]>(

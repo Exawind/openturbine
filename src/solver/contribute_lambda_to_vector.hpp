@@ -19,8 +19,8 @@ struct ContributeLambdaToVector {
     template <typename ValueType>
     using LeftView = Kokkos::View<ValueType, Kokkos::LayoutLeft, DeviceType>;
 
-    ConstView<FreedomSignature*> base_node_freedom_signature;
-    ConstView<FreedomSignature*> target_node_freedom_signature;
+    ConstView<dof::FreedomSignature*> base_node_freedom_signature;
+    ConstView<dof::FreedomSignature*> target_node_freedom_signature;
 
     ConstView<size_t* [6]> base_node_freedom_table;
     ConstView<size_t* [6]> target_node_freedom_table;

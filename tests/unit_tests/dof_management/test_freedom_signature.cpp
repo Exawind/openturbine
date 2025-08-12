@@ -2,7 +2,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::dof::tests {
 
 TEST(TestFreedomSignature, CombineSignatures_NoOverlap) {
     const auto x = FreedomSignature::JustPosition;
@@ -34,4 +34,4 @@ TEST(TestFreedomSignature, CountActiveDofs_AllComponents) {
     auto x = count_active_dofs(FreedomSignature::AllComponents);
     EXPECT_EQ(x, 6);
 }
-}  // namespace openturbine::tests
+}  // namespace openturbine::dof::tests

@@ -21,7 +21,7 @@ struct Masses {
     size_t num_elems;                     //< Total number of elements
     View<size_t*> num_nodes_per_element;  //< This is always 1 for masses
     View<size_t*> state_indices;
-    View<FreedomSignature*> element_freedom_signature;
+    View<dof::FreedomSignature*> element_freedom_signature;
     View<size_t* [6]> element_freedom_table;
     View<double[3]> gravity;
     View<double* [7]> node_x0;      //< Initial position/rotation
@@ -51,7 +51,7 @@ struct Masses {
               Kokkos::view_alloc("system_matrix_terms", Kokkos::WithoutInitializing), num_elems
           ) {
         Kokkos::deep_copy(num_nodes_per_element, 1);  // Always 1 node per element
-        Kokkos::deep_copy(element_freedom_signature, FreedomSignature::AllComponents);
+        Kokkos::deep_copy(element_freedom_signature, dof::FreedomSignature::AllComponents);
     }
 };
 

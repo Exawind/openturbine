@@ -5,7 +5,7 @@
 #include "elements/elements.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace openturbine::dof {
 
 /**
  * @brief A Kernel that creates the element freedom table which maps each degree of freedom
@@ -135,4 +135,4 @@ inline void create_element_freedom_table(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

@@ -24,7 +24,7 @@ struct UpdateDynamicPrediction {
     double h;
     double beta_prime;
     double gamma_prime;
-    ConstView<FreedomSignature*> node_freedom_allocation_table;
+    ConstView<dof::FreedomSignature*> node_freedom_allocation_table;
     ConstView<size_t*> node_freedom_map_table;
     ConstLeftView<double* [1]> x_delta;
     View<double* [6]> q_delta;

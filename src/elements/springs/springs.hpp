@@ -19,7 +19,7 @@ struct Springs {
 
     View<size_t*> num_nodes_per_element;  //< This is always 2 for springs
     View<size_t* [2]> node_state_indices;
-    View<FreedomSignature* [2]> element_freedom_signature;
+    View<dof::FreedomSignature* [2]> element_freedom_signature;
     View<size_t* [2][3]> element_freedom_table;  //< Only translational DOFs for springs
 
     View<double* [3]> x0;  //< Initial distance vector between nodes
@@ -54,7 +54,7 @@ struct Springs {
           ) {
         Kokkos::deep_copy(num_nodes_per_element, 2);  // Always 2 nodes per element
         Kokkos::deep_copy(
-            element_freedom_signature, FreedomSignature::JustPosition
+            element_freedom_signature, dof::FreedomSignature::JustPosition
         );  // Springs only have translational DOFs
     }
 };

@@ -21,7 +21,7 @@ struct UpdateStaticPrediction {
     using ConstLeftView = typename LeftView<ValueType>::const_type;
 
     double h;
-    ConstView<FreedomSignature*> node_freedom_allocation_table;
+    ConstView<dof::FreedomSignature*> node_freedom_allocation_table;
     ConstView<size_t*> node_freedom_map_table;
     ConstLeftView<double* [1]> x_delta;
     Kokkos::View<double* [6], DeviceType> q_delta;
