@@ -40,7 +40,7 @@ var searchData=
   ['computecolinds_37',['ComputeColInds',['../structopenturbine_1_1solver_1_1ComputeColInds.html',1,'openturbine::solver']]],
   ['computeconstraintscolinds_38',['ComputeConstraintsColInds',['../structopenturbine_1_1solver_1_1ComputeConstraintsColInds.html',1,'openturbine::solver']]],
   ['computeconstraintsrowentries_39',['ComputeConstraintsRowEntries',['../structopenturbine_1_1solver_1_1ComputeConstraintsRowEntries.html',1,'openturbine::solver']]],
-  ['computenodefreedommaptable_40',['ComputeNodeFreedomMapTable',['../structopenturbine_1_1ComputeNodeFreedomMapTable.html',1,'openturbine']]],
+  ['computenodefreedommaptable_40',['ComputeNodeFreedomMapTable',['../structopenturbine_1_1dof_1_1ComputeNodeFreedomMapTable.html',1,'openturbine::dof']]],
   ['computenumsystemdofsreducer_41',['ComputeNumSystemDofsReducer',['../structopenturbine_1_1solver_1_1ComputeNumSystemDofsReducer.html',1,'openturbine::solver']]],
   ['computerowptrs_42',['ComputeRowPtrs',['../structopenturbine_1_1solver_1_1ComputeRowPtrs.html',1,'openturbine::solver']]],
   ['computesystemcolinds_43',['ComputeSystemColInds',['../structopenturbine_1_1solver_1_1ComputeSystemColInds.html',1,'openturbine::solver']]],
@@ -63,9 +63,9 @@ var searchData=
   ['copyconstraintsresidualtovector_60',['CopyConstraintsResidualToVector',['../structopenturbine_1_1solver_1_1CopyConstraintsResidualToVector.html',1,'openturbine::solver']]],
   ['copyconstraintstosparsematrix_61',['CopyConstraintsToSparseMatrix',['../structopenturbine_1_1solver_1_1CopyConstraintsToSparseMatrix.html',1,'openturbine::solver']]],
   ['copyconstraintstransposetosparsematrix_62',['CopyConstraintsTransposeToSparseMatrix',['../structopenturbine_1_1solver_1_1CopyConstraintsTransposeToSparseMatrix.html',1,'openturbine::solver']]],
-  ['createconstraintfreedomtable_63',['CreateConstraintFreedomTable',['../structopenturbine_1_1CreateConstraintFreedomTable.html',1,'openturbine']]],
-  ['createelementfreedomtable_5fbeams_64',['CreateElementFreedomTable_Beams',['../structopenturbine_1_1CreateElementFreedomTable__Beams.html',1,'openturbine']]],
-  ['createelementfreedomtable_5fmasses_65',['CreateElementFreedomTable_Masses',['../structopenturbine_1_1CreateElementFreedomTable__Masses.html',1,'openturbine']]],
-  ['createelementfreedomtable_5fsprings_66',['CreateElementFreedomTable_Springs',['../structopenturbine_1_1CreateElementFreedomTable__Springs.html',1,'openturbine']]],
+  ['createconstraintfreedomtable_63',['CreateConstraintFreedomTable',['../structopenturbine_1_1dof_1_1CreateConstraintFreedomTable.html',1,'openturbine::dof']]],
+  ['createelementfreedomtable_5fbeams_64',['CreateElementFreedomTable_Beams',['../structopenturbine_1_1dof_1_1CreateElementFreedomTable__Beams.html',1,'openturbine::dof']]],
+  ['createelementfreedomtable_5fmasses_65',['CreateElementFreedomTable_Masses',['../structopenturbine_1_1dof_1_1CreateElementFreedomTable__Masses.html',1,'openturbine::dof']]],
+  ['createelementfreedomtable_5fsprings_66',['CreateElementFreedomTable_Springs',['../structopenturbine_1_1dof_1_1CreateElementFreedomTable__Springs.html',1,'openturbine::dof']]],
   ['createfullmatrix_67',['CreateFullMatrix',['../structopenturbine_1_1solver_1_1CreateFullMatrix.html',1,'openturbine::solver']]]
 ];

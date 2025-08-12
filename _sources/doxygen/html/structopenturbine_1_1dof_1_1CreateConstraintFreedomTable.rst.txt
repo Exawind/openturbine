@@ -1,0 +1,14 @@
+.. meta::61aaa5d0ee7ca89a15489ef4a6d78b022f696fa068cc572f637ace1fea27e96e8be1764f233c56a433a931d586953eedba1397c315c38a76475dd3be95048060
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dof::CreateConstraintFreedomTable&lt; DeviceType &gt; Struct Template Reference
+
+CreateConstraintFreedomTable&lt; DeviceType &gt; Struct Template Reference
+==========================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1dof_1_1CreateConstraintFreedomTable.html

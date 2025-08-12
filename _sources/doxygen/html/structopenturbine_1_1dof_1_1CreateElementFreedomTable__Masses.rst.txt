@@ -1,0 +1,14 @@
+.. meta::47c9b5f6ba3cd713a82ea54ef4616cd4c6d1377deaa91ee0668fb492e87790471dca8491399a72316bd9c14c7d2112f1f3ffbddf2f39fb5db0d50cc8fe6437c5
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dof::CreateElementFreedomTable_Masses&lt; DeviceType &gt; Struct Template Reference
+
+CreateElementFreedomTable\_Masses&lt; DeviceType &gt; Struct Template Reference
+===============================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1dof_1_1CreateElementFreedomTable__Masses.html

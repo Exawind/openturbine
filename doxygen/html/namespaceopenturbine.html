@@ -179,6 +179,8 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1constraints" id="r_namespaceopenturbine_1_1constraints"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1constraints.html">constraints</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceopenturbine_1_1dof" id="r_namespaceopenturbine_1_1dof"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1dof.html">dof</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1dss" id="r_namespaceopenturbine_1_1dss"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1dss.html">dss</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespaceopenturbine_1_1interfaces" id="r_namespaceopenturbine_1_1interfaces"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></td></tr>
@@ -198,18 +200,6 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html">AssembleNodeFreedomMapTable_Beams</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a Beam element's freedom signature to all nodes it contains.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Beams.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html">AssembleNodeFreedomMapTable_Constraints</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a constraint's freedom signature to its base and target nodes.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Constraints.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html">AssembleNodeFreedomMapTable_Masses</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a mass element's freedom signature to its node.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Masses.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html">AssembleNodeFreedomMapTable_Springs</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for applying a spring element's freedom signature to both of its nodes.  <a href="structopenturbine_1_1AssembleNodeFreedomMapTable__Springs.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Beam element constitutes flexible beams material behavior in openturbine.  <a href="structopenturbine_1_1BeamElement.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,26 +221,11 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel for calculating the tangent operator at each node.  <a href="structopenturbine_1_1CalculateTangentOperator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1ComputeNodeFreedomMapTable.html">ComputeNodeFreedomMapTable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Scanning Kernel which to convert the number of active degrees of freedom per node to a pointer map to the start of their degrees of freedom in a serialized global vector.  <a href="structopenturbine_1_1ComputeNodeFreedomMapTable.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraint.html">Constraint</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a constraint between two nodes or enforces a boundary condition at a single node.  <a href="structopenturbine_1_1Constraint.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container class for managing multiple constraints in a simulation.  <a href="structopenturbine_1_1Constraints.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateConstraintFreedomTable.html">CreateConstraintFreedomTable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel that creates the node freedom tables for each the target and base nodes for a given constrain.  <a href="structopenturbine_1_1CreateConstraintFreedomTable.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateElementFreedomTable__Beams.html">CreateElementFreedomTable_Beams</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel that creates the element freedom table which maps each degree of freedom on the beam element to its global component number.  <a href="structopenturbine_1_1CreateElementFreedomTable__Beams.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateElementFreedomTable__Masses.html">CreateElementFreedomTable_Masses</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel that creates the element freedom table which maps each degree of freedom on the mass element to its global component number.  <a href="structopenturbine_1_1CreateElementFreedomTable__Masses.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1CreateElementFreedomTable__Springs.html">CreateElementFreedomTable_Springs</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A Kernel that creates the element freedom table which maps each degree of freedom on the spring element to its global component number.  <a href="structopenturbine_1_1CreateElementFreedomTable__Springs.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container providing handle to all structural elements present in the model.  <a href="structopenturbine_1_1Elements.html#details">More...</a><br /></td></tr>
@@ -324,13 +299,6 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a86a41c4e6ed003fa419c858b8e6cd18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4a0c4b14f459d6be7082dd819d5e15c" id="r_ac4a0c4b14f459d6be7082dd819d5e15c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> : std::uint8_t { <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e">AllComponents</a> = 0b00111111
-, <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d">JustPosition</a> = 0b00111000
-, <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be">JustRotation</a> = 0b00000111
-, <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67">NoComponents</a> = 0b00000000
- }</td></tr>
-<tr class="memdesc:ac4a0c4b14f459d6be7082dd819d5e15c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the active degrees of freedom for a node.  <a href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">More...</a><br /></td></tr>
-<tr class="separator:ac4a0c4b14f459d6be7082dd819d5e15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -343,28 +311,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a14ddfd0e99cc8dfae2c642df6d8b1063" id="r_a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION constexpr size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a14ddfd0e99cc8dfae2c642df6d8b1063">NumRowsForConstraint</a> (<a class="el" href="namespaceopenturbine.html#a86a41c4e6ed003fa419c858b8e6cd18d">ConstraintType</a> type)</td></tr>
 <tr class="memdesc:a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of degrees of freedom prescribed/fixed by the constraint type.  <br /></td></tr>
 <tr class="separator:a14ddfd0e99cc8dfae2c642df6d8b1063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a932a665948376539c8aa98265a8e8257" id="r_a932a665948376539c8aa98265a8e8257"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a932a665948376539c8aa98265a8e8257"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a932a665948376539c8aa98265a8e8257">assemble_node_freedom_allocation_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state, const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints)</td></tr>
-<tr class="memdesc:a932a665948376539c8aa98265a8e8257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the node freedom allocation table in state based on the connectivities defined in the elements and constraints structures.  <br /></td></tr>
-<tr class="separator:a932a665948376539c8aa98265a8e8257"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab306821727cde73c9c0a552c66b62238" id="r_ab306821727cde73c9c0a552c66b62238"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:ab306821727cde73c9c0a552c66b62238"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ab306821727cde73c9c0a552c66b62238">compute_node_freedom_map_table</a> (<a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
-<tr class="memdesc:ab306821727cde73c9c0a552c66b62238"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the node freedom map table, a pointer map to the start of the degrees of freedom ofa given node in a serialized global vector.  <br /></td></tr>
-<tr class="separator:ab306821727cde73c9c0a552c66b62238"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54288e8047ccc914721bc897928e61cc" id="r_a54288e8047ccc914721bc897928e61cc"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a54288e8047ccc914721bc897928e61cc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a54288e8047ccc914721bc897928e61cc">create_constraint_freedom_table</a> (<a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;constraints, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
-<tr class="memdesc:a54288e8047ccc914721bc897928e61cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates node freedom tables for each the target and base nodes in the constraints.  <br /></td></tr>
-<tr class="separator:a54288e8047ccc914721bc897928e61cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68e93c3fd69a7f4617f67df3a8ece264" id="r_a68e93c3fd69a7f4617f67df3a8ece264"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
-<tr class="memitem:a68e93c3fd69a7f4617f67df3a8ece264"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a68e93c3fd69a7f4617f67df3a8ece264">create_element_freedom_table</a> (<a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;elements, const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;state)</td></tr>
-<tr class="memdesc:a68e93c3fd69a7f4617f67df3a8ece264"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the element freedom tables for all of the elements in the system.  <br /></td></tr>
-<tr class="separator:a68e93c3fd69a7f4617f67df3a8ece264"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46c42f508c32ce963cde7215e5acd063" id="r_a46c42f508c32ce963cde7215e5acd063"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#a46c42f508c32ce963cde7215e5acd063">operator|</a> (<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> x, <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> y)</td></tr>
-<tr class="memdesc:a46c42f508c32ce963cde7215e5acd063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines two freedom signatures using bitwise OR.  <br /></td></tr>
-<tr class="separator:a46c42f508c32ce963cde7215e5acd063"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac49461f4e15c88f90f8383dffa5ac51b" id="r_ac49461f4e15c88f90f8383dffa5ac51b"><td class="memItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#ac49461f4e15c88f90f8383dffa5ac51b">count_active_dofs</a> (<a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> x)</td></tr>
-<tr class="memdesc:ac49461f4e15c88f90f8383dffa5ac51b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts the number of active degrees of freedom in a signature.  <br /></td></tr>
-<tr class="separator:ac49461f4e15c88f90f8383dffa5ac51b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af984b601608050be09485b044eb900a7" id="r_af984b601608050be09485b044eb900a7"><td class="memTemplParams" colspan="2">template&lt;typename DeviceType &gt; </td></tr>
 <tr class="memitem:af984b601608050be09485b044eb900a7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1Beams.html">Beams</a>&lt; DeviceType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine.html#af984b601608050be09485b044eb900a7">CreateBeams</a> (const <a class="el" href="structopenturbine_1_1BeamsInput.html">BeamsInput</a> &amp;beams_input, const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;nodes)</td></tr>
 <tr class="separator:af984b601608050be09485b044eb900a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -432,103 +378,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac4a0c4b14f459d6be7082dd819d5e15c" name="ac4a0c4b14f459d6be7082dd819d5e15c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4a0c4b14f459d6be7082dd819d5e15c">&#9670;&#160;</a></span>FreedomSignature</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">openturbine::FreedomSignature</a> : std::uint8_t</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Represents the active degrees of freedom for a node. </p>
-<p>Each bit in the 6-bit signature represents a degree of freedom:</p><ul>
-<li>Bits 5-3: Translational DOFs (x, y, z positions)</li>
-<li>Bits 2-0: Rotational DOFs (rx, ry, rz rotations)</li>
-</ul>
-<p>Binary format: 0b00[Tz][Ty][Tx][Rz][Ry][Rx] </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e" name="ac4a0c4b14f459d6be7082dd819d5e15ca3b833b799f6bc70091f2d9cf4e10f41e"></a>AllComponents&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d" name="ac4a0c4b14f459d6be7082dd819d5e15cac3f1ed4c290648ed6b685b415448430d"></a>JustPosition&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be" name="ac4a0c4b14f459d6be7082dd819d5e15ca6bd15481aa8778fbfe716b3aee6fa8be"></a>JustRotation&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67" name="ac4a0c4b14f459d6be7082dd819d5e15cad777bc3d604905978e7e68786d91dd67"></a>NoComponents&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a932a665948376539c8aa98265a8e8257" name="a932a665948376539c8aa98265a8e8257"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a932a665948376539c8aa98265a8e8257">&#9670;&#160;</a></span>assemble_node_freedom_allocation_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::assemble_node_freedom_allocation_table </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>elements</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>constraints</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates the node freedom allocation table in state based on the connectivities defined in the elements and constraints structures. </p>
-<p>The node freedom allocation table defines which degrees of freedom are defined on which nodes by collecting this information from all elements and constraints which contain this node. The most common action using this information is to query how many degrees of freedom are defined, so this information is also computed.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">DeviceType</td><td>The Kokkos device defining where OpenTurbine's structures reside</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>A structure containing the node freedom allocation table to be filled </td></tr>
-    <tr><td class="paramname">elements</td><td>A structure containing all of the elements and their connectivities </td></tr>
-    <tr><td class="paramname">constraints</td><td>A structure containing all of the constraints and their connectivities </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a794447995e27871f70d7acf0f3f13747" name="a794447995e27871f70d7acf0f3f13747"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a794447995e27871f70d7acf0f3f13747">&#9670;&#160;</a></span>CloneState()</h2>
 
@@ -554,48 +404,6 @@ template&lt;typename DeviceType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab306821727cde73c9c0a552c66b62238" name="ab306821727cde73c9c0a552c66b62238"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab306821727cde73c9c0a552c66b62238">&#9670;&#160;</a></span>compute_node_freedom_map_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::compute_node_freedom_map_table </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>state</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Compute the node freedom map table, a pointer map to the start of the degrees of freedom ofa given node in a serialized global vector. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where the <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object resides</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">state</td><td>A state object with a completed node freedom allocation table </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -672,141 +480,6 @@ template&lt;typename DeviceType &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac49461f4e15c88f90f8383dffa5ac51b" name="ac49461f4e15c88f90f8383dffa5ac51b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac49461f4e15c88f90f8383dffa5ac51b">&#9670;&#160;</a></span>count_active_dofs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_INLINE_FUNCTION size_t openturbine::count_active_dofs </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>&#160;</td>
-          <td class="paramname"><em>x</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Counts the number of active degrees of freedom in a signature. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>The freedom signature to count </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of active degrees of freedom </dd></dl>
-
-</div>
-</div>
-<a id="a54288e8047ccc914721bc897928e61cc" name="a54288e8047ccc914721bc897928e61cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54288e8047ccc914721bc897928e61cc">&#9670;&#160;</a></span>create_constraint_freedom_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::create_constraint_freedom_table </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Constraints.html">Constraints</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>constraints</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>state</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates node freedom tables for each the target and base nodes in the constraints. </p>
-<p>The constraint freedom table maps each degree of freedom for each node of a constraint to its global degree of freedom number</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where constraints and state reside</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">constraints</td><td>The <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object used to create state's node freedom map table </td></tr>
-    <tr><td class="paramname">state</td><td>A <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object with a completed node freedom map table </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a68e93c3fd69a7f4617f67df3a8ece264" name="a68e93c3fd69a7f4617f67df3a8ece264"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68e93c3fd69a7f4617f67df3a8ece264">&#9670;&#160;</a></span>create_element_freedom_table()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DeviceType &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void openturbine::create_element_freedom_table </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structopenturbine_1_1Elements.html">Elements</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>elements</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structopenturbine_1_1State.html">State</a>&lt; DeviceType &gt; &amp;&#160;</td>
-          <td class="paramname"><em>state</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates the element freedom tables for all of the elements in the system. </p>
-<p>The element freedom table for each element type maps the degrees of freedom for that element to their global degree of freedom number</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where elements and state reside</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">elements</td><td>the <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a> object used to create state's node freedom map table </td></tr>
-    <tr><td class="paramname">state</td><td>A <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a> object with a completed node freedom map table </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -1066,44 +739,6 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns the number of degrees of freedom prescribed/fixed by the constraint type. </p>
-
-</div>
-</div>
-<a id="a46c42f508c32ce963cde7215e5acd063" name="a46c42f508c32ce963cde7215e5acd063"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46c42f508c32ce963cde7215e5acd063">&#9670;&#160;</a></span>operator|()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">KOKKOS_INLINE_FUNCTION <a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a> openturbine::operator| </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespaceopenturbine.html#ac4a0c4b14f459d6be7082dd819d5e15c">FreedomSignature</a>&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Combines two freedom signatures using bitwise OR. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>First freedom signature </td></tr>
-    <tr><td class="paramname">y</td><td>Second freedom signature </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Combined freedom signature with all DOFs from both inputs enabled </dd></dl>
 
 </div>
 </div>

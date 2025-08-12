@@ -1,0 +1,14 @@
+.. meta::88bfd18f29cc1493f049cfb258f1148285029a4977bf06d5d12fce3aba59e7d0f545f7bdcbe99bfe2b01d66d954c5ef5e6bc0c2d006c452498d64f037637c614
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::dof::CreateElementFreedomTable_Springs&lt; DeviceType &gt; Struct Template Reference
+
+CreateElementFreedomTable\_Springs&lt; DeviceType &gt; Struct Template Reference
+================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1dof_1_1CreateElementFreedomTable__Springs.html
