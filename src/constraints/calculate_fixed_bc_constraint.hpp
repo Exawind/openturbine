@@ -6,7 +6,7 @@
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::constraints {
 
 /**
  * @brief Kernel for calculating the residual and system gradient for a Fix BC constraint
@@ -90,4 +90,4 @@ struct CalculateFixedBCConstraint {
         );
     }
 };
-}  // namespace openturbine
+}  // namespace openturbine::constraints

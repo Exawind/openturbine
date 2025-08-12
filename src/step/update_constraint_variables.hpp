@@ -25,7 +25,7 @@ inline void UpdateConstraintVariables(
     auto range_policy = RangePolicy(0, constraints.num_constraints);
     Kokkos::parallel_for(
         "CalculateConstraintResidualGradient", range_policy,
-        CalculateConstraintResidualGradient<DeviceType>{
+        constraints::CalculateConstraintResidualGradient<DeviceType>{
             constraints.type, constraints.base_node_index, constraints.target_node_index,
             constraints.X0, constraints.axes, constraints.input, constraints.lambda, state.tangent,
             state.q, constraints.residual_terms, constraints.base_lambda_residual_terms,
