@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: preprocess_windio_for_BE.WindIOPreprocessor Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: preprocess_windio_for_BE.WindIOPreprocessor Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classpreprocess__windio__for__BE_1_1WindIOPreprocessor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="preprocess-windio-for-be-windiopreprocessor-class-reference">
+<h1>preprocess_windio_for_BE.WindIOPreprocessor Class Reference<a class="headerlink" href="#preprocess-windio-for-be-windiopreprocessor-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: preprocess_windio_for_BE.WindIOPreprocessor Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacepreprocess__windio__for__BE.html">preprocess_windio_for_BE</a></li><li class="navelem"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html">WindIOPreprocessor</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">preprocess_windio_for_BE.WindIOPreprocessor Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae4ce4fc8e062bbd8d63ebd78079245ef" id="r_ae4ce4fc8e062bbd8d63ebd78079245ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#ae4ce4fc8e062bbd8d63ebd78079245ef">__init__</a> (self, str <a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a3ba268c671d10586a02504ea293ec5ab">windIO_file</a>)</td></tr>
+<tr class="separator:ae4ce4fc8e062bbd8d63ebd78079245ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63fb613e6a5fbe7581ce226affde1cc7" id="r_a63fb613e6a5fbe7581ce226affde1cc7"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a63fb613e6a5fbe7581ce226affde1cc7">process_all_data</a> (self, np.ndarray aero_nodes)</td></tr>
+<tr class="separator:a63fb613e6a5fbe7581ce226affde1cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16a2f22510f3346cd33acfd828b9a431" id="r_a16a2f22510f3346cd33acfd828b9a431"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a16a2f22510f3346cd33acfd828b9a431">save_processed_data</a> (self, Dict[str, Any] processed_data, str output_file)</td></tr>
+<tr class="separator:a16a2f22510f3346cd33acfd828b9a431"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a3ba268c671d10586a02504ea293ec5ab" id="r_a3ba268c671d10586a02504ea293ec5ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a3ba268c671d10586a02504ea293ec5ab">windIO_file</a></td></tr>
+<tr class="separator:a3ba268c671d10586a02504ea293ec5ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80014ccc883b4229b52d373ce5515ea8" id="r_a80014ccc883b4229b52d373ce5515ea8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a80014ccc883b4229b52d373ce5515ea8">windIO_data</a></td></tr>
+<tr class="separator:a80014ccc883b4229b52d373ce5515ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e03a76b33b51bc3eba37e4d3b9e072" id="r_af6e03a76b33b51bc3eba37e4d3b9e072"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#af6e03a76b33b51bc3eba37e4d3b9e072">blade_data</a></td></tr>
+<tr class="separator:af6e03a76b33b51bc3eba37e4d3b9e072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18eaeb17fc69d6412b2e387574c13bf" id="r_aa18eaeb17fc69d6412b2e387574c13bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#aa18eaeb17fc69d6412b2e387574c13bf">span_positions</a></td></tr>
+<tr class="separator:aa18eaeb17fc69d6412b2e387574c13bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab39d98a5c655b9313151fb5957db7fbd" id="r_ab39d98a5c655b9313151fb5957db7fbd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#ab39d98a5c655b9313151fb5957db7fbd">airfoil_labels</a></td></tr>
+<tr class="separator:ab39d98a5c655b9313151fb5957db7fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af80932db3a4ab2aabf4b2ed35ee892d6" id="r_af80932db3a4ab2aabf4b2ed35ee892d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#af80932db3a4ab2aabf4b2ed35ee892d6">airfoil_data</a></td></tr>
+<tr class="separator:af80932db3a4ab2aabf4b2ed35ee892d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad74bdf7714cc60a6ee5fc79ec531df7d" id="r_ad74bdf7714cc60a6ee5fc79ec531df7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#ad74bdf7714cc60a6ee5fc79ec531df7d">polar_data</a></td></tr>
+<tr class="separator:ad74bdf7714cc60a6ee5fc79ec531df7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a7107d31e7ab894942e87b4790b8e7" id="r_a30a7107d31e7ab894942e87b4790b8e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a30a7107d31e7ab894942e87b4790b8e7">outer_shape_data</a></td></tr>
+<tr class="separator:a30a7107d31e7ab894942e87b4790b8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:aabc149ca2034325e40ecff0b6c2d6cda" id="r_aabc149ca2034325e40ecff0b6c2d6cda"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#aabc149ca2034325e40ecff0b6c2d6cda">_initialize_data</a> (self)</td></tr>
+<tr class="separator:aabc149ca2034325e40ecff0b6c2d6cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8808b3f9f58f021d0d806e03e0b09006" id="r_a8808b3f9f58f021d0d806e03e0b09006"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a8808b3f9f58f021d0d806e03e0b09006">_load_windIO_file</a> (self)</td></tr>
+<tr class="separator:a8808b3f9f58f021d0d806e03e0b09006"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeebbf9f2c87a429586c4698e603db053" id="r_aeebbf9f2c87a429586c4698e603db053"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#aeebbf9f2c87a429586c4698e603db053">_extract_blade_data</a> (self)</td></tr>
+<tr class="separator:aeebbf9f2c87a429586c4698e603db053"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3bf99bd5e031b85fa8c05a39050b758" id="r_aa3bf99bd5e031b85fa8c05a39050b758"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#aa3bf99bd5e031b85fa8c05a39050b758">_extract_airfoil_data</a> (self)</td></tr>
+<tr class="separator:aa3bf99bd5e031b85fa8c05a39050b758"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a582c68410b70a6a6e389007df390088f" id="r_a582c68410b70a6a6e389007df390088f"><td class="memItemLeft" align="right" valign="top">None&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a582c68410b70a6a6e389007df390088f">_extract_polar_data</a> (self)</td></tr>
+<tr class="separator:a582c68410b70a6a6e389007df390088f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae92af5dc2a7b90faef9eb9d4913e9a6c" id="r_ae92af5dc2a7b90faef9eb9d4913e9a6c"><td class="memItemLeft" align="right" valign="top">Tuple[Dict[str, Any], Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#ae92af5dc2a7b90faef9eb9d4913e9a6c">_interpolate_airfoil_cross_sections</a> (self, np.ndarray aero_nodes)</td></tr>
+<tr class="separator:ae92af5dc2a7b90faef9eb9d4913e9a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012ee4ed415b61e46f75f3bb0216abf7" id="r_a012ee4ed415b61e46f75f3bb0216abf7"><td class="memItemLeft" align="right" valign="top">Dict[str, np.ndarray]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a012ee4ed415b61e46f75f3bb0216abf7">_normalize_airfoil_coordinates</a> (self, str airfoil_name, int num_points=300)</td></tr>
+<tr class="separator:a012ee4ed415b61e46f75f3bb0216abf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40487b6fd8b9dc3f292726df7bdc5ba2" id="r_a40487b6fd8b9dc3f292726df7bdc5ba2"><td class="memItemLeft" align="right" valign="top">Dict[str, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a40487b6fd8b9dc3f292726df7bdc5ba2">_setup_property_interpolators</a> (self)</td></tr>
+<tr class="separator:a40487b6fd8b9dc3f292726df7bdc5ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71d1059f64ff9b14a3f18dbede7eef49" id="r_a71d1059f64ff9b14a3f18dbede7eef49"><td class="memItemLeft" align="right" valign="top">Dict[str, Dict[str, Any]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a71d1059f64ff9b14a3f18dbede7eef49">_normalize_all_airfoil_polars</a> (self, Dict[str, np.ndarray] target_conditions)</td></tr>
+<tr class="separator:a71d1059f64ff9b14a3f18dbede7eef49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a070bc411a87953715a220e8b2e57dcc8" id="r_a070bc411a87953715a220e8b2e57dcc8"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a070bc411a87953715a220e8b2e57dcc8">_normalize_single_airfoil_polars</a> (self, Dict[str, Any] polar_set, Dict[str, np.ndarray] target_conditions)</td></tr>
+<tr class="separator:a070bc411a87953715a220e8b2e57dcc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fd6b5aac14d0022a2602e1d13263a7e" id="r_a8fd6b5aac14d0022a2602e1d13263a7e"><td class="memItemLeft" align="right" valign="top">Dict[str, Any]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#a8fd6b5aac14d0022a2602e1d13263a7e">_interpolate_polars_at_aero_node</a> (self, str node_name, float node_position, List[str] source_airfoils, Dict[str, Dict[str, Any]] normalized_polars)</td></tr>
+<tr class="separator:a8fd6b5aac14d0022a2602e1d13263a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af47df2740dd199a9cc58597998f2eca5" id="r_af47df2740dd199a9cc58597998f2eca5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#af47df2740dd199a9cc58597998f2eca5">_interpolate_polars_via_pchip</a> (self, normalized_polars, weight)</td></tr>
+<tr class="separator:af47df2740dd199a9cc58597998f2eca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef97d99417ffe7226a945c42e54992a5" id="r_aef97d99417ffe7226a945c42e54992a5"><td class="memItemLeft" align="right" valign="top">Dict[str, Tuple[float, float]]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpreprocess__windio__for__BE_1_1WindIOPreprocessor.html#aef97d99417ffe7226a945c42e54992a5">_calculate_aerodynamic_center_coords</a> (self, Dict[str, Any] interpolated_cross_sections)</td></tr>
+<tr class="separator:aef97d99417ffe7226a945c42e54992a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><pre class="fragment">Preprocessor for windIO airfoil and polar data interpolation.</pre> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae4ce4fc8e062bbd8d63ebd78079245ef" name="ae4ce4fc8e062bbd8d63ebd78079245ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4ce4fc8e062bbd8d63ebd78079245ef">&#9670;&#160;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>windIO_file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Initializes the preprocessor with a windIO file and loads all data attributes.
+
+Args:
+    windIO_file: Path to the input windIO YAML file
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aef97d99417ffe7226a945c42e54992a5" name="aef97d99417ffe7226a945c42e54992a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef97d99417ffe7226a945c42e54992a5">&#9670;&#160;</a></span>_calculate_aerodynamic_center_coords()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Tuple[float, float]] preprocess_windio_for_BE.WindIOPreprocessor._calculate_aerodynamic_center_coords </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>interpolated_cross_sections</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Calculate local x-y coordinates of aerodynamic centers for each aerodynamic node.
+
+This function performs the following steps:
+- Scales airfoil coordinates by chord length
+- Positions aerodynamic center along x-axis (chord line) based on aerodynamic_center value
+- Applies section offsets (section_offset_x, section_offset_y)
+- Applies twist rotation around leading edge
+
+Args:
+    interpolated_cross_sections: Dictionary containing interpolated cross-section data
+
+Returns:
+    Dictionary with node_name -&gt; (x_ac, y_ac) coordinates of aerodynamic centers
+</pre> 
+</div>
+</div>
+<a id="aa3bf99bd5e031b85fa8c05a39050b758" name="aa3bf99bd5e031b85fa8c05a39050b758"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3bf99bd5e031b85fa8c05a39050b758">&#9670;&#160;</a></span>_extract_airfoil_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None preprocess_windio_for_BE.WindIOPreprocessor._extract_airfoil_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Extracts airfoil data from windIO structure.</pre> 
+</div>
+</div>
+<a id="aeebbf9f2c87a429586c4698e603db053" name="aeebbf9f2c87a429586c4698e603db053"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeebbf9f2c87a429586c4698e603db053">&#9670;&#160;</a></span>_extract_blade_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None preprocess_windio_for_BE.WindIOPreprocessor._extract_blade_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Extracts blade and outer_shape_data from windIO structure.</pre> 
+</div>
+</div>
+<a id="a582c68410b70a6a6e389007df390088f" name="a582c68410b70a6a6e389007df390088f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a582c68410b70a6a6e389007df390088f">&#9670;&#160;</a></span>_extract_polar_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None preprocess_windio_for_BE.WindIOPreprocessor._extract_polar_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Extracts polar data from airfoil data.</pre> 
+</div>
+</div>
+<a id="aabc149ca2034325e40ecff0b6c2d6cda" name="aabc149ca2034325e40ecff0b6c2d6cda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabc149ca2034325e40ecff0b6c2d6cda">&#9670;&#160;</a></span>_initialize_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor._initialize_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Initializes all data attributes.
+
+Calls the following methods in order:
+- _load_windIO_file -&gt; loads and parses the windIO YAML file
+- _extract_blade_data -&gt; extracts blade and outer_shape_data from windIO structure
+- _extract_airfoil_data -&gt; extracts airfoil data from windIO structure
+- _extract_polar_data -&gt; extracts polar data from airfoil data
+</pre> 
+</div>
+</div>
+<a id="ae92af5dc2a7b90faef9eb9d4913e9a6c" name="ae92af5dc2a7b90faef9eb9d4913e9a6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae92af5dc2a7b90faef9eb9d4913e9a6c">&#9670;&#160;</a></span>_interpolate_airfoil_cross_sections()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Tuple[Dict[str, Any], Dict[str, Any]] preprocess_windio_for_BE.WindIOPreprocessor._interpolate_airfoil_cross_sections </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">np.ndarray&#160;</td>
+          <td class="paramname"><em>aero_nodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Interpolates airfoil cross-sections at aerodynamic nodes along the blade span.
+
+This function:
+- Uses spanwise positions from windIO outer_shape data to locate provided airfoils
+- Normalizes all windIO-provided airfoils to a common grid
+- Interpolates new airfoil cross-section between normalized airfoils using the piecewise
+  cubic hermite polynomial (PCHIP) interpolation
+- Interpolates chord, twist, section_offset_y, section_offset_x, relative thickness (rthick),
+  and aerodynamic center using PCHIP
+
+Args:
+    aero_nodes: Array of aerodynamic node positions [0-1] along blade span, r/R
+
+Returns:
+    Tuple with two dictionaries:
+    - normalized_airfoils: Dictionary with normalized airfoil cross-sections
+    - interpolated_cross_sections: Dictionary with interpolated airfoil cross-sections at each node, including:
+        - airfoil_coordinates: normalized x,y coordinates
+        - interpolation_method: 'direct_copy' or 'pchip'
+        - source_airfoils: list of provided airfoils used
+        - interpolation_weight: weight for interpolation between two airfoils
+        - chord: interpolated chord
+        - twist: interpolated twist
+        - section_offset_y: interpolated section offset y
+        - section_offset_x: interpolated section offset x
+        - relative_thickness: interpolated thickness ratio
+        - aerodynamic_center: interpolated aerodynamic center
+</pre> 
+</div>
+</div>
+<a id="a8fd6b5aac14d0022a2602e1d13263a7e" name="a8fd6b5aac14d0022a2602e1d13263a7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fd6b5aac14d0022a2602e1d13263a7e">&#9670;&#160;</a></span>_interpolate_polars_at_aero_node()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] preprocess_windio_for_BE.WindIOPreprocessor._interpolate_polars_at_aero_node </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>node_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>node_position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">List[str]&#160;</td>
+          <td class="paramname"><em>source_airfoils</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Dict[str, Any]]
+    &#160;</td>
+          <td class="paramname"><em>normalized_polars</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Interpolates polar data at a specific aerodynamic node using pre-normalized data.
+
+Args:
+    node_name: Name of the aerodynamic node
+    node_position: Position along blade span, r/R [0-1]
+    source_airfoils: List of source airfoil names for interpolation
+    normalized_polars: Pre-normalized polar data for all windIO-provided airfoils
+
+Returns:
+    Dictionary containing interpolated polar data for this node
+</pre> 
+</div>
+</div>
+<a id="af47df2740dd199a9cc58597998f2eca5" name="af47df2740dd199a9cc58597998f2eca5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af47df2740dd199a9cc58597998f2eca5">&#9670;&#160;</a></span>_interpolate_polars_via_pchip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor._interpolate_polars_via_pchip </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>normalized_polars</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>weight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Interpolates polar data at a specific spanwise position using PCHIP interpolation
+across all available airfoils.
+
+Args:
+    normalized_polars: Dictionary of normalized polar data for all airfoils
+    weight: Spanwise position for interpolation [0-1]
+
+Returns:
+    Interpolated polar data
+</pre> 
+</div>
+</div>
+<a id="a8808b3f9f58f021d0d806e03e0b09006" name="a8808b3f9f58f021d0d806e03e0b09006"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8808b3f9f58f021d0d806e03e0b09006">&#9670;&#160;</a></span>_load_windIO_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None preprocess_windio_for_BE.WindIOPreprocessor._load_windIO_file </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Loads and parses the windIO YAML file.</pre> 
+</div>
+</div>
+<a id="a012ee4ed415b61e46f75f3bb0216abf7" name="a012ee4ed415b61e46f75f3bb0216abf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a012ee4ed415b61e46f75f3bb0216abf7">&#9670;&#160;</a></span>_normalize_airfoil_coordinates()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, np.ndarray] preprocess_windio_for_BE.WindIOPreprocessor._normalize_airfoil_coordinates </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>airfoil_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &#160;</td>
+          <td class="paramname"><em>num_points</em> = <code>300</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Normalizes/regularizes airfoil coordinates to a common grid based on normalized surface curve fraction.
+Uses PCHIP interpolation with open trailing edge.
+
+This normalization/regularization is necessary for blade element analysis because:
+- Different airfoils may have different numbers of coordinate points
+- Original coordinates may have non-uniform spacing along the surface
+- Blade span interpolation i.e. interpolation between two airfoils requires the
+  airfoils to be in comparable formats
+
+The process splits the airfoil into upper/lower surfaces, parameterizes each by arc
+length, then interpolates to a uniform grid (uniform spacing, 300 points by default)
+for consistent analysis.
+
+Args:
+    airfoil_name: Name of the airfoil
+    num_points: Number of points for normalized grid
+
+Returns:
+    Dictionary with normalized x, y coordinates
+</pre> 
+</div>
+</div>
+<a id="a71d1059f64ff9b14a3f18dbede7eef49" name="a71d1059f64ff9b14a3f18dbede7eef49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71d1059f64ff9b14a3f18dbede7eef49">&#9670;&#160;</a></span>_normalize_all_airfoil_polars()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Dict[str, Any]] preprocess_windio_for_BE.WindIOPreprocessor._normalize_all_airfoil_polars </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, np.ndarray]&#160;</td>
+          <td class="paramname"><em>target_conditions</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Normalizes/regularizes polar data for all available airfoils to a common angle-of-attack grid.
+
+This function processes all airfoils that have polar data available in the windIO file.
+For each airfoil, it interpolates the polar coefficients (cl, cd, cm) to a common
+angle-of-attack grid using linear interpolation.
+
+Args:
+    target_conditions: Target conditions i.e. angle-of-attack range for interpolation.
+    The target conditions typically include a standardized angle-of-attack range
+    (e.g., -π to +π radians at 1° resolution) that will be used consistently across
+    all airfoils for blade element analysis.
+
+Returns:
+    Dictionary with airfoil names as keys and their normalized polar data as values
+</pre> 
+</div>
+</div>
+<a id="a070bc411a87953715a220e8b2e57dcc8" name="a070bc411a87953715a220e8b2e57dcc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a070bc411a87953715a220e8b2e57dcc8">&#9670;&#160;</a></span>_normalize_single_airfoil_polars()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] preprocess_windio_for_BE.WindIOPreprocessor._normalize_single_airfoil_polars </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>polar_set</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, np.ndarray]
+    &#160;</td>
+          <td class="paramname"><em>target_conditions</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Processes a single airfoil polar set by extracting coefficients and interpolating to target angle-of-attack
+(AoA) conditions using linear interpolation to ensure bounded behavior.
+
+Args:
+    polar_set: Single airfoil polar dataset containing 'alpha', 'cl', 'cd', 'cm'
+    target_conditions: Target conditions for interpolation
+
+Returns:
+    Interpolated polar data as dictionary
+</pre> 
+</div>
+</div>
+<a id="a40487b6fd8b9dc3f292726df7bdc5ba2" name="a40487b6fd8b9dc3f292726df7bdc5ba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40487b6fd8b9dc3f292726df7bdc5ba2">&#9670;&#160;</a></span>_setup_property_interpolators()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Dict[str, Any]] preprocess_windio_for_BE.WindIOPreprocessor._setup_property_interpolators </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<pre class="fragment">Sets up interpolators for blade properties including outer_shape properties
+namely chord, twist, section_offset_y, section_offset_x, and rthick, and
+airfoil-specific properties namely aerodynamic center.
+
+Returns:
+    Dictionary of interpolators for each property
+</pre> 
+</div>
+</div>
+<a id="a63fb613e6a5fbe7581ce226affde1cc7" name="a63fb613e6a5fbe7581ce226affde1cc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63fb613e6a5fbe7581ce226affde1cc7">&#9670;&#160;</a></span>process_all_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> Dict[str, Any] preprocess_windio_for_BE.WindIOPreprocessor.process_all_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">np.ndarray&#160;</td>
+          <td class="paramname"><em>aero_nodes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Processes all airfoil cross-sections and polars by
+- normalizing/regularizing the cross-sections and then interpolating the normalized
+  cross-sections at each aerodynamic node
+- normalizing/regularizing the provided polars in windIO file to a common angle-of-attack
+  grid
+- interpolating the normalized polars at each aerodynamic node
+
+Args:
+    aero_nodes: Aerodynamic node positions
+
+Returns:
+    Complete processed dataset
+</pre> 
+</div>
+</div>
+<a id="a16a2f22510f3346cd33acfd828b9a431" name="a16a2f22510f3346cd33acfd828b9a431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16a2f22510f3346cd33acfd828b9a431">&#9670;&#160;</a></span>save_processed_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> None preprocess_windio_for_BE.WindIOPreprocessor.save_processed_data </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dict[str, Any]&#160;</td>
+          <td class="paramname"><em>processed_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str
+    &#160;</td>
+          <td class="paramname"><em>output_file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">Saves processed data as a new windIO v2.0 file with additional airfoil information
+for Blade Element Analysis at aerodynamic nodes.
+
+This method creates a new windIO file that includes:
+- All original windIO data
+- Processed airfoil cross-sections at aerodynamic nodes
+- Processed polar data at aerodynamic nodes
+
+Args:
+    processed_data: Processed airfoil and polar data
+    output_file: Output windIO file path
+</pre> 
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="af80932db3a4ab2aabf4b2ed35ee892d6" name="af80932db3a4ab2aabf4b2ed35ee892d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af80932db3a4ab2aabf4b2ed35ee892d6">&#9670;&#160;</a></span>airfoil_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.airfoil_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab39d98a5c655b9313151fb5957db7fbd" name="ab39d98a5c655b9313151fb5957db7fbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab39d98a5c655b9313151fb5957db7fbd">&#9670;&#160;</a></span>airfoil_labels</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.airfoil_labels</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af6e03a76b33b51bc3eba37e4d3b9e072" name="af6e03a76b33b51bc3eba37e4d3b9e072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6e03a76b33b51bc3eba37e4d3b9e072">&#9670;&#160;</a></span>blade_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.blade_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30a7107d31e7ab894942e87b4790b8e7" name="a30a7107d31e7ab894942e87b4790b8e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30a7107d31e7ab894942e87b4790b8e7">&#9670;&#160;</a></span>outer_shape_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.outer_shape_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad74bdf7714cc60a6ee5fc79ec531df7d" name="ad74bdf7714cc60a6ee5fc79ec531df7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad74bdf7714cc60a6ee5fc79ec531df7d">&#9670;&#160;</a></span>polar_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.polar_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa18eaeb17fc69d6412b2e387574c13bf" name="aa18eaeb17fc69d6412b2e387574c13bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa18eaeb17fc69d6412b2e387574c13bf">&#9670;&#160;</a></span>span_positions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.span_positions</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a80014ccc883b4229b52d373ce5515ea8" name="a80014ccc883b4229b52d373ce5515ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80014ccc883b4229b52d373ce5515ea8">&#9670;&#160;</a></span>windIO_data</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.windIO_data</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ba268c671d10586a02504ea293ec5ab" name="a3ba268c671d10586a02504ea293ec5ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ba268c671d10586a02504ea293ec5ab">&#9670;&#160;</a></span>windIO_file</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">preprocess_windio_for_BE.WindIOPreprocessor.windIO_file</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/scripts/<a class="el" href="preprocess__windio__for__BE_8py.html">preprocess_windio_for_BE.py</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
