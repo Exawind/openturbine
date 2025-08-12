@@ -49,4 +49,4 @@ inline void compute_node_freedom_map_table(State<DeviceType>& state) {
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

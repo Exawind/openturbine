@@ -135,4 +135,4 @@ inline void create_element_freedom_table(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

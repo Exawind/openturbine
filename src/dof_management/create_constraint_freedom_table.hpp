@@ -79,4 +79,4 @@ inline void create_constraint_freedom_table(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

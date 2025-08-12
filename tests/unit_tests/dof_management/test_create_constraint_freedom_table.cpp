@@ -141,4 +141,4 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::dof::tests

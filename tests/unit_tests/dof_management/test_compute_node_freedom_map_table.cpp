@@ -52,4 +52,4 @@ TEST(TestComputeNodeFreedomMapTable, FourNodes) {
     EXPECT_EQ(host_node_freedom_map_table(3), 12);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::dof::tests

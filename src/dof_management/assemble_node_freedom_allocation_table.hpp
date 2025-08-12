@@ -191,4 +191,4 @@ inline void assemble_node_freedom_allocation_table(
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

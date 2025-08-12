@@ -53,4 +53,4 @@ size_t count_active_dofs(FreedomSignature x) {
     return count;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::dof

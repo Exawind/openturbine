@@ -220,4 +220,4 @@ TEST(
     EXPECT_EQ(host_node_freedom_allocation_table(4), FreedomSignature::JustPosition);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::dof::tests
