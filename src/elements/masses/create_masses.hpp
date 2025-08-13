@@ -6,6 +6,16 @@
 
 namespace openturbine {
 
+/**
+ * @brief Creates a masses data structure and initializes its data
+ *
+ * @tparam DeviceData The Kokkos Device where the newly created Masses structure will reside
+ *
+ * @param masses_input A MassesInput object defining the mass elements
+ * @param nodes A vector defining all of the nodes in the problem
+ * @return A fully initialized Masses data structure
+ *
+ */
 template <typename DeviceType>
 inline Masses<DeviceType> CreateMasses(
     const MassesInput& masses_input, const std::vector<Node>& nodes

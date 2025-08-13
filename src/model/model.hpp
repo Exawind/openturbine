@@ -459,7 +459,7 @@ public:
     template <typename DeviceType>
     [[nodiscard]] State<DeviceType> CreateState() const {
         auto state = State<DeviceType>(this->nodes_.size());
-        CopyNodesToState<DeviceType>(state, this->nodes_);
+        model::CopyNodesToState<DeviceType>(state, this->nodes_);
         return state;
     }
 

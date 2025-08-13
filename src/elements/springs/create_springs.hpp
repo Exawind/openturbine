@@ -6,6 +6,16 @@
 
 namespace openturbine {
 
+/**
+ * @brief Creates a springs data structure and initializes its data
+ *
+ * @tparam DeviceData The Kokkos Device where the newly created Beams structure will reside
+ *
+ * @param springss_input A SpringsInput object defining the spring elements
+ * @param nodes A vector defining all of the nodes in the problem
+ * @return A fully initialized Springs data structure
+ *
+ */
 template <typename DeviceType>
 inline Springs<DeviceType> CreateSprings(
     const SpringsInput& springs_input, const std::vector<Node>& nodes

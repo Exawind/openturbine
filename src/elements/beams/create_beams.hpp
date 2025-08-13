@@ -12,6 +12,16 @@
 
 namespace openturbine {
 
+/**
+ * @brief Creates a beams data structure and initializes its data
+ *
+ * @tparam DeviceData The Kokkos Device where the newly created Beams structure will reside
+ *
+ * @param beams_input A BeamsInput object defining the beam elements
+ * @param nodes A vector defining all of the nodes in the problem
+ * @return A fully initialized Beams data structure
+ *
+ */
 template <typename DeviceType>
 inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
     using Kokkos::ALL;

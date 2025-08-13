@@ -6,7 +6,7 @@
 #include "state/state.hpp"
 #include "state/update_global_position.hpp"
 
-namespace openturbine {
+namespace openturbine::model {
 
 template <typename DeviceType>
 inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& nodes) {
@@ -57,4 +57,4 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
     );
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::model

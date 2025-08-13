@@ -8,6 +8,17 @@
 
 namespace openturbine {
 
+/**
+ * @brief Reads State data from a provided restart file.
+ *
+ * @details It is assumed that the State data structure has a properly initialized
+ * connectivity information, such as when it has been created through the Model interface.
+ *
+ * @tparam DeviceType the Kokkos Device where the State object resides
+ *
+ * @param input An input stream from a binary restart file
+ * @param state The State object into which to write data
+ */
 template <typename DeviceType>
 inline void ReadStateFromFile(std::istream& input, State<DeviceType>& state) {
     auto num_system_nodes = size_t{};
