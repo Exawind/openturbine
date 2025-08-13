@@ -34,7 +34,7 @@ given by
 
    \begin{aligned}
     \underline{x}^\mathrm{c} = \underline{x}^\mathrm{r} + \underline{u}\\
-    \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}\mathrm{r}^
+    \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r}
    \end{aligned}
 
 respectively. The rigid body is defined by a mass matrix defined in
@@ -77,7 +77,7 @@ and where
    \underline{\underline{\mathcal{RR}^\mathrm{r}}}=
    \begin{bmatrix}
    \underline{\underline{R}}~\underline{\underline{R}}^\mathrm{r}& \underline{\underline{\mathrm{r}}} \\
-   \underline{\underline{\mathrm{r}}} & \underline{\underline{R}}~\underline{\underline{R}}\mathrm{r}^
+   \underline{\underline{R}} & \underline{\underline{R}}~\underline{\underline{R}}^\mathrm{r}
    \end{bmatrix}
    \in \mathbb{R}^{6\times6}
 
@@ -97,7 +97,7 @@ where
    \begin{aligned}
    \underline{\underline{G}} =
    \begin{bmatrix}
-   \underline{\underline{\mathrm{r}}} & \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
+   \underline{\underline{r}} & \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
             + \widetilde{\omega} m \widetilde{\eta}^T\\
    \underline{\underline{\mathrm{r}}} & \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
    \end{bmatrix}
