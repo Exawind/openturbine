@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::model::MeshConnectivity Class Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::model::MeshConnectivity Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classopenturbine_1_1model_1_1MeshConnectivity.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="meshconnectivity-class-reference">
+<h1>MeshConnectivity Class Reference<a class="headerlink" href="#meshconnectivity-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::model::MeshConnectivity Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1model.html">model</a></li><li class="navelem"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html">MeshConnectivity</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classopenturbine_1_1model_1_1MeshConnectivity-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::model::MeshConnectivity Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Class to manage element-to-node connectivity information for a mesh.  
+ <a href="classopenturbine_1_1model_1_1MeshConnectivity.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="mesh__connectivity_8hpp_source.html">mesh_connectivity.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a51dee1ea51c3a9c8b824b3c8ca05efee" id="r_a51dee1ea51c3a9c8b824b3c8ca05efee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">MeshConnectivity</a> ()=default</td></tr>
+<tr class="separator:a51dee1ea51c3a9c8b824b3c8ca05efee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afac4c65547cbce70f9924e0ae0670723" id="r_afac4c65547cbce70f9924e0ae0670723"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#afac4c65547cbce70f9924e0ae0670723">AddBeamElementConnectivity</a> (size_t elem_id, const std::vector&lt; size_t &gt; &amp;node_ids)</td></tr>
+<tr class="memdesc:afac4c65547cbce70f9924e0ae0670723"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a beam element's node connectivity.  <br /></td></tr>
+<tr class="separator:afac4c65547cbce70f9924e0ae0670723"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1646dde0df04debc8a21be086c5a9b2" id="r_ab1646dde0df04debc8a21be086c5a9b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">AddMassElementConnectivity</a> (size_t elem_id, size_t node_id)</td></tr>
+<tr class="memdesc:ab1646dde0df04debc8a21be086c5a9b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a mass element's node connectivity.  <br /></td></tr>
+<tr class="separator:ab1646dde0df04debc8a21be086c5a9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad35290105de1b15baed553fe87ae14b6" id="r_ad35290105de1b15baed553fe87ae14b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">AddSpringElementConnectivity</a> (size_t elem_id, const std::array&lt; size_t, 2 &gt; &amp;node_ids)</td></tr>
+<tr class="memdesc:ad35290105de1b15baed553fe87ae14b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a spring element's node connectivity.  <br /></td></tr>
+<tr class="separator:ad35290105de1b15baed553fe87ae14b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7b2538047d78808e725432b8b287fb2" id="r_ac7b2538047d78808e725432b8b287fb2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ac7b2538047d78808e725432b8b287fb2">AddConstraintConnectivity</a> (size_t constraint_id, const std::vector&lt; size_t &gt; &amp;node_ids)</td></tr>
+<tr class="memdesc:ac7b2538047d78808e725432b8b287fb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a constraint's node connectivity.  <br /></td></tr>
+<tr class="separator:ac7b2538047d78808e725432b8b287fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7ed9986c79eaa72f0645a321cb664d3" id="r_ad7ed9986c79eaa72f0645a321cb664d3"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">GetBeamElementConnectivity</a> (size_t elem_id) const</td></tr>
+<tr class="memdesc:ad7ed9986c79eaa72f0645a321cb664d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes connected to a specific beam element.  <br /></td></tr>
+<tr class="separator:ad7ed9986c79eaa72f0645a321cb664d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a506f88d0ceee74a01a812288f1a427d8" id="r_a506f88d0ceee74a01a812288f1a427d8"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">GetMassElementConnectivity</a> (size_t elem_id) const</td></tr>
+<tr class="memdesc:a506f88d0ceee74a01a812288f1a427d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes connected to a specific mass element.  <br /></td></tr>
+<tr class="separator:a506f88d0ceee74a01a812288f1a427d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b27be4da29f7ac8d3f92d7d3dabdc90" id="r_a1b27be4da29f7ac8d3f92d7d3dabdc90"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">GetSpringElementConnectivity</a> (size_t elem_id) const</td></tr>
+<tr class="memdesc:a1b27be4da29f7ac8d3f92d7d3dabdc90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes connected to a specific spring element.  <br /></td></tr>
+<tr class="separator:a1b27be4da29f7ac8d3f92d7d3dabdc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada3b08212e37040ea2bd25d4b581a613" id="r_ada3b08212e37040ea2bd25d4b581a613"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; size_t &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">GetConstraintConnectivity</a> (size_t constraint_id) const</td></tr>
+<tr class="memdesc:ada3b08212e37040ea2bd25d4b581a613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get nodes connected to a specific constraint.  <br /></td></tr>
+<tr class="separator:ada3b08212e37040ea2bd25d4b581a613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dff3e76803c2da70513cb8a23594b59" id="r_a3dff3e76803c2da70513cb8a23594b59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">ExportToYAML</a> (std::ostream &amp;file) const</td></tr>
+<tr class="memdesc:a3dff3e76803c2da70513cb8a23594b59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity inforation to a YAML file.  <br /></td></tr>
+<tr class="separator:a3dff3e76803c2da70513cb8a23594b59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4efee73146ae1d11bfa4a728add9acd" id="r_ab4efee73146ae1d11bfa4a728add9acd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">ExportToYAML</a> (const std::string &amp;filename) const</td></tr>
+<tr class="memdesc:ab4efee73146ae1d11bfa4a728add9acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity information to a YAML file.  <br /></td></tr>
+<tr class="separator:ab4efee73146ae1d11bfa4a728add9acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71989dd2174c54e50318169292f7edb4" id="r_a71989dd2174c54e50318169292f7edb4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">ImportFromYAML</a> (const YAML::Node &amp;root)</td></tr>
+<tr class="memdesc:a71989dd2174c54e50318169292f7edb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import mesh connectivity information from a YAML file.  <br /></td></tr>
+<tr class="separator:a71989dd2174c54e50318169292f7edb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03928df2eed755e7b41be799ab47f4e5" id="r_a03928df2eed755e7b41be799ab47f4e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">ImportFromYAML</a> (const std::string &amp;filename)</td></tr>
+<tr class="memdesc:a03928df2eed755e7b41be799ab47f4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Import mesh connectivity information from a YAML file.  <br /></td></tr>
+<tr class="separator:a03928df2eed755e7b41be799ab47f4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class to manage element-to-node connectivity information for a mesh. </p>
+<p>This class stores and manages the relationships between elements/constraints and the nodes they connect to, providing YAML import/export functionality. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a51dee1ea51c3a9c8b824b3c8ca05efee" name="a51dee1ea51c3a9c8b824b3c8ca05efee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51dee1ea51c3a9c8b824b3c8ca05efee">&#9670;&#160;</a></span>MeshConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">openturbine::model::MeshConnectivity::MeshConnectivity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="afac4c65547cbce70f9924e0ae0670723" name="afac4c65547cbce70f9924e0ae0670723"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afac4c65547cbce70f9924e0ae0670723">&#9670;&#160;</a></span>AddBeamElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::AddBeamElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a beam element's node connectivity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The beam element ID </td></tr>
+    <tr><td class="paramname">node_ids</td><td>The vector of node IDs connected to this beam </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac7b2538047d78808e725432b8b287fb2" name="ac7b2538047d78808e725432b8b287fb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7b2538047d78808e725432b8b287fb2">&#9670;&#160;</a></span>AddConstraintConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::AddConstraintConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>constraint_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a constraint's node connectivity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">constraint_id</td><td>The constraint ID </td></tr>
+    <tr><td class="paramname">node_ids</td><td>The vector of node IDs connected to this constraint </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab1646dde0df04debc8a21be086c5a9b2" name="ab1646dde0df04debc8a21be086c5a9b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1646dde0df04debc8a21be086c5a9b2">&#9670;&#160;</a></span>AddMassElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::AddMassElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>node_id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a mass element's node connectivity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The mass element ID </td></tr>
+    <tr><td class="paramname">node_id</td><td>The node ID connected to this mass </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad35290105de1b15baed553fe87ae14b6" name="ad35290105de1b15baed553fe87ae14b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad35290105de1b15baed553fe87ae14b6">&#9670;&#160;</a></span>AddSpringElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::AddSpringElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; size_t, 2 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node_ids</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a spring element's node connectivity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The spring element ID </td></tr>
+    <tr><td class="paramname">node_ids</td><td>The array of node IDs connected to this spring </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab4efee73146ae1d11bfa4a728add9acd" name="ab4efee73146ae1d11bfa4a728add9acd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4efee73146ae1d11bfa4a728add9acd">&#9670;&#160;</a></span>ExportToYAML() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::ExportToYAML </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Export mesh connectivity information to a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Path to the output YAML file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3dff3e76803c2da70513cb8a23594b59" name="a3dff3e76803c2da70513cb8a23594b59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dff3e76803c2da70513cb8a23594b59">&#9670;&#160;</a></span>ExportToYAML() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::ExportToYAML </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>file</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Export mesh connectivity inforation to a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td>Stream to output YAML file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad7ed9986c79eaa72f0645a321cb664d3" name="ad7ed9986c79eaa72f0645a321cb664d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7ed9986c79eaa72f0645a321cb664d3">&#9670;&#160;</a></span>GetBeamElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; size_t &gt; &amp; openturbine::model::MeshConnectivity::GetBeamElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get nodes connected to a specific beam element. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The beam element ID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of node IDs </dd></dl>
+
+</div>
+</div>
+<a id="ada3b08212e37040ea2bd25d4b581a613" name="ada3b08212e37040ea2bd25d4b581a613"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada3b08212e37040ea2bd25d4b581a613">&#9670;&#160;</a></span>GetConstraintConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; size_t &gt; &amp; openturbine::model::MeshConnectivity::GetConstraintConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>constraint_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get nodes connected to a specific constraint. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">constraint_id</td><td>The constraint ID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of node IDs </dd></dl>
+
+</div>
+</div>
+<a id="a506f88d0ceee74a01a812288f1a427d8" name="a506f88d0ceee74a01a812288f1a427d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a506f88d0ceee74a01a812288f1a427d8">&#9670;&#160;</a></span>GetMassElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; size_t &gt; &amp; openturbine::model::MeshConnectivity::GetMassElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get nodes connected to a specific mass element. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The mass element ID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of node IDs </dd></dl>
+
+</div>
+</div>
+<a id="a1b27be4da29f7ac8d3f92d7d3dabdc90" name="a1b27be4da29f7ac8d3f92d7d3dabdc90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b27be4da29f7ac8d3f92d7d3dabdc90">&#9670;&#160;</a></span>GetSpringElementConnectivity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; size_t &gt; &amp; openturbine::model::MeshConnectivity::GetSpringElementConnectivity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>elem_id</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get nodes connected to a specific spring element. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">elem_id</td><td>The spring element ID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector of node IDs </dd></dl>
+
+</div>
+</div>
+<a id="a03928df2eed755e7b41be799ab47f4e5" name="a03928df2eed755e7b41be799ab47f4e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03928df2eed755e7b41be799ab47f4e5">&#9670;&#160;</a></span>ImportFromYAML() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::ImportFromYAML </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Import mesh connectivity information from a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Path to the input YAML file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a71989dd2174c54e50318169292f7edb4" name="a71989dd2174c54e50318169292f7edb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71989dd2174c54e50318169292f7edb4">&#9670;&#160;</a></span>ImportFromYAML() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::model::MeshConnectivity::ImportFromYAML </td>
+          <td>(</td>
+          <td class="paramtype">const YAML::Node &amp;&#160;</td>
+          <td class="paramname"><em>root</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Import mesh connectivity information from a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">root</td><td>YAML node with the input YAML file loaded </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/model/<a class="el" href="mesh__connectivity_8hpp_source.html">mesh_connectivity.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

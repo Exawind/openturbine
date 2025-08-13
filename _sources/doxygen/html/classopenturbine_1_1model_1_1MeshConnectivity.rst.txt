@@ -1,0 +1,14 @@
+.. meta::d47c12bb68107b71a8ba7bb7299569420d09331ab34e2a302857c5e901e9f067dab4aec40e6fe9164738066b2e2955d263f92bd0400c374b2e716edc543c8c0d
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::model::MeshConnectivity Class Reference
+
+MeshConnectivity Class Reference
+================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1model_1_1MeshConnectivity.html

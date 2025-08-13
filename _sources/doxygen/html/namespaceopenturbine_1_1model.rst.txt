@@ -1,0 +1,14 @@
+.. meta::896f9894703db89ea1ef295bca39a47e3fc675c43da016bb5bd2dd3cd3e6e6d7ac425df2bf1c80e5149d5a7da9699fc1a96b8034bd0b04f0dc99955122d6344c
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::model Namespace Reference
+
+model Namespace Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: namespaceopenturbine_1_1model.html

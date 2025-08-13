@@ -1,0 +1,14 @@
+.. meta::b4aa16ad4e43a99237d32e20e6e59504b1240c8eff3a2c488a92c6ecfeda4382887d9d902e5ff6617e0c586d3af4a45d34c04385c61c0944836f20c3436510ad
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::system::CalculateTangentOperator&lt; DeviceType &gt; Struct Template Reference
+
+CalculateTangentOperator&lt; DeviceType &gt; Struct Template Reference
+======================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1system_1_1CalculateTangentOperator.html

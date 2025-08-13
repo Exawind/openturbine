@@ -194,7 +194,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    Kokkos::parallel_for(</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="stringliteral">&quot;CalculateTangentOperator&quot;</span>, RangePolicy(0, state.<a class="code hl_variable" href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">num_system_nodes</a>),</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_struct" href="structopenturbine_1_1CalculateTangentOperator.html">CalculateTangentOperator&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <a class="code hl_struct" href="structopenturbine_1_1system_1_1CalculateTangentOperator.html">system::CalculateTangentOperator&lt;DeviceType&gt;</a>{</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>            parameters.h,</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            state.q_delta,</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            state.tangent,</div>
@@ -209,10 +209,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="anamespaceopenturbine_1_1step_html_ae0aa80ce6eb1259e34e50e9cbfd54f92"><div class="ttname"><a href="namespaceopenturbine_1_1step.html#ae0aa80ce6eb1259e34e50e9cbfd54f92">openturbine::step::UpdateTangentOperator</a></div><div class="ttdeci">void UpdateTangentOperator(StepParameters &amp;parameters, State&lt; DeviceType &gt; &amp;state)</div><div class="ttdef"><b>Definition</b> update_tangent_operator.hpp:13</div></div>
 <div class="ttc" id="astate_8hpp_html"><div class="ttname"><a href="state_8hpp.html">state.hpp</a></div></div>
 <div class="ttc" id="astep__parameters_8hpp_html"><div class="ttname"><a href="step__parameters_8hpp.html">step_parameters.hpp</a></div></div>
-<div class="ttc" id="astructopenturbine_1_1CalculateTangentOperator_html"><div class="ttname"><a href="structopenturbine_1_1CalculateTangentOperator.html">openturbine::CalculateTangentOperator</a></div><div class="ttdoc">A Kernel for calculating the tangent operator at each node.</div><div class="ttdef"><b>Definition</b> calculate_tangent_operator.hpp:16</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html"><div class="ttname"><a href="structopenturbine_1_1State.html">openturbine::State</a></div><div class="ttdoc">Container for storing the complete system state of the simulation at a given time increment.</div><div class="ttdef"><b>Definition</b> state.hpp:18</div></div>
 <div class="ttc" id="astructopenturbine_1_1State_html_a6a604bf52063fa2e7380b3a38d190aa3"><div class="ttname"><a href="structopenturbine_1_1State.html#a6a604bf52063fa2e7380b3a38d190aa3">openturbine::State::num_system_nodes</a></div><div class="ttdeci">size_t num_system_nodes</div><div class="ttdef"><b>Definition</b> state.hpp:23</div></div>
 <div class="ttc" id="astructopenturbine_1_1StepParameters_html"><div class="ttname"><a href="structopenturbine_1_1StepParameters.html">openturbine::StepParameters</a></div><div class="ttdoc">A Struct containing the paramters used to control the time stepping process.</div><div class="ttdef"><b>Definition</b> step_parameters.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1system_1_1CalculateTangentOperator_html"><div class="ttname"><a href="structopenturbine_1_1system_1_1CalculateTangentOperator.html">openturbine::system::CalculateTangentOperator</a></div><div class="ttdoc">A Kernel for calculating the tangent operator at each node.</div><div class="ttdef"><b>Definition</b> calculate_tangent_operator.hpp:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

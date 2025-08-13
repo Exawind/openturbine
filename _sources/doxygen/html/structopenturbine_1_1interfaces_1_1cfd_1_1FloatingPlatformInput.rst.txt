@@ -1,0 +1,14 @@
+.. meta::e7f4b54aef87860ae9e3c7337f762fae690b2b387d179ce9e3f50f9da66f90face3b576197afd933da411934ef28e294583464ae9ecb2cb7bdbd57f91e337ff6
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::cfd::FloatingPlatformInput Struct Reference
+
+FloatingPlatformInput Struct Reference
+======================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1cfd_1_1FloatingPlatformInput.html

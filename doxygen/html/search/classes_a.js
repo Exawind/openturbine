@@ -3,7 +3,7 @@ var searchData=
   ['netcdffile_0',['NetCDFFile',['../classopenturbine_1_1util_1_1NetCDFFile.html',1,'openturbine::util']]],
   ['node_1',['Node',['../structopenturbine_1_1Node.html',1,'openturbine']]],
   ['nodebuilder_2',['NodeBuilder',['../classopenturbine_1_1NodeBuilder.html',1,'openturbine']]],
-  ['nodedata_3',['nodedata',['../structopenturbine_1_1cfd_1_1NodeData.html',1,'openturbine::cfd::NodeData'],['../structopenturbine_1_1interfaces_1_1NodeData.html',1,'openturbine::interfaces::NodeData']]],
+  ['nodedata_3',['nodedata',['../structopenturbine_1_1interfaces_1_1cfd_1_1NodeData.html',1,'openturbine::interfaces::cfd::NodeData'],['../structopenturbine_1_1interfaces_1_1NodeData.html',1,'openturbine::interfaces::NodeData']]],
   ['nodestatewriter_4',['NodeStateWriter',['../classopenturbine_1_1util_1_1NodeStateWriter.html',1,'openturbine::util']]],
   ['numericfunction_5',['NumericFunction',['../structopenturbine_1_1dss_1_1NumericFunction.html',1,'openturbine::dss']]],
   ['numericfunction_3c_20dsshandle_3c_20algorithm_3a_3asuperlu_5fmt_20_3e_2c_20crsmatrixtype_20_3e_6',['NumericFunction&lt; DSSHandle&lt; Algorithm::SUPERLU_MT &gt;, CrsMatrixType &gt;',['../structopenturbine_1_1dss_1_1NumericFunction_3_01DSSHandle_3_01Algorithm_1_1SUPERLU__MT_01_4_00_01CrsMatrixType_01_4.html',1,'openturbine::dss']]],

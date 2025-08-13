@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::cfd::InterfaceBuilder Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::cfd::InterfaceBuilder Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="interfacebuilder-struct-reference">
+<h1>InterfaceBuilder Struct Reference<a class="headerlink" href="#interfacebuilder-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::cfd::InterfaceBuilder Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1cfd.html">cfd</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::cfd::InterfaceBuilder Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="interface__builder_8hpp_source.html">interface_builder.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a834274f3540451e70c5f0e739e3fdcd3" id="r_a834274f3540451e70c5f0e739e3fdcd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a834274f3540451e70c5f0e739e3fdcd3">SetGravity</a> (const std::array&lt; double, 3 &gt; &amp;gravity)</td></tr>
+<tr class="separator:a834274f3540451e70c5f0e739e3fdcd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d3e65105b8b28e1fce354c7407b8d94" id="r_a4d3e65105b8b28e1fce354c7407b8d94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a4d3e65105b8b28e1fce354c7407b8d94">SetMaximumNonlinearIterations</a> (size_t max_iter)</td></tr>
+<tr class="separator:a4d3e65105b8b28e1fce354c7407b8d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae196e2256ecb23aca6dcc496d8504c6e" id="r_ae196e2256ecb23aca6dcc496d8504c6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ae196e2256ecb23aca6dcc496d8504c6e">SetTimeStep</a> (double time_step)</td></tr>
+<tr class="separator:ae196e2256ecb23aca6dcc496d8504c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7232bbc16416721070426c05572e6584" id="r_a7232bbc16416721070426c05572e6584"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a7232bbc16416721070426c05572e6584">SetDampingFactor</a> (double rho_inf)</td></tr>
+<tr class="separator:a7232bbc16416721070426c05572e6584"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbc60f9369f5e0e32d8bbde951e8360e" id="r_acbc60f9369f5e0e32d8bbde951e8360e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#acbc60f9369f5e0e32d8bbde951e8360e">EnableFloatingPlatform</a> (bool enable)</td></tr>
+<tr class="separator:acbc60f9369f5e0e32d8bbde951e8360e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03885a0b4a45fc3985a43d9d423538fe" id="r_a03885a0b4a45fc3985a43d9d423538fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a03885a0b4a45fc3985a43d9d423538fe">SetFloatingPlatformPosition</a> (const std::array&lt; double, 7 &gt; &amp;p)</td></tr>
+<tr class="separator:a03885a0b4a45fc3985a43d9d423538fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a664e98263de6e75c957ea5e5e8507497" id="r_a664e98263de6e75c957ea5e5e8507497"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a664e98263de6e75c957ea5e5e8507497">SetFloatingPlatformVelocity</a> (const std::array&lt; double, 6 &gt; &amp;v)</td></tr>
+<tr class="separator:a664e98263de6e75c957ea5e5e8507497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6c3ab69447498a0dd6db7fb4419d4e4" id="r_ab6c3ab69447498a0dd6db7fb4419d4e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ab6c3ab69447498a0dd6db7fb4419d4e4">SetFloatingPlatformAcceleration</a> (const std::array&lt; double, 6 &gt; &amp;a)</td></tr>
+<tr class="separator:ab6c3ab69447498a0dd6db7fb4419d4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8905a2c3e62daf2b2ee31678a9f2e32" id="r_ad8905a2c3e62daf2b2ee31678a9f2e32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ad8905a2c3e62daf2b2ee31678a9f2e32">SetFloatingPlatformMassMatrix</a> (const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;mass_matrix)</td></tr>
+<tr class="separator:ad8905a2c3e62daf2b2ee31678a9f2e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c713f5d708851b6793a9368471557b2" id="r_a3c713f5d708851b6793a9368471557b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a3c713f5d708851b6793a9368471557b2">SetNumberOfMooringLines</a> (size_t number)</td></tr>
+<tr class="separator:a3c713f5d708851b6793a9368471557b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4c6efeda22c1236d20e3e4513e8a0e2" id="r_ab4c6efeda22c1236d20e3e4513e8a0e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ab4c6efeda22c1236d20e3e4513e8a0e2">SetMooringLineStiffness</a> (size_t line, double stiffness)</td></tr>
+<tr class="separator:ab4c6efeda22c1236d20e3e4513e8a0e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0aed84bc350b9c4952fa2b10cd3af8" id="r_aca0aed84bc350b9c4952fa2b10cd3af8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#aca0aed84bc350b9c4952fa2b10cd3af8">SetMooringLineUndeformedLength</a> (size_t line, double length)</td></tr>
+<tr class="separator:aca0aed84bc350b9c4952fa2b10cd3af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace3ae0ac8c683c82e6eb59ee931e85dc" id="r_ace3ae0ac8c683c82e6eb59ee931e85dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ace3ae0ac8c683c82e6eb59ee931e85dc">SetMooringLineFairleadPosition</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;p)</td></tr>
+<tr class="separator:ace3ae0ac8c683c82e6eb59ee931e85dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af39a3f83ed242a1377b07794456378e7" id="r_af39a3f83ed242a1377b07794456378e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#af39a3f83ed242a1377b07794456378e7">SetMooringLineAnchorPosition</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;p)</td></tr>
+<tr class="separator:af39a3f83ed242a1377b07794456378e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee115ff27904cb058da8513a76efbf0" id="r_adee115ff27904cb058da8513a76efbf0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#adee115ff27904cb058da8513a76efbf0">SetMooringLineAnchorVelocity</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="separator:adee115ff27904cb058da8513a76efbf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5fd87faad672d699284f2c0d181c1cf" id="r_af5fd87faad672d699284f2c0d181c1cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#af5fd87faad672d699284f2c0d181c1cf">SetMooringLineAnchorAcceleration</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;a)</td></tr>
+<tr class="separator:af5fd87faad672d699284f2c0d181c1cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a799f5851566a55e56db98da32bec32ec" id="r_a799f5851566a55e56db98da32bec32ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a799f5851566a55e56db98da32bec32ec">SetOutputFile</a> (const std::string &amp;path)</td></tr>
+<tr class="separator:a799f5851566a55e56db98da32bec32ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad00564ac41393dfb2fae0f5585a753b0" id="r_ad00564ac41393dfb2fae0f5585a753b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ad00564ac41393dfb2fae0f5585a753b0">Build</a> () const</td></tr>
+<tr class="separator:ad00564ac41393dfb2fae0f5585a753b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad00564ac41393dfb2fae0f5585a753b0" name="ad00564ac41393dfb2fae0f5585a753b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad00564ac41393dfb2fae0f5585a753b0">&#9670;&#160;</a></span>Build()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html">Interface</a> openturbine::interfaces::cfd::InterfaceBuilder::Build </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acbc60f9369f5e0e32d8bbde951e8360e" name="acbc60f9369f5e0e32d8bbde951e8360e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbc60f9369f5e0e32d8bbde951e8360e">&#9670;&#160;</a></span>EnableFloatingPlatform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::EnableFloatingPlatform </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7232bbc16416721070426c05572e6584" name="a7232bbc16416721070426c05572e6584"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7232bbc16416721070426c05572e6584">&#9670;&#160;</a></span>SetDampingFactor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetDampingFactor </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rho_inf</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab6c3ab69447498a0dd6db7fb4419d4e4" name="ab6c3ab69447498a0dd6db7fb4419d4e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6c3ab69447498a0dd6db7fb4419d4e4">&#9670;&#160;</a></span>SetFloatingPlatformAcceleration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetFloatingPlatformAcceleration </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 6 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad8905a2c3e62daf2b2ee31678a9f2e32" name="ad8905a2c3e62daf2b2ee31678a9f2e32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8905a2c3e62daf2b2ee31678a9f2e32">&#9670;&#160;</a></span>SetFloatingPlatformMassMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetFloatingPlatformMassMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>mass_matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a03885a0b4a45fc3985a43d9d423538fe" name="a03885a0b4a45fc3985a43d9d423538fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03885a0b4a45fc3985a43d9d423538fe">&#9670;&#160;</a></span>SetFloatingPlatformPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetFloatingPlatformPosition </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 7 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a664e98263de6e75c957ea5e5e8507497" name="a664e98263de6e75c957ea5e5e8507497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a664e98263de6e75c957ea5e5e8507497">&#9670;&#160;</a></span>SetFloatingPlatformVelocity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetFloatingPlatformVelocity </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 6 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a834274f3540451e70c5f0e739e3fdcd3" name="a834274f3540451e70c5f0e739e3fdcd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a834274f3540451e70c5f0e739e3fdcd3">&#9670;&#160;</a></span>SetGravity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetGravity </td>
+          <td>(</td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>gravity</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d3e65105b8b28e1fce354c7407b8d94" name="a4d3e65105b8b28e1fce354c7407b8d94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d3e65105b8b28e1fce354c7407b8d94">&#9670;&#160;</a></span>SetMaximumNonlinearIterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMaximumNonlinearIterations </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_iter</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5fd87faad672d699284f2c0d181c1cf" name="af5fd87faad672d699284f2c0d181c1cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5fd87faad672d699284f2c0d181c1cf">&#9670;&#160;</a></span>SetMooringLineAnchorAcceleration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineAnchorAcceleration </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>a</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af39a3f83ed242a1377b07794456378e7" name="af39a3f83ed242a1377b07794456378e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af39a3f83ed242a1377b07794456378e7">&#9670;&#160;</a></span>SetMooringLineAnchorPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineAnchorPosition </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adee115ff27904cb058da8513a76efbf0" name="adee115ff27904cb058da8513a76efbf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adee115ff27904cb058da8513a76efbf0">&#9670;&#160;</a></span>SetMooringLineAnchorVelocity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineAnchorVelocity </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>v</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace3ae0ac8c683c82e6eb59ee931e85dc" name="ace3ae0ac8c683c82e6eb59ee931e85dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace3ae0ac8c683c82e6eb59ee931e85dc">&#9670;&#160;</a></span>SetMooringLineFairleadPosition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineFairleadPosition </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::array&lt; double, 3 &gt; &amp;&#160;</td>
+          <td class="paramname"><em>p</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4c6efeda22c1236d20e3e4513e8a0e2" name="ab4c6efeda22c1236d20e3e4513e8a0e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4c6efeda22c1236d20e3e4513e8a0e2">&#9670;&#160;</a></span>SetMooringLineStiffness()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineStiffness </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>stiffness</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca0aed84bc350b9c4952fa2b10cd3af8" name="aca0aed84bc350b9c4952fa2b10cd3af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca0aed84bc350b9c4952fa2b10cd3af8">&#9670;&#160;</a></span>SetMooringLineUndeformedLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetMooringLineUndeformedLength </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>line</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c713f5d708851b6793a9368471557b2" name="a3c713f5d708851b6793a9368471557b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c713f5d708851b6793a9368471557b2">&#9670;&#160;</a></span>SetNumberOfMooringLines()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetNumberOfMooringLines </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>number</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a799f5851566a55e56db98da32bec32ec" name="a799f5851566a55e56db98da32bec32ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a799f5851566a55e56db98da32bec32ec">&#9670;&#160;</a></span>SetOutputFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetOutputFile </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae196e2256ecb23aca6dcc496d8504c6e" name="ae196e2256ecb23aca6dcc496d8504c6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae196e2256ecb23aca6dcc496d8504c6e">&#9670;&#160;</a></span>SetTimeStep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp; openturbine::interfaces::cfd::InterfaceBuilder::SetTimeStep </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>time_step</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/cfd/<a class="el" href="interface__builder_8hpp_source.html">interface_builder.hpp</a></li>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/cfd/<a class="el" href="interface__builder_8cpp.html">interface_builder.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
