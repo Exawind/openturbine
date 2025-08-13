@@ -8,6 +8,14 @@
 
 namespace openturbine {
 
+/**
+ * @brief Writes State data into a minimal restart file
+ *
+ * @tparam DeviceType the Kokkos Device where the State object resides
+ *
+ * @param output An output stream to the binary restart file
+ * @param state The State object from which to write out the data
+ */
 template <typename DeviceType>
 inline void WriteStateToFile(std::ostream& output, const State<DeviceType>& state) {
     auto num_system_nodes = state.num_system_nodes;

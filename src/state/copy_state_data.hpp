@@ -4,6 +4,19 @@
 
 namespace openturbine {
 
+/**
+ * @brief Performs a deep copy of the state data which might have changed in a given
+ * time step.
+ *
+ * @details It is assumed that the target State object has all of its data which
+ * is unchanged (connectivity information, x0, ID) already copied over and all of its
+ * Views are properly sized.  One way to ensure this is to first create it with the
+ * Clone state method.
+ *
+ * @tparam DeviceType The Kokkos Device where copy and old states reside
+ * @param old The State from which to be copied
+ * @param copy The State to which to be copied
+ */
 template <typename DeviceType>
 inline void CopyStateData(State<DeviceType>& copy, const State<DeviceType>& old) {
     using Kokkos::deep_copy;
