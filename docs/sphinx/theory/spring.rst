@@ -11,14 +11,14 @@ element has reference position defined by its endpoint positions,
 .. math::
 
    \begin{aligned}
-    \underline{q}^0 = 
+    \underline{q}^\mathrm{r} = 
    \begin{bmatrix}
-     \underline{x}_1^0 \\
-     \underline{x}_2^0 
+     \underline{x}_1^\mathrm{r} \\
+     \underline{x}_2^\mathrm{r} 
    \end{bmatrix}
    \end{aligned}
 
-where :math:`\underline{q}^0 \in \mathbb{R}^6`,
+where :math:`\underline{q}^\mathrm{r} \in \mathbb{R}^6`,
 and displacement is denoted
 
 .. math::
@@ -46,7 +46,7 @@ where :math:`\underline{g} \in \mathbb{R}^6` and
 
 with 
 
-.. math:: \underline{r} = \underline{x}_2^0 + \underline{u}_2 - \underline{x}_1^0  - \underline{u}_1
+.. math:: \underline{r} = \underline{x}_2^\mathrm{r} + \underline{u}_2 - \underline{x}_1^\mathrm{r}  - \underline{u}_1
 
 Variation of the force equation provides the stiffness contribution
 to the generalized-:math:`\alpha` iteration matrix (See Eq. :eq:`iteration`):
