@@ -118,6 +118,7 @@ public:
      * @brief Returns a node by ID
      *
      * @param id Index number of node
+     * @return The desired node
      */
     [[nodiscard]] const Node& GetNode(size_t id) const { return this->nodes_[id]; }
 
@@ -125,6 +126,7 @@ public:
      * @brief Returns a node by ID
      *
      * @param id Index number of node
+     * @return The desired node
      */
     [[nodiscard]] Node& GetNode(size_t id) { return this->nodes_[id]; }
 
@@ -467,7 +469,12 @@ public:
     // Constraints
     //--------------------------------------------------------------------------
 
-    /// Adds a fixed boundary condition constraint to the model and returns the ID
+    /**
+     * @brief Adds a fixed boundary condition constraint to the model and returns the ID
+     *
+     * @param node_id the ID of the node where the constraint is to be added
+     * @return The ID of the created constraint
+     */
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
@@ -477,7 +484,13 @@ public:
         return id;
     }
 
-    /// Adds a prescribed boundary condition constraint to the model and returns the ID
+    /**
+     * @brief Adds a prescribed boundary condition constraint to the model and returns the ID
+     *
+     * @param node_id the ID of the node where the constraint is to be added
+     * @param initial_displacement The displacement of the node to be forced on the node
+     * @return the ID of the created constraint
+     */
     size_t AddPrescribedBC(
         const size_t node_id,
         const std::array<double, 7>& initial_displacement = {0., 0., 0., 1., 0., 0., 0.}
@@ -491,7 +504,12 @@ public:
         return id;
     }
 
-    /// Adds a rigid constraint to the model and returns the ID
+    /**
+     * @brief Adds a rigid constraint to the model and returns the ID
+     *
+     * @param node_ids The IDs of the two nodes to be linked by the constraint
+     * @return The ID of the created constraint
+     */
     size_t AddRigidJointConstraint(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(id, constraints::ConstraintType::RigidJoint, node_ids);
@@ -501,7 +519,14 @@ public:
         return id;
     }
 
-    /// Adds a revolute/hinge constraint to the model and returns the ID
+    /**
+     * @brief Adds a revolute/hinge constraint to the model and returns the ID
+     *
+     * @param node_ids the IDs of the two nodes to be linked by the constraint
+     * @param axis The axis about which the torque force will be applied
+     * @param torque A pointer to the location in memory where the torque will be set
+     * @return the ID of the created constraint
+     */
     size_t AddRevoluteJointConstraint(
         const std::array<size_t, 2>& node_ids, const std::array<double, 3>& axis, double* torque
     ) {
@@ -516,7 +541,13 @@ public:
         return id;
     }
 
-    /// Adds a rotation control constraint to the model and returns the ID
+    /**
+     * @brief Adds a rotation control constraint to the model and returns the ID
+     * @param node_ids the IDs of the two nodes to be linked by the constraint
+     * @param axis The axis about which the torque force will be applied
+     * @param control A pointer to the location in memory where the control rotation will be set
+     * @return the ID of the created constraint
+     */
     size_t AddRotationControl(
         const std::array<size_t, 2>& node_ids, const std::array<double, 3>& axis, double* control
     ) {
@@ -531,7 +562,12 @@ public:
         return id;
     }
 
-    /// Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID
+    /**
+     * @brief Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns
+     * the ID
+     * @param node_id The node ID where the constraint will be applied
+     * @return the ID of the created constraint
+     */
     size_t AddFixedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
@@ -541,8 +577,12 @@ public:
         return id;
     }
 
-    /// Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns
-    /// the ID
+    /**
+     * @brief Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and
+     * returns the ID
+     * @param node_id The node ID where the constraint will be applied
+     * @return the ID of the created constraint
+     */
     size_t AddPrescribedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
@@ -552,7 +592,11 @@ public:
         return id;
     }
 
-    /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
+    /**
+     * @brief Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
+     * @param node_ids the IDs of the nodes which will be joined by the constraint
+     * @return the ID of the created constraint
+     */
     size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
@@ -564,16 +608,27 @@ public:
         return id;
     }
 
-    /// Returns the number of constraints present in the model
+    /**
+     * @brief Returns the number of constraints present in the model
+     * @return the number of constraints
+     */
     [[nodiscard]] size_t NumConstraints() const { return this->constraints_.size(); }
 
-    /// Returns a Constraints object initialized from the model constraints
+    /**
+     * @brief Returns a Constraints object initialized from the model constraints
+     * @tparam DeviceType the Kokkos Device where the created constraints will reside
+     * @return The constructed Constraints object
+     */
     template <typename DeviceType>
     [[nodiscard]] Constraints<DeviceType> CreateConstraints() const {
         return Constraints<DeviceType>(this->constraints_, this->nodes_);
     }
 
-    /// Returns a State, Elements, and Constraints object initialized from the model
+    /**
+     * @brief Returns a State, Elements, and Constraints object initialized from the model
+     * @tparam DeviceType The Kokkos Device where the created objects will reside
+     * @return Constructed State, Elements, and Constraints objects
+     */
     template <
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
@@ -585,7 +640,11 @@ public:
         };
     }
 
-    /// Returns a State, Elements, Constraints, and Solver object initialized from the model
+    /**
+     * @brief Returns a State, Elements, Constraints, and Solver object initialized from the model
+     * @tparam DeviceType The Kokkos Device where the created objects will reside
+     * @return Constructed State, Elements, Constraints, and Solver objects
+     */
     template <
         typename DeviceType = Kokkos::Device<
             Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>>
@@ -601,15 +660,24 @@ public:
     // Mesh Connectivity
     //--------------------------------------------------------------------------
 
-    /// @brief Get the mesh connectivity (const/read-only version)
+    /**
+     * @brief Get the mesh connectivity
+     * @return A reference to this Model's MeshConnectivity model
+     */
     [[nodiscard]] const model::MeshConnectivity& GetMeshConnectivity() const {
         return this->mesh_connectivity_;
     }
 
-    /// @brief Get mutable mesh connectivity (non-const version)
+    /**
+     * @brief Get the mesh connectivity
+     * @return A reference to this Model's MeshConnectivity model
+     */
     [[nodiscard]] model::MeshConnectivity& GetMeshConnectivity() { return this->mesh_connectivity_; }
 
-    /// @brief Export mesh connectivity to a YAML file
+    /**
+     * @brief Export mesh connectivity to a YAML file
+     * @param filename The name of the file to which to write the connectivity
+     */
     void ExportMeshConnectivityToYAML(const std::string& filename = "mesh_connectivity.yaml") const {
         this->mesh_connectivity_.ExportToYAML(filename);
     }
