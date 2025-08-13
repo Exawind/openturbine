@@ -35,9 +35,9 @@ struct Constraints {
 
     // Constraint properties
     View<constraints::ConstraintType*> type;  //< Type of each constraint
-    std::vector<double*> control_signal;  //< Control signal for each constraint
-    View<size_t*> base_node_index;        //< Index of the base node for each constraint
-    View<size_t*> target_node_index;      //< Index of the target node for each constraint
+    std::vector<double*> control_signal;      //< Control signal for each constraint
+    View<size_t*> base_node_index;            //< Index of the base node for each constraint
+    View<size_t*> target_node_index;          //< Index of the target node for each constraint
 
     // DOF management
     View<Kokkos::pair<size_t, size_t>*> row_range;
