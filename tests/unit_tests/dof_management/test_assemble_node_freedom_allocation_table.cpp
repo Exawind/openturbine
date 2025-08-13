@@ -16,7 +16,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoS
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -38,7 +39,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneMassElementWithOneNode_NoBeamNoS
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -67,7 +69,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneSpringElementWithTwoNodes_NoBeam
     Kokkos::deep_copy(springs.node_state_indices, mirror_node_state_indices);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -95,7 +98,8 @@ TEST(
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -126,7 +130,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithTwoNodes_NoMassNo
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -157,7 +162,8 @@ TEST(TestAssembleNodeFreedomAllocationTable, TwoBeamElementsWithOneNode_NoMassNo
     auto springs = Springs<DeviceType>(0U);
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 
@@ -205,7 +211,8 @@ TEST(
 
     auto elements = Elements<DeviceType>{beams, masses, springs};
 
-    auto constraints = Constraints<DeviceType>(std::vector<Constraint>{}, std::vector<Node>{});
+    auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
 
     assemble_node_freedom_allocation_table(state, elements, constraints);
 

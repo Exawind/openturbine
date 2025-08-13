@@ -5,7 +5,7 @@
 
 #include "interfaces/cfd/turbine_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct InterfaceInput {
     /// @brief Array of gravity components (XYZ)
@@ -27,4 +27,4 @@ struct InterfaceInput {
     std::string output_file;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

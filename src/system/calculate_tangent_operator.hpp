@@ -7,7 +7,7 @@
 
 #include "math/vector_operations.hpp"
 
-namespace openturbine {
+namespace openturbine::system {
 
 /**
  * @brief A Kernel for calculating the tangent operator at each node
@@ -65,4 +65,4 @@ struct CalculateTangentOperator {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::system

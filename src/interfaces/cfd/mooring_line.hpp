@@ -4,7 +4,7 @@
 
 #include "node_data.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct MooringLine {
     /// @brief Fairlead node
@@ -23,4 +23,4 @@ struct MooringLine {
     size_t spring_element_id{0U};
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

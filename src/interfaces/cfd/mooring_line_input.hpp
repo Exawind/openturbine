@@ -2,7 +2,7 @@
 
 #include <array>
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct MooringLineInput {
     /// Mooring line stiffness
@@ -30,4 +30,4 @@ struct MooringLineInput {
     std::array<double, 3> anchor_acceleration{0., 0., 0.};
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

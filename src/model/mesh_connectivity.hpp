@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "yaml-cpp/yaml.h"
+#include <yaml-cpp/yaml.h>
 
-namespace openturbine {
+namespace openturbine::model {
 
 /**
  * @brief Class to manage element-to-node connectivity information for a mesh
@@ -208,4 +208,4 @@ private:
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::model

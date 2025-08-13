@@ -10,7 +10,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    auto fixed_bc = Constraint(0, ConstraintType::FixedBC, {0, 1});
+    auto fixed_bc = constraints::Constraint(0, constraints::ConstraintType::FixedBC, {0, 1});
     auto constraints = Constraints<DeviceType>({fixed_bc}, {invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
@@ -51,7 +51,8 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    auto prescribed_bc = Constraint(0, ConstraintType::PrescribedBC, {0, 1});
+    auto prescribed_bc =
+        constraints::Constraint(0, constraints::ConstraintType::PrescribedBC, {0, 1});
     auto constraints = Constraints<DeviceType>({prescribed_bc}, {invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
@@ -92,7 +93,7 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto node_1 = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_2 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 1
-    auto rigid_bc = Constraint(0, ConstraintType::RigidJoint, {0, 1});
+    auto rigid_bc = constraints::Constraint(0, constraints::ConstraintType::RigidJoint, {0, 1});
     auto constraints = Constraints<DeviceType>({rigid_bc}, {node_1, node_2});
 
     auto elements = Elements<DeviceType>();

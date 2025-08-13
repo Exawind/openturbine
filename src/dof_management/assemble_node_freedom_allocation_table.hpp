@@ -96,7 +96,7 @@ struct AssembleNodeFreedomMapTable_Constraints {
     template <typename ValueType>
     using ConstView = typename View<ValueType>::const_type;
 
-    ConstView<ConstraintType*> type;
+    ConstView<constraints::ConstraintType*> type;
     ConstView<size_t*> target_node_index;
     ConstView<size_t*> base_node_index;
     ConstView<FreedomSignature*> target_node_freedom_signature;

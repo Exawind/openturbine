@@ -17,7 +17,7 @@ inline void UpdateTangentOperator(StepParameters& parameters, State<DeviceType>&
 
     Kokkos::parallel_for(
         "CalculateTangentOperator", RangePolicy(0, state.num_system_nodes),
-        CalculateTangentOperator<DeviceType>{
+        system::CalculateTangentOperator<DeviceType>{
             parameters.h,
             state.q_delta,
             state.tangent,

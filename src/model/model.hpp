@@ -471,7 +471,7 @@ public:
     size_t AddFixedBC(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::FixedBC, std::array{InvalidNodeID, node_id}
+            id, constraints::ConstraintType::FixedBC, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -484,7 +484,7 @@ public:
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::PrescribedBC, std::array{InvalidNodeID, node_id},
+            id, constraints::ConstraintType::PrescribedBC, std::array{InvalidNodeID, node_id},
             std::array{0., 0., 0.}, initial_displacement
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
@@ -494,7 +494,7 @@ public:
     /// Adds a rigid constraint to the model and returns the ID
     size_t AddRigidJointConstraint(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::RigidJoint, node_ids);
+        this->constraints_.emplace_back(id, constraints::ConstraintType::RigidJoint, node_ids);
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -507,7 +507,7 @@ public:
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::RevoluteJoint, node_ids, axis,
+            id, constraints::ConstraintType::RevoluteJoint, node_ids, axis,
             std::array{0., 0., 0., 1., 0., 0., 0.}, torque
         );
         this->mesh_connectivity_.AddConstraintConnectivity(
@@ -522,7 +522,7 @@ public:
     ) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::RotationControl, node_ids, axis,
+            id, constraints::ConstraintType::RotationControl, node_ids, axis,
             std::array{0., 0., 0., 1., 0., 0., 0.}, control
         );
         this->mesh_connectivity_.AddConstraintConnectivity(
@@ -535,7 +535,7 @@ public:
     size_t AddFixedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::FixedBC3DOFs, std::array{InvalidNodeID, node_id}
+            id, constraints::ConstraintType::FixedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -546,7 +546,7 @@ public:
     size_t AddPrescribedBC3DOFs(const size_t node_id) {
         const auto id = this->constraints_.size();
         this->constraints_.emplace_back(
-            id, ConstraintType::PrescribedBC3DOFs, std::array{InvalidNodeID, node_id}
+            id, constraints::ConstraintType::PrescribedBC3DOFs, std::array{InvalidNodeID, node_id}
         );
         this->mesh_connectivity_.AddConstraintConnectivity(id, std::vector<size_t>{node_id});
         return id;
@@ -555,7 +555,9 @@ public:
     /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
     size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, ConstraintType::RigidJoint6DOFsTo3DOFs, node_ids);
+        this->constraints_.emplace_back(
+            id, constraints::ConstraintType::RigidJoint6DOFsTo3DOFs, node_ids
+        );
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -600,12 +602,12 @@ public:
     //--------------------------------------------------------------------------
 
     /// @brief Get the mesh connectivity (const/read-only version)
-    [[nodiscard]] const MeshConnectivity& GetMeshConnectivity() const {
+    [[nodiscard]] const model::MeshConnectivity& GetMeshConnectivity() const {
         return this->mesh_connectivity_;
     }
 
     /// @brief Get mutable mesh connectivity (non-const version)
-    [[nodiscard]] MeshConnectivity& GetMeshConnectivity() { return this->mesh_connectivity_; }
+    [[nodiscard]] model::MeshConnectivity& GetMeshConnectivity() { return this->mesh_connectivity_; }
 
     /// @brief Export mesh connectivity to a YAML file
     void ExportMeshConnectivityToYAML(const std::string& filename = "mesh_connectivity.yaml") const {
@@ -613,13 +615,14 @@ public:
     }
 
 private:
-    std::array<double, 3> gravity_ = {0., 0., 0.};  //< Gravity components
-    std::vector<Node> nodes_;                       //< Nodes in the model
-    std::vector<BeamElement> beam_elements_;        //< Beam elements in the model
-    std::vector<MassElement> mass_elements_;        //< Mass elements in the model
-    std::vector<SpringElement> spring_elements_;    //< Spring elements in the model
-    std::vector<Constraint> constraints_;           //< Constraints in the model
-    MeshConnectivity mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
+    std::array<double, 3> gravity_ = {0., 0., 0.};      //< Gravity components
+    std::vector<Node> nodes_;                           //< Nodes in the model
+    std::vector<BeamElement> beam_elements_;            //< Beam elements in the model
+    std::vector<MassElement> mass_elements_;            //< Mass elements in the model
+    std::vector<SpringElement> spring_elements_;        //< Spring elements in the model
+    std::vector<constraints::Constraint> constraints_;  //< Constraints in the model
+    model::MeshConnectivity
+        mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
 };
 
 }  // namespace openturbine

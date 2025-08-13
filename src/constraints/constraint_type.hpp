@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::constraints {
 
 enum class ConstraintType : std::uint8_t {
     None = 0,               //< No constraint -- default type
@@ -82,4 +82,4 @@ constexpr size_t NumRowsForConstraint(ConstraintType type) {
     return 0U;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::constraints
