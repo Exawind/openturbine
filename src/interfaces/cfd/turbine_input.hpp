@@ -9,4 +9,4 @@ struct TurbineInput {
     FloatingPlatformInput floating_platform;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

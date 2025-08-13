@@ -23,4 +23,4 @@ struct MooringLine {
     size_t spring_element_id{0U};
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

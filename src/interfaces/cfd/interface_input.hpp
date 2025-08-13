@@ -27,4 +27,4 @@ struct InterfaceInput {
     std::string output_file;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

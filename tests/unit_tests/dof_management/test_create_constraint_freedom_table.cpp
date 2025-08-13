@@ -51,7 +51,8 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
     auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
-    auto prescribed_bc = constraints::Constraint(0, constraints::ConstraintType::PrescribedBC, {0, 1});
+    auto prescribed_bc =
+        constraints::Constraint(0, constraints::ConstraintType::PrescribedBC, {0, 1});
     auto constraints = Constraints<DeviceType>({prescribed_bc}, {invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();

@@ -189,4 +189,4 @@ TEST_F(MeshConnectivityTest, ImportFromYAML) {
     EXPECT_EQ(imported_mesh.GetConstraintConnectivity(3)[1], 9);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::model::tests

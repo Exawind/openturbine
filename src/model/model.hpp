@@ -555,7 +555,9 @@ public:
     /// Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID
     size_t AddRigidJoint6DOFsTo3DOFs(const std::array<size_t, 2>& node_ids) {
         const auto id = this->constraints_.size();
-        this->constraints_.emplace_back(id, constraints::ConstraintType::RigidJoint6DOFsTo3DOFs, node_ids);
+        this->constraints_.emplace_back(
+            id, constraints::ConstraintType::RigidJoint6DOFsTo3DOFs, node_ids
+        );
         this->mesh_connectivity_.AddConstraintConnectivity(
             id, std::vector<size_t>{node_ids[0], node_ids[1]}
         );
@@ -618,8 +620,9 @@ private:
     std::vector<BeamElement> beam_elements_;        //< Beam elements in the model
     std::vector<MassElement> mass_elements_;        //< Mass elements in the model
     std::vector<SpringElement> spring_elements_;    //< Spring elements in the model
-    std::vector<constraints::Constraint> constraints_;           //< Constraints in the model
-    model::MeshConnectivity mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
+    std::vector<constraints::Constraint> constraints_;  //< Constraints in the model
+    model::MeshConnectivity
+        mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
 };
 
 }  // namespace openturbine

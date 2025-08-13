@@ -114,4 +114,4 @@ Interface InterfaceBuilder::Build() const {
     return Interface(interface_input);
 }
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

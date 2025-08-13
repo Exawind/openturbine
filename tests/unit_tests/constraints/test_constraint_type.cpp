@@ -76,4 +76,4 @@ TEST(ConstraintTypeTest, RigidJoint6DOFsTo3DOFsHasThreeDOFs) {
     EXPECT_EQ(NumRowsForConstraint(ConstraintType::RigidJoint6DOFsTo3DOFs), 3U);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::constraints::tests

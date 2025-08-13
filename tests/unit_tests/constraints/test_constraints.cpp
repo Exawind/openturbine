@@ -9,7 +9,8 @@ namespace openturbine::tests {
 TEST(ConstraintsTest, EmptyConstructor) {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    const auto constraints = Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
+    const auto constraints =
+        Constraints<DeviceType>(std::vector<constraints::Constraint>{}, std::vector<Node>{});
     EXPECT_EQ(constraints.num_constraints, 0);
     EXPECT_EQ(constraints.num_dofs, 0);
 }
@@ -40,8 +41,9 @@ TEST(ConstraintsTest, MultipleConstraintsConstructor) {
 
     auto fixed_constraint = constraints::Constraint(0, constraints::ConstraintType::FixedBC, {0, 1});
 
-    auto revolute_constraint =
-        constraints::Constraint(1, constraints::ConstraintType::RevoluteJoint, {1, 2}, std::array{0., 1., 0.});
+    auto revolute_constraint = constraints::Constraint(
+        1, constraints::ConstraintType::RevoluteJoint, {1, 2}, std::array{0., 1., 0.}
+    );
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;

@@ -75,4 +75,4 @@ public:
     std::unique_ptr<interfaces::Outputs> outputs_;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

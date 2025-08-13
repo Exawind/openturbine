@@ -50,4 +50,4 @@ private:
     InterfaceInput interface_input;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

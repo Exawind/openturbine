@@ -34,7 +34,7 @@ struct Constraints {
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    View<constraints::ConstraintType*> type;           //< Type of each constraint
+    View<constraints::ConstraintType*> type;  //< Type of each constraint
     std::vector<double*> control_signal;  //< Control signal for each constraint
     View<size_t*> base_node_index;        //< Index of the base node for each constraint
     View<size_t*> target_node_index;      //< Index of the target node for each constraint
@@ -71,7 +71,9 @@ struct Constraints {
     View<double* [6][6]> base_gradient_transpose_terms;
     View<double* [6][6]> target_gradient_transpose_terms;
 
-    explicit Constraints(const std::vector<constraints::Constraint>& constraints, const std::vector<Node>& nodes)
+    explicit Constraints(
+        const std::vector<constraints::Constraint>& constraints, const std::vector<Node>& nodes
+    )
         : num_constraints{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
@@ -178,7 +180,8 @@ struct Constraints {
             host_type(constraint) = c.type;
 
             // Set the freedom signature from the constraint types
-            if (c.type == constraints::ConstraintType::FixedBC || c.type == constraints::ConstraintType::PrescribedBC) {
+            if (c.type == constraints::ConstraintType::FixedBC ||
+                c.type == constraints::ConstraintType::PrescribedBC) {
                 host_base_freedom(constraint) = dof::FreedomSignature::NoComponents;
                 host_target_freedom(constraint) = dof::FreedomSignature::AllComponents;
 

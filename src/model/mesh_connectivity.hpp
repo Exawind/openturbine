@@ -208,4 +208,4 @@ private:
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::model

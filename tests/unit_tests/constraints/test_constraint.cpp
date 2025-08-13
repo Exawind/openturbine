@@ -151,4 +151,4 @@ TEST_F(ConstraintTest, NullControlSignal) {
     EXPECT_EQ(constraint.control, nullptr);
 }
 
-}  // namespace openturbine::tests
+}  // namespace openturbine::constraints::tests

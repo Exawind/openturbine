@@ -45,4 +45,4 @@ struct Constraint {
           control(ctrl) {}
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::constraints

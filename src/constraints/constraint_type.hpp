@@ -82,4 +82,4 @@ constexpr size_t NumRowsForConstraint(ConstraintType type) {
     return 0U;
 }
 
-}  // namespace openturbine
+}  // namespace openturbine::constraints

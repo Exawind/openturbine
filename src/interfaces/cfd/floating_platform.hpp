@@ -26,4 +26,4 @@ struct FloatingPlatform {
     std::vector<MooringLine> mooring_lines;
 };
 
-}  // namespace openturbine::cfd
+}  // namespace openturbine::interfaces::cfd

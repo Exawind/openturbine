@@ -65,4 +65,4 @@ struct CalculateTangentOperator {
     }
 };
 
-}  // namespace openturbine
+}  // namespace openturbine::system
