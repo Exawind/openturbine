@@ -66,8 +66,8 @@ problem with the following initial conditions:
 .. math::
 
    \begin{aligned}
-   \underline{u}^i &= \left[ 0, 1, 1 \right]^T \, \mathrm{m}\\
-   \underline{\underline{R}}^i &= \begin{bmatrix}
+   \underline{u}^\mathrm{init} &= \left[ 0, 1, 1 \right]^T \, \mathrm{m}\\
+   \underline{\underline{R}}^\mathrm{init} &= \begin{bmatrix}
    1 & 0 & 0 \\
    0 & \cos(\theta) & - \sin(\theta) \\
    0 & \sin(\theta) & \cos(\theta)
@@ -79,8 +79,8 @@ where :math:`\theta = \pi/2`,
 .. math::
 
    \begin{aligned}
-   \omega^i &= (-4.61538,-150,0)^T \, \mathrm{rad/s}\\
-   \dot{\underline{u}}^i &= \widetilde{\omega^i}\left(\underline{x}^\mathrm{r}+\underline{u}^i\right)\, \mathrm{m/s}
+   \omega^\mathrm{init} &= (-4.61538,-150,0)^T \, \mathrm{rad/s}\\
+   \dot{\underline{u}}^\mathrm{init} &= \widetilde{\omega^\mathrm{init}}\left(\underline{x}^\mathrm{r}+\underline{u}^\mathrm{init}\right)\, \mathrm{m/s}
    \end{aligned}
 
 .. container:: references csl-bib-body hanging-indent
