@@ -11,7 +11,7 @@ namespace openturbine {
  *
  * @tparam DeviceData The Kokkos Device where the newly created Beams structure will reside
  *
- * @param springss_input A SpringsInput object defining the spring elements
+ * @param springs_input A SpringsInput object defining the spring elements
  * @param nodes A vector defining all of the nodes in the problem
  * @return A fully initialized Springs data structure
  *
