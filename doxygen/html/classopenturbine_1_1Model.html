@@ -301,6 +301,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab0dda55887e16ba44919bb9304c5c7c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID.  <br /></td></tr>
 <tr class="separator:ab0dda55887e16ba44919bb9304c5c7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e165ed4f56036e9f8c4154310ec997e" id="r_a3e165ed4f56036e9f8c4154310ec997e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a3e165ed4f56036e9f8c4154310ec997e">AddPrescribedBC3DOFs</a> (const size_t node_id)</td></tr>
+<tr class="memdesc:a3e165ed4f56036e9f8c4154310ec997e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID.  <br /></td></tr>
 <tr class="separator:a3e165ed4f56036e9f8c4154310ec997e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2256052c437f0b05e55126c9d87012bf" id="r_a2256052c437f0b05e55126c9d87012bf"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a2256052c437f0b05e55126c9d87012bf">AddRigidJoint6DOFsTo3DOFs</a> (const std::array&lt; size_t, 2 &gt; &amp;node_ids)</td></tr>
 <tr class="memdesc:a2256052c437f0b05e55126c9d87012bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID.  <br /></td></tr>
@@ -321,10 +322,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aaaaf33e11bcf34ee3fb40448385335c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model.  <br /></td></tr>
 <tr class="separator:aaaaf33e11bcf34ee3fb40448385335c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa58bdb4e24d918767742f103186e6c" id="r_a6aa58bdb4e24d918767742f103186e6c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html">model::MeshConnectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a6aa58bdb4e24d918767742f103186e6c">GetMeshConnectivity</a> () const</td></tr>
-<tr class="memdesc:a6aa58bdb4e24d918767742f103186e6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mesh connectivity (const/read-only version)  <br /></td></tr>
+<tr class="memdesc:a6aa58bdb4e24d918767742f103186e6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mesh connectivity.  <br /></td></tr>
 <tr class="separator:a6aa58bdb4e24d918767742f103186e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d404fe6939aef9363b75fe87900dec1" id="r_a9d404fe6939aef9363b75fe87900dec1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1model_1_1MeshConnectivity.html">model::MeshConnectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a9d404fe6939aef9363b75fe87900dec1">GetMeshConnectivity</a> ()</td></tr>
-<tr class="memdesc:a9d404fe6939aef9363b75fe87900dec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get mutable mesh connectivity (non-const version)  <br /></td></tr>
+<tr class="memdesc:a9d404fe6939aef9363b75fe87900dec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the mesh connectivity.  <br /></td></tr>
 <tr class="separator:a9d404fe6939aef9363b75fe87900dec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f594db3f3ca891dc8ef9f2a751822bd" id="r_a5f594db3f3ca891dc8ef9f2a751822bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a5f594db3f3ca891dc8ef9f2a751822bd">ExportMeshConnectivityToYAML</a> (const std::string &amp;filename=&quot;mesh_connectivity.yaml&quot;) const</td></tr>
 <tr class="memdesc:a5f594db3f3ca891dc8ef9f2a751822bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export mesh connectivity to a YAML file.  <br /></td></tr>
@@ -480,6 +481,13 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a fixed boundary condition constraint to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_id</td><td>the ID of the node where the constraint is to be added </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -508,6 +516,13 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a fixed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_id</td><td>The node ID where the constraint will be applied </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -620,6 +635,14 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a prescribed boundary condition constraint to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_id</td><td>the ID of the node where the constraint is to be added </td></tr>
+    <tr><td class="paramname">initial_displacement</td><td>The displacement of the node to be forced on the node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -646,7 +669,15 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID </p>
+
+<p>Adds a prescribed boundary condition constraint (6DOFs to 3DOFs) to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_id</td><td>The node ID where the constraint will be applied </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -691,6 +722,15 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a revolute/hinge constraint to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_ids</td><td>the IDs of the two nodes to be linked by the constraint </td></tr>
+    <tr><td class="paramname">axis</td><td>The axis about which the torque force will be applied </td></tr>
+    <tr><td class="paramname">torque</td><td>A pointer to the location in memory where the torque will be set </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -719,6 +759,13 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a rigid joint constraint (6DOFs to 3DOFs) to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_ids</td><td>the IDs of the nodes which will be joined by the constraint </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -747,6 +794,13 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a rigid constraint to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_ids</td><td>The IDs of the two nodes to be linked by the constraint </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -791,6 +845,15 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a rotation control constraint to the model and returns the ID. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node_ids</td><td>the IDs of the two nodes to be linked by the constraint </td></tr>
+    <tr><td class="paramname">axis</td><td>The axis about which the torque force will be applied </td></tr>
+    <tr><td class="paramname">control</td><td>A pointer to the location in memory where the control rotation will be set </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the ID of the created constraint </dd></dl>
 
 </div>
 </div>
@@ -944,6 +1007,13 @@ template&lt;typename DeviceType &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns a <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model constraints. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>the Kokkos Device where the created constraints will reside </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The constructed <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object </dd></dl>
 
 </div>
 </div>
@@ -1117,6 +1187,13 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </div><div class="memdoc">
 
 <p>Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> object initialized from the model. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where the created objects will reside </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Constructed <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, and <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a> objects </dd></dl>
 
 </div>
 </div>
@@ -1146,6 +1223,13 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </div><div class="memdoc">
 
 <p>Returns a <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> object initialized from the model. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DeviceType</td><td>The Kokkos Device where the created objects will reside </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Constructed <a class="el" href="structopenturbine_1_1State.html" title="Container for storing the complete system state of the simulation at a given time increment.">State</a>, <a class="el" href="structopenturbine_1_1Elements.html" title="A container providing handle to all structural elements present in the model.">Elements</a>, <a class="el" href="structopenturbine_1_1Constraints.html" title="Container class for managing multiple constraints in a simulation.">Constraints</a>, and <a class="el" href="structopenturbine_1_1Solver.html" title="This object manages the assembly and solution of linear system arising from the generalized-alpha bas...">Solver</a> objects </dd></dl>
 
 </div>
 </div>
@@ -1174,6 +1258,12 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </div><div class="memdoc">
 
 <p>Export mesh connectivity to a YAML file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the file to which to write the connectivity </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1396,7 +1486,8 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </table>
 </div><div class="memdoc">
 
-<p>Get mutable mesh connectivity (non-const version) </p>
+<p>Get the mesh connectivity. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="classopenturbine_1_1Model.html" title="Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbi...">Model</a>'s MeshConnectivity model </dd></dl>
 
 </div>
 </div>
@@ -1423,7 +1514,8 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </table>
 </div><div class="memdoc">
 
-<p>Get the mesh connectivity (const/read-only version) </p>
+<p>Get the mesh connectivity. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="classopenturbine_1_1Model.html" title="Struct to define the connectivity structure of elements, nodes, and constraints defining an OpenTurbi...">Model</a>'s MeshConnectivity model </dd></dl>
 
 </div>
 </div>
@@ -1458,6 +1550,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The desired node </dd></dl>
 
 </div>
 </div>
@@ -1492,6 +1585,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The desired node </dd></dl>
 
 </div>
 </div>
@@ -1645,6 +1739,7 @@ template&lt;typename DeviceType  = Kokkos::Device&lt;            Kokkos::Default
 </div><div class="memdoc">
 
 <p>Returns the number of constraints present in the model. </p>
+<dl class="section return"><dt>Returns</dt><dd>the number of constraints </dd></dl>
 
 </div>
 </div>
