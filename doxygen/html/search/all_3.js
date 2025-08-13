@@ -187,7 +187,7 @@ var searchData=
   ['copyfromstate_184',['CopyFromState',['../structopenturbine_1_1interfaces_1_1HostState.html#ab16fd58e45201ec79ebf69df9201f00e',1,'openturbine::interfaces::HostState']]],
   ['copyfromswaparray_185',['CopyFromSwapArray',['../structopenturbine_1_1util_1_1ControllerIO.html#a8d80a1793c7f0821b78d085eb67fbc12',1,'openturbine::util::ControllerIO']]],
   ['copymatrix_186',['CopyMatrix',['../structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#a45a6958024a4060046f68323ee3e782b',1,'openturbine::constraints::CalculateConstraintResidualGradient']]],
-  ['copynodestostate_187',['CopyNodesToState',['../namespaceopenturbine.html#a04ee64780a3fb5ae6e53fa9b901db66d',1,'openturbine']]],
+  ['copynodestostate_187',['CopyNodesToState',['../namespaceopenturbine_1_1model.html#a33cbd32d45d9ee33d4e2d78cd2f48404',1,'openturbine::model']]],
   ['copystatedata_188',['CopyStateData',['../namespaceopenturbine.html#a3af04c0e5a2a9870a95b10edd29cc3f4',1,'openturbine']]],
   ['copytoswaparray_189',['CopyToSwapArray',['../structopenturbine_1_1util_1_1ControllerIO.html#acc7e18e5ba0831fb9efcf1560e700df9',1,'openturbine::util::ControllerIO']]],
   ['copyvector_190',['CopyVector',['../structopenturbine_1_1constraints_1_1CalculateConstraintResidualGradient.html#ad8d65a840f0f267e86b25c6a96f2effa',1,'openturbine::constraints::CalculateConstraintResidualGradient']]],

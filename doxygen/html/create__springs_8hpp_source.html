@@ -182,50 +182,50 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine.html">openturbine</a> {</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
-<div class="foldopen" id="foldopen00010" data-start="{" data-end="}">
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">   10</a></span><span class="keyword">inline</span> <a class="code hl_struct" href="structopenturbine_1_1Springs.html">Springs&lt;DeviceType&gt;</a> <a class="code hl_function" href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">CreateSprings</a>(</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a>&amp; springs_input, <span class="keyword">const</span> std::vector&lt;Node&gt;&amp; nodes</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>) {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">using </span>Kokkos::create_mirror_view;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keyword">using </span>Kokkos::deep_copy;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">using </span>Kokkos::WithoutInitializing;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <a class="code hl_struct" href="structopenturbine_1_1Springs.html">Springs&lt;DeviceType&gt;</a> springs(springs_input.<a class="code hl_function" href="structopenturbine_1_1SpringsInput.html#ac99e811d91347baecdefe7d642947994">NumElements</a>());</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">auto</span> host_node_state_indices =</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a3487e5b6e0ec4e3c219dcff7ac8a2b57">node_state_indices</a>);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">auto</span> host_x0 = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a26362a2fd8cffae46d025b27fae68df0">x0</a>);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">auto</span> host_l_ref = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac313effa50bf354724efcc059019dc4b">l_ref</a>);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">auto</span> host_k = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac8cf14d3da9b82db1658acc064abc4f9">k</a>);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> elementIdx = 0U; elementIdx &lt; springs_input.<a class="code hl_function" href="structopenturbine_1_1SpringsInput.html#ac99e811d91347baecdefe7d642947994">NumElements</a>(); elementIdx++) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; element = springs_input.<a class="code hl_variable" href="structopenturbine_1_1SpringsInput.html#a51b2f58176c97577448ffd981e4efc37">elements</a>[elementIdx];</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        host_node_state_indices(elementIdx, 0U) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(element.node_ids[0]);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        host_node_state_indices(elementIdx, 1U) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(element.node_ids[1]);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> component = 0U; component &lt; 3U; component++) {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            host_x0(elementIdx, component) =</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                nodes[element.node_ids[1]].x0[component] - nodes[element.node_ids[0]].x0[component];</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        }</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        host_l_ref(elementIdx) = element.undeformed_length;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        host_k(elementIdx) = element.stiffness;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a3487e5b6e0ec4e3c219dcff7ac8a2b57">node_state_indices</a>, host_node_state_indices);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a26362a2fd8cffae46d025b27fae68df0">x0</a>, host_x0);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac313effa50bf354724efcc059019dc4b">l_ref</a>, host_l_ref);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac8cf14d3da9b82db1658acc064abc4f9">k</a>, host_k);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordflow">return</span> springs;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="}">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">   20</a></span><span class="keyword">inline</span> <a class="code hl_struct" href="structopenturbine_1_1Springs.html">Springs&lt;DeviceType&gt;</a> <a class="code hl_function" href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">CreateSprings</a>(</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structopenturbine_1_1SpringsInput.html">SpringsInput</a>&amp; springs_input, <span class="keyword">const</span> std::vector&lt;Node&gt;&amp; nodes</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>) {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">using </span>Kokkos::create_mirror_view;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">using </span>Kokkos::deep_copy;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">using </span>Kokkos::WithoutInitializing;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <a class="code hl_struct" href="structopenturbine_1_1Springs.html">Springs&lt;DeviceType&gt;</a> springs(springs_input.<a class="code hl_function" href="structopenturbine_1_1SpringsInput.html#ac99e811d91347baecdefe7d642947994">NumElements</a>());</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">auto</span> host_node_state_indices =</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a3487e5b6e0ec4e3c219dcff7ac8a2b57">node_state_indices</a>);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">auto</span> host_x0 = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a26362a2fd8cffae46d025b27fae68df0">x0</a>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">auto</span> host_l_ref = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac313effa50bf354724efcc059019dc4b">l_ref</a>);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">auto</span> host_k = create_mirror_view(WithoutInitializing, springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac8cf14d3da9b82db1658acc064abc4f9">k</a>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> elementIdx = 0U; elementIdx &lt; springs_input.<a class="code hl_function" href="structopenturbine_1_1SpringsInput.html#ac99e811d91347baecdefe7d642947994">NumElements</a>(); elementIdx++) {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="keyword">const</span> <span class="keyword">auto</span>&amp; element = springs_input.<a class="code hl_variable" href="structopenturbine_1_1SpringsInput.html#a51b2f58176c97577448ffd981e4efc37">elements</a>[elementIdx];</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        host_node_state_indices(elementIdx, 0U) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(element.node_ids[0]);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        host_node_state_indices(elementIdx, 1U) = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(element.node_ids[1]);</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> component = 0U; component &lt; 3U; component++) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            host_x0(elementIdx, component) =</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                nodes[element.node_ids[1]].x0[component] - nodes[element.node_ids[0]].x0[component];</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        host_l_ref(elementIdx) = element.undeformed_length;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        host_k(elementIdx) = element.stiffness;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a3487e5b6e0ec4e3c219dcff7ac8a2b57">node_state_indices</a>, host_node_state_indices);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#a26362a2fd8cffae46d025b27fae68df0">x0</a>, host_x0);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac313effa50bf354724efcc059019dc4b">l_ref</a>, host_l_ref);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    deep_copy(springs.<a class="code hl_variable" href="structopenturbine_1_1Springs.html#ac8cf14d3da9b82db1658acc064abc4f9">k</a>, host_k);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordflow">return</span> springs;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>}  <span class="comment">// namespace openturbine</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}  <span class="comment">// namespace openturbine</span></div>
 <div class="ttc" id="anamespaceopenturbine_html"><div class="ttname"><a href="namespaceopenturbine.html">openturbine</a></div><div class="ttdef"><b>Definition</b> calculate_constraint_output.hpp:8</div></div>
-<div class="ttc" id="anamespaceopenturbine_html_a740a2e9d6bd4f113add8c965e67d09d9"><div class="ttname"><a href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">openturbine::CreateSprings</a></div><div class="ttdeci">Springs&lt; DeviceType &gt; CreateSprings(const SpringsInput &amp;springs_input, const std::vector&lt; Node &gt; &amp;nodes)</div><div class="ttdef"><b>Definition</b> create_springs.hpp:10</div></div>
+<div class="ttc" id="anamespaceopenturbine_html_a740a2e9d6bd4f113add8c965e67d09d9"><div class="ttname"><a href="namespaceopenturbine.html#a740a2e9d6bd4f113add8c965e67d09d9">openturbine::CreateSprings</a></div><div class="ttdeci">Springs&lt; DeviceType &gt; CreateSprings(const SpringsInput &amp;springs_input, const std::vector&lt; Node &gt; &amp;nodes)</div><div class="ttdoc">Creates a springs data structure and initializes its data.</div><div class="ttdef"><b>Definition</b> create_springs.hpp:20</div></div>
 <div class="ttc" id="anode_8hpp_html"><div class="ttname"><a href="node_8hpp.html">node.hpp</a></div></div>
 <div class="ttc" id="asprings_8hpp_html"><div class="ttname"><a href="springs_8hpp.html">springs.hpp</a></div></div>
 <div class="ttc" id="asprings__input_8hpp_html"><div class="ttname"><a href="springs__input_8hpp.html">springs_input.hpp</a></div></div>

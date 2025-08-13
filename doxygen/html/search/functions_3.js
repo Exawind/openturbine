@@ -37,7 +37,7 @@ var searchData=
   ['controllerinput_34',['controllerinput',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#af357bae6934cc5d1b1c7d29600d45c0f',1,'openturbine::interfaces::components::ControllerInput::ControllerInput(std::string lib_path, std::string func_name=&quot;DISCON&quot;, std::string inp_file_path=&quot;&quot;, std::string sim_name=&quot;&quot;)'],['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#a93e25761d8de8718ec3c4e3a5a12f911',1,'openturbine::interfaces::components::ControllerInput::ControllerInput()=default']]],
   ['copyfromstate_35',['CopyFromState',['../structopenturbine_1_1interfaces_1_1HostState.html#ab16fd58e45201ec79ebf69df9201f00e',1,'openturbine::interfaces::HostState']]],
   ['copyfromswaparray_36',['CopyFromSwapArray',['../structopenturbine_1_1util_1_1ControllerIO.html#a8d80a1793c7f0821b78d085eb67fbc12',1,'openturbine::util::ControllerIO']]],
-  ['copynodestostate_37',['CopyNodesToState',['../namespaceopenturbine.html#a04ee64780a3fb5ae6e53fa9b901db66d',1,'openturbine']]],
+  ['copynodestostate_37',['CopyNodesToState',['../namespaceopenturbine_1_1model.html#a33cbd32d45d9ee33d4e2d78cd2f48404',1,'openturbine::model']]],
   ['copystatedata_38',['CopyStateData',['../namespaceopenturbine.html#a3af04c0e5a2a9870a95b10edd29cc3f4',1,'openturbine']]],
   ['copytoswaparray_39',['CopyToSwapArray',['../structopenturbine_1_1util_1_1ControllerIO.html#acc7e18e5ba0831fb9efcf1560e700df9',1,'openturbine::util::ControllerIO']]],
   ['count_5factive_5fdofs_40',['count_active_dofs',['../namespaceopenturbine_1_1dof.html#abc807eb05309f7badc20ad9e2bc35313',1,'openturbine::dof']]],
