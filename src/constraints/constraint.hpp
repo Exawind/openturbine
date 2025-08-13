@@ -4,7 +4,7 @@
 
 #include "constraint_type.hpp"
 
-namespace openturbine {
+namespace openturbine::constraints {
 
 /**
  * @brief Defines a constraint between two nodes or enforces a boundary condition at a single node

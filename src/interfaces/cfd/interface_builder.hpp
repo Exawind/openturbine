@@ -5,7 +5,7 @@
 #include "interface_input.hpp"
 #include "mooring_line_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct InterfaceBuilder {
     InterfaceBuilder& SetGravity(const std::array<double, 3>& gravity);

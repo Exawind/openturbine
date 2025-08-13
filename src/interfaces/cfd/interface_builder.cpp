@@ -2,7 +2,7 @@
 
 #include "floating_platform_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 InterfaceBuilder& InterfaceBuilder::SetGravity(const std::array<double, 3>& gravity) {
     interface_input.gravity = gravity;
     return *this;

@@ -2,7 +2,7 @@
 
 #include "interfaces/cfd/floating_platform_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct TurbineInput {
     // Floating platform

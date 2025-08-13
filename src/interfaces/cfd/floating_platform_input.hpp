@@ -5,7 +5,7 @@
 
 #include "interfaces/cfd/mooring_line_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct FloatingPlatformInput {
     /// Flag to enable use of floating platform in model

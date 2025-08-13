@@ -14,7 +14,7 @@
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 class Interface {
 public:

@@ -6,7 +6,7 @@
 #include "constraints/constraint.hpp"
 #include "constraints/constraint_type.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::constraints::tests {
 
 class ConstraintTest : public ::testing::Test {
 protected:

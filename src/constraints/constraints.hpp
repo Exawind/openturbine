@@ -34,7 +34,7 @@ struct Constraints {
     size_t num_dofs;         //< Total number of degrees of freedom controlled by constraints
 
     // Constraint properties
-    View<ConstraintType*> type;           //< Type of each constraint
+    View<constraints::ConstraintType*> type;           //< Type of each constraint
     std::vector<double*> control_signal;  //< Control signal for each constraint
     View<size_t*> base_node_index;        //< Index of the base node for each constraint
     View<size_t*> target_node_index;      //< Index of the target node for each constraint
@@ -71,7 +71,7 @@ struct Constraints {
     View<double* [6][6]> base_gradient_transpose_terms;
     View<double* [6][6]> target_gradient_transpose_terms;
 
-    explicit Constraints(const std::vector<Constraint>& constraints, const std::vector<Node>& nodes)
+    explicit Constraints(const std::vector<constraints::Constraint>& constraints, const std::vector<Node>& nodes)
         : num_constraints{constraints.size()},
           num_dofs{std::transform_reduce(
               constraints.cbegin(), constraints.cend(), 0U, std::plus{},
@@ -178,28 +178,28 @@ struct Constraints {
             host_type(constraint) = c.type;
 
             // Set the freedom signature from the constraint types
-            if (c.type == ConstraintType::FixedBC || c.type == ConstraintType::PrescribedBC) {
+            if (c.type == constraints::ConstraintType::FixedBC || c.type == constraints::ConstraintType::PrescribedBC) {
                 host_base_freedom(constraint) = dof::FreedomSignature::NoComponents;
                 host_target_freedom(constraint) = dof::FreedomSignature::AllComponents;
 
                 host_base_active_dofs(constraint) = 0UL;
                 host_target_active_dofs(constraint) = 6UL;
-            } else if (c.type == ConstraintType::RigidJoint ||
-                       c.type == ConstraintType::RevoluteJoint ||
-                       c.type == ConstraintType::RotationControl) {
+            } else if (c.type == constraints::ConstraintType::RigidJoint ||
+                       c.type == constraints::ConstraintType::RevoluteJoint ||
+                       c.type == constraints::ConstraintType::RotationControl) {
                 host_base_freedom(constraint) = dof::FreedomSignature::AllComponents;
                 host_target_freedom(constraint) = dof::FreedomSignature::AllComponents;
 
                 host_base_active_dofs(constraint) = 6UL;
                 host_target_active_dofs(constraint) = 6UL;
-            } else if (c.type == ConstraintType::FixedBC3DOFs ||
-                       c.type == ConstraintType::PrescribedBC3DOFs) {
+            } else if (c.type == constraints::ConstraintType::FixedBC3DOFs ||
+                       c.type == constraints::ConstraintType::PrescribedBC3DOFs) {
                 host_base_freedom(constraint) = dof::FreedomSignature::NoComponents;
                 host_target_freedom(constraint) = dof::FreedomSignature::JustPosition;
 
                 host_base_active_dofs(constraint) = 0UL;
                 host_target_active_dofs(constraint) = 3UL;
-            } else if (c.type == ConstraintType::RigidJoint6DOFsTo3DOFs) {
+            } else if (c.type == constraints::ConstraintType::RigidJoint6DOFsTo3DOFs) {
                 host_base_freedom(constraint) = dof::FreedomSignature::AllComponents;
                 host_target_freedom(constraint) = dof::FreedomSignature::JustPosition;
 
@@ -220,8 +220,8 @@ struct Constraints {
 
             // Calculate initial relative position (X0)
             std::array<double, 3> x0{0., 0., 0.};
-            if (c.type != ConstraintType::PrescribedBC &&
-                c.type != ConstraintType::PrescribedBC3DOFs) {
+            if (c.type != constraints::ConstraintType::PrescribedBC &&
+                c.type != constraints::ConstraintType::PrescribedBC3DOFs) {
                 x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
             }
             for (auto component = 0U; component < 3U; ++component) {
@@ -238,8 +238,8 @@ struct Constraints {
             }
 
             // Initialize displacement to provided displacement if prescribed BC
-            if (c.type == ConstraintType::PrescribedBC ||
-                c.type == ConstraintType::PrescribedBC3DOFs) {
+            if (c.type == constraints::ConstraintType::PrescribedBC ||
+                c.type == constraints::ConstraintType::PrescribedBC3DOFs) {
                 for (auto component = 0U; component < 7U; ++component) {
                     host_input(constraint, component) = c.initial_displacement[component];
                 }
@@ -262,7 +262,7 @@ struct Constraints {
 
     /// Calculates the initial relative position (X0) based on constraint type and nodes
     static std::array<double, 3> CalculateX0(
-        const Constraint& constraint, const Node& target_node, const Node& base_node
+        const constraints::Constraint& constraint, const Node& target_node, const Node& base_node
     ) {
         std::array<double, 3> x0{0., 0., 0.};
         // Set X0 to the prescribed displacement for fixed and prescribed BCs i.e. constraints
@@ -283,10 +283,10 @@ struct Constraints {
 
     /// Calculates the rotation axes for a constraint based on its type and configuration
     static std::array<std::array<double, 3>, 3> CalculateAxes(
-        const Constraint& constraint, const std::array<double, 3>& x0
+        const constraints::Constraint& constraint, const std::array<double, 3>& x0
     ) {
         std::array<std::array<double, 3>, 3> rotation_matrix{};
-        if (constraint.type == ConstraintType::RevoluteJoint) {
+        if (constraint.type == constraints::ConstraintType::RevoluteJoint) {
             constexpr std::array<double, 3> x = {1., 0., 0.};
             const std::array<double, 3> x_hat = math::Norm(constraint.axis_vector) != 0.
                                                     ? math::UnitVector(constraint.axis_vector)
@@ -314,7 +314,7 @@ struct Constraints {
         }
 
         // Set rotation_matrix to the unit vector of the constraint axis for rotation control
-        if (constraint.type == ConstraintType::RotationControl) {
+        if (constraint.type == constraints::ConstraintType::RotationControl) {
             const auto unit_vector = math::UnitVector(constraint.axis_vector);
             rotation_matrix[0][0] = unit_vector[0];
             rotation_matrix[0][1] = unit_vector[1];

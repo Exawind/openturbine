@@ -15,7 +15,7 @@
 #include "turbine.hpp"
 #include "turbine_input.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 //------------------------------------------------------------------------------
 // Shared functions

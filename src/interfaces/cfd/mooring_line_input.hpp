@@ -2,7 +2,7 @@
 
 #include <array>
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct MooringLineInput {
     /// Mooring line stiffness

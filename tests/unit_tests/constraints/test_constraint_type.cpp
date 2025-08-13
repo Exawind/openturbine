@@ -2,7 +2,7 @@
 
 #include "constraints/constraint_type.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::constraints::tests {
 
 TEST(ConstraintTypeTest, NoneConstraintHasOneNode) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::None), 1U);

@@ -9,7 +9,7 @@
 
 #include "model/mesh_connectivity.hpp"
 
-namespace openturbine::tests {
+namespace openturbine::model::tests {
 
 class MeshConnectivityTest : public ::testing::Test {
 protected:

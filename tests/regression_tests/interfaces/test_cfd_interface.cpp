@@ -5,7 +5,7 @@
 
 namespace openturbine::tests {
 
-using namespace openturbine::cfd;
+using namespace openturbine::interfaces::cfd;
 
 TEST(CFDInterfaceTest, PrecessionTest) {
     // Create cfd interface

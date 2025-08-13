@@ -3,7 +3,7 @@
 #include <array>
 #include <cstddef>
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 struct NodeData {
     size_t id;

@@ -6,7 +6,7 @@
 #include "interfaces/cfd/mooring_line.hpp"
 #include "interfaces/cfd/node_data.hpp"
 
-namespace openturbine::cfd {
+namespace openturbine::interfaces::cfd {
 
 //------------------------------------------------------------------------------
 // Data Structures

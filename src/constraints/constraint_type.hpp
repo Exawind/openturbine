@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine {
+namespace openturbine::constraints {
 
 enum class ConstraintType : std::uint8_t {
     None = 0,               //< No constraint -- default type

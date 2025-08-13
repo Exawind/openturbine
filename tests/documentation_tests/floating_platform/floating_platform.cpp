@@ -48,7 +48,7 @@ int main() {
         // First, general solution parameters should be set - the gravity force,
         // time step, numerical damping factor, and maximum number of nonlinear
         // iterations.
-        auto interface_builder = openturbine::cfd::InterfaceBuilder{}
+        auto interface_builder = openturbine::interfaces::cfd::InterfaceBuilder{}
                                      .SetGravity(gravity)
                                      .SetTimeStep(time_step)
                                      .SetDampingFactor(rho_inf)
