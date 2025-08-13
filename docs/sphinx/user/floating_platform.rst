@@ -65,7 +65,7 @@ These include the gravity, time step size, numerical damping factor, and maximum
 
 .. code-block:: cpp
 
-    auto interface_builder = openturbine::cfd::InterfaceBuilder{}
+    auto interface_builder = openturbine::interfaces::cfd::InterfaceBuilder{}
                               .SetGravity(gravity)
                               .SetTimeStep(time_step)
                               .SetDampingFactor(rho_inf)
