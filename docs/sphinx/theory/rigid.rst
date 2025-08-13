@@ -8,13 +8,13 @@ vector and iteration matrix in Algorithm 1 for simulation of the
 dynamics of a rigid body with six degrees of freedom. An OpenTurbine
 rigid body has reference position and orientation given as
 
-.. math:: \underline{q}^0 = \begin{bmatrix} 
-     \underline{x}^0 \\
-     \underline{\underline{R}}^0 \\
+.. math:: \underline{q}^\mathrm{r} = \begin{bmatrix} 
+     \underline{x}^\mathrm{r} \\
+     \underline{\underline{R}}^\mathrm{r} \\
     \end{bmatrix} 
     :label: rigid-ref
 
-where :math:`\underline{q}^0 \in \mathbb{R}^3\times \mathrm{SO(3)}`. The
+where :math:`\underline{q}^\mathrm{r} \in \mathbb{R}^3\times \mathrm{SO(3)}`. The
 generalized degrees of freedom (displacement and rotation) are given by
 
 .. math::
@@ -33,8 +33,8 @@ given by
 .. math::
 
    \begin{aligned}
-    \underline{x}^\mathrm{c} = \underline{x}^0 + \underline{u}\\
-    \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}^0
+    \underline{x}^\mathrm{c} = \underline{x}^\mathrm{r} + \underline{u}\\
+    \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}\mathrm{r}^
    \end{aligned}
 
 respectively. The rigid body is defined by a mass matrix defined in
@@ -57,7 +57,7 @@ where
    m \underline{\underline{I}} & m \tilde{\eta}^T \\
    m \tilde{\eta} & \underline{\underline{\rho}}
    \end{bmatrix} 
-   = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{M}}^* {\underline{\underline{\mathcal{RR}^0}}}^T \in \mathbb{R}^{6\times6}
+   = \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{M}}^* {\underline{\underline{\mathcal{RR}^\mathrm{r}}}}^T \in \mathbb{R}^{6\times6}
 
 is the mass matrix in intertial coordinates, which defines :math:`m`,
 :math:`\underline{\eta}\in \mathbb{R}^3`,
@@ -74,10 +74,10 @@ and where
 
 .. math::
 
-   \underline{\underline{\mathcal{RR}^0}}=
+   \underline{\underline{\mathcal{RR}^\mathrm{r}}}=
    \begin{bmatrix}
-   \underline{\underline{R}}~\underline{\underline{R}}^0& \underline{\underline{0}} \\
-   \underline{\underline{0}} & \underline{\underline{R}}~\underline{\underline{R}}^0
+   \underline{\underline{R}}~\underline{\underline{R}}^\mathrm{r}& \underline{\underline{\mathrm{r}}} \\
+   \underline{\underline{\mathrm{r}}} & \underline{\underline{R}}~\underline{\underline{R}}\mathrm{r}^
    \end{bmatrix}
    \in \mathbb{R}^{6\times6}
 
@@ -97,9 +97,9 @@ where
    \begin{aligned}
    \underline{\underline{G}} =
    \begin{bmatrix}
-   \underline{\underline{0}} & \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
+   \underline{\underline{\mathrm{r}}} & \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
             + \widetilde{\omega} m \widetilde{\eta}^T\\
-   \underline{\underline{0}} & \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
+   \underline{\underline{\mathrm{r}}} & \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
    \end{bmatrix}
    \end{aligned}
 
