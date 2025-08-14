@@ -8,7 +8,7 @@ massless taut-line "mooring lines", represented by geometrically
 nonlinear springs. The model configuration is appropriate for modeling
 the DeepCWind floating platform.
 
-The generalied model degrees of freedom are
+The generalized model degrees of freedom are
 
 .. math::
 
@@ -45,10 +45,10 @@ The system input parameters include the following:
 - :math:`\underline{\underline{M}}^* \in \mathbb{R}^{6\times 6}`: Rigid
   body mass matrix in material coordinate system
 
-- :math:`\underline{x}^0 \in \mathbb{R}^3`: Rigid body reference
+- :math:`\underline{x}^\mathrm{r} \in \mathbb{R}^3`: Rigid body reference
   position
 
-- :math:`\underline{\underline{R}}^0 \in \mathbb{R}^{3\times3}`: Rigid
+- :math:`\underline{\underline{R}}^\mathrm{r} \in \mathbb{R}^{3\times3}`: Rigid
   body reference orientation
 
 - :math:`\underline{u}^\mathrm{init} \in \mathbb{R}^3`: Rigid body
@@ -63,37 +63,37 @@ The system input parameters include the following:
 - :math:`\underline{\omega}^\mathrm{init} \in \mathbb{R}^3`: Rigid body
   initial angular velocity
 
-- :math:`\underline{x}^{\mathrm{sp0}i} \in \mathbb{R}^6`: Spring
+- :math:`\underline{x}^{\mathrm{sp,r}i} \in \mathbb{R}^6`: Spring
   :math:`i` reference location
 
 - :math:`k^{\mathrm{sp}i} \in \mathbb{R}`: Spring :math:`i` spring
   constant
 
-- :math:`L^{\mathrm{sp0}i} \in \mathbb{R}`: Spring :math:`i` unstretched
+- :math:`L^{\mathrm{sp,r}i} \in \mathbb{R}`: Spring :math:`i` unstretched
   length
 
 and where
 
 .. math::
 
-   \underline{x}^{\mathrm{sp0}i} =
+   \underline{x}^{\mathrm{sp,r}i} =
    \begin{bmatrix}
-   \underline{x}^{\mathrm{sp0}i}_1 \\ \underline{x}^{\mathrm{sp0}i}_2
+   \underline{x}^{\mathrm{sp,r}i}_1 \\ \underline{x}^{\mathrm{sp,r}i}_2
    \end{bmatrix}
 
-The contraints for each spring can be written
+The constraints for each spring can be written
 
 .. math::
 
    \begin{aligned}
-    \underline{u}_1^{\mathrm{sp}i} &=  \underline{u} + \underline{\underline{R}} \underline{r}^{\mathrm{sp0}i}_1
-   - \underline{r}^{\mathrm{sp0}i}  = \underline{u} + \left(\underline{\underline{R}}-\underline{\underline{I}}\right) 
-   \underline{r}^{\mathrm{sp0}i}_1 \\
+    \underline{u}_1^{\mathrm{sp}i} &=  \underline{u} + \underline{\underline{R}} \underline{r}^{\mathrm{sp,r}i}_1
+   - \underline{r}^{\mathrm{sp,r}i}  = \underline{u} + \left(\underline{\underline{R}}-\underline{\underline{I}}\right) 
+   \underline{r}^{\mathrm{sp,r}i}_1 \\
    \underline{u}_2^{\mathrm{sp}i} &= 0
    \end{aligned}
 
-where :math:`\underline{r}^{\mathrm{sp0}i}_1 
-= \underline{x}^{\mathrm{sp0}i}_1 - \underline{x}^0`.
+where :math:`\underline{r}^{\mathrm{sp,r}i}_1 
+= \underline{x}^{\mathrm{sp,r}i}_1 - \underline{x}^\mathrm{r}`.
 
 The full-system residual required for time integration can be written as follows (see Eq. :eq:`residual`):
 
@@ -136,13 +136,13 @@ In the above, :math:`\underline{\underline{M}}^\mathrm{rb} \in \mathbb{R}^{6 \ti
    \underline{\Phi} =
    \begin{bmatrix}
    \underline{u}_1^{\mathrm{sp}1} - \underline{u} 
-   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}1} \\
+   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}1} \\
    \underline{u}_2^{\mathrm{sp}1} \\
    \underline{u}_1^{\mathrm{sp}2} - \underline{u} 
-   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}2} \\
+   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}2} \\
    \underline{u}_2^{\mathrm{sp}2} \\
    \underline{u}_1^{\mathrm{sp}3} - \underline{u} 
-   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}3} \\
+   - \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}3} \\
    \underline{u}_2^{\mathrm{sp}3} \\
    \end{bmatrix} \quad
    \in \mathbb{R}^{18}
@@ -154,7 +154,7 @@ The specific entries of :math:`\underline{\underline{B}}` are given by
    \begin{aligned}
    \underline{\underline{B}} =
    \begin{bmatrix}
-   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}1} } 
+   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}1} } 
    & \underline{\underline{I}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} 
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} \\
    %
@@ -162,7 +162,7 @@ The specific entries of :math:`\underline{\underline{B}}` are given by
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{I}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} 
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} \\
    %
-   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}2} } 
+   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}2} } 
    & \underline{\underline{0}}_{3 \times 3}  & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{I}}_{3 \times 3} 
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} \\
    %
@@ -170,7 +170,7 @@ The specific entries of :math:`\underline{\underline{B}}` are given by
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} 
    & \underline{\underline{I}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} \\
    %
-   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}3} } 
+   -\underline{\underline{I}}_{3 \times 3} & \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}3} } 
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3}
    & \underline{\underline{0}}_{3 \times 3} & \underline{\underline{I}}_{3 \times 3} & \underline{\underline{0}}_{3 \times 3}\\
    %
@@ -208,9 +208,9 @@ The full matrices :math:`\underline{\underline{C}}`, :math:`\underline{\underlin
    \underline{\underline{0}}_{3 \times 18} \\
    \underline{\underline{0}}_{3 \times 3} & 
    \left( 
-    \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp01}}} +  
-    \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp02}}} +  
-    \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp03}}}\right)  &
+    \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r1}}} +  
+    \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r2}}} +  
+    \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r3}}}\right)  &
    \underline{\underline{0}}_{3 \times 18} \\
    \underline{\underline{0}}_{18 \times 3} & 
    \underline{\underline{0}}_{18 \times 3} & 

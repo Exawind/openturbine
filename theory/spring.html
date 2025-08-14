@@ -106,13 +106,13 @@ geometrically nonlinear. The spring input properties are is spring constant <spa
 element has reference position defined by its endpoint positions,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
- \underline{q}^0 =
+ \underline{q}^\mathrm{r} =
 \begin{bmatrix}
-  \underline{x}_1^0 \\
-  \underline{x}_2^0
+  \underline{x}_1^\mathrm{r} \\
+  \underline{x}_2^\mathrm{r}
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{q}^0 \in \mathbb{R}^6\)</span>,
+<p>where <span class="math notranslate nohighlight">\(\underline{q}^\mathrm{r} \in \mathbb{R}^6\)</span>,
 and displacement is denoted</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -133,7 +133,7 @@ and displacement is denoted</p>
 \[\underline{f}^\mathrm{sp} = -k \frac{\underline{r} }{| \underline{r} |} \left( | \underline{r} | - L \right)\]</div>
 <p>with</p>
 <div class="math notranslate nohighlight">
-\[\underline{r} = \underline{x}_2^0 + \underline{u}_2 - \underline{x}_1^0  - \underline{u}_1\]</div>
+\[\underline{r} = \underline{x}_2^\mathrm{r} + \underline{u}_2 - \underline{x}_1^\mathrm{r}  - \underline{u}_1\]</div>
 <p>Variation of the force equation provides the stiffness contribution
 to the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> iteration matrix (See Eq. <a class="reference internal" href="gen-alpha.html#equation-iteration">(4)</a>):</p>
 <div class="math notranslate nohighlight">

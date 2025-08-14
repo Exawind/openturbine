@@ -105,11 +105,11 @@ vector and iteration matrix in Algorithm 1 for simulation of the
 dynamics of a rigid body with six degrees of freedom. An OpenTurbine
 rigid body has reference position and orientation given as</p>
 <div class="math notranslate nohighlight" id="equation-rigid-ref">
-<span class="eqno">(5)<a class="headerlink" href="#equation-rigid-ref" title="Permalink to this equation"></a></span>\[\begin{split}\underline{q}^0 = \begin{bmatrix}
- \underline{x}^0 \\
- \underline{\underline{R}}^0 \\
+<span class="eqno">(5)<a class="headerlink" href="#equation-rigid-ref" title="Permalink to this equation"></a></span>\[\begin{split}\underline{q}^\mathrm{r} = \begin{bmatrix}
+ \underline{x}^\mathrm{r} \\
+ \underline{\underline{R}}^\mathrm{r} \\
 \end{bmatrix}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{q}^0 \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>. The
+<p>where <span class="math notranslate nohighlight">\(\underline{q}^\mathrm{r} \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>. The
 generalized degrees of freedom (displacement and rotation) are given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -123,8 +123,8 @@ that current position and orientation, in inertial coordinates, are
 given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
- \underline{x}^\mathrm{c} = \underline{x}^0 + \underline{u}\\
- \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}^0
+ \underline{x}^\mathrm{c} = \underline{x}^\mathrm{r} + \underline{u}\\
+ \underline{\underline{R}}^\mathrm{c} = \underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r}
 \end{aligned}\end{split}\]</div>
 <p>respectively. The rigid body is defined by a mass matrix defined in
 material coordinates, and is notated as
@@ -142,7 +142,7 @@ following Eq. <a class="reference internal" href="overview.html#equation-residu
 m \underline{\underline{I}} &amp; m \tilde{\eta}^T \\
 m \tilde{\eta} &amp; \underline{\underline{\rho}}
 \end{bmatrix}
-= \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{M}}^* {\underline{\underline{\mathcal{RR}^0}}}^T \in \mathbb{R}^{6\times6}\end{split}\]</div>
+= \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{M}}^* {\underline{\underline{\mathcal{RR}^\mathrm{r}}}}^T \in \mathbb{R}^{6\times6}\end{split}\]</div>
 <p>is the mass matrix in intertial coordinates, which defines <span class="math notranslate nohighlight">\(m\)</span>,
 <span class="math notranslate nohighlight">\(\underline{\eta}\in \mathbb{R}^3\)</span>,
 <span class="math notranslate nohighlight">\(\underline{\underline{\rho}}\in\mathbb{R}^{3\times 3}\)</span>,</p>
@@ -153,10 +153,10 @@ m \tilde{\omega} \tilde{\omega} \underline{\eta}  \\
 \end{bmatrix}\end{split}\]</div>
 <p>and where</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\underline{\underline{\mathcal{RR}^0}}=
+\[\begin{split}\underline{\underline{\mathcal{RR}^\mathrm{r}}}=
 \begin{bmatrix}
-\underline{\underline{R}}~\underline{\underline{R}}^0&amp; \underline{\underline{0}} \\
-\underline{\underline{0}} &amp; \underline{\underline{R}}~\underline{\underline{R}}^0
+\underline{\underline{R}}~\underline{\underline{R}}^\mathrm{r}&amp; \underline{\underline{\mathrm{r}}} \\
+\underline{\underline{R}} &amp; \underline{\underline{R}}~\underline{\underline{R}}^\mathrm{r}
 \end{bmatrix}
 \in \mathbb{R}^{6\times6}\end{split}\]</div>
 <p>Variation of Eq. <a class="reference internal" href="#equation-rbresid">(6)</a> can be written as</p>
@@ -170,9 +170,9 @@ m \tilde{\omega} \tilde{\omega} \underline{\eta}  \\
 \[\begin{split}\begin{aligned}
 \underline{\underline{G}} =
 \begin{bmatrix}
-\underline{\underline{0}} &amp; \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
+\underline{\underline{r}} &amp; \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
          + \widetilde{\omega} m \widetilde{\eta}^T\\
-\underline{\underline{0}} &amp; \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
+\underline{\underline{\mathrm{r}}} &amp; \widetilde{\omega} \underline{\underline{\rho}} - \widetilde{\underline{\underline{\rho}} \underline{\omega}}
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">

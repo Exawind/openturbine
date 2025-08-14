@@ -104,7 +104,7 @@
 massless taut-line “mooring lines”, represented by geometrically
 nonlinear springs. The model configuration is appropriate for modeling
 the DeepCWind floating platform.</p>
-<p>The generalied model degrees of freedom are</p>
+<p>The generalized model degrees of freedom are</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{q} = \begin{bmatrix}
   \underline{u} \\
@@ -134,9 +134,9 @@ displacement (2 nodes with 3 DOF each; see <a class="reference internal" href="s
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\underline{\underline{M}}^* \in \mathbb{R}^{6\times 6}\)</span>: Rigid
 body mass matrix in material coordinate system</p></li>
-<li><p><span class="math notranslate nohighlight">\(\underline{x}^0 \in \mathbb{R}^3\)</span>: Rigid body reference
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^\mathrm{r} \in \mathbb{R}^3\)</span>: Rigid body reference
 position</p></li>
-<li><p><span class="math notranslate nohighlight">\(\underline{\underline{R}}^0 \in \mathbb{R}^{3\times3}\)</span>: Rigid
+<li><p><span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{r} \in \mathbb{R}^{3\times3}\)</span>: Rigid
 body reference orientation</p></li>
 <li><p><span class="math notranslate nohighlight">\(\underline{u}^\mathrm{init} \in \mathbb{R}^3\)</span>: Rigid body
 initial displacement</p></li>
@@ -146,29 +146,29 @@ Rigid body initial orientation</p></li>
 initial velocity</p></li>
 <li><p><span class="math notranslate nohighlight">\(\underline{\omega}^\mathrm{init} \in \mathbb{R}^3\)</span>: Rigid body
 initial angular velocity</p></li>
-<li><p><span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{sp0}i} \in \mathbb{R}^6\)</span>: Spring
+<li><p><span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{sp,r}i} \in \mathbb{R}^6\)</span>: Spring
 <span class="math notranslate nohighlight">\(i\)</span> reference location</p></li>
 <li><p><span class="math notranslate nohighlight">\(k^{\mathrm{sp}i} \in \mathbb{R}\)</span>: Spring <span class="math notranslate nohighlight">\(i\)</span> spring
 constant</p></li>
-<li><p><span class="math notranslate nohighlight">\(L^{\mathrm{sp0}i} \in \mathbb{R}\)</span>: Spring <span class="math notranslate nohighlight">\(i\)</span> unstretched
+<li><p><span class="math notranslate nohighlight">\(L^{\mathrm{sp,r}i} \in \mathbb{R}\)</span>: Spring <span class="math notranslate nohighlight">\(i\)</span> unstretched
 length</p></li>
 </ul>
 <p>and where</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\underline{x}^{\mathrm{sp0}i} =
+\[\begin{split}\underline{x}^{\mathrm{sp,r}i} =
 \begin{bmatrix}
-\underline{x}^{\mathrm{sp0}i}_1 \\ \underline{x}^{\mathrm{sp0}i}_2
+\underline{x}^{\mathrm{sp,r}i}_1 \\ \underline{x}^{\mathrm{sp,r}i}_2
 \end{bmatrix}\end{split}\]</div>
-<p>The contraints for each spring can be written</p>
+<p>The constraints for each spring can be written</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
- \underline{u}_1^{\mathrm{sp}i} &amp;=  \underline{u} + \underline{\underline{R}} \underline{r}^{\mathrm{sp0}i}_1
-- \underline{r}^{\mathrm{sp0}i}  = \underline{u} + \left(\underline{\underline{R}}-\underline{\underline{I}}\right)
-\underline{r}^{\mathrm{sp0}i}_1 \\
+ \underline{u}_1^{\mathrm{sp}i} &amp;=  \underline{u} + \underline{\underline{R}} \underline{r}^{\mathrm{sp,r}i}_1
+- \underline{r}^{\mathrm{sp,r}i}  = \underline{u} + \left(\underline{\underline{R}}-\underline{\underline{I}}\right)
+\underline{r}^{\mathrm{sp,r}i}_1 \\
 \underline{u}_2^{\mathrm{sp}i} &amp;= 0
 \end{aligned}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{r}^{\mathrm{sp0}i}_1
-= \underline{x}^{\mathrm{sp0}i}_1 - \underline{x}^0\)</span>.</p>
+<p>where <span class="math notranslate nohighlight">\(\underline{r}^{\mathrm{sp,r}i}_1
+= \underline{x}^{\mathrm{sp,r}i}_1 - \underline{x}^\mathrm{r}\)</span>.</p>
 <p>The full-system residual required for time integration can be written as follows (see Eq. <a class="reference internal" href="overview.html#equation-residual">(1)</a>):</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{R} = \begin{bmatrix}
@@ -202,13 +202,13 @@ length</p></li>
 \[\begin{split}\underline{\Phi} =
 \begin{bmatrix}
 \underline{u}_1^{\mathrm{sp}1} - \underline{u}
-- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}1} \\
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}1} \\
 \underline{u}_2^{\mathrm{sp}1} \\
 \underline{u}_1^{\mathrm{sp}2} - \underline{u}
-- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}2} \\
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}2} \\
 \underline{u}_2^{\mathrm{sp}2} \\
 \underline{u}_1^{\mathrm{sp}3} - \underline{u}
-- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp0}3} \\
+- \left(\underline{\underline{R}}-\underline{\underline{I}} \right) \underline{r}^{\mathrm{sp,r}3} \\
 \underline{u}_2^{\mathrm{sp}3} \\
 \end{bmatrix} \quad
 \in \mathbb{R}^{18}\end{split}\]</div>
@@ -217,7 +217,7 @@ length</p></li>
 \[\begin{split}\begin{aligned}
 \underline{\underline{B}} =
 \begin{bmatrix}
--\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}1} }
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}1} }
 &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
 %
@@ -225,7 +225,7 @@ length</p></li>
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
 %
--\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}2} }
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}2} }
 &amp; \underline{\underline{0}}_{3 \times 3}  &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3}
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
 %
@@ -233,7 +233,7 @@ length</p></li>
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
 &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} \\
 %
--\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp0}3} }
+-\underline{\underline{I}}_{3 \times 3} &amp; \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r}3} }
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}
 &amp; \underline{\underline{0}}_{3 \times 3} &amp; \underline{\underline{I}}_{3 \times 3} &amp; \underline{\underline{0}}_{3 \times 3}\\
 %
@@ -264,9 +264,9 @@ length</p></li>
 \underline{\underline{0}}_{3 \times 18} \\
 \underline{\underline{0}}_{3 \times 3} &amp;
 \left(
- \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp01}}} +
- \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp02}}} +
- \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp03}}}\right)  &amp;
+ \widetilde{\lambda}_2  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r1}}} +
+ \widetilde{\lambda}_4  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r2}}} +
+ \widetilde{\lambda}_6  \widetilde{ \underline{\underline{R}} \underline{r}_1^{\mathrm{sp,r3}}}\right)  &amp;
 \underline{\underline{0}}_{3 \times 18} \\
 \underline{\underline{0}}_{18 \times 3} &amp;
 \underline{\underline{0}}_{18 \times 3} &amp;

@@ -117,18 +117,18 @@ parameters, thereby removing the challenges associated rescaling
 operations to avoid singularities.</p>
 <p>In our description of GEBT, we focus on a single beam and assume it is
 defined in its reference configuration by a smooth curve, called the
-beam reference line, <span class="math notranslate nohighlight">\(\underline{x}^0(s)\in\mathbb{R}^3\)</span>,
-<span class="math notranslate nohighlight">\(\underline{\underline{R}}^0(s) \in \mathrm{SO(3)}\)</span> parameterized
+beam reference line, <span class="math notranslate nohighlight">\(\underline{x}^\mathrm{r}(s)\in\mathbb{R}^3\)</span>,
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{r}(s) \in \mathrm{SO(3)}\)</span> parameterized
 by <span class="math notranslate nohighlight">\(s \in [0, L]\)</span>, where <span class="math notranslate nohighlight">\(L\)</span> is the arclength of the
 reference line. We denote reference position as</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
- \underline{q}^\mathrm{0} = \begin{bmatrix}
-  \underline{x}^\mathrm{0} \\
-  \underline{\underline{R}}^\mathrm{0} \\
+ \underline{q}^\mathrm{r} = \begin{bmatrix}
+  \underline{x}^\mathrm{r} \\
+  \underline{\underline{R}}^\mathrm{r} \\
  \end{bmatrix}
 \end{aligned}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{q}^0(s) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>.
+<p>where <span class="math notranslate nohighlight">\(\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>.
 Generalized displacements are denoted</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -144,14 +144,14 @@ is the displacement. The beam current (deformed) configuration at time
 <span class="math notranslate nohighlight">\(t\)</span> is given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{x}^\mathrm{c} &amp;= \underline{x}^0 + \underline{u}\\
-\underline{\underline{R}}^\mathrm{c} &amp;= \underline{\underline{R}}\,\underline{\underline{R}}^0
+\underline{x}^\mathrm{c} &amp;= \underline{x}^\mathrm{r} + \underline{u}\\
+\underline{\underline{R}}^\mathrm{c} &amp;= \underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r}
 \end{aligned}\end{split}\]</div>
 <p>The GEBT equations are motion are given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
 \dot{\underline{h}} - \underline{\mathcal{F}}^\prime &amp;= \underline{f}\\
-\dot{\underline{g}} + \widetilde{u}\, \underline{h} - \underline{\mathcal{M}}^\prime - \left(\widetilde{x}^{0\prime} + \widetilde{u}^\prime \right) \underline{\mathcal{F}}&amp;= \underline{m}
+\dot{\underline{g}} + \widetilde{u}\, \underline{h} - \underline{\mathcal{M}}^\prime - \left(\widetilde{x}^{\mathrm{r}\prime} + \widetilde{u}^\prime \right) \underline{\mathcal{F}}&amp;= \underline{m}
 \end{aligned}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\underline{h}(s,t),\underline{g}(s,t) \in \mathbb{R}^3\)</span> are
 linear and angular momenta, respectively, resolved in the inertial
@@ -180,26 +180,26 @@ and
 are the sectional strain and curvature defined in inertial coordinates,
 which are defined as</p>
 <div class="math notranslate nohighlight" id="equation-strain">
-<span class="eqno">(7)<a class="headerlink" href="#equation-strain" title="Permalink to this equation"></a></span>\[\underline{\epsilon} = \underline{x}^{0\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \hat{i}_1\]</div>
+<span class="eqno">(7)<a class="headerlink" href="#equation-strain" title="Permalink to this equation"></a></span>\[\underline{\epsilon} = \underline{x}^{\mathrm{r}\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r}\right) \hat{i}_1\]</div>
 <div class="math notranslate nohighlight">
 \[\underline{\kappa} = \mathrm{axial}\left({ \underline{\underline{R}}^\prime \underline{\underline{R}} }\right)\]</div>
 <p>respectively. In the reference configuration, i.e.,
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}=\underline{\underline{I}}\)</span> and
-<span class="math notranslate nohighlight">\(\underline{u}=0\)</span>, zero strain requires that</p>
+<span class="math notranslate nohighlight">\(\underline{u}=\mathrm{r}\)</span>, zero strain requires that</p>
 <div class="math notranslate nohighlight" id="equation-zerostrain">
-<span class="eqno">(8)<a class="headerlink" href="#equation-zerostrain" title="Permalink to this equation"></a></span>\[\underline{x}^{0\prime} = \underline{\underline{R}}^0 \hat{i}_1.\]</div>
+<span class="eqno">(8)<a class="headerlink" href="#equation-zerostrain" title="Permalink to this equation"></a></span>\[\underline{x}^{\mathrm{r}\prime} = \underline{\underline{R}}^\mathrm{r} \hat{i}_1.\]</div>
 <p>In our finite-element implementation of
-Eq. <a class="reference internal" href="#equation-strain">(7)</a>, <span class="math notranslate nohighlight">\(\underline{x}^{0\prime}\)</span> will
+Eq. <a class="reference internal" href="#equation-strain">(7)</a>, <span class="math notranslate nohighlight">\(\underline{x}^{\mathrm{r}\prime}\)</span> will
 be interpolated from nodal values and
-<span class="math notranslate nohighlight">\(\underline{\underline{R}}^0\)</span> will be constructed from quaternions
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{r}\)</span> will be constructed from quaternions
 interpolated from nodal values. However, in general, at non-node
 locations, Eq. <a class="reference internal" href="#equation-zerostrain">(8)</a> is not guaranteed
-in the reference configuation due to interpolation differences. Hence,
+in the reference configuration due to interpolation differences. Hence,
 we use the equivalent definition of strain, which guarantees zero strain
 in the reference configuration at nodal and interpolated locations:</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
- \underline{\epsilon} &amp;= \underline{x}^{0\prime}+\underline{u}^\prime-\underline{\underline{R}}\,\underline{x}^{0\prime}
+ \underline{\epsilon} &amp;= \underline{x}^{\mathrm{r}\prime}+\underline{u}^\prime-\underline{\underline{R}}\,\underline{x}^{\mathrm{r}\prime}
 \label{eq:newstrain}
 \end{aligned}\]</div>
 <p>Sectional stiffness and mass matrices are typically defined in material
@@ -207,8 +207,8 @@ coordinates (denoted by a <span class="math notranslate nohighlight">\(*\)</span
 inertial coordinate section matrices can be calculated as</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{C}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
-\underline{\underline{M}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{M}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
+\underline{\underline{C}} = \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T\\
+\underline{\underline{M}} = \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{M}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T\\
 \end{aligned}\end{split}\]</div>
 <p>where
 <span class="math notranslate nohighlight">\(\underline{\underline{C}}^*(s), \underline{\underline{M}}^*(s) \in \mathbb{R}^{6\times6}\)</span>.
@@ -224,7 +224,7 @@ strong form as</p>
 \underline{\mathcal{F}}^D -
 \underline{\mathcal{F}}^\mathrm{ext}\]</div>
 <p>where each term is in <span class="math notranslate nohighlight">\(\mathbb{R}^6\)</span>;
-<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^I(s,t)\)</span> is the interial
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^I(s,t)\)</span> is the inertial
 force, <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^C(s,t)\)</span> and
 <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^D(s,t)\)</span> are elastic forces,
 and <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{ext}\)</span> are the
@@ -263,12 +263,12 @@ m \tilde{\eta} &amp; \underline{\underline{\rho}}
 \underline{\mathcal{F}}^C &amp;= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
 \underline{\mathcal{F}}^D &amp;=
 \begin{bmatrix} \underline{0} \\
-\left(\tilde{x}'^0+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon}
+\left(\tilde{x}'^\mathrm{r}+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon}
 + \underline{\underline{C}}_{12} \underline{\kappa}\right)  \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <p>where
 <span class="math notranslate nohighlight">\(\underline{\underline{C}}_{11},\underline{\underline{C}}_{12}\in \mathbb{R}^{3\times 3}\)</span>
-are the submatrices of the full sectional stiffness matrix in intertial
+are the submatrices of the full sectional stiffness matrix in inertial
 coordinates, i.e.,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -278,7 +278,7 @@ coordinates, i.e.,</p>
 \end{aligned}\end{split}\]</div>
 <p>We describe the variation of the residual,
 Eq. <a class="reference internal" href="overview.html#equation-residual1">(2)</a>, in parts. Variation of the
-inerial forces can be written</p>
+inertial forces can be written</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
 \delta \underline{\mathcal{F}}^I =
@@ -319,8 +319,8 @@ inerial forces can be written</p>
 \[\begin{split}\begin{aligned}
 \underline{\underline{\mathcal{O}}} =
 \begin{bmatrix}
-\underline{\underline{0}} &amp;  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)   \\
-\underline{\underline{0}} &amp;  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)
+\underline{\underline{0}} &amp;  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)   \\
+\underline{\underline{0}} &amp;  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">
@@ -333,9 +333,9 @@ inerial forces can be written</p>
 \underline{\underline{\mathcal{P}}} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \underline{\underline{0}} \\
- \widetilde{N} + \left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)^T
+ \widetilde{N} + \left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)^T
 \underline{\underline{\mathcal{C}}}_{11} &amp;
-\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
 \underline{\underline{\mathcal{C}}}_{12}
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
@@ -345,8 +345,8 @@ inerial forces can be written</p>
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \underline{\underline{0}} \\
  \underline{\underline{0}} &amp;
-\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
-\left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{0 \prime} + \tilde{u}' \right) \right]
+\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
+\left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right) \right]
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <div class="references csl-bib-body hanging-indent docutils container" id="refs">

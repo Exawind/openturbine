@@ -11,12 +11,12 @@ beams, with all other components being rigid.
 Table `1 <#table:hawt-cs>`__ defines the subscripts associated with
 coordinate systems used to define the model, which are illustrated in
 Figure `1 <#fig:geom>`__. For example, the tower top is defined by
-:math:`\underline{x}^0_\mathrm{tt}`, :math:`\underline{u}_\mathrm{tt}`,
-:math:`\underline{\underline{R}}^0_\mathrm{tt}`, and
+:math:`\underline{x}^\mathrm{r}_\mathrm{tt}`, :math:`\underline{u}_\mathrm{tt}`,
+:math:`\underline{\underline{R}}^\mathrm{r}_\mathrm{tt}`, and
 :math:`\underline{\underline{R}}_\mathrm{tt}`, which is the reference
 position, displacement, reference orientation, and relative rotation,
 respectively. The current orientation, denoted by a c-superscript, is
-:math:`\underline{\underline{R}}^\mathrm{c}_\mathrm{tt} = \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}^0_\mathrm{tt}`.
+:math:`\underline{\underline{R}}^\mathrm{c}_\mathrm{tt} = \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}^\mathrm{r}_\mathrm{tt}`.
 
          +--------------+-------------------------------------------------------+
          | subscript    | description                                           |
@@ -74,11 +74,11 @@ the yaw controller and the motion of the beam model for the tower top.
 We apply the yaw controller to the yaw base plate in the reference
 configuration, resulting in the total rotation for the yaw:
 
-.. math:: \underline{\underline{R}}^\mathrm{c}_\mathrm{yb} =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^0
+.. math:: \underline{\underline{R}}^\mathrm{c}_\mathrm{yb} =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^\mathrm{r}
 
 which can be written
 
-.. math:: \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{yb}^0 =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^0
+.. math:: \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{yb}^\mathrm{r} =   \underline{\underline{R}}_\mathrm{tt} \underline{\underline{R}}_\mathrm{yc} \underline{\underline{R}}_\mathrm{yb}^\mathrm{r}
 
 and simplified to
 
@@ -105,8 +105,8 @@ shaft-base relative rotation is the same as the yaw relative rotation:
 
    \underline{\Phi}_\mathrm{sb-yb} = 
    \begin{Bmatrix} 
-   \underline{u}_\mathrm{sb} + \underline{x}^0_\mathrm{sb} -\underline{u}_\mathrm{yb} -\underline{x}^0_\mathrm{yb}
-   -  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^0_\mathrm{sb}-\underline{x}^0_\mathrm{yb}\right)
+   \underline{u}_\mathrm{sb} + \underline{x}^\mathrm{r}_\mathrm{sb} -\underline{u}_\mathrm{yb} -\underline{x}^\mathrm{r}_\mathrm{yb}
+   -  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^\mathrm{r}_\mathrm{sb}-\underline{x}^\mathrm{r}_\mathrm{yb}\right)
    \\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{sb}  \underline{\underline{R}}_\mathrm{yb}^T}\right)
    \end{Bmatrix}
 
@@ -126,8 +126,8 @@ shaft-base CS.
    \end{Bmatrix} =
    \begin{Bmatrix} 
    \underline{u}_\mathrm{a}-\underline{u}_\mathrm{sb}
-   \\ \widehat{z}_\mathrm{a}^{0T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^0 \\
-   \widehat{y}_\mathrm{a}^{0T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^0 
+   \\ \widehat{z}_\mathrm{a}^{\mathrm{r}T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^\mathrm{r} \\
+   \widehat{y}_\mathrm{a}^{\mathrm{r}T}  \underline{\underline{R}}_\mathrm{a}^T  \underline{\underline{R}}_\mathrm{sb} \widehat{x}_\mathrm{sb}^\mathrm{r} 
    \end{Bmatrix}
 
 :math:`\underline{\Phi}_\mathrm{a-sb} \in \mathbb{R}^5`.
@@ -139,8 +139,8 @@ rotation as the azimuth CS
 
    \underline{\Phi}_\mathrm{h-a} = 
    \begin{Bmatrix} 
-   \underline{u}_\mathrm{h}+\underline{x}^0_\mathrm{h} -\underline{u}_\mathrm{a} - \underline{x}^0_\mathrm{a}-
-    \underline{\underline{R}}_\mathrm{a} \left(\underline{x}^0_\mathrm{h}-\underline{x}^0_\mathrm{a}\right)
+   \underline{u}_\mathrm{h}+\underline{x}^\mathrm{r}_\mathrm{h} -\underline{u}_\mathrm{a} - \underline{x}^\mathrm{r}_\mathrm{a}-
+    \underline{\underline{R}}_\mathrm{a} \left(\underline{x}^\mathrm{r}_\mathrm{h}-\underline{x}^\mathrm{r}_\mathrm{a}\right)
    \\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{h}  \underline{\underline{R}}_\mathrm{a}^T}\right)
    \end{Bmatrix}
 
@@ -166,9 +166,9 @@ pitches.
 
    \underline{\Phi}_{\mathrm{b}i-\mathrm{c}i} = 
    \begin{Bmatrix} 
-   \underline{u}_{\mathrm{b}i} + \underline{x}^0_{\mathrm{b}i}-\underline{u}_{\mathrm{c}i}
-   - \underline{x}^0_{\mathrm{c}i}
-   - \underline{\underline{R}}_{\mathrm{c}i}\left(\underline{x}^0_{\mathrm{b}i} - \underline{x}^0_{\mathrm{c}i}\right)
+   \underline{u}_{\mathrm{b}i} + \underline{x}^\mathrm{r}_{\mathrm{b}i}-\underline{u}_{\mathrm{c}i}
+   - \underline{x}^\mathrm{r}_{\mathrm{c}i}
+   - \underline{\underline{R}}_{\mathrm{c}i}\left(\underline{x}^\mathrm{r}_{\mathrm{b}i} - \underline{x}^\mathrm{r}_{\mathrm{c}i}\right)
    \\ \mathrm{axial}\left({  \underline{\underline{R}}_{\mathrm{b}i}  \underline{\underline{R}}_{\mathrm{pc}i}^T \underline{\underline{R}}_{\mathrm{c}i}^T }\right)
    \end{Bmatrix}
 
@@ -180,8 +180,8 @@ The nacelle-mass and yaw-base CS’s are assumed to be rigidly connected.
 
    \underline{\Phi}_\mathrm{nm-yb} = 
    \begin{Bmatrix} 
-   \underline{u}_\mathrm{nm} + \underline{x}^0_\mathrm{nm} -\underline{u}_\mathrm{yb} -\underline{x}^0_\mathrm{yb}
-   -  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^0_\mathrm{nm}-\underline{x}^0_\mathrm{yb}\right)
+   \underline{u}_\mathrm{nm} + \underline{x}^\mathrm{r}_\mathrm{nm} -\underline{u}_\mathrm{yb} -\underline{x}^\mathrm{r}_\mathrm{yb}
+   -  \underline{\underline{R}}_\mathrm{yb} \left(\underline{x}^\mathrm{r}_\mathrm{nm}-\underline{x}^\mathrm{r}_\mathrm{yb}\right)
    \\ \mathrm{axial}\left({  \underline{\underline{R}}_\mathrm{nm}  \underline{\underline{R}}_\mathrm{yb}^T}\right)
    \end{Bmatrix}
 
@@ -258,7 +258,7 @@ the following contraint gradient matrices:
    \end{Bmatrix}
    = \begin{bmatrix}
    \underline{\underline{I}} & \underline{\underline{0}} & -\underline{\underline{I}} & \widetilde{\underline{\underline{R}}_\mathrm{yb} 
-   \left( \underline{x}_\mathrm{sb}^0-\underline{x}_\mathrm{yb}^0 \right)}  \\
+   \left( \underline{x}_\mathrm{sb}^\mathrm{r}-\underline{x}_\mathrm{yb}^\mathrm{r} \right)}  \\
    \underline{\underline{0}} & \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{sb} \underline{\underline{R}}_\mathrm{yb}^T \right) &
    \underline{\underline{0}} & -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{sb}^T \right)
    \end{bmatrix}
@@ -304,7 +304,7 @@ the following contraint gradient matrices:
    = \begin{bmatrix}
    \underline{\underline{I}} & \underline{\underline{0}} & -\underline{\underline{I}} & 
    \widetilde{\underline{\underline{R}}_\mathrm{a} 
-   \left( \underline{x}_\mathrm{h}^0-\underline{x}_\mathrm{a}^0 \right)}  \\
+   \left( \underline{x}_\mathrm{h}^\mathrm{r}-\underline{x}_\mathrm{a}^\mathrm{r} \right)}  \\
    \underline{\underline{0}} & \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_\mathrm{a}^T \right) &
    \underline{\underline{0}} & -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{a} \underline{\underline{R}}_\mathrm{h}^T \right)
    \end{bmatrix}
@@ -348,7 +348,7 @@ the following contraint gradient matrices:
    = \begin{bmatrix}
    \underline{\underline{I}} & \underline{\underline{0}} & -\underline{\underline{I}} & 
    \widetilde{\underline{\underline{R}}_{\mathrm{c}i}
-   \left( \underline{x}_{\mathrm{b}i}^0-\underline{x}_{\mathrm{c}i}^0 \right)}  \\
+   \left( \underline{x}_{\mathrm{b}i}^\mathrm{r}-\underline{x}_{\mathrm{c}i}^0 \right)}  \\
    \underline{\underline{0}} & \mathrm{AX}\left( \underline{\underline{R}}_{\mathrm{b}i}
                      \underline{\underline{R}}_{\mathrm{pc}i}^T
                      \underline{\underline{R}}_{\mathrm{c}i}^T \right) &
@@ -374,7 +374,7 @@ the following contraint gradient matrices:
    \end{Bmatrix}
    = \begin{bmatrix}
    \underline{\underline{I}} & \underline{\underline{0}} & -\underline{\underline{I}} & \widetilde{\underline{\underline{R}}_\mathrm{yb} 
-   \left( \underline{x}_\mathrm{nm}^0-\underline{x}_\mathrm{yb}^0 \right)}  \\
+   \left( \underline{x}_\mathrm{nm}^\mathrm{r}-\underline{x}_\mathrm{yb}^\mathrm{r} \right)}  \\
    \underline{\underline{0}} & \mathrm{AX}\left( \underline{\underline{R}}_\mathrm{nm} \underline{\underline{R}}_\mathrm{yb}^T \right) &
    \underline{\underline{0}} & -\mathrm{AX}\left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{nm}^T \right)
    \end{bmatrix}
@@ -517,7 +517,7 @@ where
     \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}}\\
     \underline{\underline{0}} & -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{sb-yb},2}, \underline{\underline{R}}_\mathrm{sb} \underline{\underline{R}}_\mathrm{yb}^T\right)
    & \underline{\underline{0}} & -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{sb}^T  \widetilde{\lambda}_{\mathrm{sb-yb},2} \right) 
-   -\widetilde{\lambda}_\mathrm{sb-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^0_\mathrm{sb}-\underline{x}^0_\mathrm{yb} \right)  }
+   -\widetilde{\lambda}_\mathrm{sb-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^\mathrm{r}_\mathrm{sb}-\underline{x}^\mathrm{r}_\mathrm{yb} \right)  }
    \end{bmatrix}
    \begin{bmatrix}
    \delta \underline{u}_\mathrm{sb} \\
@@ -592,7 +592,7 @@ where
     \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}}\\
     \underline{\underline{0}} & -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{h-a},2}, \underline{\underline{R}}_\mathrm{h} \underline{\underline{R}}_\mathrm{a}^T\right)
    & \underline{\underline{0}} & -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{a} \underline{\underline{R}}_\mathrm{h}^T  \widetilde{\lambda}_{\mathrm{h-a},2}  \right) 
-   -\widetilde{\lambda}_\mathrm{h-a,1} \widetilde{ \underline{\underline{R}}_\mathrm{a} \left( \underline{x}^0_\mathrm{h}-\underline{x}^0_\mathrm{a} \right)  }
+   -\widetilde{\lambda}_\mathrm{h-a,1} \widetilde{ \underline{\underline{R}}_\mathrm{a} \left( \underline{x}^\mathrm{r}_\mathrm{h}-\underline{x}^\mathrm{r}_\mathrm{a} \right)  }
    \end{bmatrix}
    \begin{bmatrix}
    \delta \underline{u}_\mathrm{h} \\
@@ -647,7 +647,7 @@ where
     \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}}\\
     \underline{\underline{0}} & -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{bi-ci},2}, \underline{\underline{R}}_\mathrm{bi} \underline{\underline{R}}_\mathrm{pci}^T \underline{\underline{R}}_\mathrm{ci}^T\right)
    & \underline{\underline{0}} & -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{ci} \underline{\underline{R}}_\mathrm{pci} \underline{\underline{R}}_\mathrm{bi}^T  \widetilde{\lambda}_{\mathrm{bi-ci},2} \right) 
-   -\widetilde{\lambda}_\mathrm{ci-bi,1} \widetilde{ \underline{\underline{R}}_\mathrm{ci} \left( \underline{x}^0_\mathrm{bi}-\underline{x}^0_\mathrm{ci} \right)  }
+   -\widetilde{\lambda}_\mathrm{ci-bi,1} \widetilde{ \underline{\underline{R}}_\mathrm{ci} \left( \underline{x}^\mathrm{r}_\mathrm{bi}-\underline{x}^\mathrm{r}_\mathrm{ci} \right)  }
    \end{bmatrix}
    \begin{bmatrix}
    \delta \underline{u}_\mathrm{bi} \\
@@ -675,7 +675,7 @@ where
     \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}} & \underline{\underline{0}}\\
     \underline{\underline{0}} & -\mathrm{AX2} \left( \underline{\lambda}_{\mathrm{nm-yb},2}, \underline{\underline{R}}_\mathrm{nm} \underline{\underline{R}}_\mathrm{yb}^T\right)
    & \underline{\underline{0}} & -\mathrm{AX} \left( \underline{\underline{R}}_\mathrm{yb} \underline{\underline{R}}_\mathrm{nm}^T  \widetilde{\lambda}_{\mathrm{nm-yb},2} \right) 
-   -\widetilde{\lambda}_\mathrm{nm-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^0_\mathrm{nm}-\underline{x}^0_\mathrm{yb} \right)  }
+   -\widetilde{\lambda}_\mathrm{nm-yb,1} \widetilde{ \underline{\underline{R}}_\mathrm{yb} \left( \underline{x}^\mathrm{r}_\mathrm{nm}-\underline{x}^\mathrm{r}_\mathrm{yb} \right)  }
    \end{bmatrix}
    \begin{bmatrix}
    \delta \underline{u}_\mathrm{nm} \\

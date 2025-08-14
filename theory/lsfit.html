@@ -115,14 +115,14 @@ are user defined and how the beams are discretized in the reference
 configuration.</p>
 <p>We assume that OpenTurbine beams are defined as a set of points in the
 global coordinate system (
-<span class="math notranslate nohighlight">\((\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g}i)\)</span>
+<span class="math notranslate nohighlight">\((\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g})\)</span>
 with the blade root located at the origin and oriented such that the
 pitch axis, or its primary-length direction, is pointing in the
 <span class="math notranslate nohighlight">\(x\)</span> direction. For turbine blades, the <span class="math notranslate nohighlight">\(y\)</span> direction is the
 direction of the trailing edge and defines a zero pitch/twist. Note that
 this differs from the standard turbine-blade definition, which can be
 easily rotated into our system.</p>
-<p>The user must provide <span class="math notranslate nohighlight">\(n^\mathrm{geom}\)</span> points defining the
+<p>The user must provide <span class="math notranslate nohighlight">\(n^\mathrm{geom} \ge 2\)</span> points defining the
 reference line with the data
 <span class="math notranslate nohighlight">\((\eta_i^\mathrm{geom},\underline{x}_i^\mathrm{geom},\tau_i^\mathrm{geom})\)</span>,
 <span class="math notranslate nohighlight">\(i \in \{ 1, 2, \ldots, n^\mathrm{geom}\}\)</span>, where
@@ -131,11 +131,11 @@ along the beam reference line where the associated reference line
 position is <span class="math notranslate nohighlight">\(\underline{x}_i^\mathrm{geom} \in \mathbb{R}^3\)</span> and
 twist about the reference line is <span class="math notranslate nohighlight">\(\tau_i^\mathrm{geom}\)</span>. The user
 must also provide the <span class="math notranslate nohighlight">\(n^Q\)</span> quadrature locations
-<span class="math notranslate nohighlight">\(\xi_k^Q \in [-1,1]\)</span> along the reference axis. Finally, teh user
+<span class="math notranslate nohighlight">\(\xi_k^Q \in [-1,1]\)</span> along the reference axis. Finally, the user
 must provide the translation and rotation,
 <span class="math notranslate nohighlight">\(\underline{u}^\mathrm{init}\)</span> and
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{init}\)</span>, respectively, of the
-beam that defines the intial/refence position and orientation. In other
+beam that defines the initial/reference position and orientation. In other
 words, each beam is defined in the global system with its root at the
 origin and it is then translated and rotated into its reference
 position.</p>
@@ -150,7 +150,7 @@ the fitting polynomial are constrained to coincide with the reference
 data at <span class="math notranslate nohighlight">\(\eta_1^\mathrm{geom}\)</span> and
 <span class="math notranslate nohighlight">\(\eta^\mathrm{geom}_{n^\mathrm{geom}}\)</span>. If
 <span class="math notranslate nohighlight">\(P \le n^\mathrm{geom}\)</span>, that fit defines the <span class="math notranslate nohighlight">\(P\)</span> nodal
-locations of the LSFE. If <span class="math notranslate nohighlight">\(P &gt; n^\mathrm{geom}\)</span>, then the a new
+locations of the LSFE. If <span class="math notranslate nohighlight">\(P &gt; n^\mathrm{geom}\)</span>, then a new
 LSFE is constructed with <span class="math notranslate nohighlight">\(P\)</span>-nodes that lie on the lower-order
 <span class="math notranslate nohighlight">\(n^\mathrm{geom}\)</span>-point least-squares fit. The result are nodal
 values <span class="math notranslate nohighlight">\(\underline{x}^\mathrm{fit}_\ell \in \mathbb{R}^3\)</span>, for
@@ -189,7 +189,7 @@ We construct the orientation from the LSFE line as follows:</p>
 \left \Vert\sum_{i=1}^P \underline{x}^\mathrm{fit}_i
 \left .  \frac{\partial \phi_i}{\partial \xi}\right|_{\xi=\xi_i}
 \right\Vert
-, \quad \forall i \in {1, \ldots, P}
+, \quad \forall i \in \{1, \ldots, P\}
 \end{aligned}\]</div>
 </li>
 <li><p>At each LSFE node, calculate a unit vector,
@@ -212,7 +212,7 @@ with the requirements
 \overline{n}^\mathrm{fit}_i \,\,
 \overline{b}^\mathrm{fit}_i
 \end{bmatrix}
-,\, \forall i \in {1, \ldots, P}
+,\, \forall i \in \{1, \ldots, P\}
 \end{aligned}\]</div>
 <p>which have the associated quaternions
 <span class="math notranslate nohighlight">\(\widehat{q}_i^\mathrm{fit}\)</span>.</p>
@@ -222,14 +222,14 @@ with the requirements
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}^\mathrm{init}\)</span>, are calculated as</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
-\underline{x}^0_i = \underline{x}^\mathrm{fit}_i + \underline{u}^\mathrm{init} + \underline{\underline{R}}^\mathrm{init}\underline{x}^\mathrm{fit}_i,\quad \forall i \in  1, 2, \ldots, P
+\underline{x}^0_i = \underline{x}^\mathrm{fit}_i + \underline{u}^\mathrm{init} + \underline{\underline{R}}^\mathrm{init}\underline{x}^\mathrm{fit}_i,\quad \forall i \in  \{1,  \ldots, P \}
 \end{aligned}\]</div>
 </li>
 <li><p>Nodal orientations are calculated as</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
 \underline{\underline{R}}^0_i = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_i^\mathrm{fit},\tau^\mathrm{geom} \right) \underline{R}^\mathrm{fit}_i
-,\quad \forall i \in  1, 2, \ldots, P
+,\quad \forall i \in  \{1,  \ldots, P \}
 \end{aligned}\]</div>
 <p>where
 <span class="math notranslate nohighlight">\(\underline{\underline{R}}\left(\overline{t}_i^\mathrm{fit},-\tau^\mathrm{geom} \right)\)</span>
@@ -243,7 +243,7 @@ to <span class="math notranslate nohighlight">\(\xi_i\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
 \underline{\underline{R}}^{0,\mathrm{Q}}_k = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_k^\mathrm{Q},-\tau^\mathrm{geom,Q} \right) \underline{\underline{R}}\left(\widehat{q}^\mathrm{fit,Q}_k\right)
-,\quad \forall k \in  1, 2, \ldots, n^\mathrm{Q}
+,\quad \forall k \in  \{1,  \ldots, n^\mathrm{Q} \}
 \end{aligned}\]</div>
 <p>where</p>
 <div class="math notranslate nohighlight">
@@ -254,7 +254,7 @@ to <span class="math notranslate nohighlight">\(\xi_i\)</span>.</p>
 \left \Vert\sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell
 \left .  \frac{\partial \phi_\ell}{\partial \xi}\right|_{\xi=\xi_k^\mathrm{Q}}
 \right\Vert
-, \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+, \quad \forall k \in \{1, \ldots, n^\mathrm{Q}\}
 \end{aligned}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
@@ -264,7 +264,7 @@ to <span class="math notranslate nohighlight">\(\xi_i\)</span>.</p>
 \left \Vert\sum_{\ell=1}^P \widehat{q}^\mathrm{fit}_\ell
  \phi_\ell\left(\xi_k^\mathrm{Q} \right)
 \right \Vert
-, \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+, \quad \forall k \in \{1, \ldots, n^\mathrm{Q}\}
 \end{aligned}\]</div>
 <p>and <span class="math notranslate nohighlight">\(\tau^\mathrm{geom,Q}\)</span> is the twist at
 <span class="math notranslate nohighlight">\(\xi_k^\mathrm{Q}\)</span> linearly interpolated from nearest
