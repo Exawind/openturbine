@@ -12,7 +12,7 @@ configuration.
 
 We assume that OpenTurbine beams are defined as a set of points in the
 global coordinate system (
-:math:`(\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g}i)`
+:math:`(\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g})`
 with the blade root located at the origin and oriented such that the
 pitch axis, or its primary-length direction, is pointing in the
 :math:`x` direction. For turbine blades, the :math:`y` direction is the
@@ -20,7 +20,7 @@ direction of the trailing edge and defines a zero pitch/twist. Note that
 this differs from the standard turbine-blade definition, which can be
 easily rotated into our system.
 
-The user must provide :math:`n^\mathrm{geom}` points defining the
+The user must provide :math:`n^\mathrm{geom} \ge 2` points defining the
 reference line with the data
 :math:`(\eta_i^\mathrm{geom},\underline{x}_i^\mathrm{geom},\tau_i^\mathrm{geom})`,
 :math:`i \in \{ 1, 2, \ldots, n^\mathrm{geom}\}`, where
@@ -29,11 +29,11 @@ along the beam reference line where the associated reference line
 position is :math:`\underline{x}_i^\mathrm{geom} \in \mathbb{R}^3` and
 twist about the reference line is :math:`\tau_i^\mathrm{geom}`. The user
 must also provide the :math:`n^Q` quadrature locations
-:math:`\xi_k^Q \in [-1,1]` along the reference axis. Finally, teh user
+:math:`\xi_k^Q \in [-1,1]` along the reference axis. Finally, the user
 must provide the translation and rotation,
 :math:`\underline{u}^\mathrm{init}` and
 :math:`\underline{\underline{R}}^\mathrm{init}`, respectively, of the
-beam that defines the intial/refence position and orientation. In other
+beam that defines the initial/reference position and orientation. In other
 words, each beam is defined in the global system with its root at the
 origin and it is then translated and rotated into its reference
 position.
@@ -49,7 +49,7 @@ the fitting polynomial are constrained to coincide with the reference
 data at :math:`\eta_1^\mathrm{geom}` and
 :math:`\eta^\mathrm{geom}_{n^\mathrm{geom}}`. If
 :math:`P \le n^\mathrm{geom}`, that fit defines the :math:`P` nodal
-locations of the LSFE. If :math:`P > n^\mathrm{geom}`, then the a new
+locations of the LSFE. If :math:`P > n^\mathrm{geom}`, then a new
 LSFE is constructed with :math:`P`-nodes that lie on the lower-order
 :math:`n^\mathrm{geom}`-point least-squares fit. The result are nodal
 values :math:`\underline{x}^\mathrm{fit}_\ell \in \mathbb{R}^3`, for
@@ -103,7 +103,7 @@ We construct the orientation from the LSFE line as follows:
       \left \Vert\sum_{i=1}^P \underline{x}^\mathrm{fit}_i 
       \left .  \frac{\partial \phi_i}{\partial \xi}\right|_{\xi=\xi_i}  
       \right\Vert 
-      , \quad \forall i \in {1, \ldots, P}
+      , \quad \forall i \in \{1, \ldots, P\}
       \end{aligned}
 
 #. At each LSFE node, calculate a unit vector,
@@ -130,7 +130,7 @@ We construct the orientation from the LSFE line as follows:
       \overline{n}^\mathrm{fit}_i \,\,
       \overline{b}^\mathrm{fit}_i
       \end{bmatrix}
-      ,\, \forall i \in {1, \ldots, P}
+      ,\, \forall i \in \{1, \ldots, P\}
       \end{aligned}
 
    which have the associated quaternions
@@ -143,7 +143,7 @@ We construct the orientation from the LSFE line as follows:
    .. math::
 
       \begin{aligned}
-      \underline{x}^0_i = \underline{x}^\mathrm{fit}_i + \underline{u}^\mathrm{init} + \underline{\underline{R}}^\mathrm{init}\underline{x}^\mathrm{fit}_i,\quad \forall i \in  1, 2, \ldots, P 
+      \underline{x}^0_i = \underline{x}^\mathrm{fit}_i + \underline{u}^\mathrm{init} + \underline{\underline{R}}^\mathrm{init}\underline{x}^\mathrm{fit}_i,\quad \forall i \in  \{1,  \ldots, P \}
       \end{aligned}
 
 #. Nodal orientations are calculated as
@@ -152,7 +152,7 @@ We construct the orientation from the LSFE line as follows:
 
       \begin{aligned}
       \underline{\underline{R}}^0_i = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_i^\mathrm{fit},\tau^\mathrm{geom} \right) \underline{R}^\mathrm{fit}_i
-      ,\quad \forall i \in  1, 2, \ldots, P 
+      ,\quad \forall i \in  \{1,  \ldots, P \}
       \end{aligned}
 
    where
@@ -169,7 +169,7 @@ We construct the orientation from the LSFE line as follows:
 
       \begin{aligned}
       \underline{\underline{R}}^{0,\mathrm{Q}}_k = \underline{\underline{R}}^\mathrm{init} \underline{\underline{R}}\left(\overline{t}_k^\mathrm{Q},-\tau^\mathrm{geom,Q} \right) \underline{\underline{R}}\left(\widehat{q}^\mathrm{fit,Q}_k\right)
-      ,\quad \forall k \in  1, 2, \ldots, n^\mathrm{Q} 
+      ,\quad \forall k \in  \{1,  \ldots, n^\mathrm{Q} \}
       \end{aligned}
 
    where
@@ -183,7 +183,7 @@ We construct the orientation from the LSFE line as follows:
       \left \Vert\sum_{\ell=1}^P \underline{x}^\mathrm{fit}_\ell 
       \left .  \frac{\partial \phi_\ell}{\partial \xi}\right|_{\xi=\xi_k^\mathrm{Q}}  
       \right\Vert 
-      , \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+      , \quad \forall k \in \{1, \ldots, n^\mathrm{Q}\}
       \end{aligned}
 
    .. math::
@@ -195,7 +195,7 @@ We construct the orientation from the LSFE line as follows:
       \left \Vert\sum_{\ell=1}^P \widehat{q}^\mathrm{fit}_\ell 
        \phi_\ell\left(\xi_k^\mathrm{Q} \right) 
       \right \Vert
-      , \quad \forall k \in {1, \ldots, n^\mathrm{Q}}
+      , \quad \forall k \in \{1, \ldots, n^\mathrm{Q}\}
       \end{aligned}
 
    and :math:`\tau^\mathrm{geom,Q}` is the twist at

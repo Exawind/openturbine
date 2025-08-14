@@ -4,7 +4,7 @@ Heavy top constrained-rigid-body example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We provide here a simple application of the OpenTurbine formulation for
-the the heavy-top problem, which is a rotating body fixed to the ground
+the heavy-top problem, which is a rotating body fixed to the ground
 by a spherical joint. It is a common benchmark problem for
 constrained-rigid-body dynamics and for testing Lie-group time
 integrators like that used in OpenTurbine. We follow the problem
@@ -30,8 +30,8 @@ Eq. :eq:`rigid-ref`) are given by
 
 .. math::
 
-   \underline{x}^0 = ( 0, 0 , -1 )^T\,, \quad
-   \underline{\underline{R}}^0 = \underline{\underline{I}} \,, \\
+   \underline{x}^\mathrm{r} = ( 0, 0 , -1 )^T\,, \quad
+   \underline{\underline{R}}^\mathrm{r} = \underline{\underline{I}} \,, \\
 
 respectively. The only component of external force (see
 Eq. :eq:`rbresid`) is gravity:
@@ -42,22 +42,22 @@ where :math:`g=9.81` m/s\ :math:`^2`. The problem is constrained such
 that the center of mass is located 1 m from the origin, which can be
 written as three constraint equations as
 
-.. math:: \underline{\Phi} = \underline{\underline{R}}\, \underline{x}^0 - \underline{x}^c \in  \mathbb{R}^3
+.. math:: \underline{\Phi} = \underline{\underline{R}}\, \underline{x}^\mathrm{r} - \underline{x}^c \in  \mathbb{R}^3
 
 where :math:`\underline{\Phi} \in \mathbb{R}^3`, :math:`\underline{x}^c` is the current center-of-mass position,
 and for which the constraint gradient matrix is
 
 .. math:: \underline{\underline{B}}  = \begin{bmatrix}
-   -\underline{\underline{I}} & \widetilde{- \underline{\underline{R}}\, \underline{x}^0}
+   -\underline{\underline{I}} & \widetilde{- \underline{\underline{R}}\, \underline{x}^\mathrm{r}}
    \end{bmatrix}
 
 :math:`\underline{\underline{B}} \in \mathbb{R}^{3 \times 6}`. The
-stiffness matrix associated with linearization of the contraint forces (see Eq. :eq:`variation`) is
+stiffness matrix associated with linearization of the constraint forces (see Eq. :eq:`variation`) is
 
 .. math:: \underline{\underline{K}}^\Phi = \begin{bmatrix} 
    \underline{\underline{0}} & \underline{\underline{0}}\\
    \underline{\underline{0}} & 
-   \widetilde{\lambda} \, \widetilde{\underline{\underline{R}} \underline{x}}
+   \widetilde{\lambda} \, \widetilde{\underline{\underline{R}} \underline{x}^\mathrm{r}}
    \end{bmatrix}
 
 where :math:`\underline{\lambda} \in  \mathbb{R}^3` are the Lagrange multipliers.  The OpenTurbine regression test suite includes the spinning, heavy top
@@ -66,8 +66,8 @@ problem with the following initial conditions:
 .. math::
 
    \begin{aligned}
-   \underline{u}^i &= \left[ 0, 1, 1 \right]^T \, \mathrm{m}\\
-   \underline{\underline{R}}^i &= \begin{bmatrix}
+   \underline{u}^\mathrm{init} &= \left[ 0, 1, 1 \right]^T \, \mathrm{m}\\
+   \underline{\underline{R}}^\mathrm{init} &= \begin{bmatrix}
    1 & 0 & 0 \\
    0 & \cos(\theta) & - \sin(\theta) \\
    0 & \sin(\theta) & \cos(\theta)
@@ -79,8 +79,8 @@ where :math:`\theta = \pi/2`,
 .. math::
 
    \begin{aligned}
-   \omega^i &= (-4.61538,-150,0)^T \, \mathrm{rad/s}\\
-   \dot{\underline{u}}^i &= \widetilde{\omega^i}\left(\underline{x}^0+\underline{u}^i\right)\, \mathrm{m/s}
+   \omega^\mathrm{init} &= (-4.61538,-150,0)^T \, \mathrm{rad/s}\\
+   \dot{\underline{u}}^\mathrm{init} &= \widetilde{\omega^\mathrm{init}}\left(\underline{x}^\mathrm{r}+\underline{u}^\mathrm{init}\right)\, \mathrm{m/s}
    \end{aligned}
 
 .. container:: references csl-bib-body hanging-indent

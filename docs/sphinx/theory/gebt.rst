@@ -14,21 +14,21 @@ operations to avoid singularities.
 
 In our description of GEBT, we focus on a single beam and assume it is
 defined in its reference configuration by a smooth curve, called the
-beam reference line, :math:`\underline{x}^0(s)\in\mathbb{R}^3`,
-:math:`\underline{\underline{R}}^0(s) \in \mathrm{SO(3)}` parameterized
+beam reference line, :math:`\underline{x}^\mathrm{r}(s)\in\mathbb{R}^3`,
+:math:`\underline{\underline{R}}^\mathrm{r}(s) \in \mathrm{SO(3)}` parameterized
 by :math:`s \in [0, L]`, where :math:`L` is the arclength of the
 reference line. We denote reference position as
 
 .. math::
 
    \begin{aligned}
-    \underline{q}^\mathrm{0} = \begin{bmatrix}
-     \underline{x}^\mathrm{0} \\
-     \underline{\underline{R}}^\mathrm{0} \\
+    \underline{q}^\mathrm{r} = \begin{bmatrix}
+     \underline{x}^\mathrm{r} \\
+     \underline{\underline{R}}^\mathrm{r} \\
     \end{bmatrix}
    \end{aligned}
 
-where :math:`\underline{q}^0(s) \in \mathbb{R}^3\times \mathrm{SO(3)}`.
+where :math:`\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}`.
 Generalized displacements are denoted
 
 .. math::
@@ -49,8 +49,8 @@ is the displacement. The beam current (deformed) configuration at time
 .. math::
 
    \begin{aligned}
-   \underline{x}^\mathrm{c} &= \underline{x}^0 + \underline{u}\\
-   \underline{\underline{R}}^\mathrm{c} &= \underline{\underline{R}}\,\underline{\underline{R}}^0 
+   \underline{x}^\mathrm{c} &= \underline{x}^\mathrm{r} + \underline{u}\\
+   \underline{\underline{R}}^\mathrm{c} &= \underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r} 
    \end{aligned}
 
 The GEBT equations are motion are given by
@@ -59,7 +59,7 @@ The GEBT equations are motion are given by
 
    \begin{aligned}
    \dot{\underline{h}} - \underline{\mathcal{F}}^\prime &= \underline{f}\\
-   \dot{\underline{g}} + \widetilde{u}\, \underline{h} - \underline{\mathcal{M}}^\prime - \left(\widetilde{x}^{0\prime} + \widetilde{u}^\prime \right) \underline{\mathcal{F}}&= \underline{m}
+   \dot{\underline{g}} + \widetilde{u}\, \underline{h} - \underline{\mathcal{M}}^\prime - \left(\widetilde{x}^{\mathrm{r}\prime} + \widetilde{u}^\prime \right) \underline{\mathcal{F}}&= \underline{m}
    \end{aligned}
 
 where :math:`\underline{h}(s,t),\underline{g}(s,t) \in \mathbb{R}^3` are
@@ -92,7 +92,7 @@ and
 are the sectional strain and curvature defined in inertial coordinates,
 which are defined as
 
-.. math:: \underline{\epsilon} = \underline{x}^{0\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^0\right) \hat{i}_1 
+.. math:: \underline{\epsilon} = \underline{x}^{\mathrm{r}\prime}+\underline{u}^\prime-\left(\underline{\underline{R}}\,\underline{\underline{R}}^\mathrm{r}\right) \hat{i}_1 
    :label: strain 
 
 .. math::
@@ -100,25 +100,25 @@ which are defined as
 
 respectively. In the reference configuration, i.e.,
 :math:`\underline{\underline{R}}=\underline{\underline{I}}` and
-:math:`\underline{u}=0`, zero strain requires that
+:math:`\underline{u}=\mathrm{r}`, zero strain requires that
 
-.. math:: \underline{x}^{0\prime} = \underline{\underline{R}}^0 \hat{i}_1.
+.. math:: \underline{x}^{\mathrm{r}\prime} = \underline{\underline{R}}^\mathrm{r} \hat{i}_1.
    :label: zerostrain
 
 In our finite-element implementation of
-Eq. :eq:`strain`, :math:`\underline{x}^{0\prime}` will
+Eq. :eq:`strain`, :math:`\underline{x}^{\mathrm{r}\prime}` will
 be interpolated from nodal values and
-:math:`\underline{\underline{R}}^0` will be constructed from quaternions
+:math:`\underline{\underline{R}}^\mathrm{r}` will be constructed from quaternions
 interpolated from nodal values. However, in general, at non-node
 locations, Eq. :eq:`zerostrain` is not guaranteed
-in the reference configuation due to interpolation differences. Hence,
+in the reference configuration due to interpolation differences. Hence,
 we use the equivalent definition of strain, which guarantees zero strain
 in the reference configuration at nodal and interpolated locations:
 
 .. math::
 
    \begin{aligned}
-    \underline{\epsilon} &= \underline{x}^{0\prime}+\underline{u}^\prime-\underline{\underline{R}}\,\underline{x}^{0\prime} 
+    \underline{\epsilon} &= \underline{x}^{\mathrm{r}\prime}+\underline{u}^\prime-\underline{\underline{R}}\,\underline{x}^{\mathrm{r}\prime} 
    \label{eq:newstrain}
    \end{aligned}
 
@@ -129,8 +129,8 @@ inertial coordinate section matrices can be calculated as
 .. math::
 
    \begin{aligned}
-   \underline{\underline{C}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
-   \underline{\underline{M}} = \underline{\underline{\mathcal{RR}^0}}\, \underline{\underline{M}}^*\, \underline{\underline{\mathcal{RR}^0}}^T\\
+   \underline{\underline{C}} = \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T\\
+   \underline{\underline{M}} = \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{M}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T\\
    \end{aligned}
 
 where
@@ -151,7 +151,7 @@ strong form as
    :label: stronggoverning
 
 where each term is in :math:`\mathbb{R}^6`;
-:math:`\underline{\underline{\mathcal{F}}}^I(s,t)` is the interial
+:math:`\underline{\underline{\mathcal{F}}}^I(s,t)` is the inertial
 force, :math:`\underline{\underline{\mathcal{F}}}^C(s,t)` and
 :math:`\underline{\underline{\mathcal{F}}}^D(s,t)` are elastic forces,
 and :math:`\underline{\underline{\mathcal{F}}}^\mathrm{ext}` are the
@@ -198,13 +198,13 @@ The elastic forces are
    \underline{\mathcal{F}}^C &= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
    \underline{\mathcal{F}}^D &=
    \begin{bmatrix} \underline{0} \\ 
-   \left(\tilde{x}'^0+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon} 
+   \left(\tilde{x}'^\mathrm{r}+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon} 
    + \underline{\underline{C}}_{12} \underline{\kappa}\right)  \end{bmatrix}
    \end{aligned}
 
 where
 :math:`\underline{\underline{C}}_{11},\underline{\underline{C}}_{12}\in \mathbb{R}^{3\times 3}`
-are the submatrices of the full sectional stiffness matrix in intertial
+are the submatrices of the full sectional stiffness matrix in inertial
 coordinates, i.e.,
 
 .. math::
@@ -217,7 +217,7 @@ coordinates, i.e.,
 
 We describe the variation of the residual,
 Eq. :eq:`residual1`, in parts. Variation of the
-inerial forces can be written
+inertial forces can be written
 
 .. math::
 
@@ -270,8 +270,8 @@ Variation of the elastic forces are as follows:
    \begin{aligned}
    \underline{\underline{\mathcal{O}}} =
    \begin{bmatrix}
-   \underline{\underline{0}} &  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)   \\
-   \underline{\underline{0}} &  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{0 \prime} + \tilde{u}' \right)
+   \underline{\underline{0}} &  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)   \\
+   \underline{\underline{0}} &  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)
    \end{bmatrix}
    \end{aligned}
 
@@ -288,9 +288,9 @@ Variation of the elastic forces are as follows:
    \underline{\underline{\mathcal{P}}} =
    \begin{bmatrix}
    \underline{\underline{0}} & \underline{\underline{0}} \\
-    \widetilde{N} + \left(  \tilde{x}^{0 \prime}+ \tilde{u}' \right)^T
+    \widetilde{N} + \left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)^T
    \underline{\underline{\mathcal{C}}}_{11} &
-   \left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
+   \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
    \underline{\underline{\mathcal{C}}}_{12}
    \end{bmatrix}
    \end{aligned}
@@ -302,8 +302,8 @@ Variation of the elastic forces are as follows:
    \begin{bmatrix}
    \underline{\underline{0}} & \underline{\underline{0}} \\
     \underline{\underline{0}} &
-   \left( \tilde{x}^{0 \prime} + \tilde{u}' \right)^T
-   \left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{0 \prime} + \tilde{u}' \right) \right]
+   \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
+   \left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right) \right]
    \end{bmatrix}
    \end{aligned}
 

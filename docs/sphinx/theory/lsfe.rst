@@ -101,7 +101,7 @@ where displacement is interpolated in the normal manner, i.e.,
    \underline{u}^h =  \sum_{j=1}^{p} \phi_j\underline{u}_j
    \end{aligned}
 
-but quaternion interpolation requires normaliation, i.e.,
+but quaternion interpolation requires normalization, i.e.,
 
 .. math::
 
@@ -119,8 +119,8 @@ For a given quaternion, the associated rotation matrix is calculated as
    \end{aligned}
 
 Introducing a quadrature scheme with :math:`n^Q` points with locations
-and weights, :math:`\xi_j^Q`, :math:`w_j^Q`,
-:math:`j\in \{1, \ldots, n^Q\}`, respectively, the approximate form of
+and weights, :math:`\xi_k^Q`, :math:`w_k^Q`,
+:math:`k\in \{1, \ldots, n^Q\}`, respectively, the approximate form of
 the residual, Eq. :eq:`weakresidual`, can be
 written
 
@@ -141,15 +141,15 @@ where :math:`\underline{R} \in \mathbb{R}^{6 P}` and
 
    \begin{aligned}
    \underline{F}_i^{I} &=
-   \sum_{j=0}^{n^Q}
-   J(\xi^Q_j) \phi_i(\xi^Q_j) \underline{\mathcal{F}}^I(\xi^Q_j) w^Q_j\, \\
+   \sum_{k=1}^{n^Q}
+   J(\xi^Q_k) \phi_i(\xi^Q_k) \underline{\mathcal{F}}^I(\xi^Q_k) w^Q_k\, \\
    \underline{F}_i^E &=
-   \sum_{j=0}^{n^Q}
-   \left[ \left .\frac{\partial \phi_i}{\partial \xi}\right |_{\xi=\xi^Q_j}
-   {\underline{\mathcal{F}}^{C}}(\xi^Q_j)+ J(\xi^Q_j) \phi_i(\xi^Q_j) \underline{\mathcal{F}}^D(\xi^Q_j) \right] w^Q_j\, \\
+   \sum_{j=1}^{n^Q}
+   \left[ \left .\frac{\partial \phi_i}{\partial \xi}\right |_{\xi=\xi^Q_k}
+   {\underline{\mathcal{F}}^{C}}(\xi^Q_k)+ J(\xi^Q_k) \phi_i(\xi^Q_k) \underline{\mathcal{F}}^D(\xi^Q_k) \right] w^Q_k\, \\
    \underline{F}_i^{ext} &=
-   \sum_{j=0}^{n^Q} \phi_i (\xi^Q_j)
-   \underline{F}^{ext}(\xi^Q_j) J(\xi^Q_j) w^Q_j 
+   \sum_{k=1}^{n^Q} \phi_i (\xi^Q_k)
+   \underline{F}^{ext}(\xi^Q_k) J(\xi^Q_k) w^Q_k 
    \end{aligned}
 
 The matrices required for the time-integration iteration matrix in
@@ -186,23 +186,23 @@ example, the mass matrix is assembled as
 
    \underline{\underline{M}} =
    \begin{bmatrix}
-   \underline{\underline{M}}_{00}&
-   \underline{\underline{M}}_{01}& \ldots &
-   \underline{\underline{M}}_{0P}\\
-   \underline{\underline{M}}_{10} &
    \underline{\underline{M}}_{11}&
-   \ldots &
+   \underline{\underline{M}}_{12}& \ldots &
    \underline{\underline{M}}_{1P}\\
+   \underline{\underline{M}}_{21} &
+   \underline{\underline{M}}_{22}&
+   \ldots &
+   \underline{\underline{M}}_{2P}\\
    \vdots & \vdots & \vdots & \vdots \\
-   \underline{\underline{M}}_{P0}&
-   \underline{\underline{M}}_{P1}& \ldots &
+   \underline{\underline{M}}_{P1}&
+   \underline{\underline{M}}_{P2}& \ldots &
    \underline{\underline{M}}_{PP}\\
    \end{bmatrix}
 
 where
-:math:`\underline{\underline{M}} \in \mathbb{R}^{6 (P+1) \times 6 (P+1)}`;
+:math:`\underline{\underline{M}} \in \mathbb{R}^{6 P \times 6 P}`;
 similarly for
-:math:`\underline{\underline{G}}, \underline{\underline{K}} \in \mathbb{R}^{6 (P+1) \times 6 (P+1)}`.
+:math:`\underline{\underline{G}}, \underline{\underline{K}} \in \mathbb{R}^{6 P \times 6 P}`.
 
 .. container:: references csl-bib-body hanging-indent
    :name: refs
