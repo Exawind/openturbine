@@ -134,7 +134,7 @@ struct InterfaceBuilder {
      * @brief Sets the velocity of the anchor node of the mooring line
      *
      * @param line the mooring line number to be set
-     * @param p the velocity of the anchor node
+     * @param v the velocity of the anchor node
      * @return A reference to this InterfaceBuilder
      */
     InterfaceBuilder& SetMooringLineAnchorVelocity(size_t line, const std::array<double, 3>& v);
@@ -143,7 +143,7 @@ struct InterfaceBuilder {
      * @brief Sets the acceleration of the anchor node of the mooring line
      *
      * @param line the mooring line number to be set
-     * @param p the acceleration of the anchor node
+     * @param a the acceleration of the anchor node
      * @return A reference to this InterfaceBuilder
      */
     InterfaceBuilder& SetMooringLineAnchorAcceleration(size_t line, const std::array<double, 3>& a);
