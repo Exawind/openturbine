@@ -5,6 +5,9 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief All of the data describing the state at a node in an ergonomic way
+ */
 struct NodeData {
     size_t id;
     std::array<double, 7> position{0., 0., 0., 1., 0., 0., 0.};

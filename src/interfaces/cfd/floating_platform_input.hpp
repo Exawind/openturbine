@@ -7,23 +7,26 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief The input configuration options describing a FloatingPlatform object
+ */
 struct FloatingPlatformInput {
-    /// Flag to enable use of floating platform in model
+    /// @brief Flag to enable use of floating platform in model
     bool enable{false};
 
-    /// Platform point coordinates and orientation (XYZ,quaternion)
+    /// @brief Platform point coordinates and orientation (XYZ,quaternion)
     std::array<double, 7> position{0., 0., 0., 1., 0., 0., 0.};
 
-    /// Platform point translational and rotational velocity
+    /// @brief Platform point translational and rotational velocity
     std::array<double, 6> velocity{0., 0., 0., 0., 0., 0.};
 
-    /// Platform point translational and rotational acceleration
+    /// @brief Platform point translational and rotational acceleration
     std::array<double, 6> acceleration{0., 0., 0., 0., 0., 0.};
 
-    /// Platform point mass matrix
+    /// @brief Platform point mass matrix
     std::array<std::array<double, 6>, 6> mass_matrix{};
 
-    /// Mooring line array
+    /// @brief Mooring line array
     std::vector<MooringLineInput> mooring_lines;
 };
 

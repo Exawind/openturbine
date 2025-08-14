@@ -12,6 +12,9 @@ namespace openturbine::interfaces::cfd {
 // Data Structures
 //------------------------------------------------------------------------------
 
+/**
+ * @brief A structure describing a point mass and its attached mooring lines
+ */
 struct FloatingPlatform {
     /// @brief Flag indicating platform is active in model
     bool active = false;

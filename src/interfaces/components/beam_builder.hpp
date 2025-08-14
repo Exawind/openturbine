@@ -21,14 +21,37 @@ enum class ReferenceAxisOrientation : std::uint8_t {
 };
 
 /**
- * @brief Builder class for creating Blade objects with a fluent interface pattern
+ * @brief Builder class for creating Blade objects
+ *
+ * @details Each of the methods for setting options returns a reference to this BeamBuilder object
+ * to allow chaining calls together in a single statement.
  */
 class BeamBuilder {
 public:
+    /**
+     * @brief Sets the prder of the beam elements
+     *
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& SetElementOrder(size_t element_order);
 
+    /**
+     * @brief Sets the number of section refinements to perform
+     *
+     * @details This adds additional quadrature points between the supplied sections and sets their
+     * physical properties using linear interpolation.  This is used to achieve sufficiently accurate
+     * quadrature for high order elements even when the physical properties have a relatively simple
+     * distribution.
+     *
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& SetSectionRefinement(size_t section_refinement);
 
+    /**
+     * @brief Deletes all currently set reference axis points
+     *
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& ClearReferenceAxisPoints();
 
     /**
@@ -43,17 +66,56 @@ public:
         ReferenceAxisOrientation ref_axis
     );
 
+    /**
+     * @brief Adds a twist about the reference axis at a certain point
+     *
+     * @details This value will be linearly interpolated to the required locations along the
+     * actual beam element
+     *
+     * @param grid_location The location where the twist is specified
+     * @param twist The twist about the reference axis in degrees
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& AddRefAxisTwist(double grid_location, double twist);
 
+    /**
+     * @brief sets if this beam will have prescribed root motion or not
+     *
+     * @param enable If prescirbed root motion is enabled
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& PrescribedRootMotion(bool enable);
 
+    /**
+     * @brief Sets the position of this beam's root node
+     *
+     * @param p The root node position/orientation as a quaternion
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& SetRootPosition(const std::array<double, 7>& p);
 
+    /**
+     * @brief Sets the velocity of this beam's root node
+     *
+     * @param v The root node velocity/angular velcoity
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& SetRootVelocity(const std::array<double, 6>& v);
 
+    /**
+     * @brief Sets the acceleration of this beam's root node
+     *
+     * @param a The root node acceleration/angular acceleration
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& SetRootAcceleration(const std::array<double, 6>& a);
 
+    /**
+     * @brief Deletes all sections that have been added to the BeamBuilder
+     * @return A reference to this BeamBuilder
+     */
     BeamBuilder& ClearSections();
+
     /// @brief Adds sectional location, mass matrix, and stiffness matrix. Can handle reference
     /// axis along X or Z.
     /// @param grid_location section location [0,1] along blade
