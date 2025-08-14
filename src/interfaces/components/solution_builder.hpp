@@ -71,7 +71,7 @@ struct SolutionBuilder {
      *
      * @details Ranged from 0 to 1
      *
-     * @param The damping factor
+     * @param rho_inf The damping factor
      * @return A reference to this solution builder object to allow chaining
      */
     SolutionBuilder& SetDampingFactor(double rho_inf);
