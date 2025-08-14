@@ -175,6 +175,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>The main interface for controlling the CFD problem.  
+ <a href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="interface_8hpp_source.html">interface.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
@@ -185,9 +188,10 @@ Public Types</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a3ee231790bfbade9bb7ff2504f1d4d" id="r_a4a3ee231790bfbade9bb7ff2504f1d4d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#a4a3ee231790bfbade9bb7ff2504f1d4d">Interface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceInput.html">InterfaceInput</a> &amp;input)</td></tr>
+<tr class="memdesc:a4a3ee231790bfbade9bb7ff2504f1d4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html" title="The main interface for controlling the CFD problem.">Interface</a> from an <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceInput.html" title="An object describing the configuration of the interface.">InterfaceInput</a> configuration object.  <br /></td></tr>
 <tr class="separator:a4a3ee231790bfbade9bb7ff2504f1d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38096be5b05bd55f5c49ad9468f61eef" id="r_a38096be5b05bd55f5c49ad9468f61eef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#a38096be5b05bd55f5c49ad9468f61eef">Step</a> ()</td></tr>
-<tr class="memdesc:a38096be5b05bd55f5c49ad9468f61eef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Step forward in time.  <br /></td></tr>
+<tr class="memdesc:a38096be5b05bd55f5c49ad9468f61eef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Step forward in time one time step.  <br /></td></tr>
 <tr class="separator:a38096be5b05bd55f5c49ad9468f61eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43c74bae7854832cab96dc05b3488934" id="r_a43c74bae7854832cab96dc05b3488934"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#a43c74bae7854832cab96dc05b3488934">SaveState</a> ()</td></tr>
 <tr class="memdesc:a43c74bae7854832cab96dc05b3488934"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save state for correction step.  <br /></td></tr>
@@ -211,7 +215,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:aefef7c3490f15d3421821dc158c75273"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class used for model construction.  <br /></td></tr>
 <tr class="separator:aefef7c3490f15d3421821dc158c75273"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77ca66726fed69450e94f8b83dce20bc" id="r_a77ca66726fed69450e94f8b83dce20bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html">Turbine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#a77ca66726fed69450e94f8b83dce20bc">turbine</a></td></tr>
-<tr class="memdesc:a77ca66726fed69450e94f8b83dce20bc"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html">Turbine</a> model input/output data.  <br /></td></tr>
+<tr class="memdesc:a77ca66726fed69450e94f8b83dce20bc"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html" title="The top level structure defining the CFD problem.">Turbine</a> model input/output data.  <br /></td></tr>
 <tr class="separator:a77ca66726fed69450e94f8b83dce20bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8270d6035c8ddd299de5a44f4c78977" id="r_aa8270d6035c8ddd299de5a44f4c78977"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1State.html">State</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#a70d16feb16712433f3d51df3822a5baf">DeviceType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html#aa8270d6035c8ddd299de5a44f4c78977">state</a></td></tr>
 <tr class="memdesc:aa8270d6035c8ddd299de5a44f4c78977"><td class="mdescLeft">&#160;</td><td class="mdescRight">OpenTurbine class for storing system state.  <br /></td></tr>
@@ -241,7 +245,9 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a1e3e31a16a0e3791251005ab220c4cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optional NetCDF output writer.  <br /></td></tr>
 <tr class="separator:a1e3e31a16a0e3791251005ab220c4cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The main interface for controlling the CFD problem. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a70d16feb16712433f3d51df3822a5baf" name="a70d16feb16712433f3d51df3822a5baf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a70d16feb16712433f3d51df3822a5baf">&#9670;&#160;</a></span>DeviceType</h2>
 
@@ -281,6 +287,14 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Create an <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html" title="The main interface for controlling the CFD problem.">Interface</a> from an <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceInput.html" title="An object describing the configuration of the interface.">InterfaceInput</a> configuration object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>The input configuration object </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -301,6 +315,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read restart file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the restart file </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -357,7 +377,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Step forward in time. </p>
+<p>Step forward in time one time step. </p>
 
 </div>
 </div>
@@ -397,6 +417,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write restart file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The name of the restart file </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -573,7 +599,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html">Turbine</a> model input/output data. </p>
+<p><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html" title="The top level structure defining the CFD problem.">Turbine</a> model input/output data. </p>
 
 </div>
 </div>

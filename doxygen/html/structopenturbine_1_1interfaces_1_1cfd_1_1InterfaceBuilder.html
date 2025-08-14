@@ -173,48 +173,72 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A factory for configuring and building a CFD interface object.  
+ <a href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="interface__builder_8hpp_source.html">interface_builder.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a834274f3540451e70c5f0e739e3fdcd3" id="r_a834274f3540451e70c5f0e739e3fdcd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a834274f3540451e70c5f0e739e3fdcd3">SetGravity</a> (const std::array&lt; double, 3 &gt; &amp;gravity)</td></tr>
+<tr class="memdesc:a834274f3540451e70c5f0e739e3fdcd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the gravity vector for the problem.  <br /></td></tr>
 <tr class="separator:a834274f3540451e70c5f0e739e3fdcd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d3e65105b8b28e1fce354c7407b8d94" id="r_a4d3e65105b8b28e1fce354c7407b8d94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a4d3e65105b8b28e1fce354c7407b8d94">SetMaximumNonlinearIterations</a> (size_t max_iter)</td></tr>
+<tr class="memdesc:a4d3e65105b8b28e1fce354c7407b8d94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the maximum number of nonlinear iterations per time step.  <br /></td></tr>
 <tr class="separator:a4d3e65105b8b28e1fce354c7407b8d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae196e2256ecb23aca6dcc496d8504c6e" id="r_ae196e2256ecb23aca6dcc496d8504c6e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ae196e2256ecb23aca6dcc496d8504c6e">SetTimeStep</a> (double time_step)</td></tr>
+<tr class="memdesc:ae196e2256ecb23aca6dcc496d8504c6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the time step size.  <br /></td></tr>
 <tr class="separator:ae196e2256ecb23aca6dcc496d8504c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7232bbc16416721070426c05572e6584" id="r_a7232bbc16416721070426c05572e6584"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a7232bbc16416721070426c05572e6584">SetDampingFactor</a> (double rho_inf)</td></tr>
+<tr class="memdesc:a7232bbc16416721070426c05572e6584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the numerical damping factor used by the generalized alpha solver.  <br /></td></tr>
 <tr class="separator:a7232bbc16416721070426c05572e6584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbc60f9369f5e0e32d8bbde951e8360e" id="r_acbc60f9369f5e0e32d8bbde951e8360e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#acbc60f9369f5e0e32d8bbde951e8360e">EnableFloatingPlatform</a> (bool enable)</td></tr>
+<tr class="memdesc:acbc60f9369f5e0e32d8bbde951e8360e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets if the floating platform is enabled.  <br /></td></tr>
 <tr class="separator:acbc60f9369f5e0e32d8bbde951e8360e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03885a0b4a45fc3985a43d9d423538fe" id="r_a03885a0b4a45fc3985a43d9d423538fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a03885a0b4a45fc3985a43d9d423538fe">SetFloatingPlatformPosition</a> (const std::array&lt; double, 7 &gt; &amp;p)</td></tr>
+<tr class="memdesc:a03885a0b4a45fc3985a43d9d423538fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the platform.  <br /></td></tr>
 <tr class="separator:a03885a0b4a45fc3985a43d9d423538fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a664e98263de6e75c957ea5e5e8507497" id="r_a664e98263de6e75c957ea5e5e8507497"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a664e98263de6e75c957ea5e5e8507497">SetFloatingPlatformVelocity</a> (const std::array&lt; double, 6 &gt; &amp;v)</td></tr>
+<tr class="memdesc:a664e98263de6e75c957ea5e5e8507497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the velocity of the platform.  <br /></td></tr>
 <tr class="separator:a664e98263de6e75c957ea5e5e8507497"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6c3ab69447498a0dd6db7fb4419d4e4" id="r_ab6c3ab69447498a0dd6db7fb4419d4e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ab6c3ab69447498a0dd6db7fb4419d4e4">SetFloatingPlatformAcceleration</a> (const std::array&lt; double, 6 &gt; &amp;a)</td></tr>
+<tr class="memdesc:ab6c3ab69447498a0dd6db7fb4419d4e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the acceleration of the platform.  <br /></td></tr>
 <tr class="separator:ab6c3ab69447498a0dd6db7fb4419d4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8905a2c3e62daf2b2ee31678a9f2e32" id="r_ad8905a2c3e62daf2b2ee31678a9f2e32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ad8905a2c3e62daf2b2ee31678a9f2e32">SetFloatingPlatformMassMatrix</a> (const std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; &amp;mass_matrix)</td></tr>
+<tr class="memdesc:ad8905a2c3e62daf2b2ee31678a9f2e32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the mass matrix to represent the platform as a point mass.  <br /></td></tr>
 <tr class="separator:ad8905a2c3e62daf2b2ee31678a9f2e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c713f5d708851b6793a9368471557b2" id="r_a3c713f5d708851b6793a9368471557b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a3c713f5d708851b6793a9368471557b2">SetNumberOfMooringLines</a> (size_t number)</td></tr>
+<tr class="memdesc:a3c713f5d708851b6793a9368471557b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the number of mooring lines and sizes the appropriate data structures.  <br /></td></tr>
 <tr class="separator:a3c713f5d708851b6793a9368471557b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c6efeda22c1236d20e3e4513e8a0e2" id="r_ab4c6efeda22c1236d20e3e4513e8a0e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ab4c6efeda22c1236d20e3e4513e8a0e2">SetMooringLineStiffness</a> (size_t line, double stiffness)</td></tr>
+<tr class="memdesc:ab4c6efeda22c1236d20e3e4513e8a0e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the stiffness of a given mooring line.  <br /></td></tr>
 <tr class="separator:ab4c6efeda22c1236d20e3e4513e8a0e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca0aed84bc350b9c4952fa2b10cd3af8" id="r_aca0aed84bc350b9c4952fa2b10cd3af8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#aca0aed84bc350b9c4952fa2b10cd3af8">SetMooringLineUndeformedLength</a> (size_t line, double length)</td></tr>
+<tr class="memdesc:aca0aed84bc350b9c4952fa2b10cd3af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the undeformed length of the mooring line.  <br /></td></tr>
 <tr class="separator:aca0aed84bc350b9c4952fa2b10cd3af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace3ae0ac8c683c82e6eb59ee931e85dc" id="r_ace3ae0ac8c683c82e6eb59ee931e85dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ace3ae0ac8c683c82e6eb59ee931e85dc">SetMooringLineFairleadPosition</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;p)</td></tr>
+<tr class="memdesc:ace3ae0ac8c683c82e6eb59ee931e85dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the fairlead node of the mooring line.  <br /></td></tr>
 <tr class="separator:ace3ae0ac8c683c82e6eb59ee931e85dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af39a3f83ed242a1377b07794456378e7" id="r_af39a3f83ed242a1377b07794456378e7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#af39a3f83ed242a1377b07794456378e7">SetMooringLineAnchorPosition</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;p)</td></tr>
+<tr class="memdesc:af39a3f83ed242a1377b07794456378e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the position of the anchor node of the mooring line.  <br /></td></tr>
 <tr class="separator:af39a3f83ed242a1377b07794456378e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adee115ff27904cb058da8513a76efbf0" id="r_adee115ff27904cb058da8513a76efbf0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#adee115ff27904cb058da8513a76efbf0">SetMooringLineAnchorVelocity</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
+<tr class="memdesc:adee115ff27904cb058da8513a76efbf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the velocity of the anchor node of the mooring line.  <br /></td></tr>
 <tr class="separator:adee115ff27904cb058da8513a76efbf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5fd87faad672d699284f2c0d181c1cf" id="r_af5fd87faad672d699284f2c0d181c1cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#af5fd87faad672d699284f2c0d181c1cf">SetMooringLineAnchorAcceleration</a> (size_t line, const std::array&lt; double, 3 &gt; &amp;a)</td></tr>
+<tr class="memdesc:af5fd87faad672d699284f2c0d181c1cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the acceleration of the anchor node of the mooring line.  <br /></td></tr>
 <tr class="separator:af5fd87faad672d699284f2c0d181c1cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a799f5851566a55e56db98da32bec32ec" id="r_a799f5851566a55e56db98da32bec32ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html">InterfaceBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#a799f5851566a55e56db98da32bec32ec">SetOutputFile</a> (const std::string &amp;path)</td></tr>
+<tr class="memdesc:a799f5851566a55e56db98da32bec32ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the output file name.  <br /></td></tr>
 <tr class="separator:a799f5851566a55e56db98da32bec32ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad00564ac41393dfb2fae0f5585a753b0" id="r_ad00564ac41393dfb2fae0f5585a753b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html">Interface</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html#ad00564ac41393dfb2fae0f5585a753b0">Build</a> () const</td></tr>
+<tr class="memdesc:ad00564ac41393dfb2fae0f5585a753b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html" title="The main interface for controlling the CFD problem.">Interface</a> based on current settings.  <br /></td></tr>
 <tr class="separator:ad00564ac41393dfb2fae0f5585a753b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A factory for configuring and building a CFD interface object. </p>
+<p>every method returns a reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> for chaining multiple method calls together in a single statement. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad00564ac41393dfb2fae0f5585a753b0" name="ad00564ac41393dfb2fae0f5585a753b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad00564ac41393dfb2fae0f5585a753b0">&#9670;&#160;</a></span>Build()</h2>
 
@@ -229,6 +253,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Builds the <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html" title="The main interface for controlling the CFD problem.">Interface</a> based on current settings. </p>
+<dl class="section return"><dt>Returns</dt><dd>The constructed <a class="el" href="classopenturbine_1_1interfaces_1_1cfd_1_1Interface.html" title="The main interface for controlling the CFD problem.">Interface</a> </dd></dl>
 
 </div>
 </div>
@@ -248,6 +275,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets if the floating platform is enabled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>If the flating platform is enabled </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="a7232bbc16416721070426c05572e6584" name="a7232bbc16416721070426c05572e6584"></a>
@@ -265,6 +301,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the numerical damping factor used by the generalized alpha solver. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rho_inf</td><td>the numerical damping factor </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -284,6 +329,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the acceleration of the platform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The acceleration/angular acceleration of the platform </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="ad8905a2c3e62daf2b2ee31678a9f2e32" name="ad8905a2c3e62daf2b2ee31678a9f2e32"></a>
@@ -301,6 +355,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the mass matrix to represent the platform as a point mass. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mass_matrix</td><td>The mass matrix with the mass and inertia information </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -320,6 +383,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the position of the platform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">p</td><td>The position/orientation of the platform as a quatnernion </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="a664e98263de6e75c957ea5e5e8507497" name="a664e98263de6e75c957ea5e5e8507497"></a>
@@ -337,6 +409,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the velocity of the platform. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The velocity/angular velocity of the platform </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -356,6 +437,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the gravity vector for the problem. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gravity</td><td>The gravity vector </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="a4d3e65105b8b28e1fce354c7407b8d94" name="a4d3e65105b8b28e1fce354c7407b8d94"></a>
@@ -373,6 +463,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the maximum number of nonlinear iterations per time step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">max_iter</td><td>the maximum number of nonlinear iterations </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -402,6 +501,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the acceleration of the anchor node of the mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">a</td><td>the acceleration of the anchor node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="af39a3f83ed242a1377b07794456378e7" name="af39a3f83ed242a1377b07794456378e7"></a>
@@ -429,6 +538,16 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the position of the anchor node of the mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">p</td><td>the position of the anchor node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -458,6 +577,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the velocity of the anchor node of the mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">v</td><td>the velocity of the anchor node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="ace3ae0ac8c683c82e6eb59ee931e85dc" name="ace3ae0ac8c683c82e6eb59ee931e85dc"></a>
@@ -485,6 +614,16 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the position of the fairlead node of the mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">p</td><td>the position of the fairlead node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -514,6 +653,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the stiffness of a given mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">stiffness</td><td>the spring stiffness of the line </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="aca0aed84bc350b9c4952fa2b10cd3af8" name="aca0aed84bc350b9c4952fa2b10cd3af8"></a>
@@ -542,6 +691,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the undeformed length of the mooring line. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>the mooring line number to be set </td></tr>
+    <tr><td class="paramname">length</td><td>the underformed length of the line </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="a3c713f5d708851b6793a9368471557b2" name="a3c713f5d708851b6793a9368471557b2"></a>
@@ -559,6 +718,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the number of mooring lines and sizes the appropriate data structures. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">number</td><td>the number of mooring lines </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>
@@ -578,6 +746,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets the output file name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>the output file name </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
+
 </div>
 </div>
 <a id="ae196e2256ecb23aca6dcc496d8504c6e" name="ae196e2256ecb23aca6dcc496d8504c6e"></a>
@@ -595,6 +772,15 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the time step size. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">time_step</td><td>the time step size </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <a class="el" href="structopenturbine_1_1interfaces_1_1cfd_1_1InterfaceBuilder.html" title="A factory for configuring and building a CFD interface object.">InterfaceBuilder</a> </dd></dl>
 
 </div>
 </div>

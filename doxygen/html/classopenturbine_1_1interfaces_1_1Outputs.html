@@ -195,10 +195,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a8cfa464d84026a8109d1e3e1e549b1fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor taking an output file, time-series file, and location.  <br /></td></tr>
 <tr class="separator:a8cfa464d84026a8109d1e3e1e549b1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6670fc1d971605ef991c5733ac9151fb" id="r_a6670fc1d971605ef991c5733ac9151fb"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6670fc1d971605ef991c5733ac9151fb">GetOutputWriter</a> ()</td></tr>
+<tr class="memdesc:a6670fc1d971605ef991c5733ac9151fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a reference to the NodeStateWriter for direct usage.  <br /></td></tr>
 <tr class="separator:a6670fc1d971605ef991c5733ac9151fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac19df2efb5487b9522bc360d096c9372" id="r_ac19df2efb5487b9522bc360d096c9372"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classopenturbine_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac19df2efb5487b9522bc360d096c9372">GetTimeSeriesWriter</a> ()</td></tr>
+<tr class="memdesc:ac19df2efb5487b9522bc360d096c9372"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a reference to the TimeSeriesWriter for direct usage.  <br /></td></tr>
 <tr class="separator:ac19df2efb5487b9522bc360d096c9372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac28f91fea7371c14db846dfc84167bd6" id="r_ac28f91fea7371c14db846dfc84167bd6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375">OutputLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#ac28f91fea7371c14db846dfc84167bd6">GetLocation</a> () const</td></tr>
+<tr class="memdesc:ac28f91fea7371c14db846dfc84167bd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output location as set by the constructor.  <br /></td></tr>
 <tr class="separator:ac28f91fea7371c14db846dfc84167bd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72b446bdcc8a389ad25e3fd7ded8f636" id="r_a72b446bdcc8a389ad25e3fd7ded8f636"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a72b446bdcc8a389ad25e3fd7ded8f636">WriteNodeOutputsAtTimestep</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1Outputs.html#a6d0701693a41e6fd316467fbc4d25410">DeviceType</a> &gt; &amp;host_state, size_t timestep)</td></tr>
 <tr class="memdesc:a72b446bdcc8a389ad25e3fd7ded8f636"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write node state outputs to NetCDF file at specified timestep.  <br /></td></tr>
@@ -287,6 +290,14 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructor taking an output file and location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_file</td><td>The name of the output file </td></tr>
+    <tr><td class="paramname">num_nodes</td><td>the number of nodes to be written to the file </td></tr>
+    <tr><td class="paramname">location</td><td>where the output will be written (quadrature points vs nodes) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -329,6 +340,15 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructor taking an output file, time-series file, and location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_file</td><td>The name of the output file </td></tr>
+    <tr><td class="paramname">time_series_file</td><td>The name of the file with time-series data </td></tr>
+    <tr><td class="paramname">num_nodes</td><td>the number of nodes to be written to the file </td></tr>
+    <tr><td class="paramname">location</td><td>where the output will be written (quadrature points vs nodes) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -348,6 +368,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the output location as set by the constructor. </p>
+<dl class="section return"><dt>Returns</dt><dd>the OutputLocation </dd></dl>
+
 </div>
 </div>
 <a id="a6670fc1d971605ef991c5733ac9151fb" name="a6670fc1d971605ef991c5733ac9151fb"></a>
@@ -365,6 +388,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Gets a reference to the NodeStateWriter for direct usage. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the NodeStateWriter </dd></dl>
+
 </div>
 </div>
 <a id="ac19df2efb5487b9522bc360d096c9372" name="ac19df2efb5487b9522bc360d096c9372"></a>
@@ -381,6 +407,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets a reference to the TimeSeriesWriter for direct usage. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the TimeSeriesWriter </dd></dl>
 
 </div>
 </div>
@@ -411,6 +440,13 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write node state outputs to NetCDF file at specified timestep. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_state</td><td>an updated host_state object with the current state loaded </td></tr>
+    <tr><td class="paramname">timestep</td><td>The timestep number to write data to </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -447,6 +483,14 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Write rotor time-series data at specified timestep. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timestep</td><td>The timestep number to write data to </td></tr>
+    <tr><td class="paramname">azimuth_angle</td><td>The current azimuth angle </td></tr>
+    <tr><td class="paramname">rotor_speed</td><td>The current rotor speed </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
