@@ -7,6 +7,9 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief An object describing the configuration of the interface
+ */
 struct InterfaceInput {
     /// @brief Array of gravity components (XYZ)
     std::array<double, 3> gravity{0., 0., 0.};

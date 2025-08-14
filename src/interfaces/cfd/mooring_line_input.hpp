@@ -4,6 +4,9 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief A descritpion of the configuration of a mooring line for use in initialization
+ */
 struct MooringLineInput {
     /// Mooring line stiffness
     double stiffness = 0.;

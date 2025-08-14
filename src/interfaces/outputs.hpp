@@ -25,28 +25,68 @@ public:
         kQPs = 1     ///< Write outputs at quadrature points
     };
 
-    /// @brief Constructor taking an output file and location
+    /**
+     * @brief Constructor taking an output file and location
+     *
+     * @param output_file The name of the output file
+     * @param num_nodes the number of nodes to be written to the file
+     * @param location where the output will be written (quadrature points vs nodes)
+     */
     Outputs(
         const std::string& output_file, size_t num_nodes,
         OutputLocation location = OutputLocation::kNodes
     );
 
-    /// @brief Constructor taking an output file, time-series file, and location
+    /**
+     * @brief Constructor taking an output file, time-series file, and location
+     *
+     * @param output_file The name of the output file
+     * @param time_series_file The name of the file with time-series data
+     * @param num_nodes the number of nodes to be written to the file
+     * @param location where the output will be written (quadrature points vs nodes)
+     */
     Outputs(
         const std::string& output_file, const std::string& time_series_file, size_t num_nodes,
         OutputLocation location = OutputLocation::kNodes
     );
 
+    /**
+     * @brief Gets a reference to the NodeStateWriter for direct usage
+     *
+     * @return A reference to the NodeStateWriter
+     */
     [[nodiscard]] std::unique_ptr<util::NodeStateWriter>& GetOutputWriter();
 
+    /**
+     * @brief Gets a reference to the TimeSeriesWriter for direct usage
+     *
+     * @return A reference to the TimeSeriesWriter
+     */
     [[nodiscard]] std::unique_ptr<util::TimeSeriesWriter>& GetTimeSeriesWriter();
 
+    /**
+     * @brief Returns the output location as set by the constructor
+     *
+     * @return the OutputLocation
+     */
     [[nodiscard]] OutputLocation GetLocation() const;
 
-    /// @brief Write node state outputs to NetCDF file at specified timestep
+    /**
+     * @brief Write node state outputs to NetCDF file at specified timestep
+     *
+     * @param host_state an updated host_state object with the current state loaded
+     * @param timestep The timestep number to write data to
+     */
     void WriteNodeOutputsAtTimestep(const HostState<DeviceType>& host_state, size_t timestep);
 
-    /// @brief Write rotor time-series data at specified timestep
+    /// @brief
+    /**
+     * @brief Write rotor time-series data at specified timestep
+     *
+     * @param timestep The timestep number to write data to
+     * @param azimuth_angle The current azimuth angle
+     * @param rotor_speed The current rotor speed
+     */
     void WriteRotorTimeSeriesAtTimestep(size_t timestep, double azimuth_angle, double rotor_speed);
 
 private:

@@ -7,6 +7,9 @@
 
 namespace openturbine::interfaces::components {
 
+/**
+ * @brief A configuration object used to create the low level StepParameters object
+ */
 struct SolutionInput {
     /// @brief Array of gravity components (XYZ)
     std::array<double, 3> gravity{0., 0., 0.};

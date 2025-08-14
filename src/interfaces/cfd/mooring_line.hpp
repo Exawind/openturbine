@@ -6,6 +6,9 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief A description of a mooring line including its node and spring indices
+ */
 struct MooringLine {
     /// @brief Fairlead node
     NodeData fairlead_node;

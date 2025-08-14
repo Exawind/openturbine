@@ -20,8 +20,18 @@ class BladeInterface;
  */
 class BladeInterfaceBuilder {
 public:
+    /**
+     * @brief Returns the owned SolutionBuilder for defining the solution control variables
+     *
+     * @return A reference to the SolutionBuilder object
+     */
     [[nodiscard]] components::SolutionBuilder& Solution();
 
+    /**
+     * @brief Returns the owned BeamBuilder for use in defining the blade object
+     *
+     * @return A reference to the BeamBuilder object
+     */
     [[nodiscard]] components::BeamBuilder& Blade();
 
     /**

@@ -143,9 +143,9 @@ public:
     /**
      * @brief Constructs a turbine with the specified input configuration
      *
-     * Creates a complete turbine structure including blades, tower, hub, nacelle components,
-     * and all associated nodes, elements, constraints, and control systems. The turbine is
-     * positioned and oriented according to the input parameters, with proper kinematic
+     * @details Creates a complete turbine structure including blades, tower, hub, nacelle
+     * components,and all associated nodes, elements, constraints, and control systems. The
+     * turbine is positioned and oriented according to the input parameters, with proper kinematic
      * relationships established between all components.
      * --------------------------------------------------------------------------
      * Construction sequence
@@ -279,8 +279,8 @@ private:
     /**
      * @brief Creates all kinematic constraints and control connections for the turbine
      *
-     * This method establishes the complete constraint system that defines the turbine's
-     * degrees of freedom and control interfaces. Constraints are added in a specific
+     * @details This method establishes the complete constraint system that defines the
+     * turbine's degrees of freedom and control interfaces. Constraints are added in a specific
      * order to build the kinematic chain from the fixed tower base to the controllable
      * rotor and blade systems.
      *

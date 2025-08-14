@@ -16,14 +16,22 @@
 
 namespace openturbine::interfaces::cfd {
 
+/**
+ * @brief The main interface for controlling the CFD problem
+ */
 class Interface {
 public:
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
 
+    /**
+     * @brief Create an Interface from an InterfaceInput configuration object
+     *
+     * @param input The input configuration object
+     */
     explicit Interface(const InterfaceInput& input);
 
-    /// @brief Step forward in time
+    /// @brief Step forward in time one time step
     [[nodiscard]] bool Step();
 
     /// @brief Save state for correction step
@@ -32,10 +40,18 @@ public:
     /// @brief Restore state for correction step
     void RestoreState();
 
-    /// @brief Write restart file
+    /**
+     * @brief Write restart file
+     *
+     * @param filename The name of the restart file
+     */
     void WriteRestart(const std::filesystem::path& filename) const;
 
-    /// @brief Read restart file
+    /**
+     * @brief Read restart file
+     *
+     * @param filename The name of the restart file
+     */
     void ReadRestart(const std::filesystem::path& filename);
 
     /// @brief Write current state to output file if configured

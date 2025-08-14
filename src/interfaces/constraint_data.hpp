@@ -4,8 +4,10 @@
 
 namespace openturbine::interfaces {
 
+/**
+ * @brief A wrapper around the Constraint ID of a given constraint
+ */
 struct ConstraintData {
-    /// @brief Node identifier in model
     size_t id;
 };
 

@@ -9,6 +9,10 @@ namespace openturbine::interfaces {
 template <typename DeviceType>
 struct HostState;
 
+/**
+ * @brief A collection of data defining the state at a given node and providing an ergonomic way to
+ * extract that data from the State object or set the loads therein.
+ */
 struct NodeData {
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
