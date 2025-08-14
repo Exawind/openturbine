@@ -53,7 +53,7 @@ struct SolutionBuilder {
     /**
      * @brief Sets the maximum number of nonlinear iterations to take at each time step
      *
-     * @param The maximum number of nonlinear iterations
+     * @param max_iter The maximum number of nonlinear iterations
      * @return A reference to this solution builder object to allow chaining
      */
     SolutionBuilder& SetMaximumNonlinearIterations(size_t max_iter);
