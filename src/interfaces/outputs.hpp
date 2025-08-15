@@ -14,6 +14,9 @@ namespace openturbine::interfaces {
 template <typename DeviceType>
 struct HostState;
 
+/**
+ * @brief A class that handles writing state data to disk for analysis/visualization
+ */
 class Outputs {
 public:
     using DeviceType =

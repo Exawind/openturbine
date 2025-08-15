@@ -38,6 +38,7 @@ struct ControllerInput {
           simulation_name(std::move(sim_name)) {}
 
     /// @brief Check if controller is enabled (i.e. has library path)
+    /// @return If the shared library path is set
     [[nodiscard]] bool IsEnabled() const { return !shared_lib_path.empty(); }
 };
 

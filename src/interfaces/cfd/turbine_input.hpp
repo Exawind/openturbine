@@ -5,7 +5,7 @@
 namespace openturbine::interfaces::cfd {
 
 /**
- * A collection of the input objects defining the CFD problem's configuration
+ * @brief A collection of the input objects defining the CFD problem's configuration
  */
 struct TurbineInput {
     // Floating platform

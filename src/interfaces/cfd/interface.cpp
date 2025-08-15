@@ -17,10 +17,15 @@
 
 namespace openturbine::interfaces::cfd {
 
-//------------------------------------------------------------------------------
-// Shared functions
-//------------------------------------------------------------------------------
-
+/**
+ * @brief Populates the provided NodeData object with state information
+ *
+ * @param node
+ * @param host_state_x
+ * @param host_state_q
+ * @param host_state_v
+ * @param host_state_vd
+ */
 void GetNodeMotion(
     NodeData& node, const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
     const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_q,
@@ -37,10 +42,13 @@ void GetNodeMotion(
     }
 }
 
-//------------------------------------------------------------------------------
-// Floating Platform
-//------------------------------------------------------------------------------
-
+/**
+ * @brief Adds nodes to the provided model based on the provided input configuration
+ *
+ * @param input The configuration for the floating platform
+ * @param model The OpenTurbine Model to be populated with mass and spring element information
+ * @return A FlatingPlatform object based on the provided configuration
+ */
 FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
     // If floating platform is not enabled, return
     if (!input.enable) {
@@ -112,6 +120,13 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
     return platform;
 }
 
+/**
+ * @brief Sets the force vector at the Platform's mass node in the host_state
+ *
+ * @tparam DeviceType The Kokkos Device where the State corresponding to the HostState resides
+ * @param platform The platform object where the forces have been set
+ * @param host_state The HostState object where the forces wil be set
+ */
 template <typename DeviceType>
 void SetPlatformLoads(
     const FloatingPlatform& platform, openturbine::interfaces::HostState<DeviceType>& host_state
@@ -127,6 +142,15 @@ void SetPlatformLoads(
     }
 }
 
+/**
+ * @brief Sets the state data on the provided FloatingPlatform object
+ *
+ * @param platform The FloatingPlatform where data will be set
+ * @param host_state_x Location data
+ * @param host_state_q Displacement data
+ * @param host_state_v Velocity data
+ * @param host_state_vd Acceleration Data
+ */
 void GetFloatingPlatformMotion(
     FloatingPlatform& platform,
     const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
@@ -152,16 +176,29 @@ void GetFloatingPlatformMotion(
     }
 }
 
-//------------------------------------------------------------------------------
-// Turbine
-//------------------------------------------------------------------------------
-
+/**
+ * @brief Creates the Turbine object based on the input configuration and populates
+ * the provided model
+ *
+ * @param input The problem configuration object
+ * @param model The Model to be populated with element information based on the input
+ * @return The full turbine object configured based on input
+ */
 Turbine CreateTurbine(const TurbineInput& input, Model& model) {
     return {
         CreateFloatingPlatform(input.floating_platform, model),
     };
 }
 
+/**
+ * @brief Sets the force loads on the provided HostState and State objects
+ *
+ * @tparam DeviceType The Kokkos Device where the State object resides
+ *
+ * @param turbine The Turbine object where the forces have been set
+ * @param host_state A HostState object corresponding to the provided State
+ * @param state A State object where the forces will be set
+ */
 template <typename DeviceType>
 void SetTurbineLoads(
     const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state,
@@ -171,6 +208,15 @@ void SetTurbineLoads(
     Kokkos::deep_copy(state.f, host_state.f);
 }
 
+/**
+ * @brief Populates the Turbine object with the appropriate state data
+ *
+ * @param turbine The Turbine object to have its state data populated
+ * @param host_state_x Position data
+ * @param host_state_q Displacement data
+ * @param host_state_v Velocity Data
+ * @param host_state_vd Acceleration Data
+ */
 void GetTurbineMotion(
     Turbine& turbine, const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_x,
     const Kokkos::View<double* [7]>::HostMirror::const_type& host_state_q,
@@ -181,10 +227,6 @@ void GetTurbineMotion(
         turbine.floating_platform, host_state_x, host_state_q, host_state_v, host_state_vd
     );
 }
-
-//------------------------------------------------------------------------------
-// Interface implementation
-//------------------------------------------------------------------------------
 
 Interface::Interface(const InterfaceInput& input)
     : model(input.gravity),
