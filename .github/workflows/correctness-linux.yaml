@@ -1,5 +1,11 @@
 name: OpenTurbine-CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
   Correctness-Linux:
     runs-on: ubuntu-latest

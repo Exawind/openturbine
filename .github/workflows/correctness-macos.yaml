@@ -1,5 +1,11 @@
 name: OpenTurbine-CI
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
   Correctness-MacOS:
     runs-on: macos-latest
