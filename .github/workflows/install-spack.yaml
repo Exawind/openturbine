@@ -2,9 +2,9 @@ name: OpenTurbine-Install
 
 on:
   push:
-    paths-ignore:
-      - 'docs/**'
-      - '.github/workflows/deploy_docs.yaml'
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   Correctness-Linux:
