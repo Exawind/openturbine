@@ -29,21 +29,21 @@ reference line. We denote reference position as
    \end{aligned}
 
 where :math:`\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}`.
-Generalized displacements are denoted
+Generalized displacements and velcoties are denoted
 
 .. math::
 
-   \begin{aligned}
     \underline{q} = \begin{bmatrix}
      \underline{u} \\
-     \underline{\underline{R}}\\
+     \underline{\underline{R}} 
+    \end{bmatrix} \quad
+    \underline{v} = \begin{bmatrix}
+     \underline{\dot{u}} \\
+     \underline{\omega}
     \end{bmatrix}
-   \end{aligned}
 
 where :math:`\underline{q}(s,t) \in \mathbb{R}^3\times \mathrm{SO(3)}`,
-:math:`\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}` is the
-relative-rotation tensor, and :math:`\underline{u}(s,t)\in \mathbb{R}^3`
-is the displacement. The beam current (deformed) configuration at time
+:math:`\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}` is the relative-rotation tensor, :math:`\underline{u}(s,t)\in \mathbb{R}^3` is the displacement, :math:`\underline{v}(s,t)\in \mathbb{R}^6` and :math:`\underline{\omega}(s,t) \in \mathbb{R}^3` is the angular velocity. The beam current (deformed) configuration at time
 :math:`t` is given by
 
 .. math::
@@ -146,14 +146,16 @@ strong form as
    \underline{\mathcal{R}} = 
    \underline{\mathcal{F}}^I -
    \underline{\mathcal{F}}^{C\prime} +
-   \underline{\mathcal{F}}^D -
+   \underline{\mathcal{F}}^D +
+   \underline{\mathcal{F}}^d -
    \underline{\mathcal{F}}^\mathrm{ext} 
    :label: stronggoverning
 
 where each term is in :math:`\mathbb{R}^6`;
 :math:`\underline{\underline{\mathcal{F}}}^I(s,t)` is the inertial
-force, :math:`\underline{\underline{\mathcal{F}}}^C(s,t)` and
+force, :math:`\underline{\underline{\mathcal{F}}}^C(s,t)`
 :math:`\underline{\underline{\mathcal{F}}}^D(s,t)` are elastic forces,
+:math:`\underline{\underline{\mathcal{F}}}^d(s,t)` are damping forces,
 and :math:`\underline{\underline{\mathcal{F}}}^\mathrm{ext}` are the
 external forces and moments. The inertial force in the inertial frame is
 
@@ -215,6 +217,26 @@ coordinates, i.e.,
    \underline{\underline{{C}}}_{21} & \underline{\underline{{C}}}_{22} \end{bmatrix}
    \end{aligned}
 
+The damping forces are modeled as
+
+.. math::
+
+   \underline{\mathcal{F}}^d = 
+    \underline{\underline{D}}\, \begin{bmatrix} \underline{\dot{\epsilon}} \\ \underline{\dot{\kappa}} \end{bmatrix}
+   = \underline{\underline{D}}\, \begin{bmatrix} 
+     \underline{\dot{u}}^\prime - \widetilde{\omega} \underline{\underline{R}}\, \underline{x}^{0\prime}\\ 
+     \widetilde{\omega} \underline{\kappa} + \underline{\omega}^\prime
+   \end{bmatrix}
+
+where :math:`\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}` is the damping matrix in inertial coordinates. OpenTurbine currently uses stiffness proportional damping, i.e., 
+
+.. math::
+
+   \underline{\underline{D}} = 
+   \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{\mu}} \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T
+
+where :math:`\underline{\underline{\mu}} \in \mathbb{R}^6` is a diagonal matrix of user-defined damping coefficients.
+
 We describe the variation of the residual,
 Eq. :eq:`residual1`, in parts. Variation of the
 inertial forces can be written
@@ -223,8 +245,8 @@ inertial forces can be written
 
    \begin{aligned}
    \delta \underline{\mathcal{F}}^I =
-   \underline{\underline{\mathcal{M}}}^I \delta \ddot{\underline{q}}
-   + \underline{\underline{\mathcal{G}}}^I \delta \dot{\underline{q}}
+   \underline{\underline{\mathcal{M}}}^I \delta \dot{\underline{v}}
+   + \underline{\underline{\mathcal{G}}}^I \delta \underline{v}
    + \underline{\underline{\mathcal{K}}}^I \delta \underline{q}
    \end{aligned}
 
@@ -262,7 +284,8 @@ Variation of the elastic forces are as follows:
 
    \begin{aligned}
    \delta \underline{\mathcal{F}}^C =
-   \underline{\underline{\mathcal{C}}} \delta \underline{q}' + \underline{\underline{\mathcal{O}}} \delta \underline{q}
+   \underline{\underline{\mathcal{C}}} \delta \underline{q}' 
+   + \underline{\underline{\mathcal{O}}} \delta \underline{q}
    \end{aligned}
 
 .. math::
@@ -306,6 +329,67 @@ Variation of the elastic forces are as follows:
    \left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right) \right]
    \end{bmatrix}
    \end{aligned}
+
+Variation of the damping forces are as follows:
+
+.. math::
+
+   \delta \underline{\mathcal{F}}^D = 
+   \underline{\underline{D}} \delta \underline{v}^\prime +
+   \underline{\underline{\mathcal{G}}}^d \delta \underline{v} +
+   \underline{\underline{\mathcal{C}}}^d \delta \underline{q}^\prime  +
+   \underline{\underline{\mathcal{K}}}^d \delta \underline{q} 
+
+.. math::
+
+   \underline{\underline{\mathcal{G}}}^d =
+   \begin{bmatrix}
+   \underline{\underline{0}} & \underline{\underline{D}}_{11} 
+   \widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+   - \underline{\underline{D}}_{12} \widetilde{\kappa} \\
+   \underline{\underline{0}} & \underline{\underline{D}}_{21} 
+   \widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+   - \underline{\underline{D}}_{22} \widetilde{\kappa} \\
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{C}}}^d =
+   \begin{bmatrix}
+   \underline{\underline{0}} & 
+   \underline{\underline{D}}_{12}\widetilde{\omega}  \\
+   \underline{\underline{0}} & 
+   \underline{\underline{D}}_{22} \widetilde{\omega}
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{K}}}^d =
+   \begin{bmatrix}
+   \underline{\underline{0}} & 
+   -\widetilde{\underline{\underline{D}}_{11} \underline{\dot{e}}_1}
+   +\underline{\underline{D}}_{11} \widetilde{\dot{e}_1}
+   -\widetilde{\underline{\underline{D}}_{12} \underline{\dot{e}}_2}
+   +\underline{\underline{D}}_{12} \widetilde{\dot{e}_2}
+   +\underline{\underline{D}}_{11} \widetilde{\omega} 
+   \widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+   - \underline{\underline{D}}_{12} \widetilde{\omega}\widetilde{\kappa}
+   \\
+   \underline{\underline{0}} & 
+   -\widetilde{\underline{\underline{D}}_{21} \underline{\dot{e}}_1}
+   +\underline{\underline{D}}_{21} \widetilde{\dot{e}_1}
+   -\widetilde{\underline{\underline{D}}_{22} \underline{\dot{e}}_2}
+   +\underline{\underline{D}}_{22} \widetilde{\dot{e}_2}
+   +\underline{\underline{D}}_{22} \widetilde{\omega} 
+   \widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+   - \underline{\underline{D}}_{22} \widetilde{\omega}\widetilde{\kappa}
+   \end{bmatrix}
+
+
+
+
+
+**Local references**
 
 .. container:: references csl-bib-body hanging-indent
    :name: refs
