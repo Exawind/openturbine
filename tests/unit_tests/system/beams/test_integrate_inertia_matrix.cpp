@@ -19,7 +19,8 @@ inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     constexpr auto max_simd_size = size_t{8U};
 
     const auto qp_weights = CreateView<double[number_of_qps]>("weights", std::array<double, 1>{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("jacobian", std::array<double, 1>{3.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("jacobian", std::array<double, 1>{3.});
     const auto shape_interp = CreateLeftView<double[max_simd_size][number_of_qps]>(
         "shape_interp", std::array<double, max_simd_size>{5.}
     );

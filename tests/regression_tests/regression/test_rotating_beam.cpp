@@ -136,7 +136,8 @@ TEST(RotatingBeamTest, StepConvergence) {
         const auto x_root = math::RotateVectorByQuaternion(q, x0_root);
         const auto u_root =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
-        const auto displacement = std::array{u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]};
+        const auto displacement =
+            std::array{u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]};
         constraints.UpdateDisplacement(0, displacement);
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
