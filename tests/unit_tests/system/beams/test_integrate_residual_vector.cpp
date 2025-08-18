@@ -15,12 +15,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fc) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{0.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{0.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{3.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc =
@@ -57,12 +61,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fd) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{3.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{4.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{0.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
@@ -99,12 +107,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fi) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{3.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{4.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{0.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
@@ -141,12 +153,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fe) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{3.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{4.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{0.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
@@ -182,12 +198,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_Fg) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{3.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{4.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{0.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc = Kokkos::View<double[number_of_qps][6]>("qp_Fc");
@@ -223,12 +243,16 @@ TEST(IntegrateResidualVector, OneElementOneNodeOneQP_FX) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{3.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{4.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{3.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{4.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{0.}
+    );
 
     const auto node_FX =
         CreateView<double[number_of_nodes][6]>("node_FX", std::array{1., 2., 3., 4., 5., 6.});
@@ -264,12 +288,16 @@ TEST(IntegrateResidualVector, TwoElementsOneNodeOneQP) {
     constexpr auto number_of_nodes = size_t{1U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
-    const auto shape_interp =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0.});
-    const auto shape_deriv =
-        CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_deriv", std::array{3.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{0.});
+    const auto shape_interp = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_interp", std::array<double, 1>{0.}
+    );
+    const auto shape_deriv = CreateLeftView<double[number_of_nodes][number_of_qps]>(
+        "shape_deriv", std::array<double, 1>{3.}
+    );
 
     const auto node_FX = Kokkos::View<double[number_of_nodes][6]>("node_FX");
     const auto qp_Fc_1 =
@@ -359,8 +387,10 @@ TEST(IntegrateResidualVector, OneElementTwoNodesOneQP) {
     constexpr auto number_of_nodes = size_t{2U};
     constexpr auto number_of_qps = size_t{1U};
 
-    const auto qp_weights = CreateView<double[number_of_qps]>("qp_weights", std::array{2.});
-    const auto qp_jacobian = CreateView<double[number_of_qps]>("qp_jacobian", std::array{0.});
+    const auto qp_weights =
+        CreateView<double[number_of_qps]>("qp_weights", std::array<double, 1>{2.});
+    const auto qp_jacobian =
+        CreateView<double[number_of_qps]>("qp_jacobian", std::array<double, 1>{0.});
     const auto shape_interp =
         CreateLeftView<double[number_of_nodes][number_of_qps]>("shape_interp", std::array{0., 0.});
     const auto shape_deriv =

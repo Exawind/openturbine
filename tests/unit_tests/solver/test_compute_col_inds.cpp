@@ -210,7 +210,7 @@ TEST(ComputeColInds, OneElementOneNode_OneConstraint) {
         "target_node_freedom_table", std::array{6UL, 7UL, 8UL, 9UL, 10UL, 11UL}
     );
     const auto row_range = CreateView<Kokkos::pair<size_t, size_t>[1]>(
-        "row_range", std::array{Kokkos::make_pair(0UL, 6UL)}
+        "row_range", std::array<Kokkos::pair<size_t, size_t>, 1>{Kokkos::make_pair(0UL, 6UL)}
     );
     const auto row_ptrs = CreateView<int[19]>(
         "row_ptrs",

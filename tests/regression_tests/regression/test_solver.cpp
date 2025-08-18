@@ -95,13 +95,13 @@ inline void SetUpSolverAndAssemble() {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    auto u_rot = math::RotationVectorToQuaternion({0., 0., omega * step_size});
-    auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
-    auto u_trans =
+    const auto u_rot = math::RotationVectorToQuaternion({0., 0., omega * step_size});
+    const auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
+    const auto u_trans =
         std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
-    constraints.UpdateDisplacement(
-        0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
-    );
+    const auto displacement =
+        std::array{u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]};
+    constraints.UpdateDisplacement(0, displacement);
 
     // Predict the next state for the solver
     step::PredictNextState(parameters, state);
