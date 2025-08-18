@@ -18,15 +18,15 @@ typename Kokkos::View<ValueType>::const_type CreateView(
 }
 
 inline auto create_shape_interp_OneNodeOneQP() {
-    return CreateView<double[1][1][1]>("shape_interp", std::array{2.});
+    return CreateView<double[1][1][1]>("shape_interp", std::array<double, 1>{2.});
 }
 
 inline auto create_shape_deriv_OneNodeOneQP() {
-    return CreateView<double[1][1][1]>("shape_deriv", std::array{4.});
+    return CreateView<double[1][1][1]>("shape_deriv", std::array<double, 1>{4.});
 }
 
 inline auto create_jacobian_OneQP() {
-    return CreateView<double[1][1]>("jacobian", std::array{2.});
+    return CreateView<double[1][1]>("jacobian", std::array<double, 1>{2.});
 }
 
 inline auto create_shape_interp_OneNodeTwoQP() {

@@ -136,7 +136,8 @@ TEST(RotatingBeamTest, StepConvergence) {
         const auto x_root = math::RotateVectorByQuaternion(q, x0_root);
         const auto u_root =
             std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
-        constraints.UpdateDisplacement(0, {u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]});
+        const auto displacement = std::array{u_root[0], u_root[1], u_root[2], q[0], q[1], q[2], q[3]};
+        constraints.UpdateDisplacement(0, displacement);
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
@@ -369,7 +370,8 @@ TEST(RotatingBeamTest, MasslessConstraints) {
     for (auto i = 0; i < 10; ++i) {
         // Set constraint displacement
         const auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size * (i + 1)});
-        constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto displacement = std::array{0., 0., 0., q[0], q[1], q[2], q[3]};
+        constraints.UpdateDisplacement(hub_bc_id, displacement);
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
@@ -510,8 +512,9 @@ TEST(RotatingBeamTest, CompoundRotationControlConstraint) {
         const auto t = step_size * static_cast<double>(i + 1);
         pitch = t * M_PI / 2.;
         azimuth = 0.5 * t * M_PI / 2.;
-        auto q = math::RotationVectorToQuaternion({0., 0., azimuth});
-        constraints.UpdateDisplacement(hub_bc_id, {0., 0., 0., q[0], q[1], q[2], q[3]});
+        const auto q = math::RotationVectorToQuaternion({0., 0., azimuth});
+        const auto displacement = std::array{0., 0., 0., q[0], q[1], q[2], q[3]};
+        constraints.UpdateDisplacement(hub_bc_id, displacement);
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
