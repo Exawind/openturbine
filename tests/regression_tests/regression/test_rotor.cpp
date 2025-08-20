@@ -126,7 +126,7 @@ TEST(RotorTest, IEA15Rotor) {
         );
 
         // Define hub translation/rotation displacement
-        const auto u_hub = std::array<double, 7>{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on beam root nodes
         for (const auto bc_id : prescribed_bc_ids) {
@@ -232,7 +232,7 @@ TEST(RotorTest, IEA15RotorHub) {
         );
 
         // Define hub translation/rotation displacement
-        const auto u_hub = std::array<double, 7>{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on hub
         constraints.UpdateDisplacement(hub_bc_id, u_hub);
@@ -305,7 +305,7 @@ TEST(RotorTest, IEA15RotorController) {
             math::RotationVectorToQuaternion({omega[0] * t, omega[1] * t, omega[2] * t});
 
         // Update prescribed displacement constraint on hub
-        const auto u_hub = std::array<double, 7>{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
         constraints.UpdateDisplacement(hub_bc_id, u_hub);
 
         // Update time in controller
@@ -365,7 +365,7 @@ TEST(RotorTest, IEA15RotorHost) {
         );
 
         // Define hub translation/rotation displacement
-        const auto u_hub = std::array<double, 7>{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
+        const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
 
         // Update prescribed displacement constraint on beam root nodes
         for (const auto bc_id : prescribed_bc_ids) {
