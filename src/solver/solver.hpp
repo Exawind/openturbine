@@ -57,7 +57,7 @@ struct Solver {
 
     using HandleType = dss::Handle<algorithm>;
 #if defined(OpenTurbine_ENABLE_MKL)
-    using IndexType = std::conditional<algorithm == dss::Algorithm::MKL, MKL_INT, int>;
+    using IndexType = std::conditional<algorithm == dss::Algorithm::MKL, MKL_INT, int>::type;
 #else
     using IndexType = int;
 #endif
