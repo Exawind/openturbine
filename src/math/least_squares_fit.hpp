@@ -6,9 +6,15 @@
 
 #include <Kokkos_Core.hpp>
 
+#include "OpenTurbine_config.h"
+
 /// @cond
 namespace lapack {
+#ifdef OpenTurbine_ENABLE_MKL
+#include <mkl_lapacke.h>
+#else
 #include <lapacke.h>
+#endif
 }  // namespace lapack
 /// @endcond
 
@@ -163,11 +169,16 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     }
 
     // Solve the least squares problem for each dimension of B
-    const auto IPIV = Kokkos::View<int*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
+#ifdef OpenTurbine_ENABLE_MKL
+    using index_type = MKL_INT;
+#else
+    using index_type = int;
+#endif
+    const auto IPIV = Kokkos::View<index_type*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
 
     lapack::LAPACKE_dgesv(
-        LAPACK_COL_MAJOR, static_cast<int>(p), 3, A.data(), static_cast<int>(p), IPIV.data(),
-        B.data(), static_cast<int>(p)
+        LAPACK_COL_MAJOR, static_cast<index_type>(p), 3, A.data(), static_cast<index_type>(p), IPIV.data(),
+        B.data(), static_cast<index_type>(p)
     );
 
     auto result = std::vector<std::array<double, 3>>(B.extent(0));

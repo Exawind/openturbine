@@ -114,11 +114,14 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 #----------------------------------------
 # Set include directories
 #----------------------------------------
+if(OpenTurbine_ENABLE_MKL)
+else()
 find_path(LAPACKE_INCLUDE_DIRS lapacke.h)
 target_include_directories(openturbine_library SYSTEM
-  PUBLIC
-  ${LAPACKE_INCLUDE_DIRS}
+ PUBLIC
+${LAPACKE_INCLUDE_DIRS}
 )
+endif()
 
 target_include_directories(openturbine_library
   PUBLIC
