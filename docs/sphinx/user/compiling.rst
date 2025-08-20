@@ -130,6 +130,7 @@ Install Kokkos and Kokkos Kernels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For a simple serial build
+
 .. code-block:: bash
 
     spack install kokkos
