@@ -333,7 +333,8 @@ struct Constraints {
     }
 
     /// Sets the new displacement for the given constraint
-    void UpdateDisplacement(size_t constraint_id, const std::array<double, 7>& disp) const {
+    template <typename ArrayType>
+    void UpdateDisplacement(size_t constraint_id, const ArrayType& disp) const {
         for (auto component = 0U; component < 7U; ++component) {
             host_input(constraint_id, component) = disp[component];
         }

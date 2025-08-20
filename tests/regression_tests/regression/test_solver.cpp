@@ -330,9 +330,9 @@ inline void SetupAndTakeNoSteps() {
     auto x_root = math::RotateVectorByQuaternion(u_rot, x0_root);
     auto u_trans =
         std::array{x_root[0] - x0_root[0], x_root[1] - x0_root[1], x_root[2] - x0_root[2]};
-    constraints.UpdateDisplacement(
-        0, {u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]}
-    );
+    auto displacement =
+        std::array{u_trans[0], u_trans[1], u_trans[2], u_rot[0], u_rot[1], u_rot[2], u_rot[3]};
+    constraints.UpdateDisplacement(0, displacement);
 
     Step(parameters, solver, elements, state, constraints);
 
@@ -526,7 +526,8 @@ inline auto SetupAndTakeTwoSteps() {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     auto q = math::RotationVectorToQuaternion({0., 0., omega * step_size});
-    constraints.UpdateDisplacement(0, {0., 0., 0., q[0], q[1], q[2], q[3]});
+    auto displacement = std::array{0., 0., 0., q[0], q[1], q[2], q[3]};
+    constraints.UpdateDisplacement(0, displacement);
 
     Step(parameters, solver, elements, state, constraints);
 
