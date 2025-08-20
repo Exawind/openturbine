@@ -218,12 +218,11 @@ spack<span class="w"> </span>install<span class="w"> </span>suite-sparse
 </div>
 <div class="section" id="install-kokkos-and-kokkos-kernels">
 <h3>Install Kokkos and Kokkos Kernels<a class="headerlink" href="#install-kokkos-and-kokkos-kernels" title="Permalink to this heading"></a></h3>
-<p>For a simple serial build
-.. code-block:: bash</p>
-<blockquote>
-<div><p>spack install kokkos
-spack install kokkos-kernels</p>
-</div></blockquote>
+<p>For a simple serial build</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>kokkos
+spack<span class="w"> </span>install<span class="w"> </span>kokkos-kernels
+</pre></div>
+</div>
 <p>To compile with OpenMP support for parallelism on CPU based machines</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spack<span class="w"> </span>install<span class="w"> </span>kokkos+openmp
 spack<span class="w"> </span>install<span class="w"> </span>kokkos-kernels+openmp
