@@ -174,12 +174,11 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
 #else
     using index_type = int;
 #endif
-    const auto IPIV = Kokkos::View<index_type*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
+    const auto IPIV =
+        Kokkos::View<index_type*, Kokkos::LayoutLeft, Kokkos::HostSpace>("IPIV", B.extent(0));
+    const auto rows = static_cast<index_type>(p);
 
-    lapack::LAPACKE_dgesv(
-        LAPACK_COL_MAJOR, static_cast<index_type>(p), 3, A.data(), static_cast<index_type>(p), IPIV.data(),
-        B.data(), static_cast<index_type>(p)
-    );
+    lapack::LAPACKE_dgesv(LAPACK_COL_MAJOR, rows, 3, A.data(), rows, IPIV.data(), B.data(), rows);
 
     auto result = std::vector<std::array<double, 3>>(B.extent(0));
 
