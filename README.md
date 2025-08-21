@@ -1,4 +1,5 @@
 # OpenTurbine
+[Documentation](https://exawind.github.io/openturbine) | [Nightly test dashboard](http://my.cdash.org/index.php?project=Exawind) 
 
 **OpenTurbine development began in 2023, is ongoing, and we aim for beta release in 2025**
 
