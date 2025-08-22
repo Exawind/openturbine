@@ -44,11 +44,17 @@ parts) as
 .. math::
    \underline{R}_i = 
    \int_{-1}^{1} \phi_i \underline{\mathcal{R}}\, J d\xi = 
-   \int_{-1}^{1} \left(
-   \phi_i \underline{\mathcal{F}}^I +
-   \frac{\partial \phi_i}{\partial \xi} \underline{\mathcal{F}}^{C} J^{-1} +
-   \phi_i \underline{\mathcal{F}}^D  - 
-   \phi_i\underline{\mathcal{F}}^\mathrm{ext}\right)
+   \int_{-1}^{1} \left[
+   \frac{\partial \phi_i}{\partial \xi} 
+   \left(\underline{\mathcal{F}}^\mathrm{E1} +
+   \underline{\mathcal{F}}^\mathrm{D1} \right)J^{-1} 
+   + \phi_i \left(
+   \underline{\mathcal{F}}^\mathrm{I}  
+   + \underline{\mathcal{F}}^\mathrm{E2}  
+   + \underline{\mathcal{F}}^\mathrm{D2}  
+   - \underline{\mathcal{F}}^\mathrm{ext}
+   \right)
+   \right]
     J d\xi
    :label: weakresidual
 
@@ -128,10 +134,16 @@ written
 
    \begin{aligned}
    \underline{R} = \begin{bmatrix}
-   \underline{F}^I_1 + \underline{F}^E_1 - \underline{F}^\mathrm{ext}_1 \\
-   \underline{F}^I_2 + \underline{F}^E_2 - \underline{F}^\mathrm{ext}_2 \\
+   \underline{F}^\mathrm{I}_1 + \underline{F}^\mathrm{E}_1 
+   + \underline{F}^\mathrm{D}_1 
+   - \underline{F}^\mathrm{ext}_1  \\
+   \underline{F}^\mathrm{I}_2 + \underline{F}^\mathrm{E}_2 
+   + \underline{F}^\mathrm{D}_2 
+   - \underline{F}^\mathrm{ext}_2  \\
    \vdots \\
-   \underline{F}^I_P + \underline{F}^E_P - \underline{F}^\mathrm{ext}_P 
+   \underline{F}^\mathrm{I}_P + \underline{F}^\mathrm{E}_P 
+   + \underline{F}^\mathrm{D}_P 
+   - \underline{F}^\mathrm{ext}_P 
    \end{bmatrix}
    \end{aligned}
 
@@ -140,17 +152,29 @@ where :math:`\underline{R} \in \mathbb{R}^{6 P}` and
 .. math::
 
    \begin{aligned}
-   \underline{F}_i^{I} &=
+   \underline{F}_i^\mathrm{I} &=
    \sum_{k=1}^{n^Q}
    J(\xi^Q_k) \phi_i(\xi^Q_k) \underline{\mathcal{F}}^I(\xi^Q_k) w^Q_k\, \\
-   \underline{F}_i^E &=
-   \sum_{j=1}^{n^Q}
-   \left[ \left .\frac{\partial \phi_i}{\partial \xi}\right |_{\xi=\xi^Q_k}
-   {\underline{\mathcal{F}}^{C}}(\xi^Q_k)+ J(\xi^Q_k) \phi_i(\xi^Q_k) \underline{\mathcal{F}}^D(\xi^Q_k) \right] w^Q_k\, \\
-   \underline{F}_i^{ext} &=
+   \underline{F}_i^\mathrm{E} &=
+   \sum_{k=1}^{n^Q}
+   \left[\phi_i^\prime(\xi^Q_k) 
+   {\underline{\mathcal{F}}^{E1}}(\xi^Q_k)+ J(\xi^Q_k) \phi_i(\xi^Q_k) 
+   \underline{\mathcal{F}}^\mathrm{E2}(\xi^Q_k) \right] w^Q_k\, \\
+   \underline{F}_i^\mathrm{D} &=
+   \sum_{k=1}^{n^Q}
+   \left[\phi_i^\prime(\xi^Q_k) 
+   {\underline{\mathcal{F}}^{D1}}(\xi^Q_k)+ J(\xi^Q_k) \phi_i(\xi^Q_k) 
+   \underline{\mathcal{F}}^\mathrm{D2}(\xi^Q_k) \right] w^Q_k\, \\
+   \underline{F}_i^\mathrm{ext} &=
    \sum_{k=1}^{n^Q} \phi_i (\xi^Q_k)
    \underline{F}^{ext}(\xi^Q_k) J(\xi^Q_k) w^Q_k 
    \end{aligned}
+
+and 
+
+.. math::
+    \phi_i^\prime(\xi^Q_k) = \left .\frac{\partial \phi_i}{\partial \xi}\right|_{\xi=\xi^Q_k}
+
 
 The matrices required for the time-integration iteration matrix in
 Eq. :eq:`iteration` are constructed from the
@@ -161,20 +185,38 @@ following:
    \begin{aligned}
    \underline{\underline{M}}_{ij} =
    \sum_{k=1}^{n^Q} &
-   \phi_i(\xi^Q_k) \underline{\underline{\mathcal{M}}}(\xi^Q_k) \phi_j(\xi^Q_k) J(\xi^Q_k) w^Q_k \\
+   \phi_i(\xi^Q_k) \underline{\underline{M}}(\xi^Q_k) \phi_j(\xi^Q_k) J(\xi^Q_k) w^Q_k \\
    %
    \underline{\underline{G}}_{ij} =
    \sum_{k=1}^{n^Q} &
-   \phi_i(\xi^Q_k) \underline{\underline{\mathcal{G}}}(\xi^Q_k) \phi_j(\xi^Q_k) J(\xi^Q_k) w^Q_k \\
+   \Big\{
+   \phi'_i(\xi^Q_k) \underline{\underline{D}}(\xi^Q_k) \phi'_j(\xi^Q_k) \frac{1}{J(\xi^Q_k)} \\
+   &+ \phi_i^\prime (\xi^Q_k) \underline{\underline{\mathcal{G}}}^\mathrm{D1}(\xi^Q_k) \phi_j(\xi^Q_k) \\
+   & +\phi_i(\xi^Q_k) \underline{\underline{D}}^\mathrm{D2}(\xi^Q_k) \phi^\prime_j(\xi^Q_k) \\
+   & \phi_i(\xi^Q_k) \left[\underline{\underline{\mathcal{G}}}^\mathrm{I}(\xi^Q_k) 
+   + \underline{\underline{\mathcal{G}}}^\mathrm{D2}(\xi^Q_k) \right] \phi_j(\xi^Q_k) J(\xi^Q_k)
+   \Big\}w^Q_k \\
    %
    \underline{\underline{K}}_{ij} =
    \sum_{k=1}^{n^Q} 
-   \Big\{ & \phi_i(\xi^Q_k) \underline{\underline{\mathcal{P}}}(\xi^Q_k) \phi'_j(\xi^Q_k) +
-   \phi_i(\xi^Q_k) \left[\underline{\underline{\mathcal{K}}}(\xi^Q_k)+\underline{\underline{\mathcal{Q}}}(\xi^Q_k) \right]\phi_j(\xi^Q_k) J(\xi^Q_k)+ \\
-   &
-   \phi'_i(\xi^Q_k) \underline{\underline{\mathcal{C}}}(\xi^Q_k) \phi'_j(\xi^Q_k) \frac{1}{J(\xi^Q_k)}+
-   \phi'_i(\xi^Q_k) \underline{\underline{\mathcal{O}}}(\xi^Q_k) \phi_j(\xi^Q_k)
-   \Big\} w^Q_k \\
+   \Big\{& 
+   \phi'_i(\xi^Q_k) \left[
+   \underline{\underline{C}}(\xi^Q_k) 
+   + \underline{\underline{D}}^\mathrm{D1}(\xi^Q_k) 
+    \right] \phi'_j(\xi^Q_k) \frac{1}{J(\xi^Q_k)} \\
+   & + \phi'_i(\xi^Q_k) \left[
+   \underline{\underline{K}}^\mathrm{E1}(\xi^Q_k) 
+   + \underline{\underline{K}}^\mathrm{D1}(\xi^Q_k) 
+    \right] \phi_j(\xi^Q_k) \\
+   & \phi_i(\xi^Q_k) \left[ 
+   \underline{\underline{\mathcal{P}}}^\mathrm{E2}(\xi^Q_k) +
+   \underline{\underline{\mathcal{P}}}^\mathrm{D2}(\xi^Q_k) \right]
+   \phi'_j(\xi^Q_k) \\
+   & + \phi_i(\xi^Q_k) \left[
+   \underline{\underline{\mathcal{K}}}^\mathrm{E2}(\xi^Q_k)
+   +\underline{\underline{\mathcal{K}}}^\mathrm{D2}(\xi^Q_k) 
+   \right]\phi_j(\xi^Q_k) J(\xi^Q_k)
+   \Big\} w^Q_k 
    \end{aligned}
 
 for all :math:`i,j \in\{1,2, \ldots, P\}` and
