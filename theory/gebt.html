@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Legendre spectral finite elements" href="lsfe.html" />
-    <link rel="prev" title="Beam" href="beam.html" /> 
+    <link rel="prev" title="Geometrically Exact Beams" href="beam.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,7 +60,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="member-types.html">Member library</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="rigid.html">Rigid body</a></li>
 <li class="toctree-l3"><a class="reference internal" href="spring.html">Geometrically nonlinear spring</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="beam.html">Beam</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="beam.html">Geometrically Exact Beams</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Geometrically exact beam theory</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lsfe.html">Legendre spectral finite elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="quadrature.html">Notes on quadrature</a></li>
@@ -94,7 +94,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Theory Manual</a></li>
           <li class="breadcrumb-item"><a href="member-types.html">Member library</a></li>
-          <li class="breadcrumb-item"><a href="beam.html">Beam</a></li>
+          <li class="breadcrumb-item"><a href="beam.html">Geometrically Exact Beams</a></li>
       <li class="breadcrumb-item active">Geometrically exact beam theory</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/theory/gebt.rst.txt" rel="nofollow"> View page source</a>
@@ -129,18 +129,18 @@ reference line. We denote reference position as</p>
  \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>.
-Generalized displacements are denoted</p>
+Generalized displacements and velocities are denoted</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{aligned}
- \underline{q} = \begin{bmatrix}
-  \underline{u} \\
-  \underline{\underline{R}}\\
- \end{bmatrix}
-\end{aligned}\end{split}\]</div>
+\[\begin{split}\underline{q} = \begin{bmatrix}
+ \underline{u} \\
+ \underline{\underline{R}}
+\end{bmatrix} \quad
+\underline{v} = \begin{bmatrix}
+ \underline{\dot{u}} \\
+ \underline{\omega}
+\end{bmatrix}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\underline{q}(s,t) \in \mathbb{R}^3\times \mathrm{SO(3)}\)</span>,
-<span class="math notranslate nohighlight">\(\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}\)</span> is the
-relative-rotation tensor, and <span class="math notranslate nohighlight">\(\underline{u}(s,t)\in \mathbb{R}^3\)</span>
-is the displacement. The beam current (deformed) configuration at time
+<span class="math notranslate nohighlight">\(\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}\)</span> is the relative-rotation tensor, <span class="math notranslate nohighlight">\(\underline{u}(s,t)\in \mathbb{R}^3\)</span> is the displacement, <span class="math notranslate nohighlight">\(\underline{v}(s,t)\in \mathbb{R}^6\)</span> and <span class="math notranslate nohighlight">\(\underline{\omega}(s,t) \in \mathbb{R}^3\)</span> is the angular velocity. The beam current (deformed) configuration at time
 <span class="math notranslate nohighlight">\(t\)</span> is given by</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
@@ -219,19 +219,24 @@ quantities in <span class="math notranslate nohighlight">\(s\in[0,L]\)</span>.</
 strong form as</p>
 <div class="math notranslate nohighlight" id="equation-stronggoverning">
 <span class="eqno">(9)<a class="headerlink" href="#equation-stronggoverning" title="Permalink to this equation"></a></span>\[\underline{\mathcal{R}} =
-\underline{\mathcal{F}}^I -
-\underline{\mathcal{F}}^{C\prime} +
-\underline{\mathcal{F}}^D -
-\underline{\mathcal{F}}^\mathrm{ext}\]</div>
+\underline{\mathcal{F}}^\mathrm{I}
+- \underline{\mathcal{F}}^{\mathrm{E1}\prime}
+- \underline{\mathcal{F}}^{\mathrm{D1}\prime}
++ \underline{\mathcal{F}}^\mathrm{E2}
++ \underline{\mathcal{F}}^\mathrm{D2}
+- \underline{\mathcal{F}}^\mathrm{ext}\]</div>
 <p>where each term is in <span class="math notranslate nohighlight">\(\mathbb{R}^6\)</span>;
-<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^I(s,t)\)</span> is the inertial
-force, <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^C(s,t)\)</span> and
-<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^D(s,t)\)</span> are elastic forces,
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{I}(s,t)\)</span> is the inertial
+force,
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{E1\prime}(s,t)\)</span>
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{E2}(s,t)\)</span> are elastic forces,
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{D1\prime}(s,t)\)</span>
+<span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{D2}(s,t)\)</span> are damping forces,
 and <span class="math notranslate nohighlight">\(\underline{\underline{\mathcal{F}}}^\mathrm{ext}\)</span> are the
 external forces and moments. The inertial force in the inertial frame is</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\mathcal{F}}^I =
+\underline{\mathcal{F}}^\mathrm{I} =
 \begin{bmatrix}
 \dot{\underline{h}} \\ \dot{\underline{g}} + \dot{\widetilde{u}} \underline{g}
 \end{bmatrix}
@@ -257,11 +262,11 @@ m \underline{\underline{I}}_3 &amp; m \tilde{\eta}^T\\
 m \tilde{\eta} &amp; \underline{\underline{\rho}}
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
-<p>The elastic forces are</p>
+<p>The elastic-force terms are</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\mathcal{F}}^C &amp;= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
-\underline{\mathcal{F}}^D &amp;=
+\underline{\mathcal{F}}^\mathrm{E1} &amp;= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
+\underline{\mathcal{F}}^\mathrm{E2} &amp;=
 \begin{bmatrix} \underline{0} \\
 \left(\tilde{x}'^\mathrm{r}+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon}
 + \underline{\underline{C}}_{12} \underline{\kappa}\right)  \end{bmatrix}
@@ -271,25 +276,40 @@ m \tilde{\eta} &amp; \underline{\underline{\rho}}
 are the submatrices of the full sectional stiffness matrix in inertial
 coordinates, i.e.,</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\begin{aligned}
-\underline{\underline{C}} = \begin{bmatrix}
+\[\begin{split}\underline{\underline{C}} = \begin{bmatrix}
 \underline{\underline{{C}}}_{11} &amp; \underline{\underline{{C}}}_{12} \\
-\underline{\underline{{C}}}_{21} &amp; \underline{\underline{{C}}}_{22} \end{bmatrix}
-\end{aligned}\end{split}\]</div>
+\underline{\underline{{C}}}_{21} &amp; \underline{\underline{{C}}}_{22} \end{bmatrix}\end{split}\]</div>
+<p>The damping-force terms are modeled as</p>
+<div class="math notranslate nohighlight" id="equation-straindot">
+<span class="eqno">(10)<a class="headerlink" href="#equation-straindot" title="Permalink to this equation"></a></span>\[\begin{split}\underline{\mathcal{F}}^\mathrm{D1} =
+ \underline{\underline{D}}\, \begin{bmatrix} \underline{\dot{\epsilon}} \\ \underline{\dot{\kappa}} \end{bmatrix}
+= \underline{\underline{D}}\, \begin{bmatrix}
+  \underline{\dot{u}}^\prime - \widetilde{\omega} \underline{\underline{R}}\, \underline{x}^{0\prime}\\
+  \widetilde{\omega} \underline{\kappa} + \underline{\omega}^\prime
+\end{bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}\)</span> is the damping matrix in inertial coordinates. OpenTurbine currently uses stiffness proportional damping, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{D}}
+= \begin{bmatrix}
+\underline{\underline{{D}}}_{11} &amp; \underline{\underline{{D}}}_{12} \\
+\underline{\underline{{D}}}_{21} &amp; \underline{\underline{{D}}}_{22}
+\end{bmatrix} =
+\underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{\mu}} \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\underline{\mu}} \in \mathbb{R}^6\)</span> is a diagonal matrix of user-defined damping coefficients.</p>
 <p>We describe the variation of the residual,
 Eq. <a class="reference internal" href="overview.html#equation-residual1">(2)</a>, in parts. Variation of the
 inertial forces can be written</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
-\delta \underline{\mathcal{F}}^I =
-\underline{\underline{\mathcal{M}}}^I \delta \ddot{\underline{q}}
-+ \underline{\underline{\mathcal{G}}}^I \delta \dot{\underline{q}}
+\delta \underline{\mathcal{F}}^\mathrm{I} =
+\underline{\underline{M}} \delta \dot{\underline{v}}
++ \underline{\underline{\mathcal{G}}}^I \delta \underline{v}
 + \underline{\underline{\mathcal{K}}}^I \delta \underline{q}
 \end{aligned}\]</div>
 <p>where</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{\mathcal{G}}} =
+\underline{\underline{\mathcal{G}}}^\mathrm{I} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
          + \widetilde{\omega} m \widetilde{\eta}^T\\
@@ -298,7 +318,7 @@ inertial forces can be written</p>
 \end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{\mathcal{K}}} =
+\underline{\underline{\mathcal{K}}}^\mathrm{I} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
         \right) m \widetilde{\eta}^T\\
@@ -312,12 +332,14 @@ inertial forces can be written</p>
 <p>Variation of the elastic forces are as follows:</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
-\delta \underline{\mathcal{F}}^C =
-\underline{\underline{\mathcal{C}}} \delta \underline{q}' + \underline{\underline{\mathcal{O}}} \delta \underline{q}
+\delta \underline{\mathcal{F}}^\mathrm{E1} =
+\underline{\underline{C}} \delta \underline{q}'
++ \underline{\underline{\mathcal{K}}}^\mathrm{E1}
+\delta \underline{q}
 \end{aligned}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{\mathcal{O}}} =
+\underline{\underline{\mathcal{K}}}^\mathrm{E1} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp;  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)   \\
 \underline{\underline{0}} &amp;  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)
@@ -325,23 +347,23 @@ inertial forces can be written</p>
 \end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
-\delta \underline{\mathcal{F}}^D =
-\underline{\underline{\mathcal{P}}} \delta \underline{q}' + \underline{\underline{\mathcal{Q}}} \delta \underline{q}
+\delta \underline{\mathcal{F}}^\mathrm{E2} =
+\underline{\underline{\mathcal{P}}}^\mathrm{E2} \delta \underline{q}' + \underline{\underline{\mathcal{K}}}^\mathrm{E2} \delta \underline{q}
 \end{aligned}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{\mathcal{P}}} =
+\underline{\underline{\mathcal{P}}}^\mathrm{E2} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \underline{\underline{0}} \\
  \widetilde{N} + \left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)^T
-\underline{\underline{\mathcal{C}}}_{11} &amp;
+\underline{\underline{C}}_{11} &amp;
 \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
-\underline{\underline{\mathcal{C}}}_{12}
+\underline{\underline{C}}_{12}
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{aligned}
-\underline{\underline{\mathcal{Q}}} =
+\underline{\underline{\mathcal{K}}}^\mathrm{E2} =
 \begin{bmatrix}
 \underline{\underline{0}} &amp; \underline{\underline{0}} \\
  \underline{\underline{0}} &amp;
@@ -349,6 +371,97 @@ inertial forces can be written</p>
 \left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right) \right]
 \end{bmatrix}
 \end{aligned}\end{split}\]</div>
+<p>Variation of the damping forces are as follows:</p>
+<div class="math notranslate nohighlight">
+\[\delta \underline{\mathcal{F}}^\mathrm{D1} =
+\underline{\underline{D}} \delta \underline{v}^\prime +
+\underline{\underline{\mathcal{G}}}^\mathrm{D1} \delta \underline{v} +
+\underline{\underline{\mathcal{D}}}^\mathrm{D1} \delta \underline{q}^\prime  +
+\underline{\underline{\mathcal{K}}}^\mathrm{D1} \delta \underline{q}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{G}}}^\mathrm{D1} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{D}}_{11}
+\widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+- \underline{\underline{D}}_{12} \widetilde{\kappa} \\
+\underline{\underline{0}} &amp; \underline{\underline{D}}_{21}
+\widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+- \underline{\underline{D}}_{22} \widetilde{\kappa} \\
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{D}}}^\mathrm{D1} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp;
+\underline{\underline{D}}_{12}\widetilde{\omega}  \\
+\underline{\underline{0}} &amp;
+\underline{\underline{D}}_{22} \widetilde{\omega}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{K}}}^\mathrm{D1} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp;
+-\widetilde{\underline{\underline{D}}_{11} \underline{\dot{\epsilon}}}
++\underline{\underline{D}}_{11} \widetilde{\dot{\epsilon}}
+-\widetilde{\underline{\underline{D}}_{12} \underline{\dot{\kappa}}}
++\underline{\underline{D}}_{12} \widetilde{\dot{\kappa}}
++\underline{\underline{D}}_{11} \widetilde{\omega}
+\widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+- \underline{\underline{D}}_{12} \widetilde{\omega}\widetilde{\kappa}
+\\
+\underline{\underline{0}} &amp;
+-\widetilde{\underline{\underline{D}}_{21} \underline{\dot{\epsilon}}}
++\underline{\underline{D}}_{21} \widetilde{\dot{\epsilon}}
+-\widetilde{\underline{\underline{D}}_{22} \underline{\dot{\kappa}}}
++\underline{\underline{D}}_{22} \widetilde{\dot{\kappa}}
++\underline{\underline{D}}_{22} \widetilde{\omega}
+\widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+- \underline{\underline{D}}_{22} \widetilde{\omega}\widetilde{\kappa}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\delta \underline{\mathcal{F}}^\mathrm{D2} =
+\underline{\underline{\mathcal{D}}}^\mathrm{D2} \delta \underline{v}^\prime +
+\underline{\underline{\mathcal{G}}}^\mathrm{D2} \delta \underline{v} +
+\underline{\underline{\mathcal{P}}}^\mathrm{D2} \delta \underline{q}^\prime  +
+\underline{\underline{\mathcal{K}}}^\mathrm{D2} \delta \underline{q}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{D}}}^\mathrm{D2} = \begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+\underline{\underline{D}}_{11} &amp; \underline{\underline{D}}_{12}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{G}}}^\mathrm{D2} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+\underline{\underline{0}} &amp; \underline{\underline{D}}_{11}
+\widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+- \underline{\underline{D}}_{12} \widetilde{\kappa}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{P}}}^\mathrm{D2} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp; \underline{\underline{0}} \\
+-\widetilde{\underline{\underline{D}}_{11} \dot{\underline{\epsilon}}}
+-\widetilde{\underline{\underline{D}}_{12} \dot{\underline{\kappa}}}
+&amp;
+\underline{\underline{D}}_{12} \widetilde{\omega}
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underline{\underline{\mathcal{K}}}^\mathrm{D2} =
+\begin{bmatrix}
+\underline{\underline{0}} &amp;
+\underline{\underline{0}}
+\\
+\underline{\underline{0}} &amp;
+-\widetilde{\underline{\underline{D}}_{11} \underline{\dot{\epsilon}}}
++\underline{\underline{D}}_{11} \widetilde{\dot{\epsilon}}
+-\widetilde{\underline{\underline{D}}_{12} \underline{\dot{\kappa}}}
++\underline{\underline{D}}_{12} \widetilde{\dot{\kappa}}
++\underline{\underline{D}}_{r1} \widetilde{\omega}
+\widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+- \underline{\underline{D}}_{12} \widetilde{\omega}\widetilde{\kappa}
+\end{bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\underline{\dot{\epsilon}}\)</span> and <span class="math notranslate nohighlight">\(\underline{\dot{\kappa}}\)</span> are defined in <a class="reference internal" href="#equation-straindot">(10)</a>.</p>
+<p><strong>Local references</strong></p>
 <div class="references csl-bib-body hanging-indent docutils container" id="refs">
 <div class="csl-entry docutils container" id="ref-bauchau-2011">
 <p>Bauchau, O. A. 2011. <em>Flexible Multibody Dynamics</em>. Springer.</p>
@@ -384,7 +497,7 @@ FAST Modular Framework.” <em>Wind Energy</em>.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="beam.html" class="btn btn-neutral float-left" title="Beam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beam.html" class="btn btn-neutral float-left" title="Geometrically Exact Beams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lsfe.html" class="btn btn-neutral float-right" title="Legendre spectral finite elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -144,7 +144,7 @@ massless 6-DOF node, and a fluid model whose motion is tied to structure
 motion. The interface should be such that only the following nodal data
 (for <span class="math notranslate nohighlight">\(P\)</span> nodes) is transferred after initialization:</p>
 <div class="math notranslate nohighlight" id="equation-fsi-data">
-<span class="eqno">(13)<a class="headerlink" href="#equation-fsi-data" title="Permalink to this equation"></a></span>\[\underline{f}_i^n \in \mathbb{R}^3, \,
+<span class="eqno">(14)<a class="headerlink" href="#equation-fsi-data" title="Permalink to this equation"></a></span>\[\underline{f}_i^n \in \mathbb{R}^3, \,
 \underline{m}_i^n \in \mathbb{R}^3, \,
 \underline{q}_i^n \in \mathbb{R}^7,\,
 \underline{v}_i^n \in \mathbb{R}^6, \qquad i\in \{1,\ldots,P\}\]</div>
@@ -301,7 +301,7 @@ by</p>
 <p>An OpenTurbine goal is to provide an API that facilitates robust and accurate coupling with fluid-dynamics codes, like those in the ExaWind suite. OpenTurbine needs to provide data to the fluid solver at the “right” time and place. In our approach, we assume that OpenTurbine and the fluid solver are operating on a shared timeline.  However, the structural time integration scheme is typically different than that of the fluid solver, and the codes may be using different time step sizes.  For example, accuracy or stability requirements may require <span class="math notranslate nohighlight">\(\Delta t^\mathrm{st} &lt; \Delta t^\mathrm{fl}\)</span>, or vice versa, where <span class="math notranslate nohighlight">\(\Delta t^\mathrm{st}\)</span> and <span class="math notranslate nohighlight">\(\Delta t^\mathrm{fl}\)</span> are the structure and fluid time steps, respectively.  In the following, <span class="math notranslate nohighlight">\(\Delta t^{n+1}\)</span> is the FSI timestep for data sharing between codes such that <span class="math notranslate nohighlight">\(t^{n+1} = t^{n} + \Delta t^{n+1}\)</span>, and we require that <span class="math notranslate nohighlight">\(\Delta t^\mathrm{fluid} = A \Delta t^\mathrm{structure}\)</span>
 <span class="math notranslate nohighlight">\(A\ge 1\)</span> is a positive integer, and <span class="math notranslate nohighlight">\(\Delta t^{n+1}\)</span> is taken equal to <span class="math notranslate nohighlight">\(\Delta t^\mathrm{fluid}\)</span>.</p>
 <p>Depending on the fluid solver, OpenTurbine output may be required at <span class="math notranslate nohighlight">\(t^n\)</span> (e.g., fluid solver is explicit), <span class="math notranslate nohighlight">\(t^{n+1/2}\)</span> (e.g., fluid solver is Crank-Nicolson), or <span class="math notranslate nohighlight">\(t^{n+1}\)</span> (e.g., fluid solver is backwards Euler). For example, the Nalu-Wind CFD code uses a backwards Euler time integration scheme and AMR-Wind uses a Crank-Nicolson-like solver; these two CFD codes are our primary targets for coupling.</p>
-<p>Assume we know the following states at time <span class="math notranslate nohighlight">\(t^n\)</span>, which are the data being transferred between the fluid and structure (see Eq. <a class="reference internal" href="#equation-fsi-data">(13)</a>):</p>
+<p>Assume we know the following states at time <span class="math notranslate nohighlight">\(t^n\)</span>, which are the data being transferred between the fluid and structure (see Eq. <a class="reference internal" href="#equation-fsi-data">(14)</a>):</p>
 <div class="math notranslate nohighlight">
 \[\begin{aligned}
 \underline{f}_\ell^{n-1} \in \mathbb{R}^3, \,

@@ -1,7 +1,7 @@
 .. _sec-beam:
 
-Beam 
-----
+Geometrically Exact Beams
+-------------------------
 
 .. toctree::
    gebt
