@@ -29,7 +29,7 @@ reference line. We denote reference position as
    \end{aligned}
 
 where :math:`\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}`.
-Generalized displacements and velcoties are denoted
+Generalized displacements and velocities are denoted
 
 .. math::
 
