@@ -2,6 +2,7 @@ target_sources(openturbine_library
   PRIVATE
   beam.cpp
   beam_builder.cpp
+  inflow.cpp
   solution_builder.cpp
   turbine.cpp
   turbine_builder.cpp
@@ -12,6 +13,7 @@ install(FILES
         beam_builder.hpp
         beam_input.hpp
         controller_input.hpp
+        inflow.hpp
         solution_builder.hpp
         solution_input.hpp
         turbine.hpp
