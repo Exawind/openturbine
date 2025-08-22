@@ -232,7 +232,11 @@ where :math:`\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}` is the dampin
 
 .. math::
 
-   \underline{\underline{D}} = 
+   \underline{\underline{D}} 
+   = \begin{bmatrix}
+   \underline{\underline{{D}}}_{11} & \underline{\underline{{D}}}_{12} \\
+   \underline{\underline{{D}}}_{21} & \underline{\underline{{D}}}_{22}
+   \end{bmatrix} = 
    \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{\mu}} \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T
 
 where :math:`\underline{\underline{\mu}} \in \mathbb{R}^6` is a diagonal matrix of user-defined damping coefficients.
@@ -341,12 +345,6 @@ Variation of the damping forces are as follows:
    \underline{\underline{\mathcal{D}}}^\mathrm{D1} \delta \underline{q}^\prime  +
    \underline{\underline{\mathcal{K}}}^\mathrm{D1} \delta \underline{q} 
 
-.. math::
-
-   \underline{\underline{D}} = \begin{bmatrix}
-   \underline{\underline{{D}}}_{11} & \underline{\underline{{D}}}_{12} \\
-   \underline{\underline{{D}}}_{21} & \underline{\underline{{D}}}_{22} 
-   \end{bmatrix}
 
 
 .. math::
