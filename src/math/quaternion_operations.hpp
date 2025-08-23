@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <iterator>
 #include <numbers>
 #include <ranges>
@@ -178,6 +179,21 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
     for (auto i = 1; i < 4; ++i) {
         q_out(i) = -q_in(i) / length;
     }
+}
+
+/**
+ * @brief Computes the inverse of a quaternion
+ */
+inline std::array<double, 4> QuaternionInverse(const std::array<double, 4>& quaternion) {
+    const auto length = std::sqrt(
+        quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] +
+        quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3]
+    );
+
+    return {
+        quaternion[0] / length, -quaternion[1] / length, -quaternion[2] / length,
+        -quaternion[3] / length
+    };
 }
 
 /**
