@@ -1,7 +1,7 @@
 Compiling
 =========
 
-OpenTurbine is developed in C++17 and is designed to be buildable on any system with a compliant compiler.
+OpenTurbine is developed in C++20 and is designed to be buildable on any system with a compliant compiler.
 It utilizes `Kokkos <https://github.com/kokkos/kokkos>`_ to ensure performance portability, allowing it to run on any platform supported by these projects.
 We strive to test OpenTurbine on a wide range of platforms, including Linux and macOS, although it is not feasible to cover every possible configuration.
 This document outlines the build procedure verified to work on Linux (RHEL8).
@@ -89,7 +89,7 @@ Dependencies
 
 Before building OpenTurbine, you'll need the following:
 
-- C++ compiler that supports the C++17 standard
+- C++ compiler that supports the C++20 standard
 - `CMake <https://cmake.org/>`_: the default build system for C++ projects, version 3.21 or later
 - `Kokkos <https://github.com/kokkos/kokkos>`_: core programming model for performance portability
 - `KokkosKernels <https://github.com/kokkos/kokkoskernels>`_: performance portable linear algebra library
