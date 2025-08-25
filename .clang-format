@@ -91,4 +91,4 @@ PointerAlignment: Left
 QualifierAlignment: Left
 
 # Language standard
-Standard: c++17
+Standard: c++20
