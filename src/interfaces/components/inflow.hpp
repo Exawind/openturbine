@@ -19,7 +19,7 @@ struct UniformFlowParameters {
      * @param position 3D position [x, y, z]
      * @return 3D velocity vector [vx, vy, vz]
      */
-    std::array<double, 3> Velocity(const std::array<double, 3>& position) const;
+    [[nodiscard]] std::array<double, 3> Velocity(const std::array<double, 3>& position) const;
 };
 
 /**
@@ -35,13 +35,14 @@ struct UniformFlow {
      * @param position 3D position [x, y, z]
      * @return 3D velocity vector [vx, vy, vz]
      */
-    std::array<double, 3> Velocity(double t, const std::array<double, 3>& position) const;
+    [[nodiscard]] std::array<double, 3> Velocity(double t, const std::array<double, 3>& position)
+        const;
 };
 
 /**
  * @brief Type of inflow model
  */
-enum class InflowType {
+enum class InflowType : std::uint8_t {
     Uniform = 1,  ///< Uniform flow
 };
 
@@ -52,14 +53,21 @@ struct Inflow {
     InflowType type;           ///< Type of inflow model
     UniformFlow uniform_flow;  ///< Uniform flow parameters
 
+    /// Default constructor
+    Inflow() = default;
+
+    /// Constructor with type and uniform flow parameters
+    Inflow(InflowType type, const UniformFlow& uniform_flow)
+        : type(type), uniform_flow(uniform_flow) {}
+
     /**
      * @brief Creates a steady wind inflow
-     * @param velocity_horizontal Horizontal inflow velocity (m/s)
-     * @param height_reference Reference height (m)
-     * @param shear_vertical Vertical shear exponent
-     * @param flow_angle_horizontal Flow angle relative to x axis (radians)
+     * @param vh Horizontal inflow velocity (m/s)
+     * @param z_ref Reference height (m)
+     * @param alpha Vertical shear exponent
+     * @param angle_h Flow angle relative to x axis (radians)
      */
-    static Inflow SteadyWind(double vh, double z_ref, double alpha, double flow_angle_h);
+    static Inflow SteadyWind(double vh, double z_ref, double alpha, double angle_h);
 
     /**
      * @brief Calculates velocity vector at a given time and position
@@ -67,7 +75,8 @@ struct Inflow {
      * @param position 3D position [x, y, z]
      * @return 3D velocity vector [vx, vy, vz]
      */
-    std::array<double, 3> Velocity(double t, const std::array<double, 3>& position) const;
+    [[nodiscard]] std::array<double, 3> Velocity(double t, const std::array<double, 3>& position)
+        const;
 };
 
 }  // namespace openturbine::interfaces::components

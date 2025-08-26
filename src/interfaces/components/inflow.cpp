@@ -8,11 +8,11 @@ namespace openturbine::interfaces::components {
 std::array<double, 3> UniformFlowParameters::Velocity(const std::array<double, 3>& position) const {
     // Calculate horizontal velocity using power law wind shear
     // vh = v_ref * (z / z_ref)^alpha
-    double vh = velocity_horizontal * std::pow(position[2] / height_reference, shear_vertical);
+    const double vh = velocity_horizontal * std::pow(position[2] / height_reference, shear_vertical);
 
     // Apply horizontal direction to the velocity vector
-    double sin_flow_angle = std::sin(flow_angle_horizontal);
-    double cos_flow_angle = std::cos(flow_angle_horizontal);
+    const double sin_flow_angle = std::sin(flow_angle_horizontal);
+    const double cos_flow_angle = std::cos(flow_angle_horizontal);
     return {vh * cos_flow_angle, -vh * sin_flow_angle, 0.};
 }
 
@@ -28,20 +28,16 @@ std::array<double, 3> UniformFlow::Velocity(
     throw std::runtime_error("Time-dependent uniform flow not implemented yet");
 }
 
-Inflow Inflow::SteadyWind(double vh, double z_ref, double alpha, double flow_angle_h) {
-    return Inflow{
-        .type = InflowType::Uniform,
-        .uniform_flow =
-            UniformFlow{
-                .time = {0.},
-                .data = {UniformFlowParameters{
-                    .velocity_horizontal = vh,
-                    .height_reference = z_ref,
-                    .shear_vertical = alpha,
-                    .flow_angle_horizontal = flow_angle_h
-                }}
+Inflow Inflow::SteadyWind(double vh, double z_ref, double alpha, double angle_h) {
+    return Inflow(
+        InflowType::Uniform,
+        UniformFlow{
+            std::vector<double>{0.},
+            std::vector<UniformFlowParameters>{
+                {vh, z_ref, alpha, angle_h}  // Use aggregate initialization
             }
-    };
+        }
+    );
 }
 
 std::array<double, 3> Inflow::Velocity(double t, const std::array<double, 3>& position) const {
