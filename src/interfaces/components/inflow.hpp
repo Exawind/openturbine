@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
 #include <vector>
 
 namespace openturbine::interfaces::components {
@@ -57,8 +58,7 @@ struct Inflow {
     Inflow() = default;
 
     /// Constructor with type and uniform flow parameters
-    Inflow(InflowType type, const UniformFlow& uniform_flow)
-        : type(type), uniform_flow(uniform_flow) {}
+    Inflow(InflowType type, UniformFlow uniform_flow) : type(type), uniform_flow(uniform_flow) {}
 
     /**
      * @brief Creates a steady wind inflow
