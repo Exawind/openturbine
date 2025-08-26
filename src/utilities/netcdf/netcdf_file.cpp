@@ -158,8 +158,7 @@ void NetCDFFile::WriteVariable(const std::string& name, const std::vector<int>& 
 }
 
 void NetCDFFile::WriteVariable(const std::string& name, const std::vector<std::string>& data) const {
-    std::vector<const char*> c_strs;
-    c_strs.resize(data.size());
+    auto c_strs = std::vector<const char*>(data.size());
     std::transform(
         std::cbegin(data), std::cend(data), std::begin(c_strs),
         [](const std::string& str) {
@@ -206,8 +205,7 @@ void NetCDFFile::WriteVariableAt(
     const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
     const std::vector<std::string>& data
 ) const {
-    std::vector<const char*> c_strs;
-    c_strs.resize(data.size());
+    auto c_strs = std::vector<const char*>(data.size());
     std::transform(
         std::cbegin(data), std::cend(data), std::begin(c_strs),
         [](const std::string& str) {
