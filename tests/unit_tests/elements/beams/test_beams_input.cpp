@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <gtest/gtest.h>
 
 #include "elements/beams/beams_input.hpp"
@@ -58,7 +60,9 @@ protected:
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            std::vector{std::array{-0.5773502691896257, 1.0}, std::array{0.5773502691896257, 1.0}}
+            std::vector{
+                std::array{-std::numbers::inv_sqrt3, 1.0}, std::array{std::numbers::inv_sqrt3, 1.0}
+            }
         );
         // Element 3 - 4 nodes, 4 quadrature points
         model.AddBeamElement(
