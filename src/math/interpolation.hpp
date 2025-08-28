@@ -53,7 +53,10 @@ inline void LinearInterpWeights(double x, std::span<const double> xs, std::vecto
 inline double LinearInterp(double x, std::span<const double> xs, std::span<const double> values) {
     std::vector<double> weights(xs.size());
     LinearInterpWeights(x, xs, weights);
-    return std::transform_reduce(std::begin(weights), std::end(weights), std::begin(values), 0., std::plus<>(), std::multiplies<>());
+    return std::transform_reduce(
+        std::begin(weights), std::end(weights), std::begin(values), 0., std::plus<>(),
+        std::multiplies<>()
+    );
 }
 
 /**
@@ -100,12 +103,18 @@ inline void LagrangePolynomialDerivWeights(
     for (auto i : std::views::iota(0U, n)) {
         auto xi = xs[i];
         auto weight = 0.;
-        for (auto j : std::views::iota(0U, n) | std::views::filter([i](unsigned j) { return j != i; } )) {
-                double prod = 1.;
-                for (auto xk : std::views::iota(0U, n) | std::views::filter([i, j](unsigned k) { return k != i && k != j; } ) | std::views::transform([&xs](auto k) { return xs[k]; } ))  {
-                        prod *= (x - xk) / (xi - xk);
-                }
-                weight += prod / (xi - xs[j]);
+        for (auto j : std::views::iota(0U, n) | std::views::filter([i](unsigned j) {
+                          return j != i;
+                      })) {
+            double prod = 1.;
+            for (auto xk : std::views::iota(0U, n) | std::views::filter([i, j](unsigned k) {
+                               return k != i && k != j;
+                           }) | std::views::transform([&xs](auto k) {
+                               return xs[k];
+                           })) {
+                prod *= (x - xk) / (xi - xk);
+            }
+            weight += prod / (xi - xs[j]);
         }
         weights[i] = weight;
     }
