@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <ranges>
 #include <string>
 
 #include <KokkosSparse_SortCrs.hpp>
@@ -48,8 +49,8 @@ TEST(ComputeColInds, OneElementOneNode) {
 
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
 
-    for (auto row = 0U; row < 6U; ++row) {
-        for (auto col = 0U; col < 6U; ++col) {
+    for (auto row : std::views::iota(0U, 6U)) {
+        for (auto col : std::views::iota(0U, 6U)) {
             EXPECT_EQ(col_inds_mirror(row * 6U + col), col);
         }
     }
@@ -86,8 +87,8 @@ TEST(ComputeColInds, OneElementTwoNodes) {
 
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
 
-    for (auto row = 0U; row < 12U; ++row) {
-        for (auto col = 0U; col < 12U; ++col) {
+    for (auto row : std::views::iota(0U, 12U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(row * 12U + col), col);
         }
     }
@@ -125,14 +126,14 @@ TEST(ComputeColInds, TwoElementsTwoNodesNoOverlap) {
 
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
 
-    for (auto row = 0U; row < 12U; ++row) {
-        for (auto col = 0U; col < 12U; ++col) {
+    for (auto row : std::views::iota(0U, 12U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(row * 12U + col), col);
         }
     }
 
-    for (auto row = 0U; row < 12U; ++row) {
-        for (auto col = 0U; col < 12U; ++col) {
+    for (auto row : std::views::iota(0U, 12U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(144U + row * 12U + col), 12U + col);
         }
     }
@@ -172,20 +173,20 @@ TEST(ComputeColInds, TwoElementsTwoNodesOverlap) {
 
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
 
-    for (auto row = 0U; row < 6U; ++row) {
-        for (auto col = 0U; col < 12U; ++col) {
+    for (auto row : std::views::iota(0U, 6U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(row * 12U + col), col);
         }
     }
 
-    for (auto row = 0U; row < 6U; ++row) {
-        for (auto col = 0U; col < 18U; ++col) {
+    for (auto row : std::views::iota(0U, 6U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(72U + row * 18U + col), col);
         }
     }
 
-    for (auto row = 0U; row < 6U; ++row) {
-        for (auto col = 0U; col < 12U; ++col) {
+    for (auto row : std::views::iota(0U, 6U)) {
+        for (auto col : std::views::iota(0U, 12U)) {
             EXPECT_EQ(col_inds_mirror(180U + row * 12U + col), 6U + col);
         }
     }
@@ -230,7 +231,7 @@ TEST(ComputeColInds, OneElementOneNode_OneConstraint) {
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
     const auto row_ptrs_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < 6U; ++row) {
+    for (auto row : std::views::iota(0, 6)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 0UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 1UL);
@@ -245,7 +246,7 @@ TEST(ComputeColInds, OneElementOneNode_OneConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 10), 16UL);
         EXPECT_EQ(col_inds_mirror(entry + 11), 17UL);
     }
-    for (auto row = 6U; row < 12U; ++row) {
+    for (auto row : std::views::iota(6, 12)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 6UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 7UL);
@@ -260,7 +261,7 @@ TEST(ComputeColInds, OneElementOneNode_OneConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 10), 16UL);
         EXPECT_EQ(col_inds_mirror(entry + 11), 17UL);
     }
-    for (auto row = 12U; row < 18U; ++row) {
+    for (auto row : std::views::iota(12, 18)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 0UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 1UL);
@@ -318,7 +319,7 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
     const auto col_inds_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), col_inds);
     const auto row_ptrs_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < 6U; ++row) {
+    for (auto row : std::views::iota(0, 6)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 0UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 1UL);
@@ -339,7 +340,7 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 16), 28UL);
         EXPECT_EQ(col_inds_mirror(entry + 17), 29UL);
     }
-    for (auto row = 6U; row < 12U; ++row) {
+    for (auto row : std::views::iota(6, 12)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 6UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 7UL);
@@ -354,7 +355,7 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 10), 22UL);
         EXPECT_EQ(col_inds_mirror(entry + 11), 23UL);
     }
-    for (auto row = 12U; row < 18U; ++row) {
+    for (auto row : std::views::iota(12, 18)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 12UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 13UL);
@@ -369,7 +370,7 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 10), 28UL);
         EXPECT_EQ(col_inds_mirror(entry + 11), 29UL);
     }
-    for (auto row = 18U; row < 24U; ++row) {
+    for (auto row : std::views::iota(18, 24)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 0UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 1UL);
@@ -384,7 +385,7 @@ TEST(ComputeColInds, OneElementOneNode_TwoConstraint) {
         EXPECT_EQ(col_inds_mirror(entry + 10), 10UL);
         EXPECT_EQ(col_inds_mirror(entry + 11), 11UL);
     }
-    for (auto row = 24U; row < 30U; ++row) {
+    for (auto row : std::views::iota(24, 30)) {
         auto entry = row_ptrs_host(row);
         EXPECT_EQ(col_inds_mirror(entry), 0UL);
         EXPECT_EQ(col_inds_mirror(entry + 1), 1UL);

@@ -2,6 +2,8 @@
 
 #include <array>
 #include <iterator>
+#include <numbers>
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 
@@ -173,7 +175,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
 
     // Inverse of a quaternion is the conjugate divided by the length
     q_out(0) = q_in(0) / length;
-    for (auto i = 1; i < 4; ++i) {
+    for (auto i : std::views::iota(1, 4)) {
         q_out(i) = -q_in(i) / length;
     }
 }
@@ -217,7 +219,7 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.) / angle;
 
     quaternion(0) = cos_angle;
-    for (auto i = 1; i < 4; ++i) {
+    for (auto i : std::views::iota(1, 4)) {
         quaternion(i) = phi(i - 1) * factor;
     }
 }
@@ -303,7 +305,7 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
     // Normalize the quaternion
     const auto length = std::sqrt(length_squared);
     auto normalized_quaternion = Kokkos::Array<double, 4>{};
-    for (auto k = 0U; k < 4U; ++k) {
+    for (auto k : std::views::iota(0U, 4U)) {
         normalized_quaternion[k] = q[k] / length;
     }
     return normalized_quaternion;
@@ -335,7 +337,7 @@ inline std::array<double, 4> TangentTwistToQuaternion(
         {e1[2], e2[2], e3[2]},
     }});
 
-    const auto twist_rad = twist * M_PI / 180.;
+    const auto twist_rad = twist * std::numbers::pi / 180.;
     auto q_twist =
         RotationVectorToQuaternion({e1[0] * twist_rad, e1[1] * twist_rad, e1[2] * twist_rad});
 

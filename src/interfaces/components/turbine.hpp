@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <vector>
 
 #include "interfaces/components/beam.hpp"
@@ -209,7 +210,7 @@ private:
      * @return Vector of blades
      */
     [[nodiscard]] static std::vector<Beam> CreateBlades(
-        const std::vector<BeamInput>& blade_inputs, Model& model
+        std::span<const BeamInput> blade_inputs, Model& model
     );
 
     /**

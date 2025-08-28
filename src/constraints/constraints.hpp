@@ -2,6 +2,8 @@
 
 #include <array>
 #include <numeric>
+#include <ranges>
+#include <span>
 #include <vector>
 
 #include <Kokkos_Core.hpp>
@@ -72,11 +74,11 @@ struct Constraints {
     View<double* [6][6]> target_gradient_transpose_terms;
 
     explicit Constraints(
-        const std::vector<constraints::Constraint>& constraints, const std::vector<Node>& nodes
+        std::span<const constraints::Constraint> constraints, std::span<const Node> nodes
     )
         : num_constraints{constraints.size()},
           num_dofs{std::transform_reduce(
-              constraints.cbegin(), constraints.cend(), 0U, std::plus{},
+              std::begin(constraints), std::end(constraints), 0U, std::plus{},
               [](auto c) {
                   return NumRowsForConstraint(c.type);
               }
@@ -171,7 +173,7 @@ struct Constraints {
         auto host_axes = create_mirror_view(WithoutInitializing, axes);
 
         auto start_row = size_t{0U};
-        for (auto constraint = 0U; constraint < num_constraints; ++constraint) {
+        for (auto constraint : std::views::iota(0U, num_constraints)) {
             const auto& c = constraints[constraint];
             const auto base_node_id = c.node_ids[0];
             const auto target_node_id = c.node_ids[1];
@@ -227,14 +229,14 @@ struct Constraints {
                 c.type != constraints::ConstraintType::PrescribedBC3DOFs) {
                 x0 = CalculateX0(c, nodes[target_node_id], nodes[base_node_id]);
             }
-            for (auto component = 0U; component < 3U; ++component) {
+            for (auto component : std::views::iota(0U, 3U)) {
                 host_X0(constraint, component) = x0[component];
             }
 
             // Calculate rotation axes
             const auto rotation_matrix = CalculateAxes(c, x0);
-            for (auto component_1 = 0U; component_1 < 3U; ++component_1) {
-                for (auto component_2 = 0U; component_2 < 3U; ++component_2) {
+            for (auto component_1 : std::views::iota(0U, 3U)) {
+                for (auto component_2 : std::views::iota(0U, 3U)) {
                     host_axes(constraint, component_1, component_2) =
                         rotation_matrix[component_1][component_2];
                 }
@@ -243,7 +245,7 @@ struct Constraints {
             // Initialize displacement to provided displacement if prescribed BC
             if (c.type == constraints::ConstraintType::PrescribedBC ||
                 c.type == constraints::ConstraintType::PrescribedBC3DOFs) {
-                for (auto component = 0U; component < 7U; ++component) {
+                for (auto component : std::views::iota(0U, 7U)) {
                     host_input(constraint, component) = c.initial_displacement[component];
                 }
             }
@@ -335,14 +337,14 @@ struct Constraints {
     /// Sets the new displacement for the given constraint
     template <typename ArrayType>
     void UpdateDisplacement(size_t constraint_id, const ArrayType& disp) const {
-        for (auto component = 0U; component < 7U; ++component) {
+        for (auto component : std::views::iota(0U, 7U)) {
             host_input(constraint_id, component) = disp[component];
         }
     }
 
     /// Transfers new prescribed displacements and control signals to Views
     void UpdateViews() {
-        for (auto constraint = 0U; constraint < this->num_constraints; ++constraint) {
+        for (auto constraint : std::views::iota(0U, this->num_constraints)) {
             if (control_signal[constraint] != nullptr) {
                 host_input(constraint, 0) = *control_signal[constraint];
             }

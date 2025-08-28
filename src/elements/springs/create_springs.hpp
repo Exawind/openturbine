@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 
 #include "model/node.hpp"
 #include "springs.hpp"
@@ -18,7 +19,7 @@ namespace openturbine {
  */
 template <typename DeviceType>
 inline Springs<DeviceType> CreateSprings(
-    const SpringsInput& springs_input, const std::vector<Node>& nodes
+    const SpringsInput& springs_input, std::span<const Node> nodes
 ) {
     using Kokkos::create_mirror_view;
     using Kokkos::deep_copy;
@@ -32,13 +33,13 @@ inline Springs<DeviceType> CreateSprings(
     auto host_l_ref = create_mirror_view(WithoutInitializing, springs.l_ref);
     auto host_k = create_mirror_view(WithoutInitializing, springs.k);
 
-    for (auto elementIdx = 0U; elementIdx < springs_input.NumElements(); elementIdx++) {
+    for (auto elementIdx : std::views::iota(0U, springs_input.NumElements())) {
         const auto& element = springs_input.elements[elementIdx];
 
         host_node_state_indices(elementIdx, 0U) = static_cast<size_t>(element.node_ids[0]);
         host_node_state_indices(elementIdx, 1U) = static_cast<size_t>(element.node_ids[1]);
 
-        for (auto component = 0U; component < 3U; component++) {
+        for (auto component : std::views::iota(0U, 3U)) {
             host_x0(elementIdx, component) =
                 nodes[element.node_ids[1]].x0[component] - nodes[element.node_ids[0]].x0[component];
         }

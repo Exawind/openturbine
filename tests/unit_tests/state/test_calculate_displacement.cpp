@@ -1,4 +1,5 @@
 #include <array>
+#include <ranges>
 #include <string>
 
 #include <Kokkos_Core.hpp>
@@ -31,7 +32,7 @@ TEST(CalculateDisplacement, OneNode) {
     const auto q_exact =
         Kokkos::View<double[1][7], Kokkos::HostSpace>::const_type(q_exact_data.data());
     const auto q_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), q);
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0, 7)) {
         EXPECT_NEAR(q_mirror(0, i), q_exact(0, i), 1.e-14);
     }
 }

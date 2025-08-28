@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 
 #include <Kokkos_Core.hpp>
 
@@ -23,7 +24,7 @@ namespace openturbine {
  *
  */
 template <typename DeviceType>
-inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::vector<Node>& nodes) {
+inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, std::span<const Node> nodes) {
     using Kokkos::ALL;
     using Kokkos::create_mirror_view;
     using Kokkos::deep_copy;
@@ -61,7 +62,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
     host_gravity(1) = beams_input.gravity[1];
     host_gravity(2) = beams_input.gravity[2];
 
-    for (auto element = 0U; element < beams_input.NumElements(); ++element) {
+    for (auto element : std::views::iota(0U, beams_input.NumElements())) {
         // Get number of nodes and quadrature points in element
         const auto num_nodes = beams_input.elements[element].node_ids.size();
         const auto num_qps = beams_input.elements[element].quadrature.size();
@@ -71,7 +72,7 @@ inline Beams<DeviceType> CreateBeams(const BeamsInput& beams_input, const std::v
         host_num_qps_per_element(element) = num_qps;
 
         // Populate beam node->state indices
-        for (auto node = 0U; node < num_nodes; ++node) {
+        for (auto node : std::views::iota(0U, num_nodes)) {
             host_node_state_indices(element, node) = beams_input.elements[element].node_ids[node];
         }
 

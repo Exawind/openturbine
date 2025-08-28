@@ -48,9 +48,9 @@ TEST(ModelTest, AddBeamElementToModel) {
                         .Build();
 
     // Add a beam element to the model
-    auto sections = std::vector<BeamSection>{};
-    auto quadrature = std::vector<std::array<double, 2>>{};
-    model.AddBeamElement({node1_id, node2_id}, sections, quadrature);
+    constexpr auto sections = std::array<BeamSection, 0>{};
+    constexpr auto quadrature = std::array<std::array<double, 2>, 0>{};
+    model.AddBeamElement(std::array{node1_id, node2_id}, sections, quadrature);
 
     ASSERT_EQ(model.NumBeamElements(), 1);
 
@@ -99,14 +99,14 @@ TEST(ModelTest, ModelCreateState) {
     // Verify initial position
     const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
     const auto exact_x0 = std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(x0(0, i), exact_x0[i], 1.e-15);
     }
 
     // Verify initial displacement
     const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     const auto exact_q = std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(q(0, i), exact_q[i], 1.e-15);
     }
 
@@ -114,7 +114,7 @@ TEST(ModelTest, ModelCreateState) {
     auto Rt = math::QuaternionCompose(R2, R1);
     const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(x(0, i), exact_x[i], 1.e-15);
     }
 }
@@ -138,14 +138,14 @@ TEST(ModelTest, ModelCreateSystem) {
     // Verify initial position
     const auto x0 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x0);
     const auto exact_x0 = std::array{1., 2., 3., R1[0], R1[1], R1[2], R1[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(x0(0, i), exact_x0[i], 1.e-15);
     }
 
     // Verify initial displacement
     const auto q = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.q);
     const auto exact_q = std::array{3., 2., 1., R2[0], R2[1], R2[2], R2[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(q(0, i), exact_q[i], 1.e-15);
     }
 
@@ -153,7 +153,7 @@ TEST(ModelTest, ModelCreateSystem) {
     auto Rt = math::QuaternionCompose(R2, R1);
     const auto x = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.x);
     const auto exact_x = std::array{4., 4., 4., Rt[0], Rt[1], Rt[2], Rt[3]};
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(x(0, i), exact_x[i], 1.e-15);
     }
 

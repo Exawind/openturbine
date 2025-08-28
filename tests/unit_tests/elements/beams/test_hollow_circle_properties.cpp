@@ -1,5 +1,7 @@
 #include <array>
 #include <cmath>
+#include <numbers>
+#include <ranges>
 #include <stdexcept>
 
 #include <gtest/gtest.h>
@@ -45,8 +47,8 @@ protected:
         const std::array<std::array<double, 6>, 6>& actual,
         const std::array<std::array<double, 6>, 6>& expected
     ) {
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
+        for (auto i : std::views::iota(0U, 6U)) {
+            for (auto j : std::views::iota(0U, 6U)) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)
                     << "Matrix element [" << i << "][" << j << "] differs";
             }
@@ -76,9 +78,12 @@ TEST_F(HollowCirclePropertiesTest, CalculateGeometricProperties) {
     const double outer_radius = tp_.outer_diameter / 2.;
     const double inner_radius = outer_radius - tp_.wall_thickness;
 
-    const double expected_area = M_PI * (std::pow(outer_radius, 2) - std::pow(inner_radius, 2));
-    const double expected_Ixx = M_PI * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 4.;
-    const double expected_J = M_PI * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 2.;
+    const double expected_area =
+        std::numbers::pi * (std::pow(outer_radius, 2) - std::pow(inner_radius, 2));
+    const double expected_Ixx =
+        std::numbers::pi * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 4.;
+    const double expected_J =
+        std::numbers::pi * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 2.;
     const double expected_kx = (6. * (1. + tp_.nu)) / (7. + 6. * tp_.nu);
 
     EXPECT_NEAR(properties.area, expected_area, kTolerance);

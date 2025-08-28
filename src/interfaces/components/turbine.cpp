@@ -1,6 +1,9 @@
 #include "turbine.hpp"
 
+#include <algorithm>
 #include <array>
+#include <numbers>
+#include <ranges>
 #include <vector>
 
 #include "interfaces/components/turbine_input.hpp"
@@ -58,10 +61,10 @@ const TurbineInput& Turbine::GetTurbineInput() const {
     return this->turbine_input;
 }
 
-std::vector<Beam> Turbine::CreateBlades(const std::vector<BeamInput>& blade_inputs, Model& model) {
+std::vector<Beam> Turbine::CreateBlades(std::span<const BeamInput> blade_inputs, Model& model) {
     std::vector<Beam> blades;
-    std::transform(
-        blade_inputs.begin(), blade_inputs.end(), std::back_inserter(blades),
+    std::ranges::transform(
+        blade_inputs, std::back_inserter(blades),
         [&model](const BeamInput& input) {
             return Beam(input, model);
         }
@@ -94,11 +97,11 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
     const auto origin = std::array{0., 0., 0.};
 
     // Calculate angle between the blades
-    const auto blade_angle_delta = 2. * M_PI / static_cast<double>(this->blades.size());
+    const auto blade_angle_delta = 2. * std::numbers::pi / static_cast<double>(this->blades.size());
 
     // Calculate rotation quaternion to align a component from x-axis to z-axis (i.e.
     // rotate about y-axis by -90 degrees)
-    const auto q_x_to_z = math::RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+    const auto q_x_to_z = math::RotationVectorToQuaternion({0., -std::numbers::pi / 2., 0.});
 
     // Calculate cone angle rotation quaternion (rotate about y-axis by -cone angle)
     const auto q_cone = math::RotationVectorToQuaternion({0., -input.cone_angle, 0.});
@@ -129,12 +132,11 @@ void Turbine::PositionNodes(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Loop over blades
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         // Get node IDs for this blade only
         std::vector<size_t> current_blade_node_ids;
-        std::transform(
-            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
-            std::back_inserter(current_blade_node_ids),
+        std::ranges::transform(
+            this->blades[beam].nodes, std::back_inserter(current_blade_node_ids),
             [](const NodeData& node) {
                 return node.id;
             }
@@ -223,7 +225,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     this->apex_nodes.reserve(this->blades.size());
 
     // Create one apex node per blade at origin
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         const auto apex_node_id = model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
         this->apex_nodes.emplace_back(apex_node_id);
     }
@@ -238,8 +240,8 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
 
     // Add tower nodes to tower_node_ids vector
     this->tower_node_ids.reserve(this->tower.nodes.size());
-    std::transform(
-        this->tower.nodes.begin(), this->tower.nodes.end(), std::back_inserter(this->tower_node_ids),
+    std::ranges::transform(
+        this->tower.nodes, std::back_inserter(this->tower_node_ids),
         [](const auto& node) {
             return node.id;
         }
@@ -263,11 +265,10 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     this->blade_node_ids.reserve(
         this->blades.size() * (this->blades[0].nodes.size() + 1)  // +1 for apex node
     );
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         // Add blade structural nodes
-        std::transform(
-            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
-            std::back_inserter(this->blade_node_ids),
+        std::ranges::transform(
+            this->blades[beam].nodes, std::back_inserter(this->blade_node_ids),
             [](const NodeData& node) {
                 return node.id;
             }
@@ -334,7 +335,7 @@ void Turbine::AddConstraints(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
 
     // Loop through blades
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         // Get the blade apex node
         const auto& apex_node = model.GetNode(this->apex_nodes[beam].id);
 
@@ -413,7 +414,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
     //--------------------------------------------------------------------------
     // Apply initial blade pitch
     //--------------------------------------------------------------------------
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         // Get the blade root and apex nodes
         const auto& root_node = model.GetNode(this->blades[beam].nodes.front().id);
         const auto& apex_node = model.GetNode(this->apex_nodes[beam].id);
@@ -520,11 +521,10 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
     std::vector<size_t> rotor_velocity_node_ids{this->hub_node.id, this->azimuth_node.id};
 
     // Add all blade nodes and apex nodes
-    for (auto beam = 0U; beam < this->blades.size(); ++beam) {
+    for (auto beam : std::views::iota(0U, this->blades.size())) {
         // Add blade nodes
-        std::transform(
-            this->blades[beam].nodes.begin(), this->blades[beam].nodes.end(),
-            std::back_inserter(rotor_velocity_node_ids),
+        std::ranges::transform(
+            this->blades[beam].nodes, std::back_inserter(rotor_velocity_node_ids),
             [](const auto& blade_node) {
                 return blade_node.id;
             }

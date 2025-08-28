@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 
@@ -64,10 +65,10 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
 
     // matmul(r,m)
     std::array<std::array<double, 6>, 6> mt{};
-    for (auto i = 0U; i < 6; ++i) {
-        for (auto j = 0U; j < 6; ++j) {
+    for (auto i : std::views::iota(0U, 6U)) {
+        for (auto j : std::views::iota(0U, 6U)) {
             mt[i][j] = 0.;
-            for (auto k = 0U; k < 6; ++k) {
+            for (auto k : std::views::iota(0U, 6U)) {
                 mt[i][j] += r[i][k] * m[k][j];
             }
         }
@@ -75,10 +76,10 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
 
     // matmul(matmul(r,m),r^T)
     std::array<std::array<double, 6>, 6> mo{};
-    for (auto i = 0U; i < 6; ++i) {
-        for (auto j = 0U; j < 6; ++j) {
+    for (auto i : std::views::iota(0U, 6U)) {
+        for (auto j : std::views::iota(0U, 6U)) {
             mo[i][j] = 0.;
-            for (auto k = 0U; k < 6; ++k) {
+            for (auto k : std::views::iota(0U, 6U)) {
                 mo[i][j] += mt[i][k] * r[j][k];
             }
         }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <array>
+#include <ranges>
+#include <span>
 #include <stdexcept>
 #include <vector>
 
@@ -29,7 +31,7 @@ namespace openturbine::math {
  *                       sorted in ascending order
  * @return std::vector<double> Mapped/normalized evaluation points in domain [-1, 1]
  */
-inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom_locations) {
+inline std::vector<double> MapGeometricLocations(std::span<const double> geom_locations) {
     // Get first and last points of the input domain (assumed to be sorted)
     const double domain_start = geom_locations.front();
     const double domain_end = geom_locations.back();
@@ -42,9 +44,12 @@ inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom
     // Map each point from domain -> [-1, 1]
     std::vector<double> mapped_locations(geom_locations.size());
     const auto domain_span = domain_end - domain_start;
-    for (auto i = 0U; i < geom_locations.size(); ++i) {
-        mapped_locations[i] = 2. * (geom_locations[i] - domain_start) / domain_span - 1.;
-    }
+    std::ranges::transform(
+        geom_locations, std::begin(mapped_locations),
+        [domain_start, domain_span](auto geom_location) {
+            return 2. * (geom_location - domain_start) / domain_span - 1.;
+        }
+    );
     return mapped_locations;
 }
 
@@ -58,7 +63,7 @@ inline std::vector<double> MapGeometricLocations(const std::vector<double>& geom
  * @return Shape function matrix
  */
 inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
-    const std::vector<double>& input_points, const std::vector<double>& output_points
+    std::span<const double> input_points, std::span<const double> output_points
 ) {
     // Number of points in input and output arrays
     const auto num_input_points = input_points.size();
@@ -71,9 +76,9 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
     auto shape_functions = std::vector<std::vector<double>>(
         num_output_points, std::vector<double>(num_input_points, 0.)
     );
-    for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
+    for (auto input_point : std::views::iota(0U, num_input_points)) {
         math::LagrangePolynomialInterpWeights(input_points[input_point], output_points, weights);
-        for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
+        for (auto output_point : std::views::iota(0U, num_output_points)) {
             shape_functions[output_point][input_point] = weights[output_point];
         }
     }
@@ -91,7 +96,7 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionValues(
  * @return Shape function derivative matrix
  */
 inline std::vector<std::vector<double>> ComputeShapeFunctionDerivatives(
-    const std::vector<double>& input_points, const std::vector<double>& output_points
+    std::span<const double> input_points, std::span<const double> output_points
 ) {
     // Number of points in input and output arrays
     const auto num_input_points = input_points.size();
@@ -104,9 +109,9 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionDerivatives(
     auto derivative_functions = std::vector<std::vector<double>>(
         num_output_points, std::vector<double>(num_input_points, 0.)
     );
-    for (auto input_point = 0U; input_point < num_input_points; ++input_point) {
+    for (auto input_point : std::views::iota(0U, num_input_points)) {
         math::LagrangePolynomialDerivWeights(input_points[input_point], output_points, weights);
-        for (auto output_point = 0U; output_point < num_output_points; ++output_point) {
+        for (auto output_point : std::views::iota(0U, num_output_points)) {
             derivative_functions[output_point][input_point] = weights[output_point];
         }
     }
@@ -127,8 +132,8 @@ inline std::vector<std::vector<double>> ComputeShapeFunctionDerivatives(
  * @return Interpolation coefficients (p x 3)
  */
 inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
-    size_t p, const std::vector<std::vector<double>>& shape_functions,
-    const std::vector<std::array<double, 3>>& points_to_fit
+    size_t p, std::span<const std::vector<double>> shape_functions,
+    std::span<const std::array<double, 3>> points_to_fit
 ) {
     if (shape_functions.size() != p) {
         throw std::invalid_argument("shape_functions rows do not match order p.");
@@ -144,10 +149,10 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     const auto A = Kokkos::View<double**, Kokkos::LayoutLeft, Kokkos::HostSpace>("A", p, p);
     A(0, 0) = 1.;
     A(p - 1, p - 1) = 1.;
-    for (auto j = 0U; j < p; ++j) {
-        for (auto i = 1U; i < p - 1; ++i) {
+    for (auto j : std::views::iota(0U, p)) {
+        for (auto i : std::views::iota(1U, p - 1U)) {
             auto sum = 0.;
-            for (auto k = 0U; k < n; ++k) {
+            for (auto k : std::views::iota(0U, n)) {
                 sum += shape_functions[i][k] * shape_functions[j][k];
             }
             A(i, j) = sum;
@@ -156,13 +161,13 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
 
     // Construct matrix B in RHS (p x 3)
     const auto B = Kokkos::View<double* [3], Kokkos::LayoutLeft, Kokkos::HostSpace>("B", p);
-    for (auto dim = 0U; dim < 3U; ++dim) {
+    for (auto dim : std::views::iota(0U, 3U)) {
         B(0, dim) = points_to_fit[0][dim];
         B(p - 1, dim) = points_to_fit[n - 1][dim];
     }
-    for (auto i = 1U; i < p - 1; ++i) {
-        for (auto k = 0U; k < n; ++k) {
-            for (auto dim = 0U; dim < 3U; ++dim) {
+    for (auto i : std::views::iota(1U, p - 1U)) {
+        for (auto k : std::views::iota(0U, n)) {
+            for (auto dim : std::views::iota(0U, 3U)) {
                 B(i, dim) += shape_functions[i][k] * points_to_fit[k][dim];
             }
         }
@@ -182,8 +187,8 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
 
     auto result = std::vector<std::array<double, 3>>(B.extent(0));
 
-    for (auto i = 0U; i < result.size(); ++i) {
-        for (auto j = 0U; j < result.front().size(); ++j) {
+    for (auto i : std::views::iota(0U, result.size())) {
+        for (auto j : std::views::iota(0U, result.front().size())) {
             result[i][j] = B(i, j);
         }
     }

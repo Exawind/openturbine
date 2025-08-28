@@ -51,8 +51,8 @@ inline void SetUpSolverAndAssemble() {
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
     std::vector<size_t> beam_node_ids;
-    std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+    std::ranges::transform(
+        node_s, std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s + x0_root[0];
             return model.AddNode()
@@ -66,11 +66,11 @@ inline void SetUpSolverAndAssemble() {
     // Add beam element
     model.AddBeamElement(
         beam_node_ids,
-        {
+        std::array{
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        std::vector{
+        std::array{
             std::array{-0.9491079123427585, 0.1294849661688697},
             std::array{-0.7415311855993943, 0.27970539148927664},
             std::array{-0.40584515137739696, 0.3818300505051189},
@@ -282,8 +282,8 @@ inline void SetupAndTakeNoSteps() {
     constexpr auto omega = 0.1;
     const auto x0_root = std::array{2., 0., 0.};
     std::vector<size_t> beam_node_ids;
-    std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+    std::ranges::transform(
+        node_s, std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s + x0_root[0];
             return model.AddNode()
@@ -297,11 +297,11 @@ inline void SetupAndTakeNoSteps() {
     // Add beam element
     model.AddBeamElement(
         beam_node_ids,
-        {
+        std::array{
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        std::vector{
+        std::array{
             std::array{-0.9491079123427585, 0.1294849661688697},
             std::array{-0.7415311855993943, 0.27970539148927664},
             std::array{-0.40584515137739696, 0.3818300505051189},
@@ -481,8 +481,8 @@ inline auto SetupAndTakeTwoSteps() {
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
     std::vector<size_t> beam_node_ids;
-    std::transform(
-        std::cbegin(node_s), std::cend(node_s), std::back_inserter(beam_node_ids),
+    std::ranges::transform(
+        node_s, std::back_inserter(beam_node_ids),
         [&](auto s) {
             const auto x = 10 * s;
             return model.AddNode()
@@ -496,11 +496,11 @@ inline auto SetupAndTakeTwoSteps() {
     // Add beam element
     model.AddBeamElement(
         beam_node_ids,
-        {
+        std::array{
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        std::vector{
+        std::array{
             std::array{-0.9491079123427585, 0.1294849661688697},
             std::array{-0.7415311855993943, 0.27970539148927664},
             std::array{-0.40584515137739696, 0.3818300505051189},

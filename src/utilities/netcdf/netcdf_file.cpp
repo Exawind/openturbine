@@ -1,6 +1,8 @@
 #include "netcdf_file.hpp"
 
 #include <algorithm>
+#include <ranges>
+#include <span>
 #include <stdexcept>
 
 namespace {
@@ -43,7 +45,7 @@ int NetCDFFile::AddDimension(const std::string& name, size_t length) const {
 }
 
 template <>
-int NetCDFFile::AddVariable<float>(const std::string& name, const std::vector<int>& dim_ids) const {
+int NetCDFFile::AddVariable<float>(const std::string& name, std::span<const int> dim_ids) const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
@@ -56,7 +58,7 @@ int NetCDFFile::AddVariable<float>(const std::string& name, const std::vector<in
 }
 
 template <>
-int NetCDFFile::AddVariable<double>(const std::string& name, const std::vector<int>& dim_ids) const {
+int NetCDFFile::AddVariable<double>(const std::string& name, std::span<const int> dim_ids) const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
@@ -69,7 +71,7 @@ int NetCDFFile::AddVariable<double>(const std::string& name, const std::vector<i
 }
 
 template <>
-int NetCDFFile::AddVariable<int>(const std::string& name, const std::vector<int>& dim_ids) const {
+int NetCDFFile::AddVariable<int>(const std::string& name, std::span<const int> dim_ids) const {
     int var_id{-1};
     check_netCDF_error(
         nc_def_var(
@@ -82,7 +84,7 @@ int NetCDFFile::AddVariable<int>(const std::string& name, const std::vector<int>
 }
 
 template <>
-int NetCDFFile::AddVariable<std::string>(const std::string& name, const std::vector<int>& dim_ids)
+int NetCDFFile::AddVariable<std::string>(const std::string& name, std::span<const int> dim_ids)
     const {
     int var_id{-1};
     check_netCDF_error(
@@ -136,35 +138,32 @@ void NetCDFFile::AddAttribute(
     );
 }
 
-void NetCDFFile::WriteVariable(const std::string& name, const std::vector<float>& data) const {
+void NetCDFFile::WriteVariable(const std::string& name, std::span<const float> data) const {
     check_netCDF_error(
         nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
         "Failed to write variable " + name
     );
 }
 
-void NetCDFFile::WriteVariable(const std::string& name, const std::vector<double>& data) const {
+void NetCDFFile::WriteVariable(const std::string& name, std::span<const double> data) const {
     check_netCDF_error(
         nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
         "Failed to write variable " + name
     );
 }
 
-void NetCDFFile::WriteVariable(const std::string& name, const std::vector<int>& data) const {
+void NetCDFFile::WriteVariable(const std::string& name, std::span<const int> data) const {
     check_netCDF_error(
         nc_put_var(netcdf_id_, this->GetVariableId(name), data.data()),
         "Failed to write variable " + name
     );
 }
 
-void NetCDFFile::WriteVariable(const std::string& name, const std::vector<std::string>& data) const {
+void NetCDFFile::WriteVariable(const std::string& name, std::span<const std::string> data) const {
     auto c_strs = std::vector<const char*>(data.size());
-    std::transform(
-        std::cbegin(data), std::cend(data), std::begin(c_strs),
-        [](const std::string& str) {
-            return str.c_str();
-        }
-    );
+    std::ranges::transform(data, std::begin(c_strs), [](const std::string& str) {
+        return str.c_str();
+    });
     check_netCDF_error(
         nc_put_var_string(netcdf_id_, this->GetVariableId(name), c_strs.data()),
         "Failed to write string variable " + name
@@ -172,8 +171,8 @@ void NetCDFFile::WriteVariable(const std::string& name, const std::vector<std::s
 }
 
 void NetCDFFile::WriteVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<float>& data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const float> data
 ) const {
     check_netCDF_error(
         nc_put_vara(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), data.data()),
@@ -182,8 +181,8 @@ void NetCDFFile::WriteVariableAt(
 }
 
 void NetCDFFile::WriteVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<double>& data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const double> data
 ) const {
     check_netCDF_error(
         nc_put_vara(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), data.data()),
@@ -192,8 +191,8 @@ void NetCDFFile::WriteVariableAt(
 }
 
 void NetCDFFile::WriteVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<int>& data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const int> data
 ) const {
     check_netCDF_error(
         nc_put_vara(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), data.data()),
@@ -202,16 +201,13 @@ void NetCDFFile::WriteVariableAt(
 }
 
 void NetCDFFile::WriteVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<std::string>& data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const std::string> data
 ) const {
     auto c_strs = std::vector<const char*>(data.size());
-    std::transform(
-        std::cbegin(data), std::cend(data), std::begin(c_strs),
-        [](const std::string& str) {
-            return str.c_str();
-        }
-    );
+    std::ranges::transform(data, std::begin(c_strs), [](const std::string& str) {
+        return str.c_str();
+    });
     check_netCDF_error(
         nc_put_vara_string(
             netcdf_id_, this->GetVariableId(name), start.data(), count.data(), c_strs.data()
@@ -275,7 +271,7 @@ std::vector<size_t> NetCDFFile::GetShape(const std::string& var_name) const {
     );
 
     std::vector<size_t> shape(num_dims);
-    for (auto i = 0U; i < num_dims; ++i) {
+    for (auto i : std::views::iota(0U, num_dims)) {
         shape[i] = GetDimensionLength(dim_ids[i]);
     }
     return shape;
@@ -303,7 +299,7 @@ void NetCDFFile::ReadVariable(const std::string& name, int* data) const {
 }
 
 void NetCDFFile::ReadVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
     float* data
 ) const {
     check_netCDF_error(
@@ -313,7 +309,7 @@ void NetCDFFile::ReadVariableAt(
 }
 
 void NetCDFFile::ReadVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
     double* data
 ) const {
     check_netCDF_error(
@@ -323,8 +319,7 @@ void NetCDFFile::ReadVariableAt(
 }
 
 void NetCDFFile::ReadVariableAt(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    int* data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count, int* data
 ) const {
     check_netCDF_error(
         nc_get_vara_int(netcdf_id_, this->GetVariableId(name), start.data(), count.data(), data),
@@ -333,8 +328,8 @@ void NetCDFFile::ReadVariableAt(
 }
 
 void NetCDFFile::ReadVariableWithStride(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<ptrdiff_t>& stride, float* data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const ptrdiff_t> stride, float* data
 ) const {
     check_netCDF_error(
         nc_get_vars_float(
@@ -345,8 +340,8 @@ void NetCDFFile::ReadVariableWithStride(
 }
 
 void NetCDFFile::ReadVariableWithStride(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<ptrdiff_t>& stride, double* data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const ptrdiff_t> stride, double* data
 ) const {
     check_netCDF_error(
         nc_get_vars_double(
@@ -357,8 +352,8 @@ void NetCDFFile::ReadVariableWithStride(
 }
 
 void NetCDFFile::ReadVariableWithStride(
-    const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-    const std::vector<ptrdiff_t>& stride, int* data
+    const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+    std::span<const ptrdiff_t> stride, int* data
 ) const {
     check_netCDF_error(
         nc_get_vars_int(

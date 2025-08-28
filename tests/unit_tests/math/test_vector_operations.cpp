@@ -1,4 +1,5 @@
 #include <array>
+#include <ranges>
 #include <stdexcept>
 #include <string>
 
@@ -35,8 +36,8 @@ TEST(VectorTest, VecTilde) {
     const auto expected =
         Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 3)) {
             EXPECT_NEAR(m_mirror(i, j), expected(i, j), 1.e-15);
         }
     }

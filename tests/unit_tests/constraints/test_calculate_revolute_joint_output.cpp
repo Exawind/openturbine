@@ -62,7 +62,7 @@ TEST(CalculateRevoluteJointOutputTests, OneConstraint) {
     const auto outputs_exact =
         Kokkos::View<double[1][3], Kokkos::HostSpace>::const_type(outputs_exact_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(outputs_mirror(0, i), outputs_exact(0, i), 1.e-15);
     }
 }

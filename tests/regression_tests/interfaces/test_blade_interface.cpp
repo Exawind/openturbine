@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
@@ -42,7 +44,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     const auto x_values = ref_axis["x"]["values"].as<std::vector<double>>();
     const auto y_values = ref_axis["y"]["values"].as<std::vector<double>>();
     const auto z_values = ref_axis["z"]["values"].as<std::vector<double>>();
-    for (auto i = 0U; i < axis_grid.size(); ++i) {
+    for (auto i : std::views::iota(0U, axis_grid.size())) {
         builder.Blade().AddRefAxisPoint(
             axis_grid[i], {x_values[i], y_values[i], z_values[i]},
             interfaces::components::ReferenceAxisOrientation::Z
@@ -53,7 +55,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     const auto twist = wio_blade["outer_shape_bem"]["twist"];
     const auto twist_grid = twist["grid"].as<std::vector<double>>();
     const auto twist_values = twist["values"].as<std::vector<double>>();
-    for (auto i = 0U; i < twist_grid.size(); ++i) {
+    for (auto i : std::views::iota(0U, twist_grid.size())) {
         builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i]);
     }
 
@@ -66,7 +68,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     if (m_grid.size() != k_grid.size()) {
         throw std::runtime_error("stiffness and mass matrices not on same grid");
     }
-    for (auto i = 0U; i < n_sections; ++i) {
+    for (auto i : std::views::iota(0U, n_sections)) {
         if (abs(m_grid[i] - k_grid[i]) > 1e-8) {
             throw std::runtime_error("stiffness and mass matrices not on same grid");
         }
@@ -101,12 +103,12 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     auto& tip_node = interface.Blade().nodes.back();
 
     // Loop through solution iterations
-    for (auto i = 1U; i < 20U; ++i) {
+    for (auto i : std::views::iota(1U, 20U)) {
         // Calculate time
         const auto t{static_cast<double>(i) * time_step};
 
         // Apply oscillating moment about z axis to tip
-        tip_node.loads[1] = 2.0e5 * sin(2. * M_PI * 0.05 * t);
+        tip_node.loads[1] = 2.0e5 * sin(2. * std::numbers::pi * 0.05 * t);
 
         // Take step
         const auto converged = interface.Step();
@@ -201,7 +203,7 @@ TEST(BladeInterfaceTest, RotatingBeam) {
     auto interface = builder.Build();
 
     // Loop through time steps
-    for (auto i = 1U; i < 10U; ++i) {
+    for (auto i : std::views::iota(1U, 10U)) {
         // Calculate time at end of step
         const auto t{static_cast<double>(i) * time_step};
 
@@ -321,7 +323,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
 
     // Add reference axis coordinates and twist
     const auto n_kps = 12;
-    for (auto i = 0U; i < n_kps; ++i) {
+    for (auto i : std::views::iota(0, n_kps)) {
         const auto s = static_cast<double>(i) / (n_kps - 1);
         builder.AddRefAxisPoint(
             s, {10. * s, 0., 0.}, interfaces::components::ReferenceAxisOrientation::X
@@ -376,7 +378,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    for (auto step = 0; step < 1000; ++step) {
+    for (auto _ : std::views::iota(0, 1000)) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         ASSERT_TRUE(converged);
     }

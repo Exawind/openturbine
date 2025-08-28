@@ -1,3 +1,5 @@
+#include <ranges>
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
@@ -14,19 +16,19 @@ void Compare(const T& field_1, const T& field_2) {
     const auto mirror_2 = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), field_2);
 
     if constexpr (T::rank() == 1) {
-        for (auto i = 0U; i < field_1.extent(0); ++i) {
+        for (auto i : std::views::iota(0U, field_1.extent(0))) {
             EXPECT_EQ(mirror_1(i), mirror_2(i));
         }
     } else if constexpr (T::rank() == 2) {
-        for (auto i = 0U; i < field_1.extent(0); ++i) {
-            for (auto j = 0U; j < field_1.extent(1); ++j) {
+        for (auto i : std::views::iota(0U, field_1.extent(0))) {
+            for (auto j : std::views::iota(0U, field_1.extent(1))) {
                 EXPECT_EQ(mirror_1(i, j), mirror_2(i, j));
             }
         }
     } else if constexpr (T::rank() == 3) {
-        for (auto i = 0U; i < field_1.extent(0); ++i) {
-            for (auto j = 0U; j < field_1.extent(1); ++j) {
-                for (auto k = 0U; k < field_1.extent(2); ++k) {
+        for (auto i : std::views::iota(0U, field_1.extent(0))) {
+            for (auto j : std::views::iota(0U, field_1.extent(1))) {
+                for (auto k : std::views::iota(0U, field_1.extent(2))) {
                     EXPECT_EQ(mirror_1(i, j, k), mirror_2(i, j, k));
                 }
             }

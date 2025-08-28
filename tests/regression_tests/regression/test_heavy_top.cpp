@@ -67,7 +67,7 @@ inline auto SetUpHeavyTopTest() {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Run simulation for 0.8 seconds
-    for (auto i = 0; i < 400; ++i) {
+    for (auto i : std::views::iota(0, 400)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }

@@ -11,7 +11,8 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     auto invalid_node = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
     auto fixed_bc = constraints::Constraint(0, constraints::ConstraintType::FixedBC, {0, 1});
-    auto constraints = Constraints<DeviceType>({fixed_bc}, {invalid_node, node_1});
+    auto constraints =
+        Constraints<DeviceType>(std::array{fixed_bc}, std::array{invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
     auto state = State<DeviceType>(2U);  // 2 nodes in the system
@@ -39,7 +40,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_FixedBC) {
     EXPECT_EQ(
         host_target_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // taget node has 6 DOFs which will be fixed
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_target_node_freedom_table(0, k), k + 17
         );  // target node DOFs: 17, 18, 19, 20, 21, 22
@@ -53,7 +54,8 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     auto node_1 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});        // target node - index is 1
     auto prescribed_bc =
         constraints::Constraint(0, constraints::ConstraintType::PrescribedBC, {0, 1});
-    auto constraints = Constraints<DeviceType>({prescribed_bc}, {invalid_node, node_1});
+    auto constraints =
+        Constraints<DeviceType>(std::array{prescribed_bc}, std::array{invalid_node, node_1});
 
     auto elements = Elements<DeviceType>();
     auto state = State<DeviceType>(2U);  // 2 nodes in the system
@@ -81,7 +83,7 @@ TEST(TestCreateConstraintFreedomTable, SingleNodeConstraint_PrescribedBC) {
     EXPECT_EQ(
         host_target_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // taget node has 6 DOFs which will be prescribed
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_target_node_freedom_table(0, k), k + 24
         );  // target node DOFs: 24, 25, 26, 27, 28, 29
@@ -94,7 +96,7 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     auto node_1 = Node(0U, {0., 0., 0., 1., 0., 0., 0.});  // base node - index is 0
     auto node_2 = Node(1U, {1., 0., 0., 1., 0., 0., 0.});  // target node - index is 1
     auto rigid_bc = constraints::Constraint(0, constraints::ConstraintType::RigidJoint, {0, 1});
-    auto constraints = Constraints<DeviceType>({rigid_bc}, {node_1, node_2});
+    auto constraints = Constraints<DeviceType>(std::array{rigid_bc}, std::array{node_1, node_2});
 
     auto elements = Elements<DeviceType>();
     auto state = State<DeviceType>(2U);  // 2 nodes in the system
@@ -132,10 +134,10 @@ TEST(TestCreateConstraintFreedomTable, DoubeNodeConstraint_RigidBC) {
     EXPECT_EQ(
         host_target_node_freedom_signature(0), FreedomSignature::AllComponents
     );  // target node has 6 DOFs which will be fixed relative to base node
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(host_base_node_freedom_table(0, k), k);  // base node DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_target_node_freedom_table(0, k), k + 6
         );  // target node DOFs: 6, 7, 8, 9, 10, 11

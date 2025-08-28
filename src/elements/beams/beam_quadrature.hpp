@@ -2,19 +2,20 @@
 
 #include <algorithm>
 #include <array>
+#include <ranges>
+#include <span>
 #include <vector>
 
 namespace openturbine::beams {
 
-inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(const std::vector<double>& grid
-) {
+inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(std::span<const double> grid) {
     const auto n{grid.size()};
-    const auto [grid_min, grid_max] = std::minmax_element(begin(grid), end(grid));
+    const auto [grid_min, grid_max] = std::minmax_element(std::begin(grid), std::end(grid));
     const auto grid_range{*grid_max - *grid_min};
     auto quadrature = std::vector<std::array<double, 2>>{
         {-1., (grid[1] - grid[0]) / grid_range},
     };
-    for (auto i = 1U; i < n - 1; ++i) {
+    for (auto i : std::views::iota(1U, n - 1)) {
         quadrature.push_back(
             {2. * (grid[i] - *grid_min) / grid_range - 1., (grid[i + 1] - grid[i - 1]) / grid_range}
         );

@@ -22,7 +22,8 @@ TEST(ConstraintsTest, SingleConstraintConstructorWithFixedBC) {
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    const auto constraints = Constraints<DeviceType>({constraint}, {node1, node2});
+    const auto constraints =
+        Constraints<DeviceType>(std::array{constraint}, std::array{node1, node2});
     EXPECT_EQ(constraints.num_constraints, 1);
     EXPECT_EQ(constraints.num_dofs, 6);  // Fixed constraint has 6 DOFs
 
@@ -47,8 +48,9 @@ TEST(ConstraintsTest, MultipleConstraintsConstructor) {
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    const auto constraints =
-        Constraints<DeviceType>({fixed_constraint, revolute_constraint}, {node1, node2, node3});
+    const auto constraints = Constraints<DeviceType>(
+        std::array{fixed_constraint, revolute_constraint}, std::array{node1, node2, node3}
+    );
     EXPECT_EQ(constraints.num_constraints, 2);
     EXPECT_EQ(constraints.num_dofs, 11);  // Fixed (6) + Revolute (5) = 11 DOFs
 }
@@ -60,7 +62,7 @@ TEST(ConstraintsTest, UpdateDisplacementAndUpdateViews) {
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto constraints = Constraints<DeviceType>({constraint}, {node1, node2});
+    auto constraints = Constraints<DeviceType>(std::array{constraint}, std::array{node1, node2});
 
     const auto new_displacement = std::array{0.1, 0.2, 0.3, 1., 0., 0., 0.};
     constraints.UpdateDisplacement(0, new_displacement);
@@ -83,7 +85,7 @@ TEST(ConstraintsTest, UpdateViewsWithControlSignal) {
 
     using DeviceType =
         Kokkos::Device<Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space>;
-    auto constraints = Constraints<DeviceType>({constraint}, {node1});
+    auto constraints = Constraints<DeviceType>(std::array{constraint}, std::array{node1});
     constraints.UpdateViews();
 
     auto host_input = Kokkos::create_mirror_view(constraints.input);
