@@ -78,10 +78,13 @@ void expect_kokkos_view_2D_equal(
 
 std::vector<double> kokkos_view_1D_to_vector(const Kokkos::View<double*>& view) {
     auto view_host = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), view);
-    std::vector<double> values;
-    for (auto i : std::views::iota(0U, view_host.extent(0))) {
-        values.emplace_back(view_host(i));
-    }
+    std::vector<double> values(view_host.extent(0));
+    std::ranges::transform(
+        std::views::iota(0U, view_host.extent(0)), std::begin(values),
+        [view_host](auto i) {
+            return view_host(i);
+        }
+    );
     return values;
 }
 

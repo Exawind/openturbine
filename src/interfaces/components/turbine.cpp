@@ -225,7 +225,7 @@ void Turbine::CreateIntermediateNodes(const TurbineInput& input, Model& model) {
     this->apex_nodes.reserve(this->blades.size());
 
     // Create one apex node per blade at origin
-    for (auto beam : std::views::iota(0U, this->blades.size())) {
+    for ([[maybe_unused]] auto beam : std::views::iota(0U, this->blades.size())) {
         const auto apex_node_id = model.AddNode().SetPosition({0., 0., 0., 1., 0., 0., 0.}).Build();
         this->apex_nodes.emplace_back(apex_node_id);
     }

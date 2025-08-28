@@ -151,11 +151,10 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     A(p - 1, p - 1) = 1.;
     for (auto j : std::views::iota(0U, p)) {
         for (auto i : std::views::iota(1U, p - 1U)) {
-            auto sum = 0.;
-            for (auto k : std::views::iota(0U, n)) {
-                sum += shape_functions[i][k] * shape_functions[j][k];
-            }
-            A(i, j) = sum;
+            A(i, j) = std::transform_reduce(
+                std::begin(shape_functions[i]), std::end(shape_functions[i]),
+                std::begin(shape_functions[j]), 0., std::plus<>(), std::multiplies<>()
+            );
         }
     }
 

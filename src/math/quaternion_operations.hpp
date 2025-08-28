@@ -175,7 +175,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
 
     // Inverse of a quaternion is the conjugate divided by the length
     q_out(0) = q_in(0) / length;
-    for (auto i : std::views::iota(1, 4)) {
+    for (auto i = 1; i < 4; ++i) {
         q_out(i) = -q_in(i) / length;
     }
 }
@@ -219,7 +219,7 @@ KOKKOS_INLINE_FUNCTION void RotationVectorToQuaternion(
     const auto factor = (Kokkos::abs(angle) < 1.e-12) ? 0. : Kokkos::sin(angle / 2.) / angle;
 
     quaternion(0) = cos_angle;
-    for (auto i : std::views::iota(1, 4)) {
+    for (auto i = 1; i < 4; ++i) {
         quaternion(i) = phi(i - 1) * factor;
     }
 }
@@ -305,7 +305,7 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
     // Normalize the quaternion
     const auto length = std::sqrt(length_squared);
     auto normalized_quaternion = Kokkos::Array<double, 4>{};
-    for (auto k : std::views::iota(0U, 4U)) {
+    for (auto k = 0U; k < 4; ++k) {
         normalized_quaternion[k] = q[k] / length;
     }
     return normalized_quaternion;

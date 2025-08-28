@@ -378,7 +378,7 @@ TEST(BladeInterfaceTest, TwoBeams) {
     auto [state, elements, constraints] = model.CreateSystem();
     auto solver = CreateSolver<>(state, elements, constraints);
 
-    for (auto _ : std::views::iota(0, 1000)) {
+    for ([[maybe_unused]] auto iteration : std::views::iota(0, 1000)) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         ASSERT_TRUE(converged);
     }

@@ -122,7 +122,7 @@ inline auto SetUpSpringMassChainSystem() {
     constexpr auto displacement = 0.5;
     auto position = 0.;
     model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
-    for (auto mass_number : std::views::iota(0U, number_of_masses)) {
+    for ([[maybe_unused]] auto mass_number : std::views::iota(0U, number_of_masses)) {
         position += displacement;
         model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
     }
@@ -171,7 +171,7 @@ inline auto SetUpSpringMassChainSystem() {
     auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Run simulation for T seconds
-    for (auto time_step : std::views::iota(1U, num_steps + 1U)) {
+    for ([[maybe_unused]] auto time_step : std::views::iota(1U, num_steps + 1U)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
         Kokkos::deep_copy(q, state.q);

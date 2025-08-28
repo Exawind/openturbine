@@ -106,14 +106,16 @@ inline void LagrangePolynomialDerivWeights(
         for (auto j : std::views::iota(0U, n) | std::views::filter([i](unsigned j) {
                           return j != i;
                       })) {
-            double prod = 1.;
-            for (auto xk : std::views::iota(0U, n) | std::views::filter([i, j](unsigned k) {
-                               return k != i && k != j;
-                           }) | std::views::transform([&xs](auto k) {
-                               return xs[k];
-                           })) {
-                prod *= (x - xk) / (xi - xk);
-            }
+            auto range = std::views::iota(0U, n) | std::views::filter([i, j](unsigned k) {
+                             return k != i && k != j;
+                         }) |
+                         std::views::common;
+            auto prod = std::transform_reduce(
+                std::begin(range), std::end(range), 1., std::multiplies<>(),
+                [&xs, x, xi](auto k) {
+                    return (x - xs[k]) / (xi - xs[k]);
+                }
+            );
             weight += prod / (xi - xs[j]);
         }
         weights[i] = weight;

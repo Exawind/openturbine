@@ -179,7 +179,7 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     constexpr auto velocity = std::array{0., 0., 0., 0., 0., 1.};
     constexpr auto origin = std::array{0., 0., 0.};
     constexpr auto hub_radius = 2.;
-    for (auto blade_number : std::views::iota(0, num_blades)) {
+    for ([[maybe_unused]] auto blade_number : std::views::iota(0, num_blades)) {
         auto beam_node_ids = std::vector<size_t>(node_s.size());
         std::ranges::transform(node_s, std::begin(beam_node_ids), [&](auto s) {
             return model.AddNode()
@@ -561,7 +561,7 @@ TEST(RotatingBeamTest, RevoluteJointConstraint) {
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Run 10 steps
-    for (auto i : std::views::iota(0, 5)) {
+    for ([[maybe_unused]] auto i : std::views::iota(0, 5)) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }
@@ -648,7 +648,7 @@ void GeneratorTorqueWithAxisTilt(
     auto solver = CreateSolver<>(state, elements, constraints);
 
     // Run 10 steps
-    for (auto i : std::views::iota(0, 10)) {
+    for ([[maybe_unused]] auto i : std::views::iota(0, 10)) {
         const auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_EQ(converged, true);
     }

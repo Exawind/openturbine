@@ -104,8 +104,8 @@ struct TurbineConfig {
      * qz]
      */
     struct BladeInitialState {
-        std::array<double, 7>
-            root_initial_position;  //< Initial root position of the blade (1 per blade)
+        std::array<double, 7> root_initial_position{
+        };  //< Initial root position of the blade (1 per blade)
         std::vector<std::array<double, 7>>
             node_initial_positions;  //< Initial node positions of the blade
 
@@ -117,8 +117,8 @@ struct TurbineConfig {
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
     std::array<float, 3> reference_position{0.F, 0.F, 0.F};  //< Reference position of the turbine
-    std::array<double, 7> hub_initial_position;              //< Initial hub position
-    std::array<double, 7> nacelle_initial_position;          //< Initial nacelle position
+    std::array<double, 7> hub_initial_position{};            //< Initial hub position
+    std::array<double, 7> nacelle_initial_position{};        //< Initial nacelle position
     std::vector<BladeInitialState>
         blade_initial_states;  //< Initial root and node positions of blades (size = n_blades)
 

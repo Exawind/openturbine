@@ -35,7 +35,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     auto& platform_node = interface.turbine.floating_platform.node;
 
     // Run simulation for 500 steps
-    for (auto i : std::views::iota(0, 500)) {
+    for ([[maybe_unused]] auto i : std::views::iota(0, 500)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -83,7 +83,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     interface.SaveState();
 
     // Run simulation for an additional 100 steps
-    for (auto _ : std::views::iota(500, 600)) {
+    for ([[maybe_unused]] auto iteration : std::views::iota(500, 600)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -109,7 +109,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Run simulation from 500 to 600 steps
-    for (auto _ : std::views::iota(500, 600)) {
+    for ([[maybe_unused]] auto interation : std::views::iota(500, 600)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
