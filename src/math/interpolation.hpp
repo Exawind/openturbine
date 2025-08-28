@@ -199,7 +199,7 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
             -std::cos(static_cast<double>(i) * std::numbers::pi / static_cast<double>(order));
 
         bool converged{false};
-        for (auto _ : std::views::iota(0U, max_iterations)) {
+        for ([[maybe_unused]] auto iteration : std::views::iota(0U, max_iterations)) {
             const auto x_old = x_it;
 
             // Compute Legendre polynomials up to order n
