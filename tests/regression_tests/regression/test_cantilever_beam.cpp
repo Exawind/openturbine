@@ -57,15 +57,12 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
 
     // Build vector of nodes (straight along x axis, no rotation)
     std::vector<size_t> beam_node_ids;
-    std::ranges::transform(
-        node_s, std::back_inserter(beam_node_ids),
-        [&](auto s) {
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(10 * s, 0., 0., 1., 0., 0., 0.)
-                .Build();
-        }
-    );
+    std::ranges::transform(node_s, std::back_inserter(beam_node_ids), [&](auto s) {
+        return model.AddNode()
+            .SetElemLocation(s)
+            .SetPosition(10 * s, 0., 0., 1., 0., 0., 0.)
+            .Build();
+    });
 
     // Add beam element
     model.AddBeamElement(

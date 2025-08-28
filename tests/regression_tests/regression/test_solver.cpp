@@ -51,17 +51,14 @@ inline void SetUpSolverAndAssemble() {
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
     std::vector<size_t> beam_node_ids;
-    std::ranges::transform(
-        node_s, std::back_inserter(beam_node_ids),
-        [&](auto s) {
-            const auto x = 10 * s + x0_root[0];
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
-        }
-    );
+    std::ranges::transform(node_s, std::back_inserter(beam_node_ids), [&](auto s) {
+        const auto x = 10 * s + x0_root[0];
+        return model.AddNode()
+            .SetElemLocation(s)
+            .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+            .SetVelocity(0., x * omega, 0., 0., 0., omega)
+            .Build();
+    });
 
     // Add beam element
     model.AddBeamElement(
@@ -282,17 +279,14 @@ inline void SetupAndTakeNoSteps() {
     constexpr auto omega = 0.1;
     const auto x0_root = std::array{2., 0., 0.};
     std::vector<size_t> beam_node_ids;
-    std::ranges::transform(
-        node_s, std::back_inserter(beam_node_ids),
-        [&](auto s) {
-            const auto x = 10 * s + x0_root[0];
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
-        }
-    );
+    std::ranges::transform(node_s, std::back_inserter(beam_node_ids), [&](auto s) {
+        const auto x = 10 * s + x0_root[0];
+        return model.AddNode()
+            .SetElemLocation(s)
+            .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+            .SetVelocity(0., x * omega, 0., 0., 0., omega)
+            .Build();
+    });
 
     // Add beam element
     model.AddBeamElement(
@@ -481,17 +475,14 @@ inline auto SetupAndTakeTwoSteps() {
     // 0.1 rad/s angular velocity around the z axis
     constexpr auto omega = 0.1;
     std::vector<size_t> beam_node_ids;
-    std::ranges::transform(
-        node_s, std::back_inserter(beam_node_ids),
-        [&](auto s) {
-            const auto x = 10 * s;
-            return model.AddNode()
-                .SetElemLocation(s)
-                .SetPosition(x, 0., 0., 1., 0., 0., 0.)
-                .SetVelocity(0., x * omega, 0., 0., 0., omega)
-                .Build();
-        }
-    );
+    std::ranges::transform(node_s, std::back_inserter(beam_node_ids), [&](auto s) {
+        const auto x = 10 * s;
+        return model.AddNode()
+            .SetElemLocation(s)
+            .SetPosition(x, 0., 0., 1., 0., 0., 0.)
+            .SetVelocity(0., x * omega, 0., 0., 0., omega)
+            .Build();
+    });
 
     // Add beam element
     model.AddBeamElement(

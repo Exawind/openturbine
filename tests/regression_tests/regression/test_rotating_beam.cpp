@@ -181,15 +181,12 @@ inline void CreateTwoBeamSolverWithSameBeamsAndStep() {
     constexpr auto hub_radius = 2.;
     for (auto blade_number : std::views::iota(0, num_blades)) {
         auto beam_node_ids = std::vector<size_t>(node_s.size());
-        std::ranges::transform(
-            node_s, std::begin(beam_node_ids),
-            [&](auto s) {
-                return model.AddNode()
-                    .SetElemLocation(s)
-                    .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
-                    .Build();
-            }
-        );
+        std::ranges::transform(node_s, std::begin(beam_node_ids), [&](auto s) {
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
+                .Build();
+        });
         auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
         auto rotation_quaternion = std::array{1., 0., 0., 0.};
         model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
@@ -265,15 +262,12 @@ TEST(RotatingBeamTest, ThreeBladeRotor) {
     constexpr auto hub_radius = 2.;
     for (auto blade_number : std::views::iota(0, num_blades)) {
         auto beam_node_ids = std::vector<size_t>(node_s.size());
-        std::ranges::transform(
-            node_s, std::begin(beam_node_ids),
-            [&](auto s) {
-                return model.AddNode()
-                    .SetElemLocation(s)
-                    .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
-                    .Build();
-            }
-        );
+        std::ranges::transform(node_s, std::begin(beam_node_ids), [&](auto s) {
+            return model.AddNode()
+                .SetElemLocation(s)
+                .SetPosition(10. * s, 0., 0., 1., 0., 0., 0.)
+                .Build();
+        });
         auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
         auto rotation_quaternion = math::RotationVectorToQuaternion(
             {0., 0., 2. * std::numbers::pi * blade_number / num_blades}
