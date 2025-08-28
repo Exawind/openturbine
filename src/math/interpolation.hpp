@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <numbers>
+#include <numeric>
 #include <ranges>
 #include <span>
 #include <stdexcept>
@@ -52,11 +53,7 @@ inline void LinearInterpWeights(double x, std::span<const double> xs, std::vecto
 inline double LinearInterp(double x, std::span<const double> xs, std::span<const double> values) {
     std::vector<double> weights(xs.size());
     LinearInterpWeights(x, xs, weights);
-    auto x_interp = 0.;
-    for (auto i : std::views::iota(0U, xs.size())) {
-        x_interp += weights[i] * values[i];
-    }
-    return x_interp;
+    return std::transform_reduce(std::begin(weights), std::end(weights), std::begin(values), 0., std::plus<>(), std::multiplies<>());
 }
 
 /**
@@ -100,34 +97,17 @@ inline void LagrangePolynomialDerivWeights(
     const auto n = xs.size();
     weights.assign(n, 0.);
 
-    // Pre-compute (x - xs[k]) terms to avoid repeated calculations
-    std::vector<double> x_minus_xk(n);
-    for (auto k : std::views::iota(0U, n)) {
-        x_minus_xk[k] = x - xs[k];
-    }
-
-    // Pre-compute denominators (xs[i] - xs[k]) to avoid repeated calculations
-    std::vector<std::vector<double>> denom(n, std::vector<double>(n));
     for (auto i : std::views::iota(0U, n)) {
-        for (auto k : std::views::iota(0U, n)) {
-            if (k != i) {
-                denom[i][k] = xs[i] - xs[k];
-            }
-        }
-    }
-
-    for (auto i : std::views::iota(0U, n)) {
-        for (auto j : std::views::iota(0U, n)) {
-            if (j != i) {
+        auto xi = xs[i];
+        auto weight = 0.;
+        for (auto j : std::views::iota(0U, n) | std::views::filter([i](unsigned j) { return j != i; } )) {
                 double prod = 1.;
-                for (auto k : std::views::iota(0U, n)) {
-                    if (k != i && k != j) {
-                        prod *= x_minus_xk[k] / denom[i][k];
-                    }
+                for (auto xk : std::views::iota(0U, n) | std::views::filter([i, j](unsigned k) { return k != i && k != j; } ) | std::views::transform([&xs](auto k) { return xs[k]; } ))  {
+                        prod *= (x - xk) / (xi - xk);
                 }
-                weights[i] += prod / denom[i][j];
-            }
+                weight += prod / (xi - xs[j]);
         }
+        weights[i] = weight;
     }
 }
 
