@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <ranges>
 #include <string>
 
 #include <Kokkos_Core.hpp>
@@ -46,7 +47,7 @@ TEST(ComputeRowPtrs, OneElementOneNode) {
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < 7U; ++row) {
+    for (auto row : std::views::iota(0U, 7U)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 6U);
     }
 }
@@ -77,7 +78,7 @@ TEST(ComputeRowPtrs, OneElementTwoNodes) {
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < 13U; ++row) {
+    for (auto row : std::views::iota(0U, 13U)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 12U);
     }
 }
@@ -109,7 +110,7 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesNoOverlap) {
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);
 
-    for (auto row = 0U; row < 25U; ++row) {
+    for (auto row : std::views::iota(0U, 25U)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 12U);
     }
 }
@@ -140,15 +141,15 @@ TEST(ComputeRowPtrs, TwoElementTwoNodesOverlap) {
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < 7U; ++row) {
+    for (auto row : std::views::iota(0U, 7U)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 12U);
     }
 
-    for (auto row = 0U; row < 6U; ++row) {
+    for (auto row : std::views::iota(0U, 6U)) {
         EXPECT_EQ(row_ptrs_mirror(row + 7U), 72U + (row + 1) * 18U);
     }
 
-    for (auto row = 0U; row < 6U; ++row) {
+    for (auto row : std::views::iota(0U, 6U)) {
         EXPECT_EQ(row_ptrs_mirror(row + 13U), 180U + (row + 1) * 12U);
     }
 }
@@ -184,7 +185,7 @@ TEST(ComputeRowPtrs, OneElementOneNode_OneConstraint) {
 
     const auto row_ptrs_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), row_ptrs);
 
-    for (auto row = 0U; row < num_dofs + 1UL; ++row) {
+    for (auto row : std::views::iota(0U, num_dofs + 1UL)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 12U);
     }
 }
@@ -224,11 +225,11 @@ TEST(ComputeRowPtrs, OneElementOneNode_TwoConstraint) {
     const auto row_ptrs_mirror = Kokkos::create_mirror_view(row_ptrs);
     Kokkos::deep_copy(row_ptrs_mirror, row_ptrs);
 
-    for (auto row = 0U; row < 6U; ++row) {
+    for (auto row : std::views::iota(0U, 6U)) {
         EXPECT_EQ(row_ptrs_mirror(row), row * 18U);
     }
 
-    for (auto row = 7U; row < num_dofs + 1U; ++row) {
+    for (auto row : std::views::iota(7U, num_dofs + 1UL)) {
         EXPECT_EQ(row_ptrs_mirror(row), 6U * 18U + (row - 6U) * 12U);
     }
 }

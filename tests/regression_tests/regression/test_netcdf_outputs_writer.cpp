@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <numbers>
 
 #include <gtest/gtest.h>
 
@@ -38,7 +39,7 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
     model.AddSpringElement(fixed_node_id, mass_node_id, k, l0);
 
     // Set up simulation parameters
-    const double T = 2. * M_PI * sqrt(m / k);
+    const double T = 2. * std::numbers::pi * sqrt(m / k);
     constexpr auto num_steps = 1000;
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
@@ -56,7 +57,7 @@ TEST(NetCDFOutputsWriterTest, SpringMassSystemOutputs) {
     const util::NodeStateWriter writer(output_file, true, 2);
 
     // Run simulation and write outputs
-    for (auto time_step = 0U; time_step <= num_steps; ++time_step) {
+    for (auto time_step : std::views::iota(0U, num_steps + 1U)) {
         Kokkos::deep_copy(q, state.q);
 
         // Write only displacement data

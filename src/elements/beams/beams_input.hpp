@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <numeric>
+#include <span>
 #include <vector>
 
 #include "beam_element.hpp"
@@ -22,8 +23,10 @@ struct BeamsInput {
     std::vector<BeamElement> elements;  //< Elements in the beam
     std::array<double, 3> gravity;      //< Gravity vector
 
-    BeamsInput(std::vector<BeamElement> elems, std::array<double, 3> g)
-        : elements(std::move(elems)), gravity(g) {}
+    BeamsInput(std::span<const BeamElement> elems, std::span<const double, 3> g)
+        : gravity({g[0], g[1], g[2]}) {
+        elements.assign(std::begin(elems), std::end(elems));
+    }
 
     /// Returns the number of elements in the beam
     [[nodiscard]] size_t NumElements() const { return elements.size(); }

@@ -162,7 +162,7 @@ TEST_F(NetCDFFileTest, OpenExistingFile) {
     {
         const util::NetCDFFile file(test_file);
         const int time_dim = file.AddDimension("time", 5);
-        const int position_var = file.AddVariable<double>("position", {time_dim});
+        const int position_var = file.AddVariable<double>("position", std::array{time_dim});
         EXPECT_GE(position_var, 0);
     }
 
@@ -186,7 +186,7 @@ TEST_F(NetCDFFileTest, GetNumberOfDimensions) {
     const int time_dim = file.AddDimension("time", 5);
     const int space_dim = file.AddDimension("nodes", 3);
     const std::vector<int> dim_ids = {time_dim, space_dim};
-    const int position_1D_var = file.AddVariable<double>("position_1D", {time_dim});
+    const int position_1D_var = file.AddVariable<double>("position_1D", std::array{time_dim});
     const int position_2D_var = file.AddVariable<double>("position_2D", dim_ids);
     EXPECT_GE(position_1D_var, 0);
     EXPECT_GE(position_2D_var, 0);
@@ -214,7 +214,7 @@ TEST_F(NetCDFFileTest, GetShape) {
     const int time_dim = file.AddDimension("time", 5);
     const int space_dim = file.AddDimension("nodes", 3);
 
-    const int position_1D_var = file.AddVariable<double>("position_1D", {time_dim});
+    const int position_1D_var = file.AddVariable<double>("position_1D", std::array{time_dim});
     EXPECT_GE(position_1D_var, 0);
     const std::vector<size_t> expected_shape_1D = {5};
     EXPECT_EQ(file.GetShape("position_1D"), expected_shape_1D);

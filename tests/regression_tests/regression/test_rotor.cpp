@@ -1,6 +1,9 @@
+#include <algorithm>
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <numbers>
+#include <ranges>
 
 #include <gtest/gtest.h>
 
@@ -12,14 +15,10 @@
 namespace openturbine::tests {
 
 auto ComputeIEA15NodeLocations() {
-    constexpr auto num_nodes = node_xi.size();
-    auto node_loc = std::array<double, num_nodes>{};
-    std::transform(
-        std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
-        [&](const auto xi) {
-            return (xi + 1.) / 2.;
-        }
-    );
+    auto node_loc = std::array<double, node_xi.size()>{};
+    std::ranges::transform(node_xi, std::begin(node_loc), [&](auto xi) {
+        return (xi + 1.) / 2.;
+    });
     return node_loc;
 }
 
@@ -40,18 +39,17 @@ Model CreateIEA15Blades(const std::array<double, 3>& omega) {
     const auto velocity = std::array{0., 0., 0., omega[0], omega[1], omega[2]};
     constexpr auto origin = std::array{0., 0., 0.};
 
-    for (auto blade_number = 0U; blade_number < num_blades; ++blade_number) {
+    for (auto blade_number : std::views::iota(0U, num_blades)) {
         const auto rotation_quaternion = math::RotationVectorToQuaternion(
-            {0., 0., -2. * M_PI * static_cast<double>(blade_number) / static_cast<double>(num_blades)
-            }
+            {0., 0.,
+             -2. * std::numbers::pi * static_cast<double>(blade_number) /
+                 static_cast<double>(num_blades)}
         );
 
         auto beam_node_ids = std::vector<size_t>(num_nodes);
 
-        auto node_list = std::array<size_t, num_nodes>{};
-        std::iota(std::begin(node_list), std::end(node_list), 0);
-        std::transform(
-            std::cbegin(node_list), std::cend(node_list), std::begin(beam_node_ids),
+        std::ranges::transform(
+            std::views::iota(0U, num_nodes), std::begin(beam_node_ids),
             [&](const size_t j) {
                 return model.AddNode()
                     .SetElemLocation(node_loc[j])
@@ -102,9 +100,8 @@ TEST(RotorTest, IEA15Rotor) {
     auto model = CreateIEA15Blades<num_blades>(omega);
 
     auto prescribed_bc_ids = std::array<size_t, num_blades>{};
-    std::transform(
-        std::cbegin(model.GetBeamElements()), std::cend(model.GetBeamElements()),
-        std::begin(prescribed_bc_ids),
+    std::ranges::transform(
+        model.GetBeamElements(), std::begin(prescribed_bc_ids),
         [&model](const auto& beam_elem) {
             return model.AddPrescribedBC(beam_elem.node_ids[0]);
         }
@@ -117,7 +114,7 @@ TEST(RotorTest, IEA15Rotor) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (auto i = 0U; i < num_steps; ++i) {
+    for (auto i : std::views::iota(0U, num_steps)) {
         // Calculate hub rotation for this time step
         const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
@@ -223,7 +220,7 @@ TEST(RotorTest, IEA15RotorHub) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (auto i = 0U; i < num_steps; ++i) {
+    for (auto i : std::views::iota(0U, num_steps)) {
         // Calculate hub rotation for this time step
         const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),
@@ -255,7 +252,7 @@ TEST(RotorTest, IEA15RotorController) {
     constexpr size_t max_iter(6);
     constexpr double step_size(0.01);  // seconds
     constexpr double rho_inf(0.0);
-    constexpr double t_end(0.01 * 2.0 * M_PI / angular_speed);  // 3 revolutions
+    constexpr double t_end(0.01 * 2.0 * std::numbers::pi / angular_speed);  // 3 revolutions
     constexpr auto num_steps = static_cast<size_t>(t_end / step_size + 1.);
 
     constexpr size_t num_blades = 3;
@@ -283,7 +280,7 @@ TEST(RotorTest, IEA15RotorController) {
         const auto rotation_fraction =
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
         const auto q_root =
-            math::RotationVectorToQuaternion({0., 0., -2. * M_PI * rotation_fraction});
+            math::RotationVectorToQuaternion({0., 0., -2. * std::numbers::pi * rotation_fraction});
         const auto pitch_axis = math::RotateVectorByQuaternion(q_root, {1., 0., 0.});
         model.AddRotationControl(
             {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
@@ -296,7 +293,7 @@ TEST(RotorTest, IEA15RotorController) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (auto i = 0U; i < num_steps; ++i) {
+    for (auto i : std::views::iota(0U, num_steps)) {
         // Time at end of step
         const double t = step_size * static_cast<double>(i + 1);
 
@@ -339,9 +336,8 @@ TEST(RotorTest, IEA15RotorHost) {
 
     //    auto prescribed_bc_ids = std::array<size_t, num_blades>{};
     auto prescribed_bc_ids = std::vector<size_t>(num_blades);
-    std::transform(
-        std::cbegin(model.GetBeamElements()), std::cend(model.GetBeamElements()),
-        std::begin(prescribed_bc_ids),
+    std::ranges::transform(
+        model.GetBeamElements(), std::begin(prescribed_bc_ids),
         [&model](const auto& beam_elem) {
             return model.AddPrescribedBC(beam_elem.node_ids[0]);
         }
@@ -356,7 +352,7 @@ TEST(RotorTest, IEA15RotorHost) {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<Device>();
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (auto i = 0U; i < num_steps; ++i) {
+    for (auto i : std::views::iota(0U, num_steps)) {
         // Calculate hub rotation for this time step
         const auto q_hub = math::RotationVectorToQuaternion(
             {omega[0] * step_size * static_cast<double>(i + 1),

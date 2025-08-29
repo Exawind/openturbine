@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <span>
 #include <vector>
 
 #include "interpolation.hpp"
@@ -28,7 +29,7 @@ namespace openturbine::math {
  *         - Coordinates of the projected 3D points at the target polynomial nodes
  */
 inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
-    size_t num_inputs, size_t num_outputs, const std::vector<std::array<double, 3>>& input_points
+    size_t num_inputs, size_t num_outputs, std::span<const std::array<double, 3>> input_points
 ) {
     // Calculate matrix of num_inputs points-based LSFE shape function values at ouput
     // locations
@@ -38,9 +39,9 @@ inline std::vector<std::array<double, 3>> ProjectPointsToTargetPolynomial(
 
     // Project input_points to output locations using LSFE shape functions
     auto output_points = std::vector<std::array<double, 3>>(num_outputs);
-    for (auto output = 0U; output < num_outputs; ++output) {
-        for (auto input = 0U; input < num_inputs; ++input) {
-            for (auto dim = 0U; dim < 3U; ++dim) {
+    for (auto output : std::views::iota(0U, num_outputs)) {
+        for (auto input : std::views::iota(0U, num_inputs)) {
+            for (auto dim : std::views::iota(0U, 3U)) {
                 output_points[output][dim] +=
                     shape_functions[input][output] * input_points[input][dim];
             }

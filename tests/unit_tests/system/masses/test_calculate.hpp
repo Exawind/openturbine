@@ -1,4 +1,5 @@
 #pragma once
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
@@ -19,32 +20,32 @@ typename Kokkos::View<ValueType>::const_type CreateView(
 
 inline void CompareWithExpected(
     const Kokkos::View<const double*>::host_mirror_type& result,
-    const Kokkos::View<const double*, Kokkos::HostSpace>& expected
+    const Kokkos::View<const double*, Kokkos::HostSpace>& expected, const double tolerance = 1.e-15
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        EXPECT_DOUBLE_EQ(result(i), expected(i));
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        EXPECT_NEAR(result(i), expected(i), tolerance);
     }
 }
 
 inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
-    const Kokkos::View<const double**, Kokkos::HostSpace>& expected
+    const Kokkos::View<const double**, Kokkos::HostSpace>& expected, const double tolerance = 1.e-15
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        for (auto j = 0U; j < result.extent(1); ++j) {
-            EXPECT_DOUBLE_EQ(result(i, j), expected(i, j));
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        for (auto j : std::views::iota(0U, result.extent(1))) {
+            EXPECT_NEAR(result(i, j), expected(i, j), tolerance);
         }
     }
 }
 
 inline void CompareWithExpected(
     const Kokkos::View<const double***>::host_mirror_type& result,
-    const Kokkos::View<const double***, Kokkos::HostSpace>& expected
+    const Kokkos::View<const double***, Kokkos::HostSpace>& expected, const double tolerance = 1.e-15
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        for (auto j = 0U; j < result.extent(1); ++j) {
-            for (auto k = 0U; k < result.extent(2); ++k) {
-                EXPECT_DOUBLE_EQ(result(i, j, k), expected(i, j, k));
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        for (auto j : std::views::iota(0U, result.extent(1))) {
+            for (auto k : std::views::iota(0U, result.extent(2))) {
+                EXPECT_NEAR(result(i, j, k), expected(i, j, k), tolerance);
             }
         }
     }
@@ -52,13 +53,14 @@ inline void CompareWithExpected(
 
 inline void CompareWithExpected(
     const Kokkos::View<const double****>::host_mirror_type& result,
-    const Kokkos::View<const double****, Kokkos::HostSpace>& expected
+    const Kokkos::View<const double****, Kokkos::HostSpace>& expected,
+    const double tolerance = 1.e-15
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        for (auto j = 0U; j < result.extent(1); ++j) {
-            for (auto k = 0U; k < result.extent(2); ++k) {
-                for (auto l = 0U; l < result.extent(3); ++l) {
-                    EXPECT_DOUBLE_EQ(result(i, j, k, l), expected(i, j, k, l));
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        for (auto j : std::views::iota(0U, result.extent(1))) {
+            for (auto k : std::views::iota(0U, result.extent(2))) {
+                for (auto l : std::views::iota(0U, result.extent(3))) {
+                    EXPECT_NEAR(result(i, j, k, l), expected(i, j, k, l), tolerance);
                 }
             }
         }
@@ -67,14 +69,15 @@ inline void CompareWithExpected(
 
 inline void CompareWithExpected(
     const Kokkos::View<const double*****>::host_mirror_type& result,
-    const Kokkos::View<const double*****, Kokkos::HostSpace>& expected
+    const Kokkos::View<const double*****, Kokkos::HostSpace>& expected,
+    const double tolerance = 1.e-15
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        for (auto j = 0U; j < result.extent(1); ++j) {
-            for (auto k = 0U; k < result.extent(2); ++k) {
-                for (auto l = 0U; l < result.extent(3); ++l) {
-                    for (auto m = 0U; m < result.extent(4); ++m) {
-                        EXPECT_DOUBLE_EQ(result(i, j, k, l, m), expected(i, j, k, l, m));
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        for (auto j : std::views::iota(0U, result.extent(1))) {
+            for (auto k : std::views::iota(0U, result.extent(2))) {
+                for (auto l : std::views::iota(0U, result.extent(3))) {
+                    for (auto m : std::views::iota(0U, result.extent(4))) {
+                        EXPECT_NEAR(result(i, j, k, l, m), expected(i, j, k, l, m), tolerance);
                     }
                 }
             }

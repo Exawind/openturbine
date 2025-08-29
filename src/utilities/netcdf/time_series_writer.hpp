@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -28,7 +29,7 @@ public:
      * @param values Vector of values to write at the current timestep
      */
     void WriteValuesAtTimestep(
-        const std::string& variable_name, size_t timestep, const std::vector<double>& values
+        const std::string& variable_name, size_t timestep, std::span<const double> values
     );
 
     /**

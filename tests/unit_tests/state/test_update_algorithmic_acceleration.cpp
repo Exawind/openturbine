@@ -1,5 +1,5 @@
 #include <array>
-#include <string>
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
@@ -28,7 +28,7 @@ TEST(UpdateAlgorithmicAcceleration, OneNode) {
         Kokkos::View<double[1][6], Kokkos::HostSpace>::const_type(acceleration_exact_data.data());
     const auto acceleration_mirror =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), acceleration);
-    for (auto j = 0U; j < 6U; ++j) {
+    for (auto j : std::views::iota(0, 6)) {
         EXPECT_EQ(acceleration_mirror(0, j), acceleration_exact(0, j));
     }
 }

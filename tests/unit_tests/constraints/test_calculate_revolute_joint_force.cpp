@@ -42,7 +42,7 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     const auto residual_terms_exact =
         Kokkos::View<double[6], Kokkos::HostSpace>::const_type(residual_terms_exact_data.data());
 
-    for (auto i = 0U; i < 6U; ++i) {
+    for (auto i : std::views::iota(0, 6)) {
         EXPECT_NEAR(residual_terms_mirror(i), residual_terms_exact(i), 1.e-15);
     }
 }

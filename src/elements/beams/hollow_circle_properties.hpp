@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <numbers>
 #include <stdexcept>
 
 #include "beam_section.hpp"
@@ -46,10 +47,11 @@ static HollowCircleProperties CalculateHollowCircleProperties(
     const double inner_radius = outer_radius - wall_thickness;
 
     // Calculate geometric properties using difference of circles
-    const double area = M_PI * (std::pow(outer_radius, 2) - std::pow(inner_radius, 2));
-    const double Ixx = M_PI * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 4.;
+    const double area = std::numbers::pi * (std::pow(outer_radius, 2) - std::pow(inner_radius, 2));
+    const double Ixx =
+        std::numbers::pi * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 4.;
     const double Iyy = Ixx;  // Circular symmetry
-    const double J = M_PI * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 2.;
+    const double J = std::numbers::pi * (std::pow(outer_radius, 4) - std::pow(inner_radius, 4)) / 2.;
 
     // Shear correction factors for hollow circular sections
     const double kx = (6. * (1. + nu)) / (7. + 6. * nu);  // Timoshenko-Ehrenfest beam theory

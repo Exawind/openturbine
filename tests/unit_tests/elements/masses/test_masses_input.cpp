@@ -1,3 +1,5 @@
+#include <array>
+
 #include <gtest/gtest.h>
 
 #include "elements/masses/masses_input.hpp"
@@ -26,20 +28,20 @@ protected:
         };
 
         // Create 2 mass elements
-        return std::vector<MassElement>{
+        return std::array{
             MassElement(0U, 0U, mass_matrix),  // element 1
             MassElement(1U, 1U, mass_matrix)   // element 2
         };
     }
 
     static MassesInput CreateTestMassesInput() {
-        return MassesInput(CreateTestElements(), {0., 0., -9.81});
+        return MassesInput(CreateTestElements(), std::array{0., 0., -9.81});
     }
 };
 
 TEST_F(MassesInputTest, Constructor) {
     const auto elements = CreateTestElements();
-    const std::array<double, 3> gravity = {0., 0., -9.81};
+    constexpr auto gravity = std::array{0., 0., -9.81};
     const MassesInput input(elements, gravity);
 
     EXPECT_EQ(input.elements.size(), 2);

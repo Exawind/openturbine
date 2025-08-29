@@ -34,7 +34,7 @@ protected:
         std::vector<double> s{0., 0.5, 1.0, 0., 1., 0., 0.33, 0.67, 1.0};
         std::vector<size_t> node_ids;
         node_ids.reserve(9U);
-        for (auto i = 0U; i < 9U; ++i) {
+        for (auto i : std::views::iota(0U, 9U)) {
             node_ids.emplace_back(
                 model.AddNode()
                     .SetElemLocation(s[i])
@@ -46,32 +46,32 @@ protected:
         // Create 3 elements with different numbers of nodes and quadrature points
         // Element 1 - 3 nodes, 2 quadrature points
         model.AddBeamElement(
-            {0U, 1U, 2U},
-            {
+            std::array{0UL, 1UL, 2UL},
+            std::array{
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            std::vector{std::array{-0.5, 0.5}, std::array{0.5, 0.5}}
+            std::array{std::array{-0.5, 0.5}, std::array{0.5, 0.5}}
         );
         // Element 2 - 2 nodes, 2 quadrature points
         model.AddBeamElement(
-            {3, 4},
-            {
+            std::array{3UL, 4UL},
+            std::array{
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            std::vector{
+            std::array{
                 std::array{-std::numbers::inv_sqrt3, 1.0}, std::array{std::numbers::inv_sqrt3, 1.0}
             }
         );
         // Element 3 - 4 nodes, 4 quadrature points
         model.AddBeamElement(
-            {5, 6, 7, 8},
-            {
+            std::array{5UL, 6UL, 7UL, 8UL},
+            std::array{
                 BeamSection(0.0, mass_matrix, stiffness_matrix),
                 BeamSection(1.0, mass_matrix, stiffness_matrix),
             },
-            std::vector{
+            std::array{
                 std::array{-0.861136311594053, 0.347854845137454},
                 std::array{-0.339981043584856, 0.652145154862546},
                 std::array{0.339981043584856, 0.652145154862546},
@@ -83,7 +83,7 @@ protected:
     }
 
     static BeamsInput CreateTestBeamsInput() {
-        return BeamsInput(CreateTestElements(), {0.0, 0.0, -9.81});
+        return BeamsInput(CreateTestElements(), std::array{0.0, 0.0, -9.81});
     }
 };
 

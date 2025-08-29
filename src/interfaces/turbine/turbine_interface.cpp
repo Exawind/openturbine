@@ -1,6 +1,7 @@
 #include "turbine_interface.hpp"
 
 #include <filesystem>
+#include <numbers>
 
 #include "interfaces/components/solution_input.hpp"
 #include "state/clone_state.hpp"
@@ -151,9 +152,9 @@ double TurbineInterface::CalculateAzimuthAngle() const {
     double azimuth = this->constraints.host_output(azimuth_constraint_id, 0);
 
     // Normalize azimuth angle to range [0, 2π) radians
-    azimuth = std::fmod(azimuth, 2. * M_PI);
+    azimuth = std::fmod(azimuth, 2. * std::numbers::pi);
     if (azimuth < 0) {
-        azimuth += 2. * M_PI;
+        azimuth += 2. * std::numbers::pi;
     }
 
     return azimuth;

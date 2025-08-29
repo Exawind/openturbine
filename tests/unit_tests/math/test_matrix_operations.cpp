@@ -28,8 +28,8 @@ inline void test_AX_Matrix() {
     const auto expected =
         Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 3)) {
             EXPECT_NEAR(out_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
@@ -57,7 +57,7 @@ TEST(MatrixTest, AxialVectorOfMatrix) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -75,8 +75,8 @@ TEST(MatrixTest, RotateMatrix6_1) {
     };
     const auto q = std::array{1., 0., 0., 0.};
     const auto m_act = math::RotateMatrix6(m, q);
-    for (auto i = 0U; i < 6U; ++i) {
-        for (auto j = 0U; j < 6U; ++j) {
+    for (auto i : std::views::iota(0U, 6U)) {
+        for (auto j : std::views::iota(0U, 6U)) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }
@@ -95,8 +95,8 @@ TEST(MatrixTest, RotateMatrix6_2) {
     };
     const auto q = std::array{0., 1., 0., 0.};
     const auto m_act = math::RotateMatrix6(m, q);
-    for (auto i = 0U; i < 6U; ++i) {
-        for (auto j = 0U; j < 6U; ++j) {
+    for (auto i : std::views::iota(0U, 6U)) {
+        for (auto j : std::views::iota(0U, 6U)) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }
@@ -133,10 +133,10 @@ TEST(MatrixTest, RotateMatrix6_3) {
         },
 
     };
-    const auto q = math::RotationVectorToQuaternion({0., M_PI / 4., 0.});
+    const auto q = math::RotationVectorToQuaternion({0., std::numbers::pi / 4., 0.});
     const auto m_act = math::RotateMatrix6(m, q);
-    for (auto i = 0U; i < 6U; ++i) {
-        for (auto j = 0U; j < 6U; ++j) {
+    for (auto i : std::views::iota(0U, 6U)) {
+        for (auto j : std::views::iota(0U, 6U)) {
             EXPECT_NEAR(m_act[i][j], m_exp[i][j], 1.e-12);
         }
     }

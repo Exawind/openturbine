@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <gtest/gtest.h>
 
 #include "interfaces/cfd/interface.hpp"
@@ -33,7 +35,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     auto& platform_node = interface.turbine.floating_platform.node;
 
     // Run simulation for 500 steps
-    for (auto i = 0; i < 500; ++i) {
+    for ([[maybe_unused]] auto i : std::views::iota(0, 500)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -81,7 +83,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     interface.SaveState();
 
     // Run simulation for an additional 100 steps
-    for (auto i = 500; i < 600; ++i) {
+    for ([[maybe_unused]] auto iteration : std::views::iota(500, 600)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -107,7 +109,7 @@ TEST(CFDInterfaceTest, PrecessionTest) {
     EXPECT_NEAR(platform_node.displacement[6], -0.38049886257377241, 1.e-12);
 
     // Run simulation from 500 to 600 steps
-    for (auto i = 500; i < 600; ++i) {
+    for ([[maybe_unused]] auto interation : std::views::iota(500, 600)) {
         EXPECT_EQ(interface.Step(), true);
     }
 
@@ -181,21 +183,25 @@ TEST(CFDInterfaceTest, FloatingPlatform) {
     const auto buoyancy_force = initial_spring_force + platform_gravity_force;
 
     // Iterate through time steps
-    for (auto i = 0U; i < n_steps; ++i) {
+    for (auto i : std::views::iota(0U, n_steps)) {
         // Calculate current time
         const auto t = static_cast<double>(i) * time_step;
 
         // Apply load in y direction
-        interface.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        interface.turbine.floating_platform.node.loads[1] =
+            1e6 * sin(2. * std::numbers::pi / 20. * t);
 
         // Apply time varying buoyancy force
         interface.turbine.floating_platform.node.loads[2] =
-            buoyancy_force + 0.5 * initial_spring_force * sin(2. * M_PI / 20. * t);
+            buoyancy_force + 0.5 * initial_spring_force * sin(2. * std::numbers::pi / 20. * t);
 
         // Apply time varying moments to platform node
-        interface.turbine.floating_platform.node.loads[3] = 5.0e5 * sin(2. * M_PI / 15. * t);  // rx
-        interface.turbine.floating_platform.node.loads[4] = 1.0e6 * sin(2. * M_PI / 30. * t);  // ry
-        interface.turbine.floating_platform.node.loads[5] = 2.0e7 * sin(2. * M_PI / 60. * t);  // rz
+        interface.turbine.floating_platform.node.loads[3] =
+            5.0e5 * sin(2. * std::numbers::pi / 15. * t);  // rx
+        interface.turbine.floating_platform.node.loads[4] =
+            1.0e6 * sin(2. * std::numbers::pi / 30. * t);  // ry
+        interface.turbine.floating_platform.node.loads[5] =
+            2.0e7 * sin(2. * std::numbers::pi / 60. * t);  // rz
 
         // Step
         const auto converged = interface.Step();
@@ -263,9 +269,10 @@ TEST(CFDInterfaceTest, Restart) {
     auto interface1 = builder.Build();
 
     // Take 10 initial steps
-    for (auto i = 0U; i < 100U; ++i) {
+    for (auto i : std::views::iota(0U, 100U)) {
         const auto t = static_cast<double>(i) * time_step;
-        interface1.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        interface1.turbine.floating_platform.node.loads[1] =
+            1e6 * sin(2. * std::numbers::pi / 20. * t);
         auto converged = interface1.Step();
         EXPECT_TRUE(converged);
     }
@@ -273,9 +280,10 @@ TEST(CFDInterfaceTest, Restart) {
     interface1.WriteRestart("test_restart.dat");
 
     // Take 10 more steps using original system
-    for (auto i = 0U; i < 100U; ++i) {
+    for (auto i : std::views::iota(0U, 100U)) {
         const auto t = static_cast<double>(i) * time_step;
-        interface1.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        interface1.turbine.floating_platform.node.loads[1] =
+            1e6 * sin(2. * std::numbers::pi / 20. * t);
         auto converged = interface1.Step();
         EXPECT_TRUE(converged);
     }
@@ -284,9 +292,10 @@ TEST(CFDInterfaceTest, Restart) {
     interface2.ReadRestart("test_restart.dat");
 
     // Take 10 steps using restarted system
-    for (auto i = 0U; i < 100U; ++i) {
+    for (auto i : std::views::iota(0U, 100U)) {
         const auto t = static_cast<double>(i) * time_step;
-        interface2.turbine.floating_platform.node.loads[1] = 1e6 * sin(2. * M_PI / 20. * t);
+        interface2.turbine.floating_platform.node.loads[1] =
+            1e6 * sin(2. * std::numbers::pi / 20. * t);
         auto converged = interface2.Step();
         EXPECT_TRUE(converged);
     }
@@ -294,7 +303,7 @@ TEST(CFDInterfaceTest, Restart) {
     const auto& platform_u_1 = interface1.turbine.floating_platform.node.displacement;
     const auto& platform_u_2 = interface2.turbine.floating_platform.node.displacement;
     // Ensure platform location is the same for original and restarted system
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_NEAR(platform_u_1[i], platform_u_2[i], 1.e-12);
     }
 

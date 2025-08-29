@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ranges>
+#include <span>
 #include <vector>
 
 #include "node.hpp"
@@ -9,7 +11,7 @@
 namespace openturbine::model {
 
 template <typename DeviceType>
-inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& nodes) {
+inline void CopyNodesToState(State<DeviceType>& state, std::span<const Node> nodes) {
     using Kokkos::create_mirror_view;
     using Kokkos::deep_copy;
     using Kokkos::WithoutInitializing;
@@ -21,13 +23,13 @@ inline void CopyNodesToState(State<DeviceType>& state, const std::vector<Node>& 
     auto host_v = create_mirror_view(WithoutInitializing, state.v);
     auto host_vd = create_mirror_view(WithoutInitializing, state.vd);
 
-    for (auto node_index = 0U; node_index < nodes.size(); ++node_index) {
+    for (auto node_index : std::views::iota(0U, nodes.size())) {
         const auto& node = nodes[node_index];
-        for (auto component = 0U; component < 7U; ++component) {
+        for (auto component : std::views::iota(0U, 7U)) {
             host_x0(node_index, component) = node.x0[component];
             host_q(node_index, component) = node.u[component];
         }
-        for (auto component = 0U; component < 6U; ++component) {
+        for (auto component : std::views::iota(0U, 6U)) {
             host_v(node_index, component) = node.v[component];
             host_vd(node_index, component) = node.vd[component];
         }

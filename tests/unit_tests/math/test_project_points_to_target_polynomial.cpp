@@ -27,8 +27,8 @@ TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
     };
 
     ASSERT_EQ(output_points.size(), expected_projected_points.size());
-    for (auto i = 0U; i < output_points.size(); ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0U, output_points.size())) {
+        for (auto j : std::views::iota(0U, 3U)) {
             EXPECT_NEAR(output_points[i][j], expected_projected_points[i][j], 1e-6)
                 << "Mismatch at projected point [" << i << "][" << j << "]";
         }

@@ -32,11 +32,11 @@ void GetNodeMotion(
     const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_v,
     const Kokkos::View<double* [6]>::HostMirror::const_type& host_state_vd
 ) {
-    for (auto component = 0U; component < 7U; ++component) {
+    for (auto component : std::views::iota(0U, 7U)) {
         node.position[component] = host_state_x(node.id, component);
         node.displacement[component] = host_state_q(node.id, component);
     }
-    for (auto component = 0U; component < 6U; ++component) {
+    for (auto component : std::views::iota(0U, 6U)) {
         node.velocity[component] = host_state_v(node.id, component);
         node.acceleration[component] = host_state_vd(node.id, component);
     }
@@ -79,9 +79,8 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
     };
 
     // Construct mooring lines
-    std::transform(
-        std::cbegin(input.mooring_lines), std::cend(input.mooring_lines),
-        std::back_inserter(platform.mooring_lines),
+    std::ranges::transform(
+        input.mooring_lines, std::back_inserter(platform.mooring_lines),
         [&](const MooringLineInput& ml_input) {
             // Add fairlead node
             auto fairlead_node_id = model.AddNode()
@@ -137,7 +136,7 @@ void SetPlatformLoads(
     }
 
     // Set external loads on platform node
-    for (auto component = 0U; component < 6; ++component) {
+    for (auto component : std::views::iota(0U, 6U)) {
         host_state.f(platform.node.id, component) = platform.node.loads[component];
     }
 }

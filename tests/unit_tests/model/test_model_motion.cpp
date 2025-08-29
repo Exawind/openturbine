@@ -12,7 +12,7 @@ protected:
         // node 2 is at x=1
         node_2 = model.AddNode().SetPosition(1., 0., 0., 1., 0., 0., 0.).Build();
         // create a beam along the x-axis
-        beam_element = model.AddBeamElement({node_1, node_2}, sections, quadrature);
+        beam_element = model.AddBeamElement(std::array{node_1, node_2}, sections, quadrature);
     }
 
     Model model;

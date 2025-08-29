@@ -107,11 +107,11 @@ inline auto SetUpBeams() {
 
     model.AddBeamElement(
         beam_node_ids,
-        {
+        std::array{
             BeamSection(0., mass_matrix, stiffness_matrix),
             BeamSection(1., mass_matrix, stiffness_matrix),
         },
-        std::vector{
+        std::array{
             std::array{-0.9491079123427585, 0.1294849661688697},
             std::array{-0.7415311855993943, 0.27970539148927664},
             std::array{-0.40584515137739696, 0.3818300505051189},

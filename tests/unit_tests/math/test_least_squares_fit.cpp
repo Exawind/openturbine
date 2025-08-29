@@ -16,7 +16,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_PositiveRange) {
     const auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (auto i = 0U; i < result.size(); ++i) {
+    for (auto i : std::views::iota(0U, result.size())) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -28,7 +28,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_NegativeRange) {
     const auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (auto i = 0U; i < result.size(); ++i) {
+    for (auto i : std::views::iota(0U, result.size())) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -40,7 +40,7 @@ TEST(LeastSquaresFitTest, MapGeometricLocations_UnitRange) {
     auto result = math::MapGeometricLocations(input);
 
     ASSERT_EQ(result.size(), expected.size());
-    for (auto i = 0U; i < result.size(); ++i) {
+    for (auto i : std::views::iota(0U, result.size())) {
         EXPECT_NEAR(result[i], expected[i], 1.e-15);
     }
 }
@@ -75,8 +75,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
         {0., 0.5, 1.}   // row 2
     };
 
-    for (auto i = 0U; i < phi_g.size(); ++i) {
-        for (auto j = 0U; j < phi_g[i].size(); ++j) {
+    for (auto i : std::views::iota(0U, phi_g.size())) {
+        for (auto j : std::views::iota(0U, phi_g[i].size())) {
             EXPECT_NEAR(phi_g[i][j], expected[i][j], 1.e-15);
         }
     }
@@ -92,8 +92,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_FirstOrder) {
         {0.5, 0.5, 0.5}      // row 2
     };
 
-    for (auto i = 0U; i < dphi_g.size(); ++i) {
-        for (auto j = 0U; j < dphi_g[i].size(); ++j) {
+    for (auto i : std::views::iota(0U, dphi_g.size())) {
+        for (auto j : std::views::iota(0U, dphi_g[i].size())) {
             EXPECT_NEAR(dphi_g[i][j], expected_dphi_g[i][j], 1.e-15);
         }
     }
@@ -125,8 +125,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
         {0., -0.125, 0., 0.375, 1.}   // row 3
     };
 
-    for (auto i = 0U; i < phi_g.size(); ++i) {
-        for (auto j = 0U; j < phi_g[i].size(); ++j) {
+    for (auto i : std::views::iota(0U, phi_g.size())) {
+        for (auto j : std::views::iota(0U, phi_g[i].size())) {
             EXPECT_NEAR(phi_g[i][j], expected[i][j], 1.e-15);
         }
     }
@@ -144,8 +144,8 @@ TEST(LeastSquaresFitTest, ShapeFunctionMatrices_SecondOrder) {
         {-0.5, 0., 0.5, 1., 1.5}     // row 3
     };
 
-    for (auto i = 0U; i < dphi_g.size(); ++i) {
-        for (auto j = 0U; j < dphi_g[i].size(); ++j) {
+    for (auto i : std::views::iota(0U, dphi_g.size())) {
+        for (auto j : std::views::iota(0U, dphi_g[i].size())) {
             EXPECT_NEAR(dphi_g[i][j], expected_dphi_g[i][j], 1.e-15);
         }
     }
@@ -183,8 +183,8 @@ TEST(LeastSquaresFitTest, FitsParametricCurve) {
     };
 
     ASSERT_EQ(X.size(), expected_coefficients.size());
-    for (auto i = 0U; i < X.size(); ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0U, X.size())) {
+        for (auto j : std::views::iota(0U, 3U)) {
             EXPECT_NEAR(X[i][j], expected_coefficients[i][j], 1e-3)
                 << "Mismatch at coefficient [" << i << "][" << j << "]";
         }

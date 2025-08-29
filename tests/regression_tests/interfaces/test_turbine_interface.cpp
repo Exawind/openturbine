@@ -1,4 +1,6 @@
 #include <array>
+#include <numbers>
+#include <ranges>
 
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
@@ -15,7 +17,7 @@ namespace openturbine::tests {
 TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto duration{0.1};        // Simulation duration in seconds
     const auto time_step{0.01};      // Time step for the simulation
-    const auto n_blades{3};          // Number of blades in turbine
+    const auto n_blades{3U};         // Number of blades in turbine
     const auto n_blade_nodes{11};    // Number of nodes per blade
     const auto n_tower_nodes{11};    // Number of nodes in tower
     const auto write_output{false};  // Write output file
@@ -56,9 +58,9 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         .SetRotorApexToHub(0.)
         .SetHubDiameter(wio_hub["diameter"].as<double>())
         .SetConeAngle(wio_hub["cone_angle"].as<double>())
-        //.SetBladePitchAngle(M_PI / 2.)
+        //.SetBladePitchAngle(std::numbers:;pi / 2.)
         .SetShaftTiltAngle(wio_nacelle["drivetrain"]["uptilt"].as<double>())
-        //.SetNacelleYawAngle(M_PI)
+        //.SetNacelleYawAngle(std::numbers:;pi)
         .SetTowerAxisToRotorApex(wio_nacelle["drivetrain"]["overhang"].as<double>())
         .SetTowerTopToRotorApex(wio_nacelle["drivetrain"]["distance_tt_hub"].as<double>());
 
@@ -67,7 +69,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     //--------------------------------------------------------------------------
 
     // Loop through blades and set parameters
-    for (auto j = 0U; j < n_blades; ++j) {
+    for (auto j : std::views::iota(0U, n_blades)) {
         // Get the blade builder
         auto& blade_builder = turbine_builder.Blade(j);
 
@@ -80,7 +82,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         const auto x_values = ref_axis["x"]["values"].as<std::vector<double>>();
         const auto y_values = ref_axis["y"]["values"].as<std::vector<double>>();
         const auto z_values = ref_axis["z"]["values"].as<std::vector<double>>();
-        for (auto i = 0U; i < axis_grid.size(); ++i) {
+        for (auto i : std::views::iota(0U, axis_grid.size())) {
             blade_builder.AddRefAxisPoint(
                 axis_grid[i], {x_values[i], y_values[i], z_values[i]},
                 interfaces::components::ReferenceAxisOrientation::Z
@@ -91,7 +93,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         const auto twist = wio_blade["outer_shape_bem"]["twist"];
         const auto twist_grid = twist["grid"].as<std::vector<double>>();
         const auto twist_values = twist["values"].as<std::vector<double>>();
-        for (auto i = 0U; i < twist_grid.size(); ++i) {
+        for (auto i : std::views::iota(0U, twist_grid.size())) {
             blade_builder.AddRefAxisTwist(twist_grid[i], twist_values[i]);
         }
 
@@ -105,7 +107,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         if (m_grid.size() != k_grid.size()) {
             throw std::runtime_error("stiffness and mass matrices not on same grid");
         }
-        for (auto i = 0U; i < n_sections; ++i) {
+        for (auto i : std::views::iota(0U, n_sections)) {
             if (abs(m_grid[i] - k_grid[i]) > 1e-8) {
                 throw std::runtime_error("stiffness and mass matrices not on same grid");
             }
@@ -152,7 +154,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto x_values = t_ref_axis["x"]["values"].as<std::vector<double>>();
     const auto y_values = t_ref_axis["y"]["values"].as<std::vector<double>>();
     const auto z_values = t_ref_axis["z"]["values"].as<std::vector<double>>();
-    for (auto i = 0U; i < axis_grid.size(); ++i) {
+    for (auto i : std::views::iota(0U, axis_grid.size())) {
         tower_builder.AddRefAxisPoint(
             axis_grid[i], {x_values[i], y_values[i], z_values[i]},
             interfaces::components::ReferenceAxisOrientation::Z
@@ -188,7 +190,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto t_diameter_grid = t_diameter["grid"].as<std::vector<double>>();
     const auto t_diameter_values = t_diameter["values"].as<std::vector<double>>();
     const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
-    for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
+    for (auto i : std::views::iota(0U, t_diameter_grid.size())) {
         // Create section mass and stiffness matrices
         const auto section = beams::GenerateHollowCircleSection(
             t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
@@ -266,7 +268,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     const auto n_steps{static_cast<size_t>(duration / time_step)};
 
     // Loop through solution iterations
-    for (auto i = 1U; i < n_steps; ++i) {
+    for (auto i : std::views::iota(1U, n_steps)) {
         // Calculate time
         const auto t{static_cast<double>(i) * time_step};
 

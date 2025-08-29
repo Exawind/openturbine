@@ -1,4 +1,5 @@
 #include <array>
+#include <ranges>
 #include <string>
 
 #include <Kokkos_Core.hpp>
@@ -23,7 +24,7 @@ TEST(UpdateGlobalPosition, OneNode) {
     const auto x_exact =
         Kokkos::View<double[1][7], Kokkos::HostSpace>::const_type(x_exact_data.data());
     const auto x_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), x);
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0, 7)) {
         EXPECT_NEAR(x_mirror(0, i), x_exact(0, i), 1.e-14);
     }
 }

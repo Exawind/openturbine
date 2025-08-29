@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 
 #include "masses.hpp"
 #include "masses_input.hpp"
@@ -18,7 +19,7 @@ namespace openturbine {
  */
 template <typename DeviceType>
 inline Masses<DeviceType> CreateMasses(
-    const MassesInput& masses_input, const std::vector<Node>& nodes
+    const MassesInput& masses_input, std::span<const Node> nodes
 ) {
     using Kokkos::create_mirror_view;
     using Kokkos::deep_copy;
@@ -36,14 +37,14 @@ inline Masses<DeviceType> CreateMasses(
     host_gravity(2) = masses_input.gravity[2];
 
     // Populate element data - x0 and Mstar
-    for (auto element = 0U; element < masses_input.NumElements(); element++) {
+    for (auto element : std::views::iota(0U, masses_input.NumElements())) {
         host_state_indices(element) = static_cast<size_t>(masses_input.elements[element].node_id);
         const auto& elem = masses_input.elements[element];
-        for (auto component = 0U; component < nodes[elem.node_id].x0.size(); ++component) {
+        for (auto component : std::views::iota(0U, 7U)) {
             host_x0(element, component) = nodes[elem.node_id].x0[component];
         }
-        for (auto component_1 = 0U; component_1 < 6U; ++component_1) {
-            for (auto component_2 = 0U; component_2 < 6U; ++component_2) {
+        for (auto component_1 : std::views::iota(0U, 6U)) {
+            for (auto component_2 : std::views::iota(0U, 6U)) {
                 host_Mstar(element, component_1, component_2) =
                     elem.M_star[component_1][component_2];
             }

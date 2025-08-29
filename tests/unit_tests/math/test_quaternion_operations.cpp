@@ -36,8 +36,8 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxi
     constexpr auto expected_data = std::array{1., 0., 0., 0., 0., -1., 0., 1., 0.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 3)) {
             EXPECT_NEAR(R_from_q_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
@@ -53,8 +53,8 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutYAxi
     constexpr auto expected_data = std::array{0., 0., 1., 0., 1., 0., -1., 0., 0.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 3)) {
             EXPECT_NEAR(R_from_q_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
@@ -70,24 +70,24 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxi
     constexpr auto expected_data = std::array{0., -1., 0., 1., 0., 0., 0., 0., 1.};
     const auto expected = Kokkos::View<const double[3][3], Kokkos::HostSpace>(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 3U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 3)) {
             EXPECT_NEAR(R_from_q_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
 }
 
 TEST(QuaternionTest, ConvertRotationMatrixToQuaternion) {
-    const auto n = 25U;
-    const auto dtheta = M_PI / static_cast<double>(n);
-    for (auto i = 0U; i < n; ++i) {
-        for (auto j = 0U; j < n; ++j) {
+    const auto n = 25;
+    const auto dtheta = std::numbers::pi / static_cast<double>(n);
+    for (auto i : std::views::iota(0, n)) {
+        for (auto j : std::views::iota(0, n)) {
             auto q_ref = math::RotationVectorToQuaternion(
                 {static_cast<double>(i) * dtheta, static_cast<double>(j) * dtheta, 0.}
             );
             auto r = math::QuaternionToRotationMatrix(q_ref);
             auto q_new = math::RotationMatrixToQuaternion(r);
-            for (auto m = 0U; m < 4; ++m) {
+            for (auto m : std::views::iota(0U, 4U)) {
                 EXPECT_NEAR(q_ref[m], q_new[m], 1e-12);
             }
         }
@@ -117,7 +117,7 @@ TEST(QuaternionTest, RotateYAxisByIdentity) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_rot_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -134,7 +134,7 @@ TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_rot_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -151,15 +151,15 @@ TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_rot_mirror(i), expected(i), 1.e-15);
     }
 }
 
 TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
     const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
-    const auto cos_pi_8 = std::cos(M_PI / 8.);
-    const auto sin_pi_8 = std::sin(M_PI / 8.);
+    const auto cos_pi_8 = std::cos(std::numbers::pi / 8.);
+    const auto sin_pi_8 = std::sin(std::numbers::pi / 8.);
     auto rotation_z_axis = Create1DView<4>({cos_pi_8, 0., 0., sin_pi_8});
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_z_axis, x_axis);
@@ -170,15 +170,15 @@ TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_rot_mirror(i), expected(i), 1.e-15);
     }
 }
 
 TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
-    const auto cos_pi_8 = std::cos(M_PI / 8.);
-    const auto sin_pi_8 = std::sin(M_PI / 8.);
+    const auto cos_pi_8 = std::cos(std::numbers::pi / 8.);
+    const auto sin_pi_8 = std::sin(std::numbers::pi / 8.);
     auto rotation_z_axis = Create1DView<4>({cos_pi_8, 0., 0., -sin_pi_8});
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_z_axis, x_axis);
@@ -189,7 +189,7 @@ TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
     const auto expected =
         Kokkos::View<double[3], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         EXPECT_NEAR(v_rot_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -213,8 +213,8 @@ TEST(QuaternionTest, QuaternionDerivative) {
     const auto expected =
         Kokkos::View<double[3][4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 3U; ++i) {
-        for (auto j = 0U; j < 4U; ++j) {
+    for (auto i : std::views::iota(0, 3)) {
+        for (auto j : std::views::iota(0, 4)) {
             EXPECT_NEAR(derivative_mirror(i, j), expected(i, j), 1.e-15);
         }
     }
@@ -240,7 +240,7 @@ TEST(QuaternionTest, GetInverse) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4U; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(q_inv_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -266,7 +266,7 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set1) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(qn_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -282,7 +282,7 @@ TEST(QuaternionTest, MultiplicationOfTwoQuaternions_Set2) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(qn_mirror(i), expected(i), 1.e-15);
     }
 }
@@ -298,7 +298,7 @@ Kokkos::View<double[4]> TestRotationToQuaternion(const Kokkos::View<double[3]>::
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set0) {
     const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
-    const auto phi = Create1DView<3>({M_PI / 2., 0., 0.});
+    const auto phi = Create1DView<3>({std::numbers::pi / 2., 0., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
     const auto quaternion_mirror =
@@ -308,14 +308,14 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set0) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4U; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(quaternion_mirror(i), expected(i), 1.e-15);
     }
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
     const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
-    const auto phi = Create1DView<3>({0., M_PI / 2., 0.});
+    const auto phi = Create1DView<3>({0., std::numbers::pi / 2., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
     const auto quaternion_mirror =
@@ -325,14 +325,14 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4U; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(quaternion_mirror(i), expected(i), 1.e-15);
     }
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
-    const auto phi = Create1DView<3>({0., 0., M_PI / 2.});
+    const auto phi = Create1DView<3>({0., 0., std::numbers::pi / 2.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
     const auto quaternion_mirror =
@@ -342,15 +342,15 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
     const auto expected =
         Kokkos::View<double[4], Kokkos::HostSpace>::const_type(expected_data.data());
 
-    for (auto i = 0U; i < 4U; ++i) {
+    for (auto i : std::views::iota(0, 4)) {
         EXPECT_NEAR(quaternion_mirror(i), expected(i), 1.e-15);
     }
 }
 
 void test_quaternion_to_rotation_vector_2() {
-    const auto n = 100U;
-    const auto dtheta = M_PI / static_cast<double>(n);
-    for (auto i = 0U; i < n; ++i) {
+    const auto n = 100;
+    const auto dtheta = std::numbers::pi / static_cast<double>(n);
+    for (auto i : std::views::iota(0, n)) {
         auto rot_vec = std::array{static_cast<double>(i) * dtheta, 0., 0.};
         auto phi = Create1DView<3>(rot_vec);
         auto phi2 = Create1DView<3>({0., 0., 0.});
@@ -365,7 +365,7 @@ void test_quaternion_to_rotation_vector_2() {
         );
 
         const auto phi2_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), phi2);
-        for (auto j = 0U; j < 3U; ++j) {
+        for (auto j : std::views::iota(0U, 3U)) {
             EXPECT_NEAR(phi2_mirror(j), rot_vec[j], 1.e-14);
         }
     }
@@ -376,9 +376,9 @@ TEST(QuaternionTest, QuaternionToRotationVector_1) {
 }
 
 TEST(QuaternionTest, QuaternionToRotationVector_2) {
-    const auto n = 100U;
-    const auto dtheta = M_PI / static_cast<double>(n);
-    for (auto i = 0U; i < n; ++i) {
+    const auto n = 100;
+    const auto dtheta = std::numbers::pi / static_cast<double>(n);
+    for (auto i : std::views::iota(0, n)) {
         auto rot_vec = std::array{static_cast<double>(i) * dtheta, 0., 0.};
         auto q = math::RotationVectorToQuaternion(rot_vec);
         auto rot_vec2 = math::QuaternionToRotationVector(q);
@@ -445,15 +445,15 @@ TEST(QuaternionTest, IsIdentityQuaternion_WithCustomTolerance) {
 
 TEST(QuaternionTest, IsIdentityQuaternion_NonIdentityQuaternions) {
     // 90 degree rotation about X axis
-    const auto rotation_x = math::RotationVectorToQuaternion({M_PI / 2., 0., 0.});
+    const auto rotation_x = math::RotationVectorToQuaternion({std::numbers::pi / 2., 0., 0.});
     EXPECT_FALSE(math::IsIdentityQuaternion(rotation_x));
 
     // 90 degree rotation about Y axis
-    const auto rotation_y = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+    const auto rotation_y = math::RotationVectorToQuaternion({0., std::numbers::pi / 2., 0.});
     EXPECT_FALSE(math::IsIdentityQuaternion(rotation_y));
 
     // 90 degree rotation about Z axis
-    const auto rotation_z = math::RotationVectorToQuaternion({0., 0., M_PI / 2.});
+    const auto rotation_z = math::RotationVectorToQuaternion({0., 0., std::numbers::pi / 2.});
     EXPECT_FALSE(math::IsIdentityQuaternion(rotation_z));
 
     // Arbitrary quaternion

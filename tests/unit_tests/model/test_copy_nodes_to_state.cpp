@@ -45,7 +45,7 @@ TEST(CopyNodesToState, OneNode_Position) {
 
     const auto x_exact = std::array{9., 11., 13., -192., 110., 104., 140.};
 
-    for (auto i = 0U; i < 7U; ++i) {
+    for (auto i : std::views::iota(0U, 7U)) {
         EXPECT_EQ(x0(0, i), x0_exact[i]);
         EXPECT_EQ(q(0, i), q_exact[i]);
         EXPECT_EQ(q_prev(0, i), q(0, i));
@@ -68,7 +68,7 @@ TEST(CopyNodesToState, OneNode_Velocity) {
     const auto v = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.v);
     const auto vd = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), state.vd);
 
-    for (auto i = 0U; i < 6U; ++i) {
+    for (auto i : std::views::iota(0U, 6U)) {
         EXPECT_EQ(v(0, i), v_exact[i]);
         EXPECT_EQ(vd(0, i), vd_exact[i]);
     }

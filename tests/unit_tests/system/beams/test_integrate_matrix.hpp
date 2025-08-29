@@ -7,9 +7,9 @@ auto get_node_state_indices() {
     using IndicesView = Kokkos::View<size_t[n_elem][n_nodes]>;
     auto indices = IndicesView("node_state_indices");
     const auto host_indices = Kokkos::create_mirror_view(indices);
-    for (auto i = 0U; i < n_elem; ++i) {
-        for (auto j = 0U; j < n_nodes; ++j) {
-            host_indices(i, j) = i * n_nodes + j;
+    for (auto element : std::views::iota(0U, n_elem)) {
+        for (auto node : std::views::iota(0U, n_nodes)) {
+            host_indices(element, node) = element * n_nodes + node;
         }
     }
     Kokkos::deep_copy(indices, host_indices);

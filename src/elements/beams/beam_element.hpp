@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <vector>
 
 #include "beam_section.hpp"
@@ -20,10 +21,14 @@ struct BeamElement {
     std::vector<std::array<double, 2>> quadrature;  // Element quadrature points and weights
 
     BeamElement(
-        size_t id, std::vector<size_t> n, std::vector<BeamSection> s,
-        std::vector<std::array<double, 2>> q
+        size_t id, std::span<const size_t> n, std::span<const BeamSection> s,
+        std::span<const std::array<double, 2>> q
     )
-        : ID(id), node_ids(std::move(n)), sections(std::move(s)), quadrature(std::move(q)) {}
+        : ID(id) {
+        node_ids.assign(std::begin(n), std::end(n));
+        sections.assign(std::begin(s), std::end(s));
+        quadrature.assign(std::begin(q), std::end(q));
+    }
 };
 
 }  // namespace openturbine
