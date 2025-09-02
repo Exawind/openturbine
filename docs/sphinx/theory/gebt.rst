@@ -29,21 +29,21 @@ reference line. We denote reference position as
    \end{aligned}
 
 where :math:`\underline{q}^\mathrm{r}(s) \in \mathbb{R}^3\times \mathrm{SO(3)}`.
-Generalized displacements are denoted
+Generalized displacements and velocities are denoted
 
 .. math::
 
-   \begin{aligned}
     \underline{q} = \begin{bmatrix}
      \underline{u} \\
-     \underline{\underline{R}}\\
+     \underline{\underline{R}} 
+    \end{bmatrix} \quad
+    \underline{v} = \begin{bmatrix}
+     \underline{\dot{u}} \\
+     \underline{\omega}
     \end{bmatrix}
-   \end{aligned}
 
 where :math:`\underline{q}(s,t) \in \mathbb{R}^3\times \mathrm{SO(3)}`,
-:math:`\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}` is the
-relative-rotation tensor, and :math:`\underline{u}(s,t)\in \mathbb{R}^3`
-is the displacement. The beam current (deformed) configuration at time
+:math:`\underline{\underline{R}}(s,t)\in \mathrm{SO(3)}` is the relative-rotation tensor, :math:`\underline{u}(s,t)\in \mathbb{R}^3` is the displacement, :math:`\underline{v}(s,t)\in \mathbb{R}^6` and :math:`\underline{\omega}(s,t) \in \mathbb{R}^3` is the angular velocity. The beam current (deformed) configuration at time
 :math:`t` is given by
 
 .. math::
@@ -144,23 +144,28 @@ strong form as
 
 .. math::
    \underline{\mathcal{R}} = 
-   \underline{\mathcal{F}}^I -
-   \underline{\mathcal{F}}^{C\prime} +
-   \underline{\mathcal{F}}^D -
-   \underline{\mathcal{F}}^\mathrm{ext} 
+   \underline{\mathcal{F}}^\mathrm{I}
+   - \underline{\mathcal{F}}^{\mathrm{E1}\prime} 
+   - \underline{\mathcal{F}}^{\mathrm{D1}\prime} 
+   + \underline{\mathcal{F}}^\mathrm{E2} 
+   + \underline{\mathcal{F}}^\mathrm{D2} 
+   - \underline{\mathcal{F}}^\mathrm{ext} 
    :label: stronggoverning
 
 where each term is in :math:`\mathbb{R}^6`;
-:math:`\underline{\underline{\mathcal{F}}}^I(s,t)` is the inertial
-force, :math:`\underline{\underline{\mathcal{F}}}^C(s,t)` and
-:math:`\underline{\underline{\mathcal{F}}}^D(s,t)` are elastic forces,
+:math:`\underline{\underline{\mathcal{F}}}^\mathrm{I}(s,t)` is the inertial
+force, 
+:math:`\underline{\underline{\mathcal{F}}}^\mathrm{E1\prime}(s,t)`
+:math:`\underline{\underline{\mathcal{F}}}^\mathrm{E2}(s,t)` are elastic forces,
+:math:`\underline{\underline{\mathcal{F}}}^\mathrm{D1\prime}(s,t)`
+:math:`\underline{\underline{\mathcal{F}}}^\mathrm{D2}(s,t)` are damping forces,
 and :math:`\underline{\underline{\mathcal{F}}}^\mathrm{ext}` are the
 external forces and moments. The inertial force in the inertial frame is
 
 .. math::
 
    \begin{aligned}
-   \underline{\mathcal{F}}^I =  
+   \underline{\mathcal{F}}^\mathrm{I} =  
    \begin{bmatrix}
    \dot{\underline{h}} \\ \dot{\underline{g}} + \dot{\widetilde{u}} \underline{g}
    \end{bmatrix}
@@ -190,13 +195,13 @@ section mass matrix in inertial coordinates as
    \end{bmatrix}
    \end{aligned}
 
-The elastic forces are
+The elastic-force terms are
 
 .. math::
 
    \begin{aligned}
-   \underline{\mathcal{F}}^C &= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
-   \underline{\mathcal{F}}^D &=
+   \underline{\mathcal{F}}^\mathrm{E1} &= \underline{\underline{C}}\, \begin{bmatrix} \underline{\epsilon} \\ \underline{\kappa} \end{bmatrix}\\
+   \underline{\mathcal{F}}^\mathrm{E2} &=
    \begin{bmatrix} \underline{0} \\ 
    \left(\tilde{x}'^\mathrm{r}+\tilde{u}'\right)^T \left( \underline{\underline{C}}_{11} \underline{\epsilon} 
    + \underline{\underline{C}}_{12} \underline{\kappa}\right)  \end{bmatrix}
@@ -208,12 +213,33 @@ are the submatrices of the full sectional stiffness matrix in inertial
 coordinates, i.e.,
 
 .. math::
-
-   \begin{aligned}
    \underline{\underline{C}} = \begin{bmatrix}
    \underline{\underline{{C}}}_{11} & \underline{\underline{{C}}}_{12} \\
    \underline{\underline{{C}}}_{21} & \underline{\underline{{C}}}_{22} \end{bmatrix}
-   \end{aligned}
+
+The damping-force terms are modeled as
+
+.. math::
+   \underline{\mathcal{F}}^\mathrm{D1} = 
+    \underline{\underline{D}}\, \begin{bmatrix} \underline{\dot{\epsilon}} \\ \underline{\dot{\kappa}} \end{bmatrix}
+   = \underline{\underline{D}}\, \begin{bmatrix} 
+     \underline{\dot{u}}^\prime - \widetilde{\omega} \underline{\underline{R}}\, \underline{x}^{0\prime}\\ 
+     \widetilde{\omega} \underline{\kappa} + \underline{\omega}^\prime
+   \end{bmatrix}
+   :label: straindot
+
+where :math:`\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}` is the damping matrix in inertial coordinates. OpenTurbine currently uses stiffness proportional damping, i.e., 
+
+.. math::
+
+   \underline{\underline{D}} 
+   = \begin{bmatrix}
+   \underline{\underline{{D}}}_{11} & \underline{\underline{{D}}}_{12} \\
+   \underline{\underline{{D}}}_{21} & \underline{\underline{{D}}}_{22}
+   \end{bmatrix} = 
+   \underline{\underline{\mathcal{RR}^\mathrm{r}}}\, \underline{\underline{\mu}} \underline{\underline{C}}^*\, \underline{\underline{\mathcal{RR}^\mathrm{r}}}^T
+
+where :math:`\underline{\underline{\mu}} \in \mathbb{R}^6` is a diagonal matrix of user-defined damping coefficients.
 
 We describe the variation of the residual,
 Eq. :eq:`residual1`, in parts. Variation of the
@@ -222,9 +248,9 @@ inertial forces can be written
 .. math::
 
    \begin{aligned}
-   \delta \underline{\mathcal{F}}^I =
-   \underline{\underline{\mathcal{M}}}^I \delta \ddot{\underline{q}}
-   + \underline{\underline{\mathcal{G}}}^I \delta \dot{\underline{q}}
+   \delta \underline{\mathcal{F}}^\mathrm{I} =
+   \underline{\underline{M}} \delta \dot{\underline{v}}
+   + \underline{\underline{\mathcal{G}}}^I \delta \underline{v}
    + \underline{\underline{\mathcal{K}}}^I \delta \underline{q}
    \end{aligned}
 
@@ -233,7 +259,7 @@ where
 .. math::
 
    \begin{aligned}
-   \underline{\underline{\mathcal{G}}} =
+   \underline{\underline{\mathcal{G}}}^\mathrm{I} =
    \begin{bmatrix}
    \underline{\underline{0}} & \widetilde{ \widetilde{\omega} m \underline{\eta} }^T
             + \widetilde{\omega} m \widetilde{\eta}^T\\
@@ -244,7 +270,7 @@ where
 .. math::
 
    \begin{aligned}
-   \underline{\underline{\mathcal{K}}} =
+   \underline{\underline{\mathcal{K}}}^\mathrm{I} =
    \begin{bmatrix}
    \underline{\underline{0}} & \left( \dot{\widetilde{\omega}} + \tilde{\omega}\tilde{\omega}
            \right) m \widetilde{\eta}^T\\
@@ -261,14 +287,16 @@ Variation of the elastic forces are as follows:
 .. math::
 
    \begin{aligned}
-   \delta \underline{\mathcal{F}}^C =
-   \underline{\underline{\mathcal{C}}} \delta \underline{q}' + \underline{\underline{\mathcal{O}}} \delta \underline{q}
+   \delta \underline{\mathcal{F}}^\mathrm{E1} =
+   \underline{\underline{C}} \delta \underline{q}' 
+   + \underline{\underline{\mathcal{K}}}^\mathrm{E1} 
+   \delta \underline{q}
    \end{aligned}
 
 .. math::
 
    \begin{aligned}
-   \underline{\underline{\mathcal{O}}} =
+   \underline{\underline{\mathcal{K}}}^\mathrm{E1} =
    \begin{bmatrix}
    \underline{\underline{0}} &  -\widetilde{N} + \underline{\underline{\mathcal{C}}}_{11}\left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)   \\
    \underline{\underline{0}} &  -\widetilde{M} + \underline{\underline{\mathcal{C}}}_{21}\left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)
@@ -278,27 +306,27 @@ Variation of the elastic forces are as follows:
 .. math::
 
    \begin{aligned}
-   \delta \underline{\mathcal{F}}^D =
-   \underline{\underline{\mathcal{P}}} \delta \underline{q}' + \underline{\underline{\mathcal{Q}}} \delta \underline{q}
+   \delta \underline{\mathcal{F}}^\mathrm{E2} =
+   \underline{\underline{\mathcal{P}}}^\mathrm{E2} \delta \underline{q}' + \underline{\underline{\mathcal{K}}}^\mathrm{E2} \delta \underline{q}
    \end{aligned}
 
 .. math::
 
    \begin{aligned}
-   \underline{\underline{\mathcal{P}}} =
+   \underline{\underline{\mathcal{P}}}^\mathrm{E2} =
    \begin{bmatrix}
    \underline{\underline{0}} & \underline{\underline{0}} \\
     \widetilde{N} + \left(  \tilde{x}^{\mathrm{r} \prime}+ \tilde{u}' \right)^T
-   \underline{\underline{\mathcal{C}}}_{11} &
+   \underline{\underline{C}}_{11} &
    \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right)^T
-   \underline{\underline{\mathcal{C}}}_{12}
+   \underline{\underline{C}}_{12}
    \end{bmatrix}
    \end{aligned}
 
 .. math::
 
    \begin{aligned}
-   \underline{\underline{\mathcal{Q}}} =
+   \underline{\underline{\mathcal{K}}}^\mathrm{E2} =
    \begin{bmatrix}
    \underline{\underline{0}} & \underline{\underline{0}} \\
     \underline{\underline{0}} &
@@ -306,6 +334,126 @@ Variation of the elastic forces are as follows:
    \left[-\widetilde{N} + \underline{\underline{C}}_{11} \left( \tilde{x}^{\mathrm{r} \prime} + \tilde{u}' \right) \right]
    \end{bmatrix}
    \end{aligned}
+
+Variation of the damping forces are as follows:
+
+.. math::
+
+   \delta \underline{\mathcal{F}}^\mathrm{D1} = 
+   \underline{\underline{D}} \delta \underline{v}^\prime +
+   \underline{\underline{\mathcal{G}}}^\mathrm{D1} \delta \underline{v} +
+   \underline{\underline{\mathcal{D}}}^\mathrm{D1} \delta \underline{q}^\prime  +
+   \underline{\underline{\mathcal{K}}}^\mathrm{D1} \delta \underline{q} 
+
+
+
+.. math::
+
+   \underline{\underline{\mathcal{G}}}^\mathrm{D1} =
+   \begin{bmatrix}
+   \underline{\underline{0}} & \underline{\underline{D}}_{11} 
+   \widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+   - \underline{\underline{D}}_{12} \widetilde{\kappa} \\
+   \underline{\underline{0}} & \underline{\underline{D}}_{21} 
+   \widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+   - \underline{\underline{D}}_{22} \widetilde{\kappa} \\
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{D}}}^\mathrm{D1} =
+   \begin{bmatrix}
+   \underline{\underline{0}} & 
+   \underline{\underline{D}}_{12}\widetilde{\omega}  \\
+   \underline{\underline{0}} & 
+   \underline{\underline{D}}_{22} \widetilde{\omega}
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{K}}}^\mathrm{D1} =
+   \begin{bmatrix}
+   \underline{\underline{0}} & 
+   -\widetilde{\underline{\underline{D}}_{11} \underline{\dot{\epsilon}}}
+   +\underline{\underline{D}}_{11} \widetilde{\dot{\epsilon}}
+   -\widetilde{\underline{\underline{D}}_{12} \underline{\dot{\kappa}}}
+   +\underline{\underline{D}}_{12} \widetilde{\dot{\kappa}}
+   +\underline{\underline{D}}_{11} \widetilde{\omega} 
+   \widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+   - \underline{\underline{D}}_{12} \widetilde{\omega}\widetilde{\kappa}
+   \\
+   \underline{\underline{0}} & 
+   -\widetilde{\underline{\underline{D}}_{21} \underline{\dot{\epsilon}}}
+   +\underline{\underline{D}}_{21} \widetilde{\dot{\epsilon}}
+   -\widetilde{\underline{\underline{D}}_{22} \underline{\dot{\kappa}}}
+   +\underline{\underline{D}}_{22} \widetilde{\dot{\kappa}}
+   +\underline{\underline{D}}_{22} \widetilde{\omega} 
+   \widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+   - \underline{\underline{D}}_{22} \widetilde{\omega}\widetilde{\kappa}
+   \end{bmatrix}
+
+.. math::
+
+   \delta \underline{\mathcal{F}}^\mathrm{D2} = 
+   \underline{\underline{\mathcal{D}}}^\mathrm{D2} \delta \underline{v}^\prime +
+   \underline{\underline{\mathcal{G}}}^\mathrm{D2} \delta \underline{v} +
+   \underline{\underline{\mathcal{P}}}^\mathrm{D2} \delta \underline{q}^\prime  +
+   \underline{\underline{\mathcal{K}}}^\mathrm{D2} \delta \underline{q} 
+
+.. math::
+
+   \underline{\underline{\mathcal{D}}}^\mathrm{D2} = \begin{bmatrix}
+   \underline{\underline{0}} & \underline{\underline{0}} \\
+   \underline{\underline{D}}_{11} & \underline{\underline{D}}_{12} 
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{G}}}^\mathrm{D2} =
+   \begin{bmatrix}
+   \underline{\underline{0}} & \underline{\underline{0}} \\
+   \underline{\underline{0}} & \underline{\underline{D}}_{11} 
+   \widetilde{\underline{\underline{R}}\,\underline{x}^{0\prime}}
+   - \underline{\underline{D}}_{12} \widetilde{\kappa} 
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{P}}}^\mathrm{D2} =
+   \begin{bmatrix}
+   \underline{\underline{0}} & \underline{\underline{0}} \\
+   -\widetilde{\underline{\underline{D}}_{11} \dot{\underline{\epsilon}}}  
+   -\widetilde{\underline{\underline{D}}_{12} \dot{\underline{\kappa}}}  
+   & 
+   \underline{\underline{D}}_{12} \widetilde{\omega}
+   \end{bmatrix}
+
+.. math::
+
+   \underline{\underline{\mathcal{K}}}^\mathrm{D2} =
+   \begin{bmatrix}
+   \underline{\underline{0}} &  
+   \underline{\underline{0}} 
+   \\
+   \underline{\underline{0}} & 
+   -\widetilde{\underline{\underline{D}}_{11} \underline{\dot{\epsilon}}}
+   +\underline{\underline{D}}_{11} \widetilde{\dot{\epsilon}}
+   -\widetilde{\underline{\underline{D}}_{12} \underline{\dot{\kappa}}}
+   +\underline{\underline{D}}_{12} \widetilde{\dot{\kappa}}
+   +\underline{\underline{D}}_{r1} \widetilde{\omega} 
+   \widetilde{\underline{\underline{R}}\, \underline{x}^{0\prime} }
+   - \underline{\underline{D}}_{12} \widetilde{\omega}\widetilde{\kappa}
+   \end{bmatrix}
+
+
+
+where :math:`\underline{\dot{\epsilon}}` and :math:`\underline{\dot{\kappa}}` are defined in :eq:`straindot`.
+
+
+
+
+
+**Local references**
 
 .. container:: references csl-bib-body hanging-indent
    :name: refs

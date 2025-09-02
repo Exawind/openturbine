@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
@@ -25,7 +27,7 @@ Kokkos::View<double[3][3]> TestQuaternionToRotationMatrix(
 }
 
 TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto rotation_x_axis = Create1DView<4>(std::array{inv_sqrt2, inv_sqrt2, 0., 0.});
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
@@ -42,7 +44,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutXAxi
 }
 
 TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutYAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto rotation_x_axis = Create1DView<4>(std::array{inv_sqrt2, 0., inv_sqrt2, 0.});
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
@@ -59,7 +61,7 @@ TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutYAxi
 }
 
 TEST(QuaternionTest, ConvertQuaternionToRotationMatrix_90DegreeRotationAboutZAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto rotation_x_axis = Create1DView<4>(std::array{inv_sqrt2, 0., 0., inv_sqrt2});
 
     const auto R_from_q = TestQuaternionToRotationMatrix(rotation_x_axis);
@@ -121,7 +123,7 @@ TEST(QuaternionTest, RotateYAxisByIdentity) {
 }
 
 TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     auto rotation_y_axis = Create1DView<4>({inv_sqrt2, 0., inv_sqrt2, 0.});
     auto x_axis = Create1DView<3>({1., 0., 0.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_y_axis, x_axis);
@@ -138,7 +140,7 @@ TEST(QuaternionTest, RotateXAxis90DegreesAboutYAxis) {
 }
 
 TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     auto rotation_x_axis = Create1DView<4>({inv_sqrt2, inv_sqrt2, 0., 0.});
     auto z_axis = Create1DView<3>({0., 0., 1.});
     const auto v_rot = TestRotateVectorByQuaternion(rotation_x_axis, z_axis);
@@ -155,7 +157,7 @@ TEST(QuaternionTest, RotateZAxis90DegreesAboutXAxis) {
 }
 
 TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto cos_pi_8 = std::cos(M_PI / 8.);
     const auto sin_pi_8 = std::sin(M_PI / 8.);
     auto rotation_z_axis = Create1DView<4>({cos_pi_8, 0., 0., sin_pi_8});
@@ -174,7 +176,7 @@ TEST(QuaternionTest, RotateXAxis45DegreesAboutZAxis) {
 }
 
 TEST(QuaternionTest, RotateXAxisNeg45DegreesAboutZAxis) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto cos_pi_8 = std::cos(M_PI / 8.);
     const auto sin_pi_8 = std::sin(M_PI / 8.);
     auto rotation_z_axis = Create1DView<4>({cos_pi_8, 0., 0., -sin_pi_8});
@@ -295,7 +297,7 @@ Kokkos::View<double[4]> TestRotationToQuaternion(const Kokkos::View<double[3]>::
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set0) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto phi = Create1DView<3>({M_PI / 2., 0., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
@@ -312,7 +314,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set0) {
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto phi = Create1DView<3>({0., M_PI / 2., 0.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
@@ -329,7 +331,7 @@ TEST(QuaternionTest, RotationVectorToQuaternion_Set1) {
 }
 
 TEST(QuaternionTest, RotationVectorToQuaternion_Set2) {
-    const auto inv_sqrt2 = 1. / std::sqrt(2.);
+    const auto inv_sqrt2 = 1. / std::numbers::sqrt2;
     const auto phi = Create1DView<3>({0., 0., M_PI / 2.});
     const auto quaternion = TestRotationToQuaternion(phi);
 
