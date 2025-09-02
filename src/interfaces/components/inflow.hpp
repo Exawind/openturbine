@@ -44,7 +44,7 @@ struct UniformFlow {
  * @brief Type of inflow model
  */
 enum class InflowType : std::uint8_t {
-    Uniform = 1,  ///< Uniform flow
+    Uniform = 0,  ///< Uniform flow
 };
 
 /**
