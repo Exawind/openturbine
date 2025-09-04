@@ -3,4 +3,5 @@ target_sources(
     openturbine_unit_tests
     PRIVATE
     test_beam.cpp
+    test_inflow.cpp
 )
