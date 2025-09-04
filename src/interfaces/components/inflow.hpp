@@ -55,8 +55,8 @@ struct Inflow {
     UniformFlow uniform_flow;              ///< Uniform flow parameters
 
     /// Constructor with type and uniform flow parameters
-    Inflow(InflowType type, UniformFlow uniform_flow)
-        : type(type), uniform_flow(std::move(uniform_flow)) {}
+    Inflow(InflowType type_, UniformFlow uniform_flow_)
+        : type(type_), uniform_flow(std::move(uniform_flow_)) {}
 
     /**
      * @brief Creates a steady wind inflow
