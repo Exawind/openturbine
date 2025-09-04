@@ -17,19 +17,19 @@ protected:
 
     void SetUp() override {
         // Beam connectivity
-        mesh_connectivity.AddBeamElementConnectivity(1, {4, 5, 6, 7, 8});
-        mesh_connectivity.AddBeamElementConnectivity(2, {9, 10, 11, 12, 13});
+        mesh_connectivity.AddBeamElementConnectivity(1, std::array{4UL, 5UL, 6UL, 7UL, 8UL});
+        mesh_connectivity.AddBeamElementConnectivity(2, std::array{9UL, 10UL, 11UL, 12UL, 13UL});
 
         // Mass connectivity
         mesh_connectivity.AddMassElementConnectivity(1, 0);
 
         // Spring connectivity
-        mesh_connectivity.AddSpringElementConnectivity(1, std::array<size_t, 2>{1, 2});
+        mesh_connectivity.AddSpringElementConnectivity(1, std::array{1UL, 2UL});
 
         // Constraint connectivity
-        mesh_connectivity.AddConstraintConnectivity(1, {0, 1});
-        mesh_connectivity.AddConstraintConnectivity(2, {2, 4});
-        mesh_connectivity.AddConstraintConnectivity(3, {8, 9});
+        mesh_connectivity.AddConstraintConnectivity(1, std::array{0UL, 1UL});
+        mesh_connectivity.AddConstraintConnectivity(2, std::array{2UL, 4UL});
+        mesh_connectivity.AddConstraintConnectivity(3, std::array{8UL, 9UL});
     }
 
     void TearDown() override {
@@ -50,7 +50,7 @@ TEST_F(MeshConnectivityTest, BeamElementConnectivity) {
     EXPECT_EQ(nodes[4], 8);
 
     // Add new beam element connectivity
-    mesh_connectivity.AddBeamElementConnectivity(3, {14, 15, 16});
+    mesh_connectivity.AddBeamElementConnectivity(3, std::array{14UL, 15UL, 16UL});
     nodes = mesh_connectivity.GetBeamElementConnectivity(3);
     ASSERT_EQ(nodes.size(), 3);
     EXPECT_EQ(nodes[0], 14);
@@ -58,7 +58,7 @@ TEST_F(MeshConnectivityTest, BeamElementConnectivity) {
     EXPECT_EQ(nodes[2], 16);
 
     // Overwrite existing beam element connectivity
-    mesh_connectivity.AddBeamElementConnectivity(1, {20, 21, 22});
+    mesh_connectivity.AddBeamElementConnectivity(1, std::array{20UL, 21UL, 22UL});
     nodes = mesh_connectivity.GetBeamElementConnectivity(1);
     ASSERT_EQ(nodes.size(), 3);
     EXPECT_EQ(nodes[0], 20);
@@ -87,7 +87,7 @@ TEST_F(MeshConnectivityTest, SpringElementConnectivity) {
     EXPECT_EQ(nodes[1], 2);
 
     // Add new spring element connectivity
-    mesh_connectivity.AddSpringElementConnectivity(2, std::array<size_t, 2>{3, 4});
+    mesh_connectivity.AddSpringElementConnectivity(2, std::array{3UL, 4UL});
     nodes = mesh_connectivity.GetSpringElementConnectivity(2);
     ASSERT_EQ(nodes.size(), 2);
     EXPECT_EQ(nodes[0], 3);

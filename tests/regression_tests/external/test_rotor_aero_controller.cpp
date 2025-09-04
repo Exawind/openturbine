@@ -5,6 +5,8 @@
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <numbers>
+#include <ranges>
 
 #include <gtest/gtest.h>
 
@@ -82,7 +84,7 @@ void SetRotorMotion(
     );
 
     // Loop through blades and set blade root motion
-    for (auto j = 0U; j < root_node_ids.size(); ++j) {
+    for (auto j : std::views::iota(0U, root_node_ids.size())) {
         turbine.SetBladeRootMotion(
             j, GetNodeData(root_node_ids[j], host_state_x),
             GetNodeData(root_node_ids[j], host_state_v), GetNodeData(root_node_ids[j], host_state_vd)
@@ -91,8 +93,8 @@ void SetRotorMotion(
 
     if (use_node_loads) {
         // Loop through blade nodes
-        for (auto j = 0U; j < beam_elem_node_ids.size(); ++j) {
-            for (auto k = 0U; k < beam_elem_node_ids[j].size(); ++k) {
+        for (auto j : std::views::iota(0U, beam_elem_node_ids.size())) {
+            for (auto k : std::views::iota(0U, beam_elem_node_ids[j].size())) {
                 turbine.SetBladeNodeMotion(
                     j, k, GetNodeData(beam_elem_node_ids[j][k], host_state_x),
                     GetNodeData(beam_elem_node_ids[j][k], host_state_v),
@@ -102,8 +104,8 @@ void SetRotorMotion(
         }
     } else {
         // Loop through blade qps
-        for (auto j = 0U; j < beam_elem_node_ids.size(); ++j) {
-            for (auto k = 0U; k < n_qps; ++k) {
+        for (auto j : std::views::iota(0U, beam_elem_node_ids.size())) {
+            for (auto k : std::views::iota(0U, n_qps)) {
                 turbine.SetBladeNodeMotion(
                     j, k, GetQPData(j, k, host_qp_x), GetQPData(j, k, host_qp_u_dot, host_qp_omega),
                     GetQPData(j, k, host_qp_u_ddot, host_qp_omega_dot)
@@ -119,20 +121,20 @@ void SetAeroLoads(
     const util::TurbineData& turbine, const T1& host_node_FX, const T2& host_qp_Fe
 ) {
     if (use_node_loads) {
-        for (auto j = 0U; j < n_blades; ++j) {
-            for (auto k = 0U; k < n_nodes; ++k) {
+        for (auto j : std::views::iota(0U, n_blades)) {
+            for (auto k : std::views::iota(0U, n_nodes)) {
                 const auto loads = turbine.GetBladeNodeLoad(j, k);
-                for (auto m = 0U; m < 6U; ++m) {
+                for (auto m : std::views::iota(0U, 6U)) {
                     host_node_FX(j, k, m) = loads[m];
                 }
             }
         }
         Kokkos::deep_copy(beams.node_FX, host_node_FX);
     } else {
-        for (auto j = 0U; j < n_blades; ++j) {
-            for (auto k = 0U; k < n_qps; ++k) {
+        for (auto j : std::views::iota(0U, n_blades)) {
+            for (auto k : std::views::iota(0U, n_qps)) {
                 const auto loads = turbine.GetBladeNodeLoad(j, k);
-                for (auto m = 0U; m < 6U; ++m) {
+                for (auto m : std::views::iota(0U, 6U)) {
                     host_qp_Fe(j, k, m) = loads[m];
                 }
             }
@@ -229,7 +231,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     // Blade nodes and elements
     //--------------------------------------------------------------------------
 
-    auto base_rot = math::RotationVectorToQuaternion({0., -M_PI / 2., 0.});
+    auto base_rot = math::RotationVectorToQuaternion({0., -std::numbers::pi / 2., 0.});
 
     // Number of nodes and quadrature points in each blade
     constexpr auto n_blade_nodes = node_xi.size();
@@ -237,22 +239,17 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Node location [0, 1]
     auto node_loc = std::array<double, n_blade_nodes>{};
-    std::transform(
-        std::cbegin(node_xi), std::cend(node_xi), std::begin(node_loc),
-        [&](const auto xi) {
-            return (xi + 1.) / 2.;
-        }
-    );
+    std::ranges::transform(node_xi, std::begin(node_loc), [&](const auto xi) {
+        return (xi + 1.) / 2.;
+    });
 
     // Build vector of blade elements
-    auto blade_list = std::array<size_t, n_blades>{};
-    std::iota(std::begin(blade_list), std::end(blade_list), 0);
     std::vector<size_t> beam_elem_ids;
     std::vector<std::vector<size_t>> beam_elem_node_ids;
-    constexpr double d_theta = 2. * M_PI / static_cast<double>(n_blades);
+    constexpr double d_theta = 2. * std::numbers::pi / static_cast<double>(n_blades);
     std::vector<std::array<double, 4>> q_roots;
     q_roots.reserve(n_blades);
-    for (auto i = 0U; i < n_blades; ++i) {
+    for (auto i : std::views::iota(0U, n_blades)) {
         q_roots.emplace_back(math::RotationVectorToQuaternion(
             {d_theta * static_cast<double>(i) + azimuth_init, 0., 0.}
         ));
@@ -263,8 +260,8 @@ TEST(Milestone, IEA15RotorAeroController) {
         rotor_speed_init * shaft_axis[2]
     };
     std::vector<Node> tip_node_ids;
-    std::transform(
-        std::cbegin(blade_list), std::cend(blade_list), std::back_inserter(beam_elem_ids),
+    std::ranges::transform(
+        std::views::iota(0U, n_blades), std::back_inserter(beam_elem_ids),
         [&](const size_t i) {
             // Define root rotation about x-axis
             const auto q_root = math::QuaternionCompose(q_roots[i], base_rot);
@@ -273,7 +270,7 @@ TEST(Milestone, IEA15RotorAeroController) {
             std::vector<size_t> beam_node_ids;
 
             // Loop through nodes in blade
-            for (auto j = 0U; j < n_blade_nodes; ++j) {
+            for (auto j : std::views::iota(0U, n_blade_nodes)) {
                 // Calculate node position and orientation for this blade
                 const auto rot = math::QuaternionCompose(
                     q_root,
@@ -311,7 +308,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
     // Blade root nodes
     std::vector<size_t> root_node_ids;
-    for (auto i = 0U; i < n_blades; ++i) {
+    for (auto i : std::views::iota(0U, n_blades)) {
         const auto q_root = math::QuaternionCompose(q_roots[i], base_rot);
 
         // Calculate node position and orientation for this blade
@@ -366,7 +363,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     model.AddRigidJointConstraint({azimuth_node_id, hub_node_id});
 
     // Add rotation control constraints between hub and blade root nodes
-    for (auto i = 0U; i < n_blades; ++i) {
+    for (auto i : std::views::iota(0U, n_blades)) {
         // Calculate pitch axis from hub node to blade root node
         const auto pitch_axis = std::array{
             model.GetNode(hub_node_id).x0[0] - model.GetNode(root_node_ids[i]).x0[0],
@@ -426,16 +423,16 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto build_blade_config = [&](size_t i_blade) {
         std::vector<std::array<double, 7>> mesh_positions;
         if (use_node_loads) {
-            std::transform(
-                beam_elem_node_ids[i_blade].begin(), beam_elem_node_ids[i_blade].end(),
-                std::back_inserter(mesh_positions),
+            std::ranges::transform(
+                beam_elem_node_ids[i_blade], std::back_inserter(mesh_positions),
                 [&model](const size_t& node_id) {
                     return model.GetNode(node_id).x0;
                 }
             );
         } else {
-            for (auto i_qp = 0U;
-                 i_qp < model.GetBeamElement(beam_elem_ids[i_blade]).quadrature.size(); ++i_qp) {
+            for (auto i_qp : std::views::iota(
+                     0U, model.GetBeamElement(beam_elem_ids[i_blade]).quadrature.size()
+                 )) {
                 mesh_positions.emplace_back(GetQPData(i_blade, i_qp, host_qp_x));
             }
         }
@@ -449,10 +446,10 @@ TEST(Milestone, IEA15RotorAeroController) {
     const std::vector<util::TurbineConfig> turbine_configs{
         util::TurbineConfig(
             true,                           // is horizontal axis wind turbine
-            {0., 0., 0.},                   // reference position
+            std::array{0.F, 0.F, 0.F},      // reference position
             model.GetNode(hub_node_id).x0,  // hub initial position
             model.GetNode(hub_node_id).x0,  // nacelle initial position
-            {
+            std::array{
                 build_blade_config(0),  // Blade 1 config
                 build_blade_config(1),  // Blade 2 config
                 build_blade_config(2),  // Blade 3 config
@@ -543,7 +540,7 @@ TEST(Milestone, IEA15RotorAeroController) {
     auto azimuth = azimuth_init;
 
     // Perform time steps and check for convergence within max_iter iterations
-    for (auto i = 0U; i < num_steps; ++i) {
+    for (auto i : std::views::iota(0U, num_steps)) {
         auto time_step_region = Kokkos::Profiling::ScopedRegion("Time Step");
 
         // Get current time and next time
@@ -611,8 +608,8 @@ TEST(Milestone, IEA15RotorAeroController) {
         w << "\t" << current_time                                      // current time (s)
           << "\t" << solver.convergence_err.size()                     // num convergence iterations
           << "\t" << conv_err                                          // convergence error
-          << "\t" << azimuth * 180. / M_PI                             // azimuth angle (deg)
-          << "\t" << pitch_actual * 180. / M_PI                        // blade pitch (deg)
+          << "\t" << azimuth * 180. / std::numbers::pi                 // azimuth angle (deg)
+          << "\t" << pitch_actual * 180. / std::numbers::pi            // blade pitch (deg)
           << "\t" << generator_speed / rpm_to_radps                    //
           << "\t" << controller.io.generator_torque_command / 1000.    //
           << "\t" << controller.io.generator_power_actual / 1000.      //
@@ -632,7 +629,7 @@ TEST(Milestone, IEA15RotorAeroController) {
         // Update rotor azimuth and speed
         azimuth = constraints.host_output(azimuth_constraint_id, 0) + azimuth_init;
         if (azimuth < 0) {
-            azimuth += 2. * M_PI;
+            azimuth += 2. * std::numbers::pi;
         }
         rotor_speed = constraints.host_output(azimuth_constraint_id, 1);
     }

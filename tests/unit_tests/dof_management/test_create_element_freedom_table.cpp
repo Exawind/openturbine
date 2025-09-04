@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
@@ -35,7 +36,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
@@ -63,7 +64,7 @@ TEST(TestCreateElementFreedomTable, OneMassElementWithOneNode_NoBeamNoSpring) {
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(0, k), k
         );  // Mass Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
@@ -105,10 +106,10 @@ TEST(TestCreateElementFreedomTable, OneSpringElementWithTwoNodes_NoBeamNoMass) {
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), springs.element_freedom_table);
 
-    for (auto k = 0U; k < 3U; ++k) {
+    for (auto k : std::views::iota(0, 3)) {
         EXPECT_EQ(host_element_freedom_table(0, 0, k), k);  // Spring Element 1 Nodes 1 DOFs: 0, 1, 2
     }
-    for (auto k = 0U; k < 3U; ++k) {
+    for (auto k : std::views::iota(0U, 3U)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 1, k), k + 3U
         );  // Spring Element 1 Nodes 2 DOFs: 3, 4, 5
@@ -151,12 +152,12 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithTwoNodes_NoMassNoSpring) {
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 1, k), k + 6U
         );  // Beam Element 1 Node 2 DOFs: 6, 7, 8, 9, 10, 11
@@ -192,7 +193,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 
     const auto host_beams_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
@@ -200,7 +201,7 @@ TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_OneMassElementWith
 
     const auto host_masses_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 6U
         );  // Mass Element 1 Node 1 DOFs: 6, 7, 8, 9, 10, 11
@@ -243,12 +244,12 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_NoMassNoSpring) {
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(1, 0, k), k + 6U
         );  // Beam Element 2 Node 1 DOFs: 6, 7, 8, 9, 10, 11
@@ -291,22 +292,22 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_NoMassNoSp
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 1, k), k + 6U
         );  // Beam Element 1 Node 2 DOFs: 6, 7, 8, 9, 10, 11
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(1, 0, k), k + 6U
         );  // Beam Element 2 Node 1 DOFs: 6, 7, 8, 9, 10, 11
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(1, 1, k), k + 12U
         );  // Beam Element 2 Node 2 DOFs: 12, 13, 14, 15, 16, 17
@@ -349,22 +350,22 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithTwoNodesShared_Flipped_No
     const auto host_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
 
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_element_freedom_table(1, 0, k), k
         );  // Beam Element 2 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(1, 1, k), k + 6U
         );  // Beam Element 2 Node 2 DOFs: 6, 7, 8, 9, 10, 11
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 0, k), k + 6U
         );  // Beam Element 1 Node 1 DOFs: 6, 7, 8, 9, 10, 11
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_element_freedom_table(0, 1, k), k + 12U
         );  // Beam Element 1 Node 2 DOFs: 12, 13, 14, 15, 16, 17
@@ -407,12 +408,12 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
 
     const auto host_beams_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
         );  // Beam Element 1 Node 1 DOFs: 0, 1, 2, 3, 4, 5
     }
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_beams_element_freedom_table(1, 0, k), k + 6U
         );  // Beam Element 2 Node 1 DOFs: 6, 7, 8, 9, 10, 11
@@ -420,7 +421,7 @@ TEST(TestCreateElementFreedomTable, TwoBeamElementsWithOneNode_OneMassElementWit
 
     const auto host_masses_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 12U
         );  // Mass Element 1 Node 1 DOFs: 12, 13, 14, 15, 16, 17
@@ -469,7 +470,7 @@ TEST(
 
     const auto host_beams_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), beams.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0, 6)) {
         EXPECT_EQ(
             host_beams_element_freedom_table(0, 0, k), k
         );  // Beam Element Node 1 DOFs: 0, 1, 2, 3, 4, 5
@@ -477,7 +478,7 @@ TEST(
 
     const auto host_masses_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), masses.element_freedom_table);
-    for (auto k = 0U; k < 6U; ++k) {
+    for (auto k : std::views::iota(0U, 6U)) {
         EXPECT_EQ(
             host_masses_element_freedom_table(0, k), k + 6U
         );  // Mass Element Node 1 DOFs: 6, 7, 8, 9, 10, 11
@@ -485,12 +486,12 @@ TEST(
 
     const auto host_springs_element_freedom_table =
         Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), springs.element_freedom_table);
-    for (auto k = 0U; k < 3U; ++k) {
+    for (auto k : std::views::iota(0U, 3U)) {
         EXPECT_EQ(
             host_springs_element_freedom_table(0, 0, k), k + 12U
         );  // Spring Element Node 1 DOFs: 12, 13, 14
     }
-    for (auto k = 0U; k < 3U; ++k) {
+    for (auto k : std::views::iota(0U, 3U)) {
         EXPECT_EQ(
             host_springs_element_freedom_table(0, 1, k), k + 15U
         );  // Spring Element Node 2 DOFs: 15, 16, 17

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <tuple>
 
 #include "constraints/constraint.hpp"
@@ -158,8 +159,8 @@ public:
      * @return the index of the newly added beam
      */
     size_t AddBeamElement(
-        const std::vector<size_t>& node_ids, const std::vector<BeamSection>& sections,
-        const std::vector<std::array<double, 2>>& quadrature
+        std::span<const size_t> node_ids, std::span<const BeamSection> sections,
+        std::span<const std::array<double, 2>> quadrature
     ) {
         const auto elem_id = this->beam_elements_.size();
         this->beam_elements_.emplace_back(elem_id, node_ids, sections, quadrature);

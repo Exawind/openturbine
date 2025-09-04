@@ -6,6 +6,7 @@
 #include <cstring>
 #include <fstream>
 #include <iterator>
+#include <ranges>
 
 #include "controller_io.hpp"
 
@@ -320,17 +321,13 @@ inline void PitchControl(ControllerIO& swap, InternalState& state) {
         auto pitch_rate = std::array<double, 3>{};
 
         // Loop through all blades
-        std::transform(
-            std::cbegin(blade_pitch), std::cend(blade_pitch), std::begin(pitch_rate),
-            [&](auto pitch) {
-                auto rate = (pitch_com_total - pitch) / elapsed_time;
-                return std::clamp(rate, -kPC_MaxRat, kPC_MaxRat);
-            }
-        );
+        std::ranges::transform(blade_pitch, std::begin(pitch_rate), [&](auto pitch) {
+            auto rate = (pitch_com_total - pitch) / elapsed_time;
+            return std::clamp(rate, -kPC_MaxRat, kPC_MaxRat);
+        });
 
-        std::transform(
-            std::cbegin(blade_pitch), std::cend(blade_pitch), std::cbegin(pitch_rate),
-            std::begin(state.pitch_commanded_latest),
+        std::ranges::transform(
+            blade_pitch, pitch_rate, std::begin(state.pitch_commanded_latest),
             [&](auto pitch, auto rate) {
                 auto commanded = pitch + rate * elapsed_time;
                 return std::clamp(commanded, kPC_MinPit, kPC_MaxPit);
@@ -446,7 +443,7 @@ void DISCON(
     }
 
     swap.CopyToSwapArray(swap_array);
-    std::copy(swap_array.cbegin(), swap_array.cend(), avrSWAP);
+    std::ranges::copy(swap_array, avrSWAP);
 }
 
 }  // extern "C"

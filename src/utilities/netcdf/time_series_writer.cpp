@@ -15,7 +15,7 @@ TimeSeriesWriter::TimeSeriesWriter(const std::string& file_path, bool create)
 }
 
 void TimeSeriesWriter::WriteValuesAtTimestep(
-    const std::string& variable_name, size_t timestep, const std::vector<double>& values
+    const std::string& variable_name, size_t timestep, std::span<const double> values
 ) {
     // Check if the variable already exists in the file
     try {
@@ -46,7 +46,7 @@ void TimeSeriesWriter::WriteValuesAtTimestep(
 void TimeSeriesWriter::WriteValueAtTimestep(
     const std::string& variable_name, size_t timestep, const double& value
 ) {
-    WriteValuesAtTimestep(variable_name, timestep, std::vector<double>{value});
+    WriteValuesAtTimestep(variable_name, timestep, std::array{value});
 }
 
 const NetCDFFile& TimeSeriesWriter::GetFile() const {

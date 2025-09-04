@@ -1,5 +1,6 @@
 #include <array>
 #include <cmath>
+#include <numbers>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -169,7 +170,8 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
     };
 
     beam_input.root.position =
-        std::array{0., 0., 0., std::cos(M_PI / 4.), 0., std::sin(M_PI / 4.), 0.};
+        std::array{0., 0., 0., std::cos(std::numbers::pi / 4.), 0., std::sin(std::numbers::pi / 4.),
+                   0.};
 
     auto beam = openturbine::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
@@ -263,8 +265,9 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
         openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
-    beam_input.root.position =
-        std::array{0., 0., 0., std::cos(M_PI / 4.), 0., 0., std::sin(M_PI / 4.)};
+    beam_input.root.position = std::array{
+        0., 0., 0., std::cos(std::numbers::pi / 4.), 0., 0., std::sin(std::numbers::pi / 4.)
+    };
 
     auto beam = openturbine::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
@@ -359,7 +362,8 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
     };
 
     beam_input.root.position =
-        std::array{0., 0., 0., std::cos(M_PI / 4.), std::sin(M_PI / 4.), 0., 0.};
+        std::array{0., 0., 0., std::cos(std::numbers::pi / 4.), std::sin(std::numbers::pi / 4.),
+                   0., 0.};
 
     auto beam = openturbine::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;

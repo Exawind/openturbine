@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
@@ -42,7 +44,7 @@ TEST(NodeTest, DisplacedPosition_RotationOnly) {
     constexpr auto init_position = std::array{1., 2., 3.};
     constexpr auto init_orientation = std::array{1., 0., 0., 0.};  // identity quaternion
     // 90° rotation around z-axis
-    const auto rotation = math::RotationVectorToQuaternion({0., 0., M_PI / 2.});
+    const auto rotation = math::RotationVectorToQuaternion({0., 0., std::numbers::pi / 2.});
     auto node_id =
         model.AddNode()
             .SetPosition(
@@ -74,7 +76,7 @@ TEST(NodeTest, DisplacedPosition_TranslationAndRotation) {
     constexpr auto init_orientation = std::array{1., 0., 0., 0.};
     constexpr auto disp_position = std::array{1., 2., 3.};
     const auto disp_rotation =
-        math::RotationVectorToQuaternion({0., M_PI / 3., 0.});  // 60° around y axis
+        math::RotationVectorToQuaternion({0., std::numbers::pi / 3., 0.});  // 60° around y axis
 
     auto node_id = model.AddNode()
                        .SetPosition(
@@ -149,7 +151,7 @@ TEST(NodeTest, RotateAboutPoint) {
     node_0.Translate({1., 0., 0.});
 
     // Now rotate the node 90 degrees around the z-axis
-    node_0.RotateAboutPoint(std::array<double, 3>{0., 0., M_PI / 2.}, {0., 0., 0.});
+    node_0.RotateAboutPoint(std::array<double, 3>{0., 0., std::numbers::pi / 2.}, {0., 0., 0.});
     ASSERT_NEAR(node_0.x0[0], 0., 1e-12);
     ASSERT_NEAR(node_0.x0[1], 1., 1e-12);
     ASSERT_NEAR(node_0.x0[2], 0., 1e-12);
@@ -204,7 +206,9 @@ TEST(NodeTest, RotateDisplacementAboutPoint) {
 
     // Rotate displacement 90 degrees around z-axis about origin
     auto node_0 = model.GetNode(node_id);
-    node_0.RotateDisplacementAboutPoint(std::array<double, 3>{0., 0., M_PI / 2.}, {0., 0., 0.});
+    node_0.RotateDisplacementAboutPoint(
+        std::array<double, 3>{0., 0., std::numbers::pi / 2.}, {0., 0., 0.}
+    );
     // Check that the displacement is now (0, 1, 0)
     ASSERT_NEAR(node_0.u[0], 0., 1e-12);
     ASSERT_NEAR(node_0.u[1], 1., 1e-12);

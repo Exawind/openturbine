@@ -1,5 +1,7 @@
 #include "beam_builder.hpp"
 
+#include <numbers>
+
 #include "beam.hpp"
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
@@ -30,7 +32,7 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
         return *this;
     }
     if (ref_axis == ReferenceAxisOrientation::Z) {
-        const auto q_z_to_x = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto q_z_to_x = math::RotationVectorToQuaternion({0., std::numbers::pi / 2., 0.});
         input.ref_axis.coordinates.emplace_back(math::RotateVectorByQuaternion(q_z_to_x, coordinates)
         );
         return *this;
@@ -40,7 +42,7 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
 
 BeamBuilder& BeamBuilder::AddRefAxisTwist(double grid_location, double twist) {
     input.ref_axis.twist_grid.emplace_back(grid_location);
-    input.ref_axis.twist.emplace_back(twist * M_PI / 180.);
+    input.ref_axis.twist.emplace_back(twist * std::numbers::pi / 180.);
     return *this;
 }
 
@@ -79,7 +81,7 @@ BeamBuilder& BeamBuilder::AddSection(
         return *this;
     }
     if (ref_axis == ReferenceAxisOrientation::Z) {
-        const auto q_z_to_x = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto q_z_to_x = math::RotationVectorToQuaternion({0., std::numbers::pi / 2., 0.});
         input.sections.emplace_back(
             grid_location, math::RotateMatrix6(mass_matrix, q_z_to_x),
             math::RotateMatrix6(stiffness_matrix, q_z_to_x)

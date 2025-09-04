@@ -2,6 +2,8 @@
 
 #include <array>
 #include <iterator>
+#include <numbers>
+#include <ranges>
 
 #include <Kokkos_Core.hpp>
 
@@ -303,7 +305,7 @@ Kokkos::Array<double, 4> NormalizeQuaternion(const Kokkos::Array<double, 4>& q) 
     // Normalize the quaternion
     const auto length = std::sqrt(length_squared);
     auto normalized_quaternion = Kokkos::Array<double, 4>{};
-    for (auto k = 0U; k < 4U; ++k) {
+    for (auto k = 0U; k < 4; ++k) {
         normalized_quaternion[k] = q[k] / length;
     }
     return normalized_quaternion;
@@ -335,7 +337,7 @@ inline std::array<double, 4> TangentTwistToQuaternion(
         {e1[2], e2[2], e3[2]},
     }});
 
-    const auto twist_rad = twist * M_PI / 180.;
+    const auto twist_rad = twist * std::numbers::pi / 180.;
     auto q_twist =
         RotationVectorToQuaternion({e1[0] * twist_rad, e1[1] * twist_rad, e1[2] * twist_rad});
 

@@ -1,3 +1,5 @@
+#include <numbers>
+
 #include <gtest/gtest.h>
 
 #include "model/model.hpp"
@@ -52,7 +54,7 @@ inline auto SetUpSpringMassSystem() {
 
     // The spring-mass system should move periodically between -2 and 2 (position of the second node)
     // with simple harmonic motion where the time period is 2 * pi * sqrt(m / k)
-    const double T = 2. * M_PI * sqrt(m / k);
+    const double T = 2. * std::numbers::pi * sqrt(m / k);
     constexpr auto num_steps = 1000;
 
     // Set up step parameters
@@ -69,7 +71,7 @@ inline auto SetUpSpringMassSystem() {
     auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Run simulation for T seconds
-    for (auto time_step = 1U; time_step <= num_steps; ++time_step) {
+    for (auto time_step : std::views::iota(1U, num_steps + 1U)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
         // Simulation at time T / 2
@@ -120,7 +122,7 @@ inline auto SetUpSpringMassChainSystem() {
     constexpr auto displacement = 0.5;
     auto position = 0.;
     model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
-    for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
+    for ([[maybe_unused]] auto mass_number : std::views::iota(0U, number_of_masses)) {
         position += displacement;
         model.AddNode().SetPosition(position, 0., 0., 1., 0., 0., 0.);
     }
@@ -139,13 +141,13 @@ inline auto SetUpSpringMassChainSystem() {
         std::array{0., 0., 0., 0., 0., j},  // inertia around z-axis
     };
 
-    for (auto mass_number = 0U; mass_number < number_of_masses; ++mass_number) {
+    for (auto mass_number : std::views::iota(0U, number_of_masses)) {
         model.AddMassElement(mass_number + 1, mass_matrix);
     }
 
     // Create springs
     const auto k = 10.;
-    for (auto mass_number = 0U; mass_number <= number_of_masses; ++mass_number) {
+    for (auto mass_number : std::views::iota(0U, number_of_masses + 1U)) {
         model.AddSpringElement(mass_number, mass_number + 1, k, 0.);
     }
 
@@ -162,18 +164,18 @@ inline auto SetUpSpringMassChainSystem() {
     constexpr bool is_dynamic_solve(true);
     constexpr size_t max_iter(6);
     constexpr double rho_inf(0.);
-    const double final_time = 2. * M_PI * sqrt(m / k);
+    const double final_time = 2. * std::numbers::pi * sqrt(m / k);
     const double step_size(final_time / static_cast<double>(num_steps));
     auto parameters = StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
     auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
 
     // Run simulation for T seconds
-    for (auto time_step = 1U; time_step <= num_steps; ++time_step) {
+    for ([[maybe_unused]] auto time_step : std::views::iota(1U, num_steps + 1U)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
         Kokkos::deep_copy(q, state.q);
-        for (auto node = 0U; node < q.extent(0); ++node) {
+        for (auto node : std::views::iota(0U, q.extent(0))) {
             EXPECT_NEAR(q(node, 0), 0., 1.e-14);
         }
     }

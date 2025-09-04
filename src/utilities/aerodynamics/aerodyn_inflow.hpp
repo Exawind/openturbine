@@ -2,7 +2,9 @@
 
 #include <array>
 #include <cmath>
+#include <numbers>
 #include <numeric>
+#include <span>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -102,33 +104,33 @@ struct TurbineConfig {
      * qz]
      */
     struct BladeInitialState {
-        std::array<double, 7>
-            root_initial_position;  //< Initial root position of the blade (1 per blade)
+        std::array<double, 7> root_initial_position{
+        };  //< Initial root position of the blade (1 per blade)
         std::vector<std::array<double, 7>>
             node_initial_positions;  //< Initial node positions of the blade
 
-        BladeInitialState(
-            const std::array<double, 7>& root, const std::vector<std::array<double, 7>>& nodes
-        )
-            : root_initial_position(root), node_initial_positions(nodes) {}
+        BladeInitialState(std::span<double, 7> root, std::span<const std::array<double, 7>> nodes) {
+            std::ranges::copy(root, std::begin(root_initial_position));
+            node_initial_positions.assign(std::begin(nodes), std::end(nodes));
+        }
     };
 
     bool is_horizontal_axis{true};                           //< Is a horizontal axis turbine?
     std::array<float, 3> reference_position{0.F, 0.F, 0.F};  //< Reference position of the turbine
-    std::array<double, 7> hub_initial_position;              //< Initial hub position
-    std::array<double, 7> nacelle_initial_position;          //< Initial nacelle position
+    std::array<double, 7> hub_initial_position{};            //< Initial hub position
+    std::array<double, 7> nacelle_initial_position{};        //< Initial nacelle position
     std::vector<BladeInitialState>
         blade_initial_states;  //< Initial root and node positions of blades (size = n_blades)
 
     TurbineConfig(
-        bool is_hawt, std::array<float, 3> ref_pos, std::array<double, 7> hub_pos,
-        std::array<double, 7> nacelle_pos, std::vector<BladeInitialState> blade_states
+        bool is_hawt, std::span<const float, 3> ref_pos, std::span<const double, 7> hub_pos,
+        std::span<const double, 7> nacelle_pos, std::span<const BladeInitialState> blade_states
     )
-        : is_horizontal_axis(is_hawt),
-          reference_position(ref_pos),
-          hub_initial_position(hub_pos),
-          nacelle_initial_position(nacelle_pos),
-          blade_initial_states(std::move(blade_states)) {
+        : is_horizontal_axis(is_hawt) {
+        std::ranges::copy(ref_pos, std::begin(reference_position));
+        std::ranges::copy(hub_pos, std::begin(hub_initial_position));
+        std::ranges::copy(nacelle_pos, std::begin(nacelle_initial_position));
+        blade_initial_states.assign(std::begin(blade_states), std::end(blade_states));
         // Make sure the initial states are valid
         Validate();
     }
@@ -161,11 +163,11 @@ struct TurbineConfig {
  * @param orientation Output array for flattened 3x3 rotation matrix
  */
 inline void SetPositionAndOrientation(
-    const std::array<double, 7>& data, std::array<float, 3>& position,
+    std::span<const double, 7> data, std::span<float, 3> position,
     std::array<std::array<double, 3>, 3>& orientation
 ) {
     // Set position (first 3 elements)
-    for (auto i = 0U; i < 3U; ++i) {
+    for (auto i : std::views::iota(0U, 3U)) {
         position[i] = static_cast<float>(data[i]);
     }
 
@@ -194,31 +196,32 @@ struct MeshData {
     /// Constructor to initialize all mesh data to zero based on provided number of nodes
     MeshData(size_t n_nodes)
         : n_points(static_cast<int32_t>(n_nodes)),
-          position(std::vector<std::array<float, 3>>(n_nodes, {0.F, 0.F, 0.F})),
-          orientation(std::vector<std::array<std::array<double, 3>, 3>>(
+          position(n_nodes, std::array{0.F, 0.F, 0.F}),
+          orientation(
               n_nodes,
-              std::array<std::array<double, 3>, 3>{{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}}
-          )),
-          velocity(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
-          acceleration(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})),
-          load(std::vector<std::array<float, 6>>(n_nodes, {0.F, 0.F, 0.F, 0.F, 0.F, 0.F})) {}
+              std::array{std::array{0., 0., 0.}, std::array{0., 0., 0.}, std::array{0., 0., 0.}}
+          ),
+          velocity(n_nodes, std::array{0.F, 0.F, 0.F, 0.F, 0.F, 0.F}),
+          acceleration(n_nodes, std::array{0.F, 0.F, 0.F, 0.F, 0.F, 0.F}),
+          load(n_nodes, std::array{0.F, 0.F, 0.F, 0.F, 0.F, 0.F}) {}
 
     /// Constructor to initialize all mesh data based on provided inputs
     MeshData(
-        size_t n_mesh_pts, const std::vector<std::array<double, 7>>& pos,
-        const std::vector<std::array<float, 6>>& vel, const std::vector<std::array<float, 6>>& acc,
-        const std::vector<std::array<float, 6>>& ld
+        size_t n_mesh_pts, std::span<const std::array<double, 7>> pos,
+        std::span<const std::array<float, 6>> vel, std::span<const std::array<float, 6>> acc,
+        std::span<const std::array<float, 6>> ld
     )
         : n_points(static_cast<int32_t>(n_mesh_pts)),
-          position(std::vector<std::array<float, 3>>(n_mesh_pts, {0.F, 0.F, 0.F})),
-          orientation(std::vector<std::array<std::array<double, 3>, 3>>(
-              n_mesh_pts, {{{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}}
-          )),
-          velocity(vel),
-          acceleration(acc),
-          load(ld) {
+          position(n_mesh_pts, std::array{0.F, 0.F, 0.F}),
+          orientation(
+              n_mesh_pts,
+              std::array{std::array{0., 0., 0.}, std::array{0., 0., 0.}, std::array{0., 0., 0.}}
+          ) {
+        velocity.assign(std::begin(vel), std::end(vel));
+        acceleration.assign(std::begin(acc), std::end(acc));
+        load.assign(std::begin(ld), std::end(ld));
         // Set mesh position and orientation from 7x1 array [x, y, z, qw, qx, qy, qz]
-        for (auto i = 0U; i < NumberOfMeshPoints(); ++i) {
+        for (auto i : std::views::iota(0U, NumberOfMeshPoints())) {
             SetPositionAndOrientation(pos[i], position[i], orientation[i]);
         }
 
@@ -252,8 +255,8 @@ struct MeshData {
 
     // Updates the values at the given point number
     void SetValues(
-        size_t point_number, const std::array<double, 7>& pos, const std::array<double, 6>& vel,
-        const std::array<double, 6>& acc
+        size_t point_number, std::span<const double, 7> pos, std::span<const double, 6> vel,
+        std::span<const double, 6> acc
     ) {
         if (point_number >= static_cast<size_t>(n_points)) {
             throw std::out_of_range("point number out of range.");
@@ -261,10 +264,8 @@ struct MeshData {
         SetPositionAndOrientation(
             pos, this->position[point_number], this->orientation[point_number]
         );
-        for (auto i = 0U; i < 6U; ++i) {
-            this->velocity[point_number][i] = static_cast<float>(vel[i]);
-            this->acceleration[point_number][i] = static_cast<float>(acc[i]);
-        }
+        std::ranges::copy(vel, std::begin(velocity[point_number]));
+        std::ranges::copy(acc, std::begin(acceleration[point_number]));
     }
 };
 
@@ -393,7 +394,7 @@ struct TurbineData {
         }
 
         // Rotation to convert blade orientation
-        const auto r_x2z = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto r_x2z = math::RotationVectorToQuaternion({0., std::numbers::pi / 2., 0.});
 
         // Original orientation
         const std::array<double, 4> r{position[3], position[4], position[5], position[6]};
@@ -430,7 +431,7 @@ struct TurbineData {
         }
 
         // Rotation to convert blade orientation
-        const auto r_x2z = math::RotationVectorToQuaternion({0., M_PI / 2., 0.});
+        const auto r_x2z = math::RotationVectorToQuaternion({0., std::numbers::pi / 2., 0.});
 
         // Original orientation
         const auto r = std::array{position[3], position[4], position[5], position[6]};
@@ -703,7 +704,7 @@ public:
      *
      * @param turbine_configs Vector of TurbineConfig objects, each representing a single turbine
      */
-    void Initialize(const std::vector<TurbineConfig>& turbine_configs) {
+    void Initialize(std::span<const TurbineConfig> turbine_configs) {
         PreInitialize(turbine_configs.size());
         SetupRotors(turbine_configs);
         FinalizeInitialization();
@@ -742,7 +743,7 @@ public:
      *
      * @param turbine_configs Vector of turbine configurations
      */
-    void SetupRotors(const std::vector<TurbineConfig>& turbine_configs) {
+    void SetupRotors(std::span<const TurbineConfig> turbine_configs) {
         auto ADI_C_SetupRotor = lib_.get_function<
             void(int*, int*, const float*, float*, double*, float*, double*, int*, float*, double*, int*, float*, double*, int*, int*, char*)>(
             "ADI_C_SetupRotor"
@@ -868,7 +869,7 @@ public:
         channel_names.resize(sim_controls_.n_channels);
         channel_units.resize(sim_controls_.n_channels);
         std::string tmp;
-        for (auto i = 0U; i < sim_controls_.n_channels; ++i) {
+        for (auto i : std::views::iota(0U, sim_controls_.n_channels)) {
             tmp = channel_names_c.substr(20UL * i, 20);
             tmp.erase(tmp.find_last_not_of(' ') + 1);
             channel_names[i] = tmp;

@@ -1,5 +1,6 @@
 #include "beam.hpp"
 
+#include <numbers>
 #include <stdexcept>
 
 #include "elements/beams/beam_quadrature.hpp"
@@ -35,8 +36,8 @@ void Beam::AddPointLoad(double s, std::array<double, 6> loads) {
     }
 
     const auto weights = this->GetNodeWeights(s);
-    for (auto node = 0U; node < this->nodes.size(); ++node) {
-        for (auto component = 0U; component < 6U; ++component) {
+    for (auto node : std::views::iota(0U, this->nodes.size())) {
+        for (auto component : std::views::iota(0U, 6U)) {
             this->nodes[node].loads[component] += weights[node] * loads[component];
         }
     }
@@ -89,23 +90,18 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
 
     if (n_geometry_pts < n_nodes) {
         // We need to project from n_geometry_pts -> element_order
-        const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
+        const auto kp_xi = math::MapGeometricLocations(input.ref_axis.coordinate_grid);
         const auto gll_points = math::GenerateGLLPoints(n_geometry_pts - 1);
         const auto phi_kn_geometry = math::ComputeShapeFunctionValues(kp_xi, gll_points);
         const auto geometry_points = math::PerformLeastSquaresFitting(
             n_geometry_pts, phi_kn_geometry, input.ref_axis.coordinates
         );
-        const auto node_coords =
+        this->node_coordinates =
             math::ProjectPointsToTargetPolynomial(n_geometry_pts, n_nodes, geometry_points);
 
-        this->node_coordinates.clear();
-        this->node_coordinates.reserve(node_coords.size());
-        std::copy(
-            node_coords.begin(), node_coords.end(), std::back_inserter(this->node_coordinates)
-        );
     } else {
         // Fit node coordinates to key points
-        const std::vector<double> kp_xi(math::MapGeometricLocations(input.ref_axis.coordinate_grid));
+        const auto kp_xi = math::MapGeometricLocations(input.ref_axis.coordinate_grid);
         const auto phi_kn = math::ComputeShapeFunctionValues(kp_xi, this->node_xi);
         this->node_coordinates =
             math::PerformLeastSquaresFitting(n_nodes, phi_kn, input.ref_axis.coordinates);
@@ -117,23 +113,26 @@ void Beam::CreateNodeGeometry(const BeamInput& input) {
 
 void Beam::CreateBeamElement(const BeamInput& input, Model& model) {
     // Add nodes to model
-    std::vector<size_t> node_ids;
-    for (auto node = 0U; node < this->node_xi.size(); ++node) {
-        const auto& pos = this->node_coordinates[node];
-        const auto q_rot = math::TangentTwistToQuaternion(this->node_tangents[node], 0.);
-        const auto node_id =
-            model.AddNode()
+    auto node_ids = std::vector<size_t>(this->node_xi.size());
+    std::ranges::transform(
+        std::views::iota(0U, this->node_xi.size()), std::begin(node_ids),
+        [&](auto node) {
+            const auto& pos = this->node_coordinates[node];
+            const auto q_rot = math::TangentTwistToQuaternion(this->node_tangents[node], 0.);
+            return model.AddNode()
                 .SetElemLocation((this->node_xi[node] + 1.) / 2.)
                 .SetPosition(pos[0], pos[1], pos[2], q_rot[0], q_rot[1], q_rot[2], q_rot[3])
                 .Build();
-        node_ids.emplace_back(node_id);
-        this->nodes.emplace_back(node_id);
-    }
+        }
+    );
+    std::ranges::transform(node_ids, std::back_inserter(this->nodes), [](auto node_id) {
+        return NodeData(node_id);
+    });
 
     // Build beam sections
     const auto sections = BuildBeamSections(input);
-    std::vector<double> section_grid(sections.size());
-    std::transform(sections.begin(), sections.end(), section_grid.begin(), [](const auto& section) {
+    auto section_grid = std::vector<double>(sections.size());
+    std::ranges::transform(sections, section_grid.begin(), [](const auto& section) {
         return section.position;
     });
 
@@ -186,10 +185,10 @@ void Beam::CalcNodeTangents() {
 
     // Calculate tangent vectors for each node
     this->node_tangents.resize(n_nodes, {0., 0., 0.});
-    for (auto node_1 = 0U; node_1 < n_nodes; ++node_1) {
-        for (auto node_2 = 0U; node_2 < n_nodes; ++node_2) {
+    for (auto node_1 : std::views::iota(0U, n_nodes)) {
+        for (auto node_2 : std::views::iota(0U, n_nodes)) {
             const auto shape_deriv = phi_prime[node_1][node_2];
-            for (auto component = 0U; component < 3; ++component) {
+            for (auto component : std::views::iota(0U, 3U)) {
                 this->node_tangents[node_2][component] +=
                     shape_deriv * this->node_coordinates[node_1][component];
             }
@@ -197,11 +196,11 @@ void Beam::CalcNodeTangents() {
     }
 
     // Normalize tangent vectors
-    std::transform(
-        this->node_tangents.begin(), this->node_tangents.end(), this->node_tangents.begin(),
+    std::ranges::transform(
+        this->node_tangents, this->node_tangents.begin(),
         [](std::array<double, 3>& tangent) {
             const auto norm = math::Norm(tangent);
-            std::transform(tangent.begin(), tangent.end(), tangent.begin(), [norm](double v) {
+            std::ranges::transform(tangent, tangent.begin(), [norm](double v) {
                 return v / norm;
             });
             return tangent;
@@ -217,20 +216,20 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
     auto twist = math::LinearInterp(
         input.sections[0].location, input.ref_axis.twist_grid, input.ref_axis.twist
     );
-    auto q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+    auto q_twist = math::RotationVectorToQuaternion({twist * std::numbers::pi / 180., 0., 0.});
     sections.emplace_back(
         input.sections[0].location, math::RotateMatrix6(input.sections[0].mass_matrix, q_twist),
         math::RotateMatrix6(input.sections[0].stiffness_matrix, q_twist)
     );
 
     // Loop through remaining section locations
-    for (auto section = 1U; section < input.sections.size(); ++section) {
+    for (auto section : std::views::iota(1U, input.sections.size())) {
         const auto section_location = input.sections[section].location;
         const auto section_mass_matrix = input.sections[section].mass_matrix;
         const auto section_stiffness_matrix = input.sections[section].stiffness_matrix;
 
         // Add refinement sections if requested
-        for (auto refinement = 0U; refinement < input.section_refinement; ++refinement) {
+        for (auto refinement : std::views::iota(0U, input.section_refinement)) {
             const auto left_location = input.sections[section - 1].location;
             const auto left_mass_matrix = input.sections[section - 1].mass_matrix;
             const auto left_stiffness_matrix = input.sections[section - 1].stiffness_matrix;
@@ -245,8 +244,8 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
             // Interpolate mass and stiffness matrices from bounding sections
             auto mass_matrix = std::array<std::array<double, 6>, 6>{};
             auto stiffness_matrix = std::array<std::array<double, 6>, 6>{};
-            for (auto component_1 = 0U; component_1 < 6; ++component_1) {
-                for (auto component_2 = 0U; component_2 < 6; ++component_2) {
+            for (auto component_1 : std::views::iota(0U, 6U)) {
+                for (auto component_2 : std::views::iota(0U, 6U)) {
                     mass_matrix[component_1][component_2] =
                         (1. - alpha) * left_mass_matrix[component_1][component_2] +
                         alpha * section_mass_matrix[component_1][component_2];
@@ -262,7 +261,7 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
             );
 
             // Add refinement section
-            q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+            q_twist = math::RotationVectorToQuaternion({twist * std::numbers::pi / 180., 0., 0.});
             sections.emplace_back(
                 grid_value, math::RotateMatrix6(mass_matrix, q_twist),
                 math::RotateMatrix6(stiffness_matrix, q_twist)
@@ -272,7 +271,7 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
         // Add ending section
         twist =
             math::LinearInterp(section_location, input.ref_axis.twist_grid, input.ref_axis.twist);
-        q_twist = math::RotationVectorToQuaternion({twist * M_PI / 180., 0., 0.});
+        q_twist = math::RotationVectorToQuaternion({twist * std::numbers::pi / 180., 0., 0.});
         sections.emplace_back(
             section_location, math::RotateMatrix6(section_mass_matrix, q_twist),
             math::RotateMatrix6(section_stiffness_matrix, q_twist)

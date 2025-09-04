@@ -35,7 +35,7 @@ inline auto SetUpPrecessionTest() {
     auto [state, elements, constraints, solver] = model.CreateSystemWithSolver<>();
 
     // Run simulation for 500 steps
-    for (auto i = 0; i < 500; ++i) {
+    for ([[maybe_unused]] auto i : std::views::iota(0, 500)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }

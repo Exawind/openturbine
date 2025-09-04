@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <ranges>
 
 #include <gtest/gtest.h>
 
@@ -56,8 +57,8 @@ protected:
         const std::array<std::array<double, 6>, 6>& actual,
         const std::array<std::array<double, 6>, 6>& expected
     ) {
-        for (auto i = 0U; i < 6U; ++i) {
-            for (auto j = 0U; j < 6U; ++j) {
+        for (auto i : std::views::iota(0U, 6U)) {
+            for (auto j : std::views::iota(0U, 6U)) {
                 EXPECT_NEAR(actual[i][j], expected[i][j], kTolerance)
                     << "Matrix element [" << i << "][" << j << "] differs";
             }

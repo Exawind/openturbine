@@ -1,5 +1,6 @@
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -52,7 +53,7 @@ public:
      * The NetCDF type is automatically determined from the template parameter.
      */
     template <typename T>
-    [[nodiscard]] int AddVariable(const std::string& name, const std::vector<int>& dim_ids) const;
+    [[nodiscard]] int AddVariable(const std::string& name, std::span<const int> dim_ids) const;
 
     /**
      * @brief Adds an attribute to a variable in the NetCDF file
@@ -78,10 +79,10 @@ public:
      * - int (NC_INT)
      * - std::string (NC_STRING)
      */
-    void WriteVariable(const std::string& name, const std::vector<float>& data) const;
-    void WriteVariable(const std::string& name, const std::vector<double>& data) const;
-    void WriteVariable(const std::string& name, const std::vector<int>& data) const;
-    void WriteVariable(const std::string& name, const std::vector<std::string>& data) const;
+    void WriteVariable(const std::string& name, std::span<const float> data) const;
+    void WriteVariable(const std::string& name, std::span<const double> data) const;
+    void WriteVariable(const std::string& name, std::span<const int> data) const;
+    void WriteVariable(const std::string& name, std::span<const std::string> data) const;
 
     /**
      * @brief Writes data to a variable at specific indices in the NetCDF file
@@ -101,20 +102,20 @@ public:
      * @param data The vector containing the data to write
      */
     void WriteVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<float>& data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const float> data
     ) const;
     void WriteVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<double>& data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const double> data
     ) const;
     void WriteVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<int>& data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const int> data
     ) const;
     void WriteVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<std::string>& data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const std::string> data
     ) const;
 
     /// @brief Synchronizes (flushes) the NetCDF file to disk
@@ -186,15 +187,15 @@ public:
      * @param data Pointer to the buffer where data will be stored
      */
     void ReadVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
         float* data
     ) const;
     void ReadVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
         double* data
     ) const;
     void ReadVariableAt(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
         int* data
     ) const;
 
@@ -209,16 +210,16 @@ public:
      * @param data Pointer to the buffer where data will be stored
      */
     void ReadVariableWithStride(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<ptrdiff_t>& stride, float* data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const ptrdiff_t> stride, float* data
     ) const;
     void ReadVariableWithStride(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<ptrdiff_t>& stride, double* data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const ptrdiff_t> stride, double* data
     ) const;
     void ReadVariableWithStride(
-        const std::string& name, const std::vector<size_t>& start, const std::vector<size_t>& count,
-        const std::vector<ptrdiff_t>& stride, int* data
+        const std::string& name, std::span<const size_t> start, std::span<const size_t> count,
+        std::span<const ptrdiff_t> stride, int* data
     ) const;
 
 private:

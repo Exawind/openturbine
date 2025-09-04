@@ -1,5 +1,6 @@
 #include <array>
 #include <cstddef>
+#include <ranges>
 #include <string>
 
 #include <Kokkos_Core.hpp>
@@ -15,8 +16,8 @@ inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
     const Kokkos::View<const double**, Kokkos::HostSpace>& expected
 ) {
-    for (auto i = 0U; i < result.extent(0); ++i) {
-        for (auto j = 0U; j < result.extent(1); ++j) {
+    for (auto i : std::views::iota(0U, result.extent(0))) {
+        for (auto j : std::views::iota(0U, result.extent(1))) {
             EXPECT_NEAR(result(i, j), expected(i, j), 1.e-14);
         }
     }

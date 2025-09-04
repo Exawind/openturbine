@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <span>
 #include <unordered_map>
 #include <vector>
 
@@ -23,8 +24,8 @@ public:
      * @param elem_id The beam element ID
      * @param node_ids The vector of node IDs connected to this beam
      */
-    void AddBeamElementConnectivity(size_t elem_id, const std::vector<size_t>& node_ids) {
-        beams_[elem_id] = node_ids;
+    void AddBeamElementConnectivity(size_t elem_id, std::span<const size_t> node_ids) {
+        beams_[elem_id].assign(std::begin(node_ids), std::end(node_ids));
     }
 
     /**
@@ -50,8 +51,8 @@ public:
      * @param constraint_id The constraint ID
      * @param node_ids The vector of node IDs connected to this constraint
      */
-    void AddConstraintConnectivity(size_t constraint_id, const std::vector<size_t>& node_ids) {
-        constraints_[constraint_id] = node_ids;
+    void AddConstraintConnectivity(size_t constraint_id, std::span<const size_t> node_ids) {
+        constraints_[constraint_id].assign(std::begin(node_ids), std::end(node_ids));
     }
 
     /**

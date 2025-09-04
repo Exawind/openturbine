@@ -8,10 +8,9 @@
 namespace openturbine::tests {
 
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
-    const auto root = std::array{1., 2., 3., 1., 0., 0., 0.};
-    const std::vector<std::array<double, 7>> nodes{
-        {4., 5., 6., 1., 0., 0., 0.}, {7., 8., 9., 1., 0., 0., 0.}
-    };
+    constexpr auto root = std::array{1., 2., 3., 1., 0., 0., 0.};
+    constexpr auto nodes =
+        std::array{std::array{4., 5., 6., 1., 0., 0., 0.}, std::array{7., 8., 9., 1., 0., 0., 0.}};
     const util::TurbineConfig::BladeInitialState blade_state{root, nodes};
 
     EXPECT_EQ(blade_state.root_initial_position, root);
@@ -19,18 +18,18 @@ TEST(AerodynInflowTest, BladeInitialState_Constructor) {
 }
 
 TEST(AerodynInflowTest, TurbineConfig_Constructor) {
-    const bool is_hawt{true};
-    const std::array<float, 3> ref_pos{10.F, 20.F, 30.F};
-    const auto hub_pos = std::array{1., 2., 3., 1., 0., 0., 0.};
-    const auto nacelle_pos = std::array{4., 5., 6., 1., 0., 0., 0.};
+    constexpr bool is_hawt{true};
+    constexpr auto ref_pos = std::array{10.F, 20.F, 30.F};
+    constexpr auto hub_pos = std::array{1., 2., 3., 1., 0., 0., 0.};
+    constexpr auto nacelle_pos = std::array{4., 5., 6., 1., 0., 0., 0.};
 
     // Create 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
-    for (auto i = 0; i < 3; ++i) {
-        const auto root = std::array{static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
-        const std::vector<std::array<double, 7>> nodes = {
-            {static_cast<double>(i), 1., 0., 1., 0., 0., 0.},
-            {static_cast<double>(i), 2., 0., 1., 0., 0., 0.}
+    for (auto i : std::views::iota(0, 3)) {
+        constexpr auto root = std::array{static_cast<double>(i), 0., 0., 1., 0., 0., 0.};
+        constexpr auto nodes = std::array{
+            std::array{static_cast<double>(i), 1., 0., 1., 0., 0., 0.},
+            std::array{static_cast<double>(i), 2., 0., 1., 0., 0., 0.}
         };
         blade_states.emplace_back(root, nodes);
     }
@@ -43,7 +42,7 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
     EXPECT_EQ(turbine_config.nacelle_initial_position, nacelle_pos);
     EXPECT_EQ(turbine_config.NumberOfBlades(), 3);
 
-    for (auto i = 0U; i < turbine_config.NumberOfBlades(); ++i) {
+    for (auto i : std::views::iota(0U, turbine_config.NumberOfBlades())) {
         EXPECT_EQ(
             turbine_config.blade_initial_states[i].root_initial_position[0], static_cast<double>(i)
         );
@@ -61,10 +60,10 @@ TEST(AerodynInflowTest, TurbineConfig_Constructor) {
 
 TEST(AerodynInflowTest, TurbineConfig_Validate_InvalidConfiguration) {
     // Invalid configuration: No blades
-    const bool is_hawt{true};
-    const std::array<float, 3> ref_pos{10.F, 20.F, 30.F};
-    const auto hub_pos = std::array{1., 2., 3., 1., 0., 0., 0.};
-    const auto nacelle_pos = std::array{4., 5., 6., 1., 0., 0., 0.};
+    constexpr bool is_hawt{true};
+    constexpr auto ref_pos = std::array{10.F, 20.F, 30.F};
+    constexpr auto hub_pos = std::array{1., 2., 3., 1., 0., 0., 0.};
+    constexpr auto nacelle_pos = std::array{4., 5., 6., 1., 0., 0., 0.};
     const std::vector<util::TurbineConfig::BladeInitialState> empty_blade_states;
 
     EXPECT_THROW(
@@ -74,26 +73,25 @@ TEST(AerodynInflowTest, TurbineConfig_Validate_InvalidConfiguration) {
 }
 
 /// Check if members of the provided array is equal to the provided expected array
-template <typename T, size_t N>
+template <typename T>
 void ExpectArrayNear(
-    const std::array<T, N>& actual, const std::array<T, N>& expected,
-    T epsilon = static_cast<T>(1.e-6)
+    std::span<const T> actual, std::array<const T> expected, T epsilon = static_cast<T>(1.e-6)
 ) {
     ASSERT_EQ(actual.size(), expected.size());
-    for (auto i = 0; i < N; ++i) {
+    for (auto i : std::views::iota(0, N)) {
         EXPECT_NEAR(actual[i], expected[i], epsilon) << "Element mismatch at index " << i;
     }
 }
 
 TEST(AerodynInflowTest, SetPositionAndOrientation) {
-    const std::array<double, 7> data = {1., 2., 3., 0.707107, 0.707107, 0., 0.};
-    std::array<float, 3> position{0.F};
-    std::array<double, 9> orientation{0.};
+    constexpr auto data = std::array{1., 2., 3., 0.707107, 0.707107, 0., 0.};
+    constexpr auto position = std::array{0.F, 0.F, 0.F};
+    auto orientation = std::array{0., 0., 0., 0., 0., 0., 0., 0., 0.};
 
     util::SetPositionAndOrientation(data, position, orientation);
 
-    ExpectArrayNear(position, {1.F, 2.F, 3.F});
-    ExpectArrayNear(orientation, {1., 0., 0., 0., 0., -1., 0., 1., 0.});
+    ExpectArrayNear(position, std::array{1.F, 2.F, 3.F});
+    ExpectArrayNear(orientation, std::array{1., 0., 0., 0., 0., -1., 0., 1., 0.});
 }
 
 TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
@@ -108,10 +106,10 @@ TEST(AerodynInflowTest, MeshData_Constructor_NumberOfNodes) {
 
 TEST(AerodynInflowTest, MeshData_Constructor_Data) {
     const size_t n_mesh_points{1};
-    const std::vector<std::array<double, 7>> mesh_data{{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
-    const std::vector<std::array<float, 6>> mesh_velocities{{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}};
-    const std::vector<std::array<float, 6>> mesh_accelerations{{7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
-    const std::vector<std::array<float, 6>> mesh_loads = {{13.F, 14.F, 15.F, 16.F, 17.F, 18.F}};
+    constexpr auto mesh_data = std::array{std::array{1., 2., 3., 0.707107, 0.707107, 0., 0.}};
+    constexpr auto mesh_velocities = std::array{std::array{1.F, 2.F, 3.F, 4.F, 5.F, 6.F}};
+    constexpr auto mesh_accelerations = std::array{std::array{7.F, 8.F, 9.F, 10.F, 11.F, 12.F}};
+    constexpr auto mesh_loads = std::array{std::array{13.F, 14.F, 15.F, 16.F, 17.F, 18.F}};
     util::MeshData mesh_motion_data(
         n_mesh_points, mesh_data, mesh_velocities, mesh_accelerations, mesh_loads
     );
@@ -181,7 +179,7 @@ TEST_F(MeshDataValidationTest, MismatchedLoadsSize) {
 TEST(AerodynInflowTest, TurbineData_Constructor) {
     // Set up 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
-    for (auto i = 0; i < 3; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
@@ -214,12 +212,12 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     ExpectArrayNear(turbine_data.nacelle.position[0], {0.F, 0.F, 90.F});
 
     // Check blade roots
-    for (auto i = 0U; i < turbine_data.NumberOfBlades(); ++i) {
+    for (auto i : std::views::iota(0U, turbine_data.NumberOfBlades())) {
         ExpectArrayNear(turbine_data.blade_roots.position[i], {0.F, 0.F, 90.F});
     }
 
     // Check blade nodes
-    for (auto i = 0U; i < turbine_data.blade_nodes.NumberOfMeshPoints(); ++i) {
+    for (auto i : std::views::iota(0U, turbine_data.blade_nodes.NumberOfMeshPoints())) {
         const float expected_y = (i % 2 == 0) ? 5.F : 10.F;
         ExpectArrayNear(turbine_data.blade_nodes.position[i], {0.F, expected_y, 90.F});
     }
@@ -230,7 +228,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
         turbine_data.blade_nodes_to_blade_num_mapping.size(),
         turbine_data.blade_nodes.NumberOfMeshPoints()
     );
-    for (auto i = 0U; i < turbine_data.blade_nodes.NumberOfMeshPoints(); ++i) {
+    for (auto i : std::views::iota(0U, turbine_data.blade_nodes.NumberOfMeshPoints())) {
         EXPECT_EQ(
             turbine_data.blade_nodes_to_blade_num_mapping[i],
             expected_blade_nodes_to_blade_num_mapping[i]
@@ -241,7 +239,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
     // Check node_indices_by_blade
     ASSERT_EQ(turbine_data.node_indices_by_blade.size(), turbine_data.NumberOfBlades());
     std::vector<std::vector<size_t>> expected_node_indices_by_blade = {{0, 1}, {2, 3}, {4, 5}};
-    for (auto blade = 0U; blade < turbine_data.NumberOfBlades(); ++blade) {
+    for (auto i : std::views::iota(0U, turbine_data.NumberOfBlades())) {
         ASSERT_EQ(turbine_data.node_indices_by_blade[blade].size(), 2)
             << "Incorrect number of nodes for blade " << blade;
         EXPECT_EQ(turbine_data.node_indices_by_blade[blade], expected_node_indices_by_blade[blade])
@@ -250,7 +248,7 @@ TEST(AerodynInflowTest, TurbineData_Constructor) {
 
     // Additional check: Verify that node_indices_by_blade correctly maps to
     // blade_nodes_to_blade_num_mapping
-    for (auto blade = 0U; blade < turbine_data.NumberOfBlades(); ++blade) {
+    for (auto blade : std::views::iota(0U, turbine_data.NumberOfBlades())) {
         for (const size_t node : turbine_data.node_indices_by_blade[blade]) {
             EXPECT_EQ(turbine_data.blade_nodes_to_blade_num_mapping[node], blade + 1)
                 << "Mismatch between node_indices_by_blade and blade_nodes_to_blade_num_mapping for "
@@ -265,7 +263,7 @@ protected:
     void SetUp() override {
         blade_states.clear();
         // Set up 3 blades with 2 nodes each
-        for (auto i = 0; i < 3; ++i) {
+        for (auto i : std::views::iota(0, 3)) {
             const util::TurbineConfig::BladeInitialState blade_state(
                 {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
                 {
@@ -328,7 +326,7 @@ TEST_F(TurbineDataValidationTest, InvalidNacelleMeshPoints) {
 TEST(AerodynInflowTest, TurbineData_SetBladeNodeValues) {
     // Set up 3 blades with 2 nodes each
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
-    for (auto i = 0; i < 3; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
@@ -581,7 +579,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     const std::array<double, 7> hub_pos = {0., 0., 90., 1., 0., 0., 0.};
     const std::array<double, 7> nacelle_pos = {0., 0., 90., 1., 0., 0., 0.};
     std::vector<util::TurbineConfig::BladeInitialState> blade_states;
-    for (auto i = 0; i < 3; ++i) {
+    for (auto i : std::views::iota(0, 3)) {
         const util::TurbineConfig::BladeInitialState blade_state(
             {0., 0., 90., 1., 0., 0., 0.},  // root_initial_position
             {
@@ -614,7 +612,7 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     double next_time = sim_controls.time_step;
     std::vector<float> output_channel_values;
 
-    for (auto i = 0; i < 10; ++i) {
+    for (auto i : std::views::iota(0, 10)) {
         // Update motion data for each time step (if needed)
         EXPECT_NO_THROW(aerodyn_inflow_library.SetRotorMotion());
 
@@ -633,12 +631,12 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
         };
 
         const auto& turbine = aerodyn_inflow_library.GetTurbines()[0];
-        for (auto ii = 0U; ii < turbine.NumberOfBlades(); ++ii) {
-            for (auto jj = 0U; jj < turbine.node_indices_by_blade[ii].size(); ++jj) {
+        for (auto ii : std::views::iota(0U, turbine.NumberOfBlades())) {
+            for (auto jj : std::views::iota(0U, turbine.node_indices_by_blade[ii].size())) {
                 auto node_index = turbine.node_indices_by_blade[ii][jj];
                 const auto& node_loads = turbine.blade_nodes.loads[node_index];
                 const auto& e_loads = expected_loads[ii * 2 + jj];
-                for (auto k = 0; k < 3; ++k) {
+                for (auto k : std::views::iota(0, 3)) {
                     EXPECT_NEAR(node_loads[k], e_loads[k], 1e-1F);
                 }
             }

@@ -125,7 +125,7 @@ TEST(MassesTest, ExternalForce) {
 
     // Run simulation for 1000 steps
     const auto n_steps = 1000;
-    for (auto i = 0; i < n_steps; ++i) {
+    for ([[maybe_unused]] auto iteration : std::views::iota(0, n_steps)) {
         auto converged = Step(parameters, solver, elements, state, constraints);
         EXPECT_TRUE(converged);
     }
