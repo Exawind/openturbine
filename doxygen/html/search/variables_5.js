@@ -10,5 +10,6 @@ var searchData=
   ['file_5fheader_7',['FILE_HEADER',['../namespacewindio.html#aebc87c6be9cc07274f5b382d5f9b396c',1,'windio']]],
   ['fixed_5fconstraint_5fid_8',['fixed_constraint_id',['../structopenturbine_1_1interfaces_1_1cfd_1_1MooringLine.html#a44e893e12edd1488f71405345c695df9',1,'openturbine::interfaces::cfd::MooringLine']]],
   ['floating_5fplatform_9',['floating_platform',['../structopenturbine_1_1interfaces_1_1cfd_1_1Turbine.html#ad879a0e61543b922387ac6dd7fa64580',1,'openturbine::interfaces::cfd::Turbine::floating_platform'],['../structopenturbine_1_1interfaces_1_1cfd_1_1TurbineInput.html#a65ffd291ffe6b6afabbc025ac62c6228',1,'openturbine::interfaces::cfd::TurbineInput::floating_platform']]],
-  ['function_5fname_10',['function_name',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#aac4fc5286a7f4f15f0d29160691fb545',1,'openturbine::interfaces::components::ControllerInput']]]
+  ['flow_5fangle_5fhorizontal_10',['flow_angle_horizontal',['../structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a7e7ebbce93daed61ad2091f564f9a662',1,'openturbine::interfaces::components::UniformFlowParameters']]],
+  ['function_5fname_11',['function_name',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#aac4fc5286a7f4f15f0d29160691fb545',1,'openturbine::interfaces::components::ControllerInput']]]
 ];

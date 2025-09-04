@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/inflow.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/inflow.hpp Source File</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/inflow_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-inflow-hpp-source-file">
+<h1>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/inflow.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-interfaces-components-inflow-hpp-source-file" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/inflow.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function() { init_codefold(0); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ee3f1a7951c308657a65f8199076c1d6.html">interfaces</a></li><li class="navelem"><a class="el" href="dir_ec19d290f88d8e9c8cebb340555e4418.html">components</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle"><div class="title">inflow.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="inflow_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a> {</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html">   12</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html">UniformFlowParameters</a> {</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a6f7082d2b9a8b47f54b7f7228eb63041">   13</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a6f7082d2b9a8b47f54b7f7228eb63041">velocity_horizontal</a>;    </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a9abb54678b05b9a4b3f6da49a5133559">   14</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a9abb54678b05b9a4b3f6da49a5133559">height_reference</a>;       </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a19cfb5264f073893faea909ddab30217">   15</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a19cfb5264f073893faea909ddab30217">shear_vertical</a>;         </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a7e7ebbce93daed61ad2091f564f9a662">   16</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a7e7ebbce93daed61ad2091f564f9a662">flow_angle_horizontal</a>;  </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    [[nodiscard]] std::array&lt;double, 3&gt; <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a5652f021f273c04b13fdf58dee5d7b0a">Velocity</a>(<span class="keyword">const</span> std::array&lt;double, 3&gt;&amp; position) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html">   29</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html">UniformFlow</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#ac061d2a5444ba7102950ef6a4eba28ee">   30</a></span>    std::vector&lt;double&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#ac061d2a5444ba7102950ef6a4eba28ee">time</a>;  </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#a64f182020bef06af6f1ca11af978563a">   31</a></span>    std::vector&lt;UniformFlowParameters&gt; <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#a64f182020bef06af6f1ca11af978563a">data</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    [[nodiscard]] std::array&lt;double, 3&gt; <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#ab46accbcc7f9d6a06ea02004dbfce303">Velocity</a>(<span class="keywordtype">double</span> t, <span class="keyword">const</span> std::array&lt;double, 3&gt;&amp; position)</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
+</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">   46</a></span><span class="keyword">enum class</span> <a class="code hl_enumeration" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">InflowType</a> : std::uint8_t {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_enumvalue" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4caf19516d11f2946f894070e92fcb56b6d">Uniform</a> = 0,  </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
+</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="};">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html">   53</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html">Inflow</a> {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a00352f023d7a5cfe7d494af1d708392d">   54</a></span>    <a class="code hl_enumeration" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">InflowType</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a00352f023d7a5cfe7d494af1d708392d">type</a>{<a class="code hl_enumvalue" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4caf19516d11f2946f894070e92fcb56b6d">InflowType::Uniform</a>};  </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809">   55</a></span>    <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html">UniformFlow</a> <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809">uniform_flow</a>;              </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a17c30c3d4852511fbdcab7f36b53ffec">   58</a></span>    <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a17c30c3d4852511fbdcab7f36b53ffec">Inflow</a>(<a class="code hl_enumeration" href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">InflowType</a> type_, <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html">UniformFlow</a> uniform_flow_)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        : <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a00352f023d7a5cfe7d494af1d708392d">type</a>(type_), <a class="code hl_variable" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809">uniform_flow</a>(std::move(uniform_flow_)) {}</div>
+</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">static</span> <a class="code hl_struct" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html">Inflow</a> <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a50647d49cf5a1bc91cdf006452d8f4e7">SteadyWind</a>(<span class="keywordtype">double</span> vh, <span class="keywordtype">double</span> z_ref, <span class="keywordtype">double</span> alpha, <span class="keywordtype">double</span> angle_h);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    [[nodiscard]] std::array&lt;double, 3&gt; <a class="code hl_function" href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aa78591afbf1c6addd76dad81a30f54b8">Velocity</a>(<span class="keywordtype">double</span> t, <span class="keyword">const</span> std::array&lt;double, 3&gt;&amp; position)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>};</div>
+</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}  <span class="comment">// namespace openturbine::interfaces::components</span></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_1_1components_html"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces_1_1components.html">openturbine::interfaces::components</a></div><div class="ttdef"><b>Definition</b> beam.cpp:14</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_1_1components_html_a367634a90aa69ad4edb15d274a777b4c"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">openturbine::interfaces::components::InflowType</a></div><div class="ttdeci">InflowType</div><div class="ttdoc">Type of inflow model.</div><div class="ttdef"><b>Definition</b> inflow.hpp:46</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1interfaces_1_1components_html_a367634a90aa69ad4edb15d274a777b4caf19516d11f2946f894070e92fcb56b6d"><div class="ttname"><a href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4caf19516d11f2946f894070e92fcb56b6d">openturbine::interfaces::components::InflowType::Uniform</a></div><div class="ttdeci">@ Uniform</div><div class="ttdoc">Uniform flow.</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html">openturbine::interfaces::components::Inflow</a></div><div class="ttdoc">Wind inflow model for turbine simulations.</div><div class="ttdef"><b>Definition</b> inflow.hpp:53</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html_a00352f023d7a5cfe7d494af1d708392d"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a00352f023d7a5cfe7d494af1d708392d">openturbine::interfaces::components::Inflow::type</a></div><div class="ttdeci">InflowType type</div><div class="ttdoc">Type of inflow model.</div><div class="ttdef"><b>Definition</b> inflow.hpp:54</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html_a17c30c3d4852511fbdcab7f36b53ffec"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a17c30c3d4852511fbdcab7f36b53ffec">openturbine::interfaces::components::Inflow::Inflow</a></div><div class="ttdeci">Inflow(InflowType type_, UniformFlow uniform_flow_)</div><div class="ttdoc">Constructor with type and uniform flow parameters.</div><div class="ttdef"><b>Definition</b> inflow.hpp:58</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html_a50647d49cf5a1bc91cdf006452d8f4e7"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#a50647d49cf5a1bc91cdf006452d8f4e7">openturbine::interfaces::components::Inflow::SteadyWind</a></div><div class="ttdeci">static Inflow SteadyWind(double vh, double z_ref, double alpha, double angle_h)</div><div class="ttdoc">Creates a steady wind inflow.</div><div class="ttdef"><b>Definition</b> inflow.cpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html_aa78591afbf1c6addd76dad81a30f54b8"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aa78591afbf1c6addd76dad81a30f54b8">openturbine::interfaces::components::Inflow::Velocity</a></div><div class="ttdeci">std::array&lt; double, 3 &gt; Velocity(double t, const std::array&lt; double, 3 &gt; &amp;position) const</div><div class="ttdoc">Calculates velocity vector at a given time and position.</div><div class="ttdef"><b>Definition</b> inflow.cpp:43</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1Inflow_html_aedd7e4ce3dea7585b009fba2f30cd809"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809">openturbine::interfaces::components::Inflow::uniform_flow</a></div><div class="ttdeci">UniformFlow uniform_flow</div><div class="ttdoc">Uniform flow parameters.</div><div class="ttdef"><b>Definition</b> inflow.hpp:55</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html">openturbine::interfaces::components::UniformFlowParameters</a></div><div class="ttdoc">Parameters defining uniform flow characteristics.</div><div class="ttdef"><b>Definition</b> inflow.hpp:12</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html_a19cfb5264f073893faea909ddab30217"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a19cfb5264f073893faea909ddab30217">openturbine::interfaces::components::UniformFlowParameters::shear_vertical</a></div><div class="ttdeci">double shear_vertical</div><div class="ttdoc">Vertical shear exponent.</div><div class="ttdef"><b>Definition</b> inflow.hpp:15</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html_a5652f021f273c04b13fdf58dee5d7b0a"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a5652f021f273c04b13fdf58dee5d7b0a">openturbine::interfaces::components::UniformFlowParameters::Velocity</a></div><div class="ttdeci">std::array&lt; double, 3 &gt; Velocity(const std::array&lt; double, 3 &gt; &amp;position) const</div><div class="ttdoc">Calculates velocity vector at a given position.</div><div class="ttdef"><b>Definition</b> inflow.cpp:8</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html_a6f7082d2b9a8b47f54b7f7228eb63041"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a6f7082d2b9a8b47f54b7f7228eb63041">openturbine::interfaces::components::UniformFlowParameters::velocity_horizontal</a></div><div class="ttdeci">double velocity_horizontal</div><div class="ttdoc">Horizontal inflow velocity (m/s)</div><div class="ttdef"><b>Definition</b> inflow.hpp:13</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html_a7e7ebbce93daed61ad2091f564f9a662"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a7e7ebbce93daed61ad2091f564f9a662">openturbine::interfaces::components::UniformFlowParameters::flow_angle_horizontal</a></div><div class="ttdeci">double flow_angle_horizontal</div><div class="ttdoc">Flow angle relative to x axis (radians)</div><div class="ttdef"><b>Definition</b> inflow.hpp:16</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters_html_a9abb54678b05b9a4b3f6da49a5133559"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a9abb54678b05b9a4b3f6da49a5133559">openturbine::interfaces::components::UniformFlowParameters::height_reference</a></div><div class="ttdeci">double height_reference</div><div class="ttdoc">Reference height (m)</div><div class="ttdef"><b>Definition</b> inflow.hpp:14</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlow_html"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html">openturbine::interfaces::components::UniformFlow</a></div><div class="ttdoc">Uniform flow with time-dependent parameters.</div><div class="ttdef"><b>Definition</b> inflow.hpp:29</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlow_html_a64f182020bef06af6f1ca11af978563a"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#a64f182020bef06af6f1ca11af978563a">openturbine::interfaces::components::UniformFlow::data</a></div><div class="ttdeci">std::vector&lt; UniformFlowParameters &gt; data</div><div class="ttdef"><b>Definition</b> inflow.hpp:31</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlow_html_ab46accbcc7f9d6a06ea02004dbfce303"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#ab46accbcc7f9d6a06ea02004dbfce303">openturbine::interfaces::components::UniformFlow::Velocity</a></div><div class="ttdeci">std::array&lt; double, 3 &gt; Velocity(double t, const std::array&lt; double, 3 &gt; &amp;position) const</div><div class="ttdoc">Calculates velocity vector at a given time and position.</div><div class="ttdef"><b>Definition</b> inflow.cpp:19</div></div>
+<div class="ttc" id="astructopenturbine_1_1interfaces_1_1components_1_1UniformFlow_html_ac061d2a5444ba7102950ef6a4eba28ee"><div class="ttname"><a href="structopenturbine_1_1interfaces_1_1components_1_1UniformFlow.html#ac061d2a5444ba7102950ef6a4eba28ee">openturbine::interfaces::components::UniformFlow::time</a></div><div class="ttdeci">std::vector&lt; double &gt; time</div><div class="ttdoc">Time vector for uniform flow parameters.</div><div class="ttdef"><b>Definition</b> inflow.hpp:30</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

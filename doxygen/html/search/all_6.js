@@ -22,8 +22,9 @@ var searchData=
   ['floating_5fplatform_5finput_2ehpp_19',['floating_platform_input.hpp',['../floating__platform__input_8hpp.html',1,'']]],
   ['floatingplatform_20',['FloatingPlatform',['../structopenturbine_1_1interfaces_1_1cfd_1_1FloatingPlatform.html',1,'openturbine::interfaces::cfd']]],
   ['floatingplatforminput_21',['FloatingPlatformInput',['../structopenturbine_1_1interfaces_1_1cfd_1_1FloatingPlatformInput.html',1,'openturbine::interfaces::cfd']]],
-  ['fluidproperties_22',['FluidProperties',['../structopenturbine_1_1util_1_1FluidProperties.html',1,'openturbine::util']]],
-  ['freedom_5fsignature_2ehpp_23',['freedom_signature.hpp',['../freedom__signature_8hpp.html',1,'']]],
-  ['freedomsignature_24',['FreedomSignature',['../namespaceopenturbine_1_1dof.html#ab91029e2d48a6d77c2bed18d0525ab7b',1,'openturbine::dof']]],
-  ['function_5fname_25',['function_name',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#aac4fc5286a7f4f15f0d29160691fb545',1,'openturbine::interfaces::components::ControllerInput']]]
+  ['flow_5fangle_5fhorizontal_22',['flow_angle_horizontal',['../structopenturbine_1_1interfaces_1_1components_1_1UniformFlowParameters.html#a7e7ebbce93daed61ad2091f564f9a662',1,'openturbine::interfaces::components::UniformFlowParameters']]],
+  ['fluidproperties_23',['FluidProperties',['../structopenturbine_1_1util_1_1FluidProperties.html',1,'openturbine::util']]],
+  ['freedom_5fsignature_2ehpp_24',['freedom_signature.hpp',['../freedom__signature_8hpp.html',1,'']]],
+  ['freedomsignature_25',['FreedomSignature',['../namespaceopenturbine_1_1dof.html#ab91029e2d48a6d77c2bed18d0525ab7b',1,'openturbine::dof']]],
+  ['function_5fname_26',['function_name',['../structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html#aac4fc5286a7f4f15f0d29160691fb545',1,'openturbine::interfaces::components::ControllerInput']]]
 ];
