@@ -51,11 +51,8 @@ enum class InflowType : std::uint8_t {
  * @brief Wind inflow model for turbine simulations
  */
 struct Inflow {
-    InflowType type;           ///< Type of inflow model
-    UniformFlow uniform_flow;  ///< Uniform flow parameters
-
-    /// Default constructor
-    Inflow() = default;
+    InflowType type{InflowType::Uniform};  ///< Type of inflow model
+    UniformFlow uniform_flow;              ///< Uniform flow parameters
 
     /// Constructor with type and uniform flow parameters
     Inflow(InflowType type, UniformFlow uniform_flow)
