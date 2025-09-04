@@ -173,6 +173,8 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
+<code>#include &lt;ranges&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
@@ -190,18 +192,18 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a849ac33ab7e9c85db54979da386a86b3" id="r_a849ac33ab7e9c85db54979da386a86b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a849ac33ab7e9c85db54979da386a86b3">openturbine::math::MapGeometricLocations</a> (const std::vector&lt; double &gt; &amp;geom_locations)</td></tr>
-<tr class="memdesc:a849ac33ab7e9c85db54979da386a86b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
-<tr class="separator:a849ac33ab7e9c85db54979da386a86b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45d63a1f07e43a74085ddfe04d5b30c6" id="r_a45d63a1f07e43a74085ddfe04d5b30c6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a45d63a1f07e43a74085ddfe04d5b30c6">openturbine::math::ComputeShapeFunctionValues</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:a45d63a1f07e43a74085ddfe04d5b30c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
-<tr class="separator:a45d63a1f07e43a74085ddfe04d5b30c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31c1e8ea84281ea43366b683db817798" id="r_a31c1e8ea84281ea43366b683db817798"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a31c1e8ea84281ea43366b683db817798">openturbine::math::ComputeShapeFunctionDerivatives</a> (const std::vector&lt; double &gt; &amp;input_points, const std::vector&lt; double &gt; &amp;output_points)</td></tr>
-<tr class="memdesc:a31c1e8ea84281ea43366b683db817798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
-<tr class="separator:a31c1e8ea84281ea43366b683db817798"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa28f6851b2c27725639a10687266fe2c" id="r_aa28f6851b2c27725639a10687266fe2c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aa28f6851b2c27725639a10687266fe2c">openturbine::math::PerformLeastSquaresFitting</a> (size_t p, const std::vector&lt; std::vector&lt; double &gt; &gt; &amp;shape_functions, const std::vector&lt; std::array&lt; double, 3 &gt; &gt; &amp;points_to_fit)</td></tr>
-<tr class="memdesc:aa28f6851b2c27725639a10687266fe2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
-<tr class="separator:aa28f6851b2c27725639a10687266fe2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6eff25533e8b5fa36d6a33e4e317ee9" id="r_af6eff25533e8b5fa36d6a33e4e317ee9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#af6eff25533e8b5fa36d6a33e4e317ee9">openturbine::math::MapGeometricLocations</a> (std::span&lt; const double &gt; geom_locations)</td></tr>
+<tr class="memdesc:af6eff25533e8b5fa36d6a33e4e317ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps input geometric locations -&gt; normalized domain using linear mapping.  <br /></td></tr>
+<tr class="separator:af6eff25533e8b5fa36d6a33e4e317ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230e5c750021c36ea73f0db4331cee33" id="r_a230e5c750021c36ea73f0db4331cee33"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a230e5c750021c36ea73f0db4331cee33">openturbine::math::ComputeShapeFunctionValues</a> (std::span&lt; const double &gt; input_points, std::span&lt; const double &gt; output_points)</td></tr>
+<tr class="memdesc:a230e5c750021c36ea73f0db4331cee33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function matrices ϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
+<tr class="separator:a230e5c750021c36ea73f0db4331cee33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fe0b655944fef1a3e5c9e3ba04ccaa3" id="r_a3fe0b655944fef1a3e5c9e3ba04ccaa3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a3fe0b655944fef1a3e5c9e3ba04ccaa3">openturbine::math::ComputeShapeFunctionDerivatives</a> (std::span&lt; const double &gt; input_points, std::span&lt; const double &gt; output_points)</td></tr>
+<tr class="memdesc:a3fe0b655944fef1a3e5c9e3ba04ccaa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes shape function derivatives dϕg relating points ξb to ξg At least two input points are required and it is assumed that there are more output points than input points.  <br /></td></tr>
+<tr class="separator:a3fe0b655944fef1a3e5c9e3ba04ccaa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb416ba17dd3e9bbbecfdefca1700c14" id="r_abb416ba17dd3e9bbbecfdefca1700c14"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::array&lt; double, 3 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#abb416ba17dd3e9bbbecfdefca1700c14">openturbine::math::PerformLeastSquaresFitting</a> (size_t p, std::span&lt; const std::vector&lt; double &gt; &gt; shape_functions, std::span&lt; const std::array&lt; double, 3 &gt; &gt; points_to_fit)</td></tr>
+<tr class="memdesc:abb416ba17dd3e9bbbecfdefca1700c14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs least squares fitting to determine interpolation coefficients.  <br /></td></tr>
+<tr class="separator:abb416ba17dd3e9bbbecfdefca1700c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

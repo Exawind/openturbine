@@ -181,8 +181,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a04ef46ce6a58c1017b40555bc49ad6cd" id="r_a04ef46ce6a58c1017b40555bc49ad6cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamElement.html#a04ef46ce6a58c1017b40555bc49ad6cd">BeamElement</a> (size_t id, std::vector&lt; size_t &gt; n, std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; s, std::vector&lt; std::array&lt; double, 2 &gt; &gt; q)</td></tr>
-<tr class="separator:a04ef46ce6a58c1017b40555bc49ad6cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27d585920c77b70c550d7d168f208d25" id="r_a27d585920c77b70c550d7d168f208d25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1BeamElement.html#a27d585920c77b70c550d7d168f208d25">BeamElement</a> (size_t id, std::span&lt; const size_t &gt; n, std::span&lt; const <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; s, std::span&lt; const std::array&lt; double, 2 &gt; &gt; q)</td></tr>
+<tr class="separator:a27d585920c77b70c550d7d168f208d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -199,8 +199,8 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Beam element constitutes flexible beams material behavior in openturbine. </p>
 <p>A beam element is defined by a set of nodes and sections. Each section is defined by a 6x6 mass matrix and a 6x6 stiffness matrix. The element quadrature is used to integrate the mass and stiffness matrices along the length of the beam. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a04ef46ce6a58c1017b40555bc49ad6cd" name="a04ef46ce6a58c1017b40555bc49ad6cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04ef46ce6a58c1017b40555bc49ad6cd">&#9670;&#160;</a></span>BeamElement()</h2>
+<a id="a27d585920c77b70c550d7d168f208d25" name="a27d585920c77b70c550d7d168f208d25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27d585920c77b70c550d7d168f208d25">&#9670;&#160;</a></span>BeamElement()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,19 +217,19 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; size_t &gt;&#160;</td>
+          <td class="paramtype">std::span&lt; const size_t &gt;&#160;</td>
           <td class="paramname"><em>n</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt;&#160;</td>
+          <td class="paramtype">std::span&lt; const <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt;&#160;</td>
           <td class="paramname"><em>s</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; std::array&lt; double, 2 &gt; &gt;&#160;</td>
+          <td class="paramtype">std::span&lt; const std::array&lt; double, 2 &gt; &gt;&#160;</td>
           <td class="paramname"><em>q</em>&#160;</td>
         </tr>
         <tr>

@@ -205,9 +205,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac66dfe301af95faec86629d28615dbfa" id="r_ac66dfe301af95faec86629d28615dbfa"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="structopenturbine_1_1Node.html">Node</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#ac66dfe301af95faec86629d28615dbfa">GetNodes</a> () const</td></tr>
 <tr class="memdesc:ac66dfe301af95faec86629d28615dbfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns constant reference to nodes vector.  <br /></td></tr>
 <tr class="separator:ac66dfe301af95faec86629d28615dbfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84537ff58c33b7de871694c6afd2e1b6" id="r_a84537ff58c33b7de871694c6afd2e1b6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a84537ff58c33b7de871694c6afd2e1b6">AddBeamElement</a> (const std::vector&lt; size_t &gt; &amp;node_ids, const std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; &amp;sections, const std::vector&lt; std::array&lt; double, 2 &gt; &gt; &amp;quadrature)</td></tr>
-<tr class="memdesc:a84537ff58c33b7de871694c6afd2e1b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a beam element to the model.  <br /></td></tr>
-<tr class="separator:a84537ff58c33b7de871694c6afd2e1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bad3812b043b8bf13be6e08a08138bd" id="r_a2bad3812b043b8bf13be6e08a08138bd"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a2bad3812b043b8bf13be6e08a08138bd">AddBeamElement</a> (std::span&lt; const size_t &gt; node_ids, std::span&lt; const <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; sections, std::span&lt; const std::array&lt; double, 2 &gt; &gt; quadrature)</td></tr>
+<tr class="memdesc:a2bad3812b043b8bf13be6e08a08138bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a beam element to the model.  <br /></td></tr>
+<tr class="separator:a2bad3812b043b8bf13be6e08a08138bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1afc76b95b8eaf97d06cdb4195d07085" id="r_a1afc76b95b8eaf97d06cdb4195d07085"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structopenturbine_1_1BeamElement.html">BeamElement</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1Model.html#a1afc76b95b8eaf97d06cdb4195d07085">GetBeamElement</a> (size_t id) const</td></tr>
 <tr class="memdesc:a1afc76b95b8eaf97d06cdb4195d07085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a beam element by ID.  <br /></td></tr>
 <tr class="separator:a1afc76b95b8eaf97d06cdb4195d07085"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -403,8 +403,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a84537ff58c33b7de871694c6afd2e1b6" name="a84537ff58c33b7de871694c6afd2e1b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84537ff58c33b7de871694c6afd2e1b6">&#9670;&#160;</a></span>AddBeamElement()</h2>
+<a id="a2bad3812b043b8bf13be6e08a08138bd" name="a2bad3812b043b8bf13be6e08a08138bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bad3812b043b8bf13be6e08a08138bd">&#9670;&#160;</a></span>AddBeamElement()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -415,19 +415,19 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">size_t openturbine::Model::AddBeamElement </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; size_t &gt; &amp;&#160;</td>
+          <td class="paramtype">std::span&lt; const size_t &gt;&#160;</td>
           <td class="paramname"><em>node_ids</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">std::span&lt; const <a class="el" href="structopenturbine_1_1BeamSection.html">BeamSection</a> &gt;&#160;</td>
           <td class="paramname"><em>sections</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; std::array&lt; double, 2 &gt; &gt; &amp;&#160;</td>
+          <td class="paramtype">std::span&lt; const std::array&lt; double, 2 &gt; &gt;&#160;</td>
           <td class="paramname"><em>quadrature</em>&#160;</td>
         </tr>
         <tr>

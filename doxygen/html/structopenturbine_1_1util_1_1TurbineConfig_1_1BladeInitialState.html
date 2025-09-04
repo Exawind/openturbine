@@ -181,8 +181,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:add6439d13d43ea9dd863d64e6b2bcbf4" id="r_add6439d13d43ea9dd863d64e6b2bcbf4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1TurbineConfig_1_1BladeInitialState.html#add6439d13d43ea9dd863d64e6b2bcbf4">BladeInitialState</a> (const std::array&lt; double, 7 &gt; &amp;root, const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;nodes)</td></tr>
-<tr class="separator:add6439d13d43ea9dd863d64e6b2bcbf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bcf11b26c220abd3044cb2cd527c0dd" id="r_a9bcf11b26c220abd3044cb2cd527c0dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1util_1_1TurbineConfig_1_1BladeInitialState.html#a9bcf11b26c220abd3044cb2cd527c0dd">BladeInitialState</a> (std::span&lt; double, 7 &gt; root, std::span&lt; const std::array&lt; double, 7 &gt; &gt; nodes)</td></tr>
+<tr class="separator:a9bcf11b26c220abd3044cb2cd527c0dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -195,8 +195,8 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Initial state for a single blade of a turbine. </p>
 <p>Stores the initial position of a blade's root and nodes in 7x1 arrays [x, y, z, qw, qx, qy, qz] </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="add6439d13d43ea9dd863d64e6b2bcbf4" name="add6439d13d43ea9dd863d64e6b2bcbf4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add6439d13d43ea9dd863d64e6b2bcbf4">&#9670;&#160;</a></span>BladeInitialState()</h2>
+<a id="a9bcf11b26c220abd3044cb2cd527c0dd" name="a9bcf11b26c220abd3044cb2cd527c0dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bcf11b26c220abd3044cb2cd527c0dd">&#9670;&#160;</a></span>BladeInitialState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,13 +207,13 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">openturbine::util::TurbineConfig::BladeInitialState::BladeInitialState </td>
           <td>(</td>
-          <td class="paramtype">const std::array&lt; double, 7 &gt; &amp;&#160;</td>
+          <td class="paramtype">std::span&lt; double, 7 &gt;&#160;</td>
           <td class="paramname"><em>root</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; std::array&lt; double, 7 &gt; &gt; &amp;&#160;</td>
+          <td class="paramtype">std::span&lt; const std::array&lt; double, 7 &gt; &gt;&#160;</td>
           <td class="paramname"><em>nodes</em>&#160;</td>
         </tr>
         <tr>
@@ -257,7 +257,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">        }</div>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>

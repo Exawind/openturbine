@@ -177,185 +177,186 @@ $(document).ready(function() { init_codefold(0); });
 <a href="mesh__connectivity_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;fstream&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;yaml-cpp/yaml.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1model.html">openturbine::model</a> {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1model_1_1MeshConnectivity.html">MeshConnectivity</a> {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">   19</a></span>    <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">MeshConnectivity</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="foldopen" id="foldopen00026" data-start="{" data-end="}">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#afac4c65547cbce70f9924e0ae0670723">   26</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#afac4c65547cbce70f9924e0ae0670723">AddBeamElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; node_ids) {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        beams_[elem_id] = node_ids;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;unordered_map&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;yaml-cpp/yaml.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1model.html">openturbine::model</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html">   18</a></span><span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1model_1_1MeshConnectivity.html">MeshConnectivity</a> {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">   20</a></span>    <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">MeshConnectivity</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a5202037fffd3b3f91df081c542e1b257">   27</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a5202037fffd3b3f91df081c542e1b257">AddBeamElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, std::span&lt;const size_t&gt; node_ids) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        beams_[elem_id].assign(std::begin(node_ids), std::end(node_ids));</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
 </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="foldopen" id="foldopen00035" data-start="{" data-end="}">
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">   35</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">AddMassElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, <span class="keywordtype">size_t</span> node_id) {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        masses_[elem_id] = std::vector&lt;size_t&gt;{node_id};</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">   36</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">AddMassElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, <span class="keywordtype">size_t</span> node_id) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        masses_[elem_id] = std::vector&lt;size_t&gt;{node_id};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
 </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">   44</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">AddSpringElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, <span class="keyword">const</span> std::array&lt;size_t, 2&gt;&amp; node_ids) {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        springs_[elem_id] = std::vector&lt;size_t&gt;{node_ids[0], node_ids[1]};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">   45</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">AddSpringElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id, <span class="keyword">const</span> std::array&lt;size_t, 2&gt;&amp; node_ids) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        springs_[elem_id] = std::vector&lt;size_t&gt;{node_ids[0], node_ids[1]};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
 </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ac7b2538047d78808e725432b8b287fb2">   53</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ac7b2538047d78808e725432b8b287fb2">AddConstraintConnectivity</a>(<span class="keywordtype">size_t</span> constraint_id, <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; node_ids) {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        constraints_[constraint_id] = node_ids;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a0b98038c340429f986b736aa8d9096b2">   54</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a0b98038c340429f986b736aa8d9096b2">AddConstraintConnectivity</a>(<span class="keywordtype">size_t</span> constraint_id, std::span&lt;const size_t&gt; node_ids) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        constraints_[constraint_id].assign(std::begin(node_ids), std::end(node_ids));</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">   62</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">GetBeamElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        <span class="keywordflow">return</span> beams_.at(elem_id);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">   63</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">GetBeamElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">return</span> beams_.at(elem_id);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="foldopen" id="foldopen00071" data-start="{" data-end="}">
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">   71</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">GetMassElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        <span class="keywordflow">return</span> masses_.at(elem_id);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    }</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">   72</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">GetMassElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keywordflow">return</span> masses_.at(elem_id);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    }</div>
 </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="foldopen" id="foldopen00080" data-start="{" data-end="}">
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">   80</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">GetSpringElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">return</span> springs_.at(elem_id);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="foldopen" id="foldopen00081" data-start="{" data-end="}">
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">   81</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">GetSpringElementConnectivity</a>(<span class="keywordtype">size_t</span> elem_id)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keywordflow">return</span> springs_.at(elem_id);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    }</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="foldopen" id="foldopen00089" data-start="{" data-end="}">
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">   89</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">GetConstraintConnectivity</a>(<span class="keywordtype">size_t</span> constraint_id)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">return</span> constraints_.at(constraint_id);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="foldopen" id="foldopen00090" data-start="{" data-end="}">
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">   90</a></span>    [[nodiscard]] <span class="keyword">const</span> std::vector&lt;size_t&gt;&amp; <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">GetConstraintConnectivity</a>(<span class="keywordtype">size_t</span> constraint_id)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">return</span> constraints_.at(constraint_id);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
 </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">   97</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">ExportToYAML</a>(std::ostream&amp; file)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        YAML::Node root;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;beams&quot;</span>, beams_);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;masses&quot;</span>, masses_);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;springs&quot;</span>, springs_);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;constraints&quot;</span>, constraints_);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        file &lt;&lt; root;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">   98</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">ExportToYAML</a>(std::ostream&amp; file)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        YAML::Node root;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;beams&quot;</span>, beams_);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;masses&quot;</span>, masses_);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;springs&quot;</span>, springs_);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        ExportElementTypeToYAML(root, <span class="stringliteral">&quot;constraints&quot;</span>, constraints_);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        file &lt;&lt; root;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    }</div>
 </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">  112</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">ExportToYAML</a>(<span class="keyword">const</span> std::string&amp; filename)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        std::ofstream file(filename);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">ExportToYAML</a>(file);</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="foldopen" id="foldopen00113" data-start="{" data-end="}">
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">  113</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">ExportToYAML</a>(<span class="keyword">const</span> std::string&amp; filename)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        std::ofstream file(filename);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">ExportToYAML</a>(file);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    }</div>
 </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="foldopen" id="foldopen00121" data-start="{" data-end="}">
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">  121</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">ImportFromYAML</a>(<span class="keyword">const</span> YAML::Node&amp; root) {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        masses_.clear();</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        springs_.clear();</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        beams_.clear();</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        constraints_.clear();</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment">// Import masses</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;masses&quot;</span>]) {</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;masses&quot;</span>]) {</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                masses_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            }</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        }</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        <span class="comment">// Import springs</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;springs&quot;</span>]) {</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;springs&quot;</span>]) {</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                springs_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            }</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        }</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <span class="comment">// Import beams</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;beams&quot;</span>]) {</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;beams&quot;</span>]) {</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                beams_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            }</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        }</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        <span class="comment">// Import constraints</span></div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;constraints&quot;</span>]) {</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;constraints&quot;</span>]) {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                constraints_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            }</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        }</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">  122</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">ImportFromYAML</a>(<span class="keyword">const</span> YAML::Node&amp; root) {</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        masses_.clear();</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        springs_.clear();</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        beams_.clear();</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        constraints_.clear();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="comment">// Import masses</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;masses&quot;</span>]) {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;masses&quot;</span>]) {</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                masses_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        }</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="comment">// Import springs</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;springs&quot;</span>]) {</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;springs&quot;</span>]) {</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                springs_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            }</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        }</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="comment">// Import beams</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;beams&quot;</span>]) {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;beams&quot;</span>]) {</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                beams_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            }</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        }</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="comment">// Import constraints</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <span class="keywordflow">if</span> (root[<span class="stringliteral">&quot;constraints&quot;</span>]) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : root[<span class="stringliteral">&quot;constraints&quot;</span>]) {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                <span class="keyword">const</span> <span class="keywordtype">size_t</span> <span class="keywordtype">id</span> = std::stoul(entry.first.as&lt;std::string&gt;());</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                constraints_[id] = entry.second.as&lt;std::vector&lt;size_t&gt;&gt;();</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            }</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        }</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    }</div>
 </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">  164</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">ImportFromYAML</a>(<span class="keyword">const</span> std::string&amp; filename) { <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">ImportFromYAML</a>(YAML::LoadFile(filename)); }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; beams_;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; masses_;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; springs_;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; constraints_;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType&gt;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> ExportElementTypeToYAML(</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        YAML::Node&amp; root, <span class="keyword">const</span> std::string&amp; element_type, <span class="keyword">const</span> MapType&amp; map</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    ) {</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="keywordflow">if</span> (map.empty()) {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        }</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        YAML::Node element_node;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        <span class="comment">// Get all keys from the map and sort them to maintain consistent order</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        std::vector&lt;size_t&gt; keys;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        keys.reserve(map.size());</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [<span class="keywordtype">id</span>, _] : map) {</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            keys.push_back(<span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        }</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        std::sort(keys.begin(), keys.end());</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="comment">// Add each element in sorted order of id</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : keys) {</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            YAML::Node array_node;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            std::for_each(map.at(<span class="keywordtype">id</span>).begin(), map.at(<span class="keywordtype">id</span>).end(), [&amp;array_node](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; node_id) {</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                array_node.push_back(node_id);</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            });</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            array_node.SetStyle(YAML::EmitterStyle::Flow);</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            element_node[std::to_string(<span class="keywordtype">id</span>)] = array_node;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        }</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        root[element_type] = element_node;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    }</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>};</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno"><a class="line" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">  165</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">ImportFromYAML</a>(<span class="keyword">const</span> std::string&amp; filename) { <a class="code hl_function" href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">ImportFromYAML</a>(YAML::LoadFile(filename)); }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; beams_;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; masses_;</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; springs_;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    std::unordered_map&lt;size_t, std::vector&lt;size_t&gt;&gt; constraints_;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType&gt;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> ExportElementTypeToYAML(</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        YAML::Node&amp; root, <span class="keyword">const</span> std::string&amp; element_type, <span class="keyword">const</span> MapType&amp; map</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    ) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="keywordflow">if</span> (map.empty()) {</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        YAML::Node element_node;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="comment">// Get all keys from the map and sort them to maintain consistent order</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        std::vector&lt;size_t&gt; keys;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        keys.reserve(map.size());</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; [<span class="keywordtype">id</span>, _] : map) {</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            keys.push_back(<span class="keywordtype">id</span>);</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        std::sort(keys.begin(), keys.end());</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="comment">// Add each element in sorted order of id</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; <span class="keywordtype">id</span> : keys) {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            YAML::Node array_node;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            std::for_each(map.at(<span class="keywordtype">id</span>).begin(), map.at(<span class="keywordtype">id</span>).end(), [&amp;array_node](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; node_id) {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                array_node.push_back(node_id);</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            });</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            array_node.SetStyle(YAML::EmitterStyle::Flow);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            element_node[std::to_string(<span class="keywordtype">id</span>)] = array_node;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        }</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        root[element_type] = element_node;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>};</div>
 </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>}  <span class="comment">// namespace openturbine::model</span></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html">openturbine::model::MeshConnectivity</a></div><div class="ttdoc">Class to manage element-to-node connectivity information for a mesh.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:17</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a03928df2eed755e7b41be799ab47f4e5"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">openturbine::model::MeshConnectivity::ImportFromYAML</a></div><div class="ttdeci">void ImportFromYAML(const std::string &amp;filename)</div><div class="ttdoc">Import mesh connectivity information from a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:164</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a1b27be4da29f7ac8d3f92d7d3dabdc90"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">openturbine::model::MeshConnectivity::GetSpringElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetSpringElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific spring element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:80</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a3dff3e76803c2da70513cb8a23594b59"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">openturbine::model::MeshConnectivity::ExportToYAML</a></div><div class="ttdeci">void ExportToYAML(std::ostream &amp;file) const</div><div class="ttdoc">Export mesh connectivity inforation to a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:97</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a506f88d0ceee74a01a812288f1a427d8"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">openturbine::model::MeshConnectivity::GetMassElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetMassElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific mass element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:71</div></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>}  <span class="comment">// namespace openturbine::model</span></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html">openturbine::model::MeshConnectivity</a></div><div class="ttdoc">Class to manage element-to-node connectivity information for a mesh.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:18</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a03928df2eed755e7b41be799ab47f4e5"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a03928df2eed755e7b41be799ab47f4e5">openturbine::model::MeshConnectivity::ImportFromYAML</a></div><div class="ttdeci">void ImportFromYAML(const std::string &amp;filename)</div><div class="ttdoc">Import mesh connectivity information from a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:165</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a0b98038c340429f986b736aa8d9096b2"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a0b98038c340429f986b736aa8d9096b2">openturbine::model::MeshConnectivity::AddConstraintConnectivity</a></div><div class="ttdeci">void AddConstraintConnectivity(size_t constraint_id, std::span&lt; const size_t &gt; node_ids)</div><div class="ttdoc">Adds a constraint's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:54</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a1b27be4da29f7ac8d3f92d7d3dabdc90"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a1b27be4da29f7ac8d3f92d7d3dabdc90">openturbine::model::MeshConnectivity::GetSpringElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetSpringElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific spring element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:81</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a3dff3e76803c2da70513cb8a23594b59"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a3dff3e76803c2da70513cb8a23594b59">openturbine::model::MeshConnectivity::ExportToYAML</a></div><div class="ttdeci">void ExportToYAML(std::ostream &amp;file) const</div><div class="ttdoc">Export mesh connectivity inforation to a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:98</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a506f88d0ceee74a01a812288f1a427d8"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a506f88d0ceee74a01a812288f1a427d8">openturbine::model::MeshConnectivity::GetMassElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetMassElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific mass element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:72</div></div>
 <div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a51dee1ea51c3a9c8b824b3c8ca05efee"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a51dee1ea51c3a9c8b824b3c8ca05efee">openturbine::model::MeshConnectivity::MeshConnectivity</a></div><div class="ttdeci">MeshConnectivity()=default</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a71989dd2174c54e50318169292f7edb4"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">openturbine::model::MeshConnectivity::ImportFromYAML</a></div><div class="ttdeci">void ImportFromYAML(const YAML::Node &amp;root)</div><div class="ttdoc">Import mesh connectivity information from a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:121</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ab1646dde0df04debc8a21be086c5a9b2"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">openturbine::model::MeshConnectivity::AddMassElementConnectivity</a></div><div class="ttdeci">void AddMassElementConnectivity(size_t elem_id, size_t node_id)</div><div class="ttdoc">Adds a mass element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:35</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ab4efee73146ae1d11bfa4a728add9acd"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">openturbine::model::MeshConnectivity::ExportToYAML</a></div><div class="ttdeci">void ExportToYAML(const std::string &amp;filename) const</div><div class="ttdoc">Export mesh connectivity information to a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:112</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ac7b2538047d78808e725432b8b287fb2"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ac7b2538047d78808e725432b8b287fb2">openturbine::model::MeshConnectivity::AddConstraintConnectivity</a></div><div class="ttdeci">void AddConstraintConnectivity(size_t constraint_id, const std::vector&lt; size_t &gt; &amp;node_ids)</div><div class="ttdoc">Adds a constraint's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:53</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ad35290105de1b15baed553fe87ae14b6"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">openturbine::model::MeshConnectivity::AddSpringElementConnectivity</a></div><div class="ttdeci">void AddSpringElementConnectivity(size_t elem_id, const std::array&lt; size_t, 2 &gt; &amp;node_ids)</div><div class="ttdoc">Adds a spring element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:44</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ad7ed9986c79eaa72f0645a321cb664d3"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">openturbine::model::MeshConnectivity::GetBeamElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetBeamElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific beam element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:62</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ada3b08212e37040ea2bd25d4b581a613"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">openturbine::model::MeshConnectivity::GetConstraintConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetConstraintConnectivity(size_t constraint_id) const</div><div class="ttdoc">Get nodes connected to a specific constraint.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:89</div></div>
-<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_afac4c65547cbce70f9924e0ae0670723"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#afac4c65547cbce70f9924e0ae0670723">openturbine::model::MeshConnectivity::AddBeamElementConnectivity</a></div><div class="ttdeci">void AddBeamElementConnectivity(size_t elem_id, const std::vector&lt; size_t &gt; &amp;node_ids)</div><div class="ttdoc">Adds a beam element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:26</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1model_html"><div class="ttname"><a href="namespaceopenturbine_1_1model.html">openturbine::model</a></div><div class="ttdef"><b>Definition</b> copy_nodes_to_state.hpp:9</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a5202037fffd3b3f91df081c542e1b257"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a5202037fffd3b3f91df081c542e1b257">openturbine::model::MeshConnectivity::AddBeamElementConnectivity</a></div><div class="ttdeci">void AddBeamElementConnectivity(size_t elem_id, std::span&lt; const size_t &gt; node_ids)</div><div class="ttdoc">Adds a beam element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:27</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_a71989dd2174c54e50318169292f7edb4"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#a71989dd2174c54e50318169292f7edb4">openturbine::model::MeshConnectivity::ImportFromYAML</a></div><div class="ttdeci">void ImportFromYAML(const YAML::Node &amp;root)</div><div class="ttdoc">Import mesh connectivity information from a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:122</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ab1646dde0df04debc8a21be086c5a9b2"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab1646dde0df04debc8a21be086c5a9b2">openturbine::model::MeshConnectivity::AddMassElementConnectivity</a></div><div class="ttdeci">void AddMassElementConnectivity(size_t elem_id, size_t node_id)</div><div class="ttdoc">Adds a mass element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:36</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ab4efee73146ae1d11bfa4a728add9acd"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ab4efee73146ae1d11bfa4a728add9acd">openturbine::model::MeshConnectivity::ExportToYAML</a></div><div class="ttdeci">void ExportToYAML(const std::string &amp;filename) const</div><div class="ttdoc">Export mesh connectivity information to a YAML file.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:113</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ad35290105de1b15baed553fe87ae14b6"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad35290105de1b15baed553fe87ae14b6">openturbine::model::MeshConnectivity::AddSpringElementConnectivity</a></div><div class="ttdeci">void AddSpringElementConnectivity(size_t elem_id, const std::array&lt; size_t, 2 &gt; &amp;node_ids)</div><div class="ttdoc">Adds a spring element's node connectivity.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:45</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ad7ed9986c79eaa72f0645a321cb664d3"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ad7ed9986c79eaa72f0645a321cb664d3">openturbine::model::MeshConnectivity::GetBeamElementConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetBeamElementConnectivity(size_t elem_id) const</div><div class="ttdoc">Get nodes connected to a specific beam element.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:63</div></div>
+<div class="ttc" id="aclassopenturbine_1_1model_1_1MeshConnectivity_html_ada3b08212e37040ea2bd25d4b581a613"><div class="ttname"><a href="classopenturbine_1_1model_1_1MeshConnectivity.html#ada3b08212e37040ea2bd25d4b581a613">openturbine::model::MeshConnectivity::GetConstraintConnectivity</a></div><div class="ttdeci">const std::vector&lt; size_t &gt; &amp; GetConstraintConnectivity(size_t constraint_id) const</div><div class="ttdoc">Get nodes connected to a specific constraint.</div><div class="ttdef"><b>Definition</b> mesh_connectivity.hpp:90</div></div>
+<div class="ttc" id="anamespaceopenturbine_1_1model_html"><div class="ttname"><a href="namespaceopenturbine_1_1model.html">openturbine::model</a></div><div class="ttdef"><b>Definition</b> copy_nodes_to_state.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
