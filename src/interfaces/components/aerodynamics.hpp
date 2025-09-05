@@ -4,6 +4,7 @@
 #include <array>
 #include <cassert>
 #include <cmath>
+#include <ranges>
 #include <vector>
 
 #include "interfaces/host_state.hpp"
@@ -507,6 +508,15 @@ public:
 
         // Copy over the polar information
         const auto n_sections = input.aero_sections.size();
+        twist = std::vector<double>(n_sections);
+        std::ranges::transform(input.aero_sections, std::begin(twist), [](auto& section) {
+            return section.twist;
+        });
+        chord = std::vector<double>(n_sections);
+        std::ranges::transform(input.aero_sections, std::begin(chord), [](auto& section) {
+            return section.chord;
+        });
+
         aoa = ExtractPolar(n_sections, [&](size_t section) {
             return input.aero_sections[section].aoa;
         });
@@ -603,6 +613,16 @@ public:
         }
     }
 
+    template<typename T>
+    void SetInflowFromFunction(const T& inflow_velocity_function) {
+        for (auto node = 0U; node < v_inflow.size(); ++node) {
+            const auto inflow_velocity = inflow_velocity_function(x_motion[node]);
+            for (auto component = 0U; component < 3U; ++component) {
+                v_inflow[node][component] = inflow_velocity[component];
+            }
+        }
+    }
+
     void SetAerodynamicLoads(const std::vector<std::array<double, 6>>& aerodynamic_loads) {
         for (auto load = 0U; load < con_force.size(); ++load) {
             loads[load] = aerodynamic_loads[load];
@@ -688,6 +708,15 @@ public:
     ) {
         for (auto i = 0U; i < bodies.size(); ++i) {
             bodies[i].SetInflowFromVector(body_inflow_velocities[i]);
+        }
+    }
+
+    template <typename T>
+    void SetInflowFromFunction(
+        const T& body_inflow_velocity_function
+    ) {
+        for (auto i = 0U; i < bodies.size(); ++i) {
+            bodies[i].SetInflowFromFunction(body_inflow_velocity_function);
         }
     }
 
