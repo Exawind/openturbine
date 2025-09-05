@@ -2,6 +2,7 @@
 target_sources(
     openturbine_regression_tests
     PRIVATE
+    test_aerodynamics_interface.cpp
     test_cfd_interface.cpp
     test_blade_interface.cpp
     test_turbine_interface.cpp

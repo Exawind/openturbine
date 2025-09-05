@@ -56,6 +56,23 @@ public:
     /// @brief Restores the previously saved state (in correction step)
     void RestoreState();
 
+    /// @brief Return a reference of the model owned by this interface
+    Model& GetModel() { return model; }
+
+    /// @brief Return a reference to this interface's host state
+    HostState<DeviceType>& GetHostState() { return host_state; }
+
+    /**
+     * @brief Calculates and normalizes azimuth angle from constraint output
+     * @return Azimuth angle in radians, normalized to [0, 2π)
+     */
+    [[nodiscard]] double CalculateAzimuthAngle() const;
+
+    /**
+     * @brief Calculates rotor speed from constraint output
+     * @return Rotor speed in rad/s
+     */
+    [[nodiscard]] double CalculateRotorSpeed() const;
 private:
     Model model;                  ///< OpenTurbine class for model construction
     components::Turbine turbine;  ///< Turbine model input/output data
@@ -81,18 +98,6 @@ private:
      * - Index 1: Rotor speed (rad/s)
      */
     void WriteRotorTimeSeriesData();
-
-    /**
-     * @brief Calculates and normalizes azimuth angle from constraint output
-     * @return Azimuth angle in radians, normalized to [0, 2π)
-     */
-    [[nodiscard]] double CalculateAzimuthAngle() const;
-
-    /**
-     * @brief Calculates rotor speed from constraint output
-     * @return Rotor speed in rad/s
-     */
-    [[nodiscard]] double CalculateRotorSpeed() const;
 
     /**
      * @brief Initialize controller with turbine parameters and connect to constraints
