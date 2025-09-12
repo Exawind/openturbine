@@ -5,13 +5,13 @@
 namespace openturbine::interfaces::components {
 
 struct AerodynamicSection {
-    size_t id;
-    double s;
-    double chord;
-    double section_offset_x;
-    double section_offset_y;
-    double aerodynamic_center;
-    double twist;
+    size_t id{};
+    double s{};
+    double chord{};
+    double section_offset_x{};
+    double section_offset_y{};
+    double aerodynamic_center{};
+    double twist{};
     std::vector<double> aoa;
     std::vector<double> cl;
     std::vector<double> cd;
@@ -19,7 +19,7 @@ struct AerodynamicSection {
 };
 
 struct AerodynamicBodyInput {
-    size_t id;
+    size_t id{};
     std::vector<size_t> beam_node_ids;
     std::vector<AerodynamicSection> aero_sections;
 };

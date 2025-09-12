@@ -1,5 +1,6 @@
 target_sources(openturbine_library
   PRIVATE
+  aerodynamics.cpp
   beam.cpp
   beam_builder.cpp
   inflow.cpp

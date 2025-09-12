@@ -43,6 +43,13 @@ public:
     /// @brief Returns a reference to the turbine model
     [[nodiscard]] components::Turbine& Turbine();
 
+    /**
+     * @brief Updates the aerodynamic loads to be applied to the sturcture based on a provided
+     * function
+     *
+     * @param fluid_density The density of the air (assumed constant)
+     * @param inflow_function A function that takes in a position and returns the velocity
+     */
     void UpdateAerodynamicLoads(
         double fluid_density,
         const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function

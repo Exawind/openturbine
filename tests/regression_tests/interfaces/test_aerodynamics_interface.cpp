@@ -138,15 +138,15 @@ TEST(AerodynamicsInterfaceTest, IEA15_Turbine) {
     auto& tower_builder =
         turbine_builder.Tower().SetElementOrder(n_tower_nodes - 1).PrescribedRootMotion(false);
 
-    auto& wio_tower = wio["components"]["tower"];
-    auto& wio_tower_diameter = wio_tower["outer_shape"]["outer_diameter"];
+    const auto& wio_tower = wio["components"]["tower"];
+    const auto& wio_tower_diameter = wio_tower["outer_shape"]["outer_diameter"];
     const auto tower_diameter_grid = wio_tower_diameter["grid"].as<std::vector<double>>();
     const auto tower_diameter_values = wio_tower_diameter["values"].as<std::vector<double>>();
     const auto tower_wall_thickness =
         wio_tower["structure"]["layers"][0]["thickness"]["values"].as<std::vector<double>>();
     const auto tower_material_name =
         wio_tower["structure"]["layers"][0]["material"].as<std::string>();
-    auto& tower_ref_axis = wio_tower["reference_axis"];
+    const auto& tower_ref_axis = wio_tower["reference_axis"];
 
     const auto axis_grid = tower_ref_axis["x"]["grid"].as<std::vector<double>>();
     const auto x_values = tower_ref_axis["x"]["values"].as<std::vector<double>>();
@@ -188,13 +188,13 @@ TEST(AerodynamicsInterfaceTest, IEA15_Turbine) {
         );
     }
 
-    auto& wio_hub = wio["components"]["hub"];
+    const auto& wio_hub = wio["components"]["hub"];
     turbine_builder.SetAzimuthAngle(0.)
         .SetConeAngle(wio_hub["cone_angle"].as<double>() * std::numbers::pi / 180.)
         .SetHubDiameter(wio_hub["diameter"].as<double>())
         .SetRotorApexToHub(0.);
 
-    auto& wio_drivetrain = wio["components"]["drivetrain"];
+    const auto& wio_drivetrain = wio["components"]["drivetrain"];
     turbine_builder.SetTowerAxisToRotorApex(wio_drivetrain["outer_shape"]["overhang"].as<double>())
         .SetTowerTopToRotorApex(wio_drivetrain["outer_shape"]["distance_tt_hub"].as<double>())
         .SetShaftTiltAngle(
@@ -233,10 +233,10 @@ TEST(AerodynamicsInterfaceTest, IEA15_Turbine) {
         );
 
     {
-        auto& airfoil_io = wio["airfoils"];
+        const auto& airfoil_io = wio["airfoils"];
         auto aero_sections = std::vector<interfaces::components::AerodynamicSection>{};
         auto id = 0UL;
-        for (auto& af : airfoil_io) {
+        for (const auto& af : airfoil_io) {
             const auto s = af["spanwise_position"].as<double>();
             const auto chord = af["chord"].as<double>();
             const auto twist = af["twist"].as<double>() * std::numbers::pi / 180.;
