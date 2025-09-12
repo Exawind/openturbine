@@ -42,7 +42,7 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
 
 BeamBuilder& BeamBuilder::AddRefAxisTwist(double grid_location, double twist) {
     input.ref_axis.twist_grid.emplace_back(grid_location);
-    input.ref_axis.twist.emplace_back(twist * std::numbers::pi / 180.);
+    input.ref_axis.twist.emplace_back(twist);
     return *this;
 }
 

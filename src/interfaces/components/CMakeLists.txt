@@ -10,6 +10,8 @@ target_sources(openturbine_library
 
 install(FILES
         aerodynamics.hpp
+        aerodynamics_builder.hpp
+        aerodynamics_input.hpp
         beam.hpp
         beam_builder.hpp
         beam_input.hpp

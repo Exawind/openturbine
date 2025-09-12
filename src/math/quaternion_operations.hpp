@@ -5,6 +5,7 @@
 #include <iterator>
 #include <numbers>
 #include <ranges>
+#include <span>
 
 #include <Kokkos_Core.hpp>
 
@@ -132,7 +133,7 @@ KOKKOS_INLINE_FUNCTION void RotateVectorByQuaternion(
  * @brief Rotates provided vector by provided *unit* quaternion and returns the result
  */
 inline std::array<double, 3> RotateVectorByQuaternion(
-    const std::array<double, 4>& q, const std::array<double, 3>& v
+    std::span<const double, 4> q, std::span<const double, 3> v
 ) {
     auto v_rot = std::array<double, 3>{};
     v_rot[0] = (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) * v[0] +
@@ -184,7 +185,7 @@ KOKKOS_INLINE_FUNCTION void QuaternionInverse(
 /**
  * @brief Computes the inverse of a quaternion
  */
-inline std::array<double, 4> QuaternionInverse(const std::array<double, 4>& quaternion) {
+inline std::array<double, 4> QuaternionInverse(std::span<const double, 4> quaternion) {
     const auto length = std::sqrt(
         quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] +
         quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3]
@@ -358,6 +359,18 @@ inline std::array<double, 4> TangentTwistToQuaternion(
         RotationVectorToQuaternion({e1[0] * twist_rad, e1[1] * twist_rad, e1[2] * twist_rad});
 
     return QuaternionCompose(q_twist, q_tan);
+}
+
+/**
+ * @brief Returns a quaternion from the axis vector and angle (radians)
+ */
+inline std::array<double, 4> AxisAngleToQuaternion(const std::array<double, 3>& axis, double angle) {
+    if (std::abs(angle) < 1.e-16) {
+        return {1., 0., 0., 0.};
+    }
+    const auto sin = std::sin(angle / 2.);
+    const auto cos = std::cos(angle / 2.);
+    return {cos, sin * axis[0], sin * axis[1], sin * axis[2]};
 }
 
 /**

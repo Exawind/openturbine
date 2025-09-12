@@ -1,5 +1,7 @@
 #pragma once
 
+#include "interfaces/components/aerodynamics.hpp"
+#include "interfaces/components/aerodynamics_input.hpp"
 #include "interfaces/components/controller_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/host_state.hpp"
@@ -34,12 +36,17 @@ public:
      */
     explicit TurbineInterface(
         const components::SolutionInput& solution_input,
-        const components::TurbineInput& turbine_input,
+        const components::TurbineInput& turbine_input, const components::AerodynamicsInput& = {},
         const components::ControllerInput& controller_input = {}
     );
 
     /// @brief Returns a reference to the turbine model
     [[nodiscard]] components::Turbine& Turbine();
+
+    void UpdateAerodynamicLoads(
+        double fluid_density,
+        const std::function<std::array<double, 3>(const std::array<double, 3>&)> inflow_function
+    );
 
     /**
      * @brief Steps forward in time
@@ -73,6 +80,7 @@ public:
      * @return Rotor speed in rad/s
      */
     [[nodiscard]] double CalculateRotorSpeed() const;
+
 private:
     Model model;                  ///< OpenTurbine class for model construction
     components::Turbine turbine;  ///< Turbine model input/output data
@@ -87,6 +95,7 @@ private:
     HostState<DeviceType> host_state;                     ///< Host local copy of node state data
     std::unique_ptr<Outputs> outputs;                     ///< handle to Output for writing to NetCDF
     std::unique_ptr<util::TurbineController> controller;  ///< DISCON-style controller
+    std::unique_ptr<components::Aerodynamics> aerodynamics;  ///< Aerodynamics component
 
     /**
      * @brief Write rotor time-series data based on constraint outputs

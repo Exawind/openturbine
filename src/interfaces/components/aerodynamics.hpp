@@ -5,8 +5,10 @@
 #include <cassert>
 #include <cmath>
 #include <ranges>
+#include <span>
 #include <vector>
 
+#include "aerodynamics_input.hpp"
 #include "interfaces/host_state.hpp"
 #include "math/interpolation.hpp"
 #include "math/quaternion_operations.hpp"
@@ -15,16 +17,16 @@
 
 namespace openturbine::interfaces::components {
 
-inline double CalculateAngleOfAttack(const std::array<double, 3>& v_rel) {
+inline double CalculateAngleOfAttack(std::span<const double, 3> v_rel) {
     return std::atan2(-v_rel[2], v_rel[1]);
 }
 
 inline std::array<double, 6> CalculateAerodynamicLoad(
-    std::array<double, 3>& ref_axis_moment, const std::array<double, 3>& v_inflow,
-    const std::array<double, 3>& v_motion, const std::vector<double>& aoa_polar,
-    const std::vector<double>& cl_polar, const std::vector<double>& cd_polar,
-    const std::vector<double>& cm_polar, double chord, double delta_s, double fluid_density,
-    const std::array<double, 3>& con_force, const std::array<double, 4>& qqr
+    std::span<double, 3> ref_axis_moment, std::span<const double, 3> v_inflow,
+    std::span<const double, 3> v_motion, std::span<const double> aoa_polar,
+    std::span<const double> cl_polar, std::span<const double> cd_polar,
+    std::span<const double> cm_polar, double chord, double delta_s, double fluid_density,
+    std::span<const double, 3> con_force, std::span<const double, 4> qqr
 ) {
     assert(aoa_polar.size() == cl_polar.size());
     assert(aoa_polar.size() == cd_polar.size());
@@ -45,13 +47,13 @@ inline std::array<double, 6> CalculateAerodynamicLoad(
 
     const auto polar_iterator =
         std::find_if(std::cbegin(aoa_polar), std::cend(aoa_polar), [aoa](auto polar) {
-            return polar < aoa;
+            return polar > aoa;
         });
 
     assert(polar_iterator != aoa_polar.end());
 
     const auto polar_index =
-        static_cast<size_t>(std::distance(std::cbegin(aoa_polar), polar_iterator));
+        static_cast<size_t>(std::distance(std::cbegin(aoa_polar), polar_iterator) - 1);
 
     const auto is_end = (polar_index == aoa_polar.size() - 1UL);
 
@@ -99,7 +101,9 @@ inline std::array<double, 6> CalculateAerodynamicLoad(
         ref_axis_moment_local[component] = force_moment[component] + moment_local[component];
     }
 
-    ref_axis_moment = math::RotateVectorByQuaternion(qqr, ref_axis_moment_local);
+    const auto moment = math::RotateVectorByQuaternion(qqr, ref_axis_moment_local);
+    std::ranges::copy(moment, std::begin(ref_axis_moment));
+    //    ref_axis_moment = math::RotateVectorByQuaternion(qqr, ref_axis_moment_local);
 
     return {load_force[0],  load_force[1],  load_force[2],
             load_moment[0], load_moment[1], load_moment[2]};
@@ -111,7 +115,7 @@ inline std::array<double, 3> CalculateConMotionVector(
     return {0., -ac_to_ref_axis_horizontal, chord_to_ref_axis_vertical};
 }
 
-inline std::vector<double> CalculateJacobianXi(const std::vector<double>& aero_node_xi) {
+inline std::vector<double> CalculateJacobianXi(std::span<const double> aero_node_xi) {
     const auto num_aero_nodes = aero_node_xi.size();
     const auto num_jacobian_nodes = 2 * num_aero_nodes + 1;
 
@@ -133,8 +137,8 @@ inline std::vector<double> CalculateJacobianXi(const std::vector<double>& aero_n
 }
 
 inline std::vector<double> CalculateAeroNodeWidths(
-    const std::vector<double>& jacobian_xi, const std::vector<double>& jacobian_integration_matrix,
-    const std::vector<double>& node_x
+    std::span<const double> jacobian_xi, std::span<const double> jacobian_integration_matrix,
+    std::span<const double> node_x
 ) {
     const auto num_nodes = node_x.size() / 3;
     const auto num_jacobian_nodes = jacobian_xi.size();
@@ -175,26 +179,6 @@ inline std::vector<double> CalculateAeroNodeWidths(
     }
     return width;
 }
-
-struct AerodynamicSection {
-    size_t id;
-    double s;
-    double chord;
-    double section_offset_x;
-    double section_offset_y;
-    double aerodynamic_center;
-    double twist;
-    std::vector<double> aoa;
-    std::vector<double> cl;
-    std::vector<double> cd;
-    std::vector<double> cm;
-};
-
-struct AerodynamicBodyInput {
-    size_t id;
-    std::vector<size_t> beam_node_ids;
-    std::vector<AerodynamicSection> aero_sections;
-};
 
 class AerodynamicBody {
 public:
@@ -243,7 +227,7 @@ private:
     }
 
     static std::vector<double> ExtractBeamNodeXi(
-        const AerodynamicBodyInput& input, const std::vector<Node>& nodes
+        const AerodynamicBodyInput& input, std::span<const Node> nodes
     ) {
         const auto n_nodes = input.beam_node_ids.size();
         auto beam_node_xi = std::vector<double>(n_nodes);
@@ -254,7 +238,7 @@ private:
     }
 
     static std::vector<double> ComputeMotionInterp(
-        const std::vector<double>& section_xi, const std::vector<double>& beam_node_xi
+        std::span<const double> section_xi, std::span<const double> beam_node_xi
     ) {
         const auto n_sections = section_xi.size();
         const auto n_nodes = beam_node_xi.size();
@@ -271,7 +255,7 @@ private:
     }
 
     static std::vector<std::array<double, 7>> ExtractNodeX(
-        const AerodynamicBodyInput& input, const std::vector<Node>& nodes
+        const AerodynamicBodyInput& input, std::span<const Node> nodes
     ) {
         const auto n_nodes = input.beam_node_ids.size();
         auto node_x = std::vector<std::array<double, 7>>(n_nodes);
@@ -284,8 +268,8 @@ private:
     }
 
     static void InterpolateQuaternionFromNodesToSections(
-        std::vector<std::array<double, 7>>& xr, const std::vector<std::array<double, 7>>& node_x,
-        const std::vector<double>& interp
+        std::span<std::array<double, 7>> xr, std::span<const std::array<double, 7>> node_x,
+        std::span<const double> interp
     ) {
         const auto n_nodes = node_x.size();
         const auto n_sections = xr.size();
@@ -314,14 +298,19 @@ private:
                 for (auto component = 3U; component < 7U; ++component) {
                     xr[section][component] /= length;
                 }
+            } else {
+                xr[section][3] = 1.;
+                for (auto component = 4U; component < 7U; ++component) {
+                    xr[section][component] = 0.;
+                }
             }
         }
     }
 
     static std::vector<std::array<double, 7>> InterpolateNodePositionsToSections(
-        const AerodynamicBodyInput& input, const std::vector<std::array<double, 7>>& node_x,
-        const std::vector<double>& interp, const std::vector<double>& section_xi,
-        const std::vector<double>& beam_node_xi
+        const AerodynamicBodyInput& input, std::span<const std::array<double, 7>> node_x,
+        std::span<const double> interp, std::span<const double> section_xi,
+        std::span<const double> beam_node_xi
     ) {
         const auto n_nodes = node_x.size();
         const auto n_sections = interp.size() / n_nodes;
@@ -338,7 +327,7 @@ private:
     }
 
     static std::vector<double> ComputeShapeDerivNode(
-        const std::vector<double>& section_xi, const std::vector<double>& beam_node_xi
+        std::span<const double> section_xi, std::span<const double> beam_node_xi
     ) {
         const auto n_sections = section_xi.size();
         const auto n_nodes = beam_node_xi.size();
@@ -354,11 +343,11 @@ private:
     }
 
     static void AddTwistToReferenceLocation(
-        std::vector<std::array<double, 7>>& xr, const std::vector<std::array<double, 7>>& node_x,
-        const AerodynamicBodyInput& input, const std::vector<double>& shape_deriv_node
+        std::vector<std::array<double, 7>>& xr, std::span<const std::array<double, 7>> node_x,
+        const AerodynamicBodyInput& input, std::span<const double> shape_deriv_node
     ) {
         const auto n_sections = xr.size();
-        const auto n_nodes = shape_deriv_node.size() / n_sections;
+        const auto n_nodes = node_x.size();
 
         auto x_tan = std::vector<std::array<double, 3>>(n_sections);
         for (auto i = 0U; i < n_sections; ++i) {
@@ -381,7 +370,7 @@ private:
 
         for (auto section = 0U; section < n_sections; ++section) {
             const auto q_twist =
-                math::TangentTwistToQuaternion(x_tan[section], -input.aero_sections[section].twist);
+                math::AxisAngleToQuaternion(x_tan[section], -input.aero_sections[section].twist);
             const auto qr =
                 std::array{xr[section][3], xr[section][4], xr[section][5], xr[section][6]};
             auto q = math::QuaternionCompose(q_twist, qr);
@@ -407,7 +396,7 @@ private:
     }
 
     static std::vector<double> ComputeShapeDerivJacobian(
-        const std::vector<double>& jacobian_xi, const std::vector<double>& beam_node_xi
+        std::span<const double> jacobian_xi, std::span<const double> beam_node_xi
     ) {
         const auto n_sections = jacobian_xi.size();
         const auto n_nodes = beam_node_xi.size();
@@ -423,8 +412,8 @@ private:
     }
 
     static std::vector<double> ComputeDeltaS(
-        const std::vector<std::array<double, 7>>& node_x, const std::vector<double>& jacobian_xi,
-        const std::vector<double>& shape_deriv_jac
+        std::span<const std::array<double, 7>> node_x, std::span<const double> jacobian_xi,
+        std::span<const double> shape_deriv_jac
     ) {
         const auto n_sections = node_x.size();
         auto node_x_flat = std::vector<double>(3U * n_sections);
@@ -451,7 +440,7 @@ private:
     }
 
     static std::vector<std::array<double, 3>> InitializeConForce(
-        const std::vector<std::array<double, 3>>& con_motion
+        std::span<const std::array<double, 3>> con_motion
     ) {
         const auto n_sections = con_motion.size();
         auto con_force = std::vector<std::array<double, 3>>(n_sections);
@@ -464,7 +453,7 @@ private:
     }
 
 public:
-    AerodynamicBody(const AerodynamicBodyInput& input, const std::vector<Node>& nodes)
+    AerodynamicBody(const AerodynamicBodyInput& input, std::span<const Node> nodes)
         : id(input.id),
           node_ids(input.beam_node_ids),
           node_u(input.beam_node_ids.size()),
@@ -538,7 +527,7 @@ public:
         // Copy beam node displacements from state
         for (auto node = 0U; node < node_u.size(); ++node) {
             for (auto component = 0U; component < 7U; ++component) {
-                node_u[node][component] = state.u(node_ids[node], component);
+                node_u[node][component] = state.q(node_ids[node], component);
             }
         }
 
@@ -595,9 +584,9 @@ public:
             }
         }
 
-        auto node_x = std::vector<double>(node_u.size() * 7U);
+        auto node_x = std::vector<double>(node_u.size() * 3U);
         for (auto node = 0U; node < node_u.size(); ++node) {
-            for (auto component = 0U; component < 7U; ++component) {
+            for (auto component = 0U; component < 3U; ++component) {
                 node_x[component * node_u.size() + node] = state.x(node_ids[node], component);
             }
         }
@@ -605,7 +594,7 @@ public:
         delta_s = CalculateAeroNodeWidths(jacobian_xi, shape_deriv_jac, node_x);
     }
 
-    void SetInflowFromVector(const std::vector<std::array<double, 3>>& inflow_velocity) {
+    void SetInflowFromVector(std::span<const std::array<double, 3>> inflow_velocity) {
         for (auto node = 0U; node < inflow_velocity.size(); ++node) {
             for (auto component = 0U; component < 3U; ++component) {
                 v_inflow[node][component] = inflow_velocity[node][component];
@@ -613,7 +602,7 @@ public:
         }
     }
 
-    template<typename T>
+    template <typename T>
     void SetInflowFromFunction(const T& inflow_velocity_function) {
         for (auto node = 0U; node < v_inflow.size(); ++node) {
             const auto inflow_velocity = inflow_velocity_function(x_motion[node]);
@@ -623,7 +612,7 @@ public:
         }
     }
 
-    void SetAerodynamicLoads(const std::vector<std::array<double, 6>>& aerodynamic_loads) {
+    void SetAerodynamicLoads(std::span<const std::array<double, 6>> aerodynamic_loads) {
         for (auto load = 0U; load < con_force.size(); ++load) {
             loads[load] = aerodynamic_loads[load];
             const auto rotated_con_force =
@@ -658,7 +647,7 @@ public:
             for (auto section = 0U; section < loads.size(); ++section) {
                 for (auto component = 0U; component < 3U; ++component) {
                     node_f[node][component] +=
-                        motion_interp[node * loads.size() + section] * loads[section][component];
+                        motion_interp[section * node_f.size() + node] * loads[section][component];
                 }
             }
         }
@@ -669,7 +658,7 @@ public:
             }
             for (auto section = 0U; section < ref_axis_moments.size(); ++section) {
                 for (auto component = 0U; component < 3U; ++component) {
-                    node_f[node][component + 3U] += motion_interp[node * loads.size() + section] *
+                    node_f[node][component + 3U] += motion_interp[section * node_f.size() + node] *
                                                     ref_axis_moments[section][component];
                 }
             }
@@ -680,7 +669,7 @@ public:
     void AddNodalLoadsToState(HostState<DeviceType>& state) {
         for (auto node = 0U; node < node_f.size(); ++node) {
             for (auto component = 0U; component < 6U; ++component) {
-                state.f(node, component) = node_f[node][component];
+                state.f(node_ids[node], component) += node_f[node][component];
             }
         }
     }
@@ -690,7 +679,7 @@ class Aerodynamics {
 public:
     std::vector<AerodynamicBody> bodies;
 
-    Aerodynamics(const std::vector<AerodynamicBodyInput>& inputs, const std::vector<Node>& nodes) {
+    Aerodynamics(std::span<const AerodynamicBodyInput> inputs, std::span<const Node> nodes) {
         for (const auto& input : inputs) {
             bodies.emplace_back(input, nodes);
         }
@@ -704,7 +693,7 @@ public:
     }
 
     void SetInflowFromVector(
-        const std::vector<std::vector<std::array<double, 3>>>& body_inflow_velocities
+        std::span<const std::vector<std::array<double, 3>>> body_inflow_velocities
     ) {
         for (auto i = 0U; i < bodies.size(); ++i) {
             bodies[i].SetInflowFromVector(body_inflow_velocities[i]);
@@ -712,16 +701,13 @@ public:
     }
 
     template <typename T>
-    void SetInflowFromFunction(
-        const T& body_inflow_velocity_function
-    ) {
-        for (auto i = 0U; i < bodies.size(); ++i) {
-            bodies[i].SetInflowFromFunction(body_inflow_velocity_function);
+    void SetInflowFromFunction(const T& body_inflow_velocity_function) {
+        for (auto& body : bodies) {
+            body.SetInflowFromFunction(body_inflow_velocity_function);
         }
     }
 
-    void SetAerodynamicLoads(const std::vector<std::vector<std::array<double, 6>>>& body_aero_loads
-    ) {
+    void SetAerodynamicLoads(std::span<const std::vector<std::array<double, 6>>> body_aero_loads) {
         for (auto i = 0U; i < bodies.size(); ++i) {
             bodies[i].SetAerodynamicLoads(body_aero_loads[i]);
         }

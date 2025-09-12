@@ -56,7 +56,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     const auto twist_grid = twist["grid"].as<std::vector<double>>();
     const auto twist_values = twist["values"].as<std::vector<double>>();
     for (auto i : std::views::iota(0U, twist_grid.size())) {
-        builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i]);
+        builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i] * std::numbers::pi / 180.);
     }
 
     // Add blade section properties
