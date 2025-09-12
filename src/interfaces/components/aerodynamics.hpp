@@ -498,11 +498,11 @@ public:
         // Copy over the polar information
         const auto n_sections = input.aero_sections.size();
         twist = std::vector<double>(n_sections);
-        std::ranges::transform(input.aero_sections, std::begin(twist), [](auto& section) {
+        std::ranges::transform(input.aero_sections, std::begin(twist), [](const auto& section) {
             return section.twist;
         });
         chord = std::vector<double>(n_sections);
-        std::ranges::transform(input.aero_sections, std::begin(chord), [](auto& section) {
+        std::ranges::transform(input.aero_sections, std::begin(chord), [](const auto& section) {
             return section.chord;
         });
 
@@ -680,9 +680,9 @@ public:
     std::vector<AerodynamicBody> bodies;
 
     Aerodynamics(std::span<const AerodynamicBodyInput> inputs, std::span<const Node> nodes) {
-        for (const auto& input : inputs) {
-            bodies.emplace_back(input, nodes);
-        }
+        std::ranges::transform(inputs, std::back_inserter(bodies), [nodes](const auto& input) {
+            return AerodynamicBody(input, nodes);
+        });
     }
 
     template <typename DeviceType>

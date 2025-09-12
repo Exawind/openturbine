@@ -45,7 +45,7 @@ public:
 
     void UpdateAerodynamicLoads(
         double fluid_density,
-        const std::function<std::array<double, 3>(const std::array<double, 3>&)> inflow_function
+        const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function
     );
 
     /**

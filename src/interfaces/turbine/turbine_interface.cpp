@@ -35,7 +35,7 @@ TurbineInterface::TurbineInterface(
             auto blade_node_ids = std::vector<size_t>{};
             std::ranges::transform(
                 turbine.blades[blade].nodes, std::back_inserter(blade_node_ids),
-                [](auto& node_data) {
+                [](const auto& node_data) {
                     return node_data.id;
                 }
             );
@@ -101,7 +101,7 @@ components::Turbine& TurbineInterface::Turbine() {
 
 void TurbineInterface::UpdateAerodynamicLoads(
     double fluid_density,
-    const std::function<std::array<double, 3>(const std::array<double, 3>&)> inflow_function
+    const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function
 ) {
     if (aerodynamics) {
         aerodynamics->CalculateMotion(host_state);
