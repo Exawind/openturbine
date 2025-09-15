@@ -32,11 +32,13 @@ public:
      * @brief Constructs a TurbineInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
      * @param turbine_input Configuration parameters for the turbine geometry
+     * @param aerodynamics_input Configuration parameters for the aerodynamic loads
      * @param controller_input Configuration parameters for the controller
      */
     explicit TurbineInterface(
         const components::SolutionInput& solution_input,
-        const components::TurbineInput& turbine_input, const components::AerodynamicsInput& = {},
+        const components::TurbineInput& turbine_input,
+        const components::AerodynamicsInput& aerodynamics_input = {},
         const components::ControllerInput& controller_input = {}
     );
 
