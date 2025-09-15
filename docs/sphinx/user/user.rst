@@ -12,6 +12,7 @@ For more detailed build instructions, see the README files in their respective f
    :glob:
    :maxdepth: 2
 
+   introduction.rst
    compiling.rst
    linking.rst
    floating_platform.rst
