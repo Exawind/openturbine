@@ -168,13 +168,26 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">openturbine::interfaces::components Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1AerodynamicBody.html">AerodynamicBody</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicBodyInput.html">AerodynamicBodyInput</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Aerodynamics.html">Aerodynamics</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1AerodynamicsBuilder.html">AerodynamicsBuilder</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html">AerodynamicSection</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1AerodynamicsInput.html">AerodynamicsInput</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html">Beam</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a turbine blade with nodes, elements, and constraints.  <a href="classopenturbine_1_1interfaces_1_1components_1_1Beam.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,6 +245,19 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a367634a90aa69ad4edb15d274a777b4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of inflow model.  <a href="namespaceopenturbine_1_1interfaces_1_1components.html#a367634a90aa69ad4edb15d274a777b4c">More...</a><br /></td></tr>
 <tr class="separator:a367634a90aa69ad4edb15d274a777b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aa01b6d2594c66ed63fbf4abf425a14ed" id="r_aa01b6d2594c66ed63fbf4abf425a14ed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#aa01b6d2594c66ed63fbf4abf425a14ed">CalculateAngleOfAttack</a> (std::span&lt; const double, 3 &gt; v_rel)</td></tr>
+<tr class="separator:aa01b6d2594c66ed63fbf4abf425a14ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37e88591ee8d4e41ee0a1b2e627c648e" id="r_a37e88591ee8d4e41ee0a1b2e627c648e"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#a37e88591ee8d4e41ee0a1b2e627c648e">CalculateAerodynamicLoad</a> (std::span&lt; double, 3 &gt; ref_axis_moment, std::span&lt; const double, 3 &gt; v_inflow, std::span&lt; const double, 3 &gt; v_motion, std::span&lt; const double &gt; aoa_polar, std::span&lt; const double &gt; cl_polar, std::span&lt; const double &gt; cd_polar, std::span&lt; const double &gt; cm_polar, double chord, double delta_s, double fluid_density, std::span&lt; const double, 3 &gt; con_force, std::span&lt; const double, 4 &gt; qqr)</td></tr>
+<tr class="separator:a37e88591ee8d4e41ee0a1b2e627c648e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affc4fa00baf0007b10cb6575e6bc45d9" id="r_affc4fa00baf0007b10cb6575e6bc45d9"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#affc4fa00baf0007b10cb6575e6bc45d9">CalculateConMotionVector</a> (double ac_to_ref_axis_horizontal, double chord_to_ref_axis_vertical)</td></tr>
+<tr class="separator:affc4fa00baf0007b10cb6575e6bc45d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ff677669ba4d28e6cfbeb64f15a8ad" id="r_a84ff677669ba4d28e6cfbeb64f15a8ad"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#a84ff677669ba4d28e6cfbeb64f15a8ad">CalculateJacobianXi</a> (std::span&lt; const double &gt; aero_node_xi)</td></tr>
+<tr class="separator:a84ff677669ba4d28e6cfbeb64f15a8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf0bf48eb2d3d06db13698c642b1a5a1" id="r_adf0bf48eb2d3d06db13698c642b1a5a1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html#adf0bf48eb2d3d06db13698c642b1a5a1">CalculateAeroNodeWidths</a> (std::span&lt; const double &gt; jacobian_xi, std::span&lt; const double &gt; jacobian_integration_matrix, std::span&lt; const double &gt; node_x)</td></tr>
+<tr class="separator:adf0bf48eb2d3d06db13698c642b1a5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a367634a90aa69ad4edb15d274a777b4c" name="a367634a90aa69ad4edb15d274a777b4c"></a>
@@ -287,6 +313,193 @@ Enumerations</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a45f226e241ddd12a4de07ec25ed276a5a02129bb861061d1a052c592e2dc6b383" name="a45f226e241ddd12a4de07ec25ed276a5a02129bb861061d1a052c592e2dc6b383"></a>X&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a45f226e241ddd12a4de07ec25ed276a5a21c2e59531c8710156d34a3c30ac81d5" name="a45f226e241ddd12a4de07ec25ed276a5a21c2e59531c8710156d34a3c30ac81d5"></a>Z&#160;</td><td class="fielddoc"></td></tr>
 </table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a37e88591ee8d4e41ee0a1b2e627c648e" name="a37e88591ee8d4e41ee0a1b2e627c648e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37e88591ee8d4e41ee0a1b2e627c648e">&#9670;&#160;</a></span>CalculateAerodynamicLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 6 &gt; openturbine::interfaces::components::CalculateAerodynamicLoad </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; double, 3 &gt;&#160;</td>
+          <td class="paramname"><em>ref_axis_moment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double, 3 &gt;&#160;</td>
+          <td class="paramname"><em>v_inflow</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double, 3 &gt;&#160;</td>
+          <td class="paramname"><em>v_motion</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>aoa_polar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>cl_polar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>cd_polar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>cm_polar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>chord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>delta_s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>fluid_density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double, 3 &gt;&#160;</td>
+          <td class="paramname"><em>con_force</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double, 4 &gt;&#160;</td>
+          <td class="paramname"><em>qqr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf0bf48eb2d3d06db13698c642b1a5a1" name="adf0bf48eb2d3d06db13698c642b1a5a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf0bf48eb2d3d06db13698c642b1a5a1">&#9670;&#160;</a></span>CalculateAeroNodeWidths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::interfaces::components::CalculateAeroNodeWidths </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>jacobian_xi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>jacobian_integration_matrix</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>node_x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa01b6d2594c66ed63fbf4abf425a14ed" name="aa01b6d2594c66ed63fbf4abf425a14ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa01b6d2594c66ed63fbf4abf425a14ed">&#9670;&#160;</a></span>CalculateAngleOfAttack()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::CalculateAngleOfAttack </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; const double, 3 &gt;&#160;</td>
+          <td class="paramname"><em>v_rel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="affc4fa00baf0007b10cb6575e6bc45d9" name="affc4fa00baf0007b10cb6575e6bc45d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affc4fa00baf0007b10cb6575e6bc45d9">&#9670;&#160;</a></span>CalculateConMotionVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; double, 3 &gt; openturbine::interfaces::components::CalculateConMotionVector </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>ac_to_ref_axis_horizontal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>chord_to_ref_axis_vertical</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84ff677669ba4d28e6cfbeb64f15a8ad" name="a84ff677669ba4d28e6cfbeb64f15a8ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84ff677669ba4d28e6cfbeb64f15a8ad">&#9670;&#160;</a></span>CalculateJacobianXi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; double &gt; openturbine::interfaces::components::CalculateJacobianXi </td>
+          <td>(</td>
+          <td class="paramtype">std::span&lt; const double &gt;&#160;</td>
+          <td class="paramname"><em>aero_node_xi</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

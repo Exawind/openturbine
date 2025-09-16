@@ -1,0 +1,14 @@
+.. meta::8d9cb22ecad62298d340bcf02e951e39dec723d58b140ac79508533351b0ed97a5518a38eb5f8bd2487e45adcca1658fb60ab5dd02ce42f8365d1b09697be720
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::AerodynamicSection Struct Reference
+
+AerodynamicSection Struct Reference
+===================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html

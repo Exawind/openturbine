@@ -1,0 +1,14 @@
+.. meta::6d21f5f77de205020ed44c183946f1d99c75e6c7b5f2822e7c27c34b21618280fad1445b853528dd8b06db93520385d406f397cd1a1471305c5bdec18eb7b0d2
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics.hpp Source File
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics.hpp Source File
+============================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: aerodynamics_8hpp_source.html

@@ -1,0 +1,14 @@
+.. meta::e477fcc31f925de32f7d930eb59f1b4007766f94729f862a8ed0e3633fb7c59e8f90b6352fc9338ca1f952fa3c42a8de89faabf429a8cbae2f35209b12d66686
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::AerodynamicBody Class Reference
+
+AerodynamicBody Class Reference
+===============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classopenturbine_1_1interfaces_1_1components_1_1AerodynamicBody.html

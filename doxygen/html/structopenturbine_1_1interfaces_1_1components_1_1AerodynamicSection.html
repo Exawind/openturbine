@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenTurbine API: openturbine::interfaces::components::AerodynamicSection Struct Reference &mdash; OpenTurbine 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenTurbine
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenTurbine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenTurbine API: openturbine::interfaces::components::AerodynamicSection Struct Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="aerodynamicsection-struct-reference">
+<h1>AerodynamicSection Struct Reference<a class="headerlink" href="#aerodynamicsection-struct-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OpenTurbine API: openturbine::interfaces::components::AerodynamicSection Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">OpenTurbine API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceopenturbine.html">openturbine</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="namespaceopenturbine_1_1interfaces_1_1components.html">components</a></li><li class="navelem"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html">AerodynamicSection</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">openturbine::interfaces::components::AerodynamicSection Struct Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="aerodynamics__input_8hpp_source.html">aerodynamics_input.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:aa6e9e9fc57b76ecf677b25731c87436f" id="r_aa6e9e9fc57b76ecf677b25731c87436f"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#aa6e9e9fc57b76ecf677b25731c87436f">id</a> {}</td></tr>
+<tr class="separator:aa6e9e9fc57b76ecf677b25731c87436f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5da6f3819645fab5e51378d3a562f52b" id="r_a5da6f3819645fab5e51378d3a562f52b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a5da6f3819645fab5e51378d3a562f52b">s</a> {}</td></tr>
+<tr class="separator:a5da6f3819645fab5e51378d3a562f52b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5dfc19166ca4575a45295aac5df5fb1" id="r_ac5dfc19166ca4575a45295aac5df5fb1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#ac5dfc19166ca4575a45295aac5df5fb1">chord</a> {}</td></tr>
+<tr class="separator:ac5dfc19166ca4575a45295aac5df5fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40897af04cf1e299aeecd0093878e548" id="r_a40897af04cf1e299aeecd0093878e548"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a40897af04cf1e299aeecd0093878e548">section_offset_x</a> {}</td></tr>
+<tr class="separator:a40897af04cf1e299aeecd0093878e548"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af45ac1cc7cd2cb6a7e45d4888363241c" id="r_af45ac1cc7cd2cb6a7e45d4888363241c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#af45ac1cc7cd2cb6a7e45d4888363241c">section_offset_y</a> {}</td></tr>
+<tr class="separator:af45ac1cc7cd2cb6a7e45d4888363241c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ae8af5fb4fba4a0a104c95861cb1e40" id="r_a9ae8af5fb4fba4a0a104c95861cb1e40"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a9ae8af5fb4fba4a0a104c95861cb1e40">aerodynamic_center</a> {}</td></tr>
+<tr class="separator:a9ae8af5fb4fba4a0a104c95861cb1e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74a1c38174c5237aaeceb35cbf908e84" id="r_a74a1c38174c5237aaeceb35cbf908e84"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a74a1c38174c5237aaeceb35cbf908e84">twist</a> {}</td></tr>
+<tr class="separator:a74a1c38174c5237aaeceb35cbf908e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b59e8e73f5b9721b69fffb13895174c" id="r_a5b59e8e73f5b9721b69fffb13895174c"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a5b59e8e73f5b9721b69fffb13895174c">aoa</a></td></tr>
+<tr class="separator:a5b59e8e73f5b9721b69fffb13895174c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39bdf18acdcd463b7e85fe65888655a2" id="r_a39bdf18acdcd463b7e85fe65888655a2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a39bdf18acdcd463b7e85fe65888655a2">cl</a></td></tr>
+<tr class="separator:a39bdf18acdcd463b7e85fe65888655a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98340a5826ce7afcbec4e3068d1c1c7d" id="r_a98340a5826ce7afcbec4e3068d1c1c7d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a98340a5826ce7afcbec4e3068d1c1c7d">cd</a></td></tr>
+<tr class="separator:a98340a5826ce7afcbec4e3068d1c1c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f61bb1a5f04b57ed37ec2f0c77e9c0f" id="r_a2f61bb1a5f04b57ed37ec2f0c77e9c0f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1AerodynamicSection.html#a2f61bb1a5f04b57ed37ec2f0c77e9c0f">cm</a></td></tr>
+<tr class="separator:a2f61bb1a5f04b57ed37ec2f0c77e9c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9ae8af5fb4fba4a0a104c95861cb1e40" name="a9ae8af5fb4fba4a0a104c95861cb1e40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ae8af5fb4fba4a0a104c95861cb1e40">&#9670;&#160;</a></span>aerodynamic_center</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::aerodynamic_center {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5b59e8e73f5b9721b69fffb13895174c" name="a5b59e8e73f5b9721b69fffb13895174c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b59e8e73f5b9721b69fffb13895174c">&#9670;&#160;</a></span>aoa</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::AerodynamicSection::aoa</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98340a5826ce7afcbec4e3068d1c1c7d" name="a98340a5826ce7afcbec4e3068d1c1c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98340a5826ce7afcbec4e3068d1c1c7d">&#9670;&#160;</a></span>cd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::AerodynamicSection::cd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5dfc19166ca4575a45295aac5df5fb1" name="ac5dfc19166ca4575a45295aac5df5fb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5dfc19166ca4575a45295aac5df5fb1">&#9670;&#160;</a></span>chord</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::chord {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a39bdf18acdcd463b7e85fe65888655a2" name="a39bdf18acdcd463b7e85fe65888655a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39bdf18acdcd463b7e85fe65888655a2">&#9670;&#160;</a></span>cl</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::AerodynamicSection::cl</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2f61bb1a5f04b57ed37ec2f0c77e9c0f" name="a2f61bb1a5f04b57ed37ec2f0c77e9c0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f61bb1a5f04b57ed37ec2f0c77e9c0f">&#9670;&#160;</a></span>cm</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;double&gt; openturbine::interfaces::components::AerodynamicSection::cm</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6e9e9fc57b76ecf677b25731c87436f" name="aa6e9e9fc57b76ecf677b25731c87436f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6e9e9fc57b76ecf677b25731c87436f">&#9670;&#160;</a></span>id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t openturbine::interfaces::components::AerodynamicSection::id {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5da6f3819645fab5e51378d3a562f52b" name="a5da6f3819645fab5e51378d3a562f52b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5da6f3819645fab5e51378d3a562f52b">&#9670;&#160;</a></span>s</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::s {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40897af04cf1e299aeecd0093878e548" name="a40897af04cf1e299aeecd0093878e548"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40897af04cf1e299aeecd0093878e548">&#9670;&#160;</a></span>section_offset_x</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::section_offset_x {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af45ac1cc7cd2cb6a7e45d4888363241c" name="af45ac1cc7cd2cb6a7e45d4888363241c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af45ac1cc7cd2cb6a7e45d4888363241c">&#9670;&#160;</a></span>section_offset_y</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::section_offset_y {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a74a1c38174c5237aaeceb35cbf908e84" name="a74a1c38174c5237aaeceb35cbf908e84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74a1c38174c5237aaeceb35cbf908e84">&#9670;&#160;</a></span>twist</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::components::AerodynamicSection::twist {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/<a class="el" href="aerodynamics__input_8hpp_source.html">aerodynamics_input.hpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

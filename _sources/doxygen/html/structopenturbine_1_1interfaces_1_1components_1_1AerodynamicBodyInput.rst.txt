@@ -1,0 +1,14 @@
+.. meta::e70808c56a9b52d318b32e262bd5a2383dc3ec0f2bc8ec4943d3ec8ce7fac0efeaaf77464a0ee49a70ac6302992e654c7ba3fc6282deabc7bde828e127ccbc70
+
+:orphan:
+
+.. title:: OpenTurbine API: openturbine::interfaces::components::AerodynamicBodyInput Struct Reference
+
+AerodynamicBodyInput Struct Reference
+=====================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structopenturbine_1_1interfaces_1_1components_1_1AerodynamicBodyInput.html

@@ -186,12 +186,15 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2ab1d770773005a7a7fb528c19af165f" id="r_a2ab1d770773005a7a7fb528c19af165f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a2ab1d770773005a7a7fb528c19af165f">TurbineInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;turbine_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a> &amp;controller_input={})</td></tr>
-<tr class="memdesc:a2ab1d770773005a7a7fb528c19af165f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html" title="Interface for blade simulation that manages state, solver, and components.">TurbineInterface</a> from solution and blade inputs.  <br /></td></tr>
-<tr class="separator:a2ab1d770773005a7a7fb528c19af165f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af88287224f03d72be8a0fb1c979b7c09" id="r_af88287224f03d72be8a0fb1c979b7c09"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#af88287224f03d72be8a0fb1c979b7c09">TurbineInterface</a> (const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1SolutionInput.html">components::SolutionInput</a> &amp;solution_input, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;turbine_input, const <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1AerodynamicsInput.html">components::AerodynamicsInput</a> &amp;aerodynamics_input={}, const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1ControllerInput.html">components::ControllerInput</a> &amp;controller_input={})</td></tr>
+<tr class="memdesc:af88287224f03d72be8a0fb1c979b7c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html" title="Interface for blade simulation that manages state, solver, and components.">TurbineInterface</a> from solution and blade inputs.  <br /></td></tr>
+<tr class="separator:af88287224f03d72be8a0fb1c979b7c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff1631f1e3db4dc0be921d71ae1a37b3" id="r_aff1631f1e3db4dc0be921d71ae1a37b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1Turbine.html">components::Turbine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#aff1631f1e3db4dc0be921d71ae1a37b3">Turbine</a> ()</td></tr>
 <tr class="memdesc:aff1631f1e3db4dc0be921d71ae1a37b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the turbine model.  <br /></td></tr>
 <tr class="separator:aff1631f1e3db4dc0be921d71ae1a37b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1330ece6c875c543fb274b34eb1fb3af" id="r_a1330ece6c875c543fb274b34eb1fb3af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a1330ece6c875c543fb274b34eb1fb3af">UpdateAerodynamicLoads</a> (double fluid_density, const std::function&lt; std::array&lt; double, 3 &gt;(const std::array&lt; double, 3 &gt; &amp;)&gt; &amp;inflow_function)</td></tr>
+<tr class="memdesc:a1330ece6c875c543fb274b34eb1fb3af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the aerodynamic loads to be applied to the sturcture based on a provided function.  <br /></td></tr>
+<tr class="separator:a1330ece6c875c543fb274b34eb1fb3af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ba64ccc54cd7641bae9adbaa9ba7c6e" id="r_a5ba64ccc54cd7641bae9adbaa9ba7c6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a5ba64ccc54cd7641bae9adbaa9ba7c6e">Step</a> ()</td></tr>
 <tr class="memdesc:a5ba64ccc54cd7641bae9adbaa9ba7c6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Steps forward in time.  <br /></td></tr>
 <tr class="separator:a5ba64ccc54cd7641bae9adbaa9ba7c6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +204,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a72c30ef900fb0fd472e4d249ca96c811" id="r_a72c30ef900fb0fd472e4d249ca96c811"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a72c30ef900fb0fd472e4d249ca96c811">RestoreState</a> ()</td></tr>
 <tr class="memdesc:a72c30ef900fb0fd472e4d249ca96c811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores the previously saved state (in correction step)  <br /></td></tr>
 <tr class="separator:a72c30ef900fb0fd472e4d249ca96c811"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a867ba4a33dc8aa58a8cceac125677079" id="r_a867ba4a33dc8aa58a8cceac125677079"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a867ba4a33dc8aa58a8cceac125677079">GetModel</a> ()</td></tr>
+<tr class="memdesc:a867ba4a33dc8aa58a8cceac125677079"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference of the model owned by this interface.  <br /></td></tr>
+<tr class="separator:a867ba4a33dc8aa58a8cceac125677079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fbc7063e40ae3c9fbb9392a746cca19" id="r_a1fbc7063e40ae3c9fbb9392a746cca19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a9eea5d692b8ec9d4f80e7cc091a2f5d4">DeviceType</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a1fbc7063e40ae3c9fbb9392a746cca19">GetHostState</a> ()</td></tr>
+<tr class="memdesc:a1fbc7063e40ae3c9fbb9392a746cca19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a reference to this interface's host state.  <br /></td></tr>
+<tr class="separator:a1fbc7063e40ae3c9fbb9392a746cca19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24c027451754dd3647eeeeb9b64f0dc3" id="r_a24c027451754dd3647eeeeb9b64f0dc3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a24c027451754dd3647eeeeb9b64f0dc3">CalculateAzimuthAngle</a> () const</td></tr>
+<tr class="memdesc:a24c027451754dd3647eeeeb9b64f0dc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates and normalizes azimuth angle from constraint output.  <br /></td></tr>
+<tr class="separator:a24c027451754dd3647eeeeb9b64f0dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af84659146ac9c5ec223dff939455adad" id="r_af84659146ac9c5ec223dff939455adad"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#af84659146ac9c5ec223dff939455adad">CalculateRotorSpeed</a> () const</td></tr>
+<tr class="memdesc:af84659146ac9c5ec223dff939455adad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates rotor speed from constraint output.  <br /></td></tr>
+<tr class="separator:af84659146ac9c5ec223dff939455adad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for blade simulation that manages state, solver, and components. </p>
@@ -221,8 +236,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a2ab1d770773005a7a7fb528c19af165f" name="a2ab1d770773005a7a7fb528c19af165f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ab1d770773005a7a7fb528c19af165f">&#9670;&#160;</a></span>TurbineInterface()</h2>
+<a id="af88287224f03d72be8a0fb1c979b7c09" name="af88287224f03d72be8a0fb1c979b7c09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af88287224f03d72be8a0fb1c979b7c09">&#9670;&#160;</a></span>TurbineInterface()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,6 +256,12 @@ Public Member Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const <a class="el" href="structopenturbine_1_1interfaces_1_1components_1_1TurbineInput.html">components::TurbineInput</a> &amp;&#160;</td>
           <td class="paramname"><em>turbine_input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classopenturbine_1_1interfaces_1_1components_1_1AerodynamicsInput.html">components::AerodynamicsInput</a> &amp;&#160;</td>
+          <td class="paramname"><em>aerodynamics_input</em> = <code>{}</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -266,6 +287,7 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">solution_input</td><td>Configuration parameters for solver and solution </td></tr>
     <tr><td class="paramname">turbine_input</td><td>Configuration parameters for the turbine geometry </td></tr>
+    <tr><td class="paramname">aerodynamics_input</td><td>Configuration parameters for the aerodynamic loads </td></tr>
     <tr><td class="paramname">controller_input</td><td>Configuration parameters for the controller </td></tr>
   </table>
   </dd>
@@ -274,6 +296,100 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a24c027451754dd3647eeeeb9b64f0dc3" name="a24c027451754dd3647eeeeb9b64f0dc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24c027451754dd3647eeeeb9b64f0dc3">&#9670;&#160;</a></span>CalculateAzimuthAngle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::TurbineInterface::CalculateAzimuthAngle </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates and normalizes azimuth angle from constraint output. </p>
+<dl class="section return"><dt>Returns</dt><dd>Azimuth angle in radians, normalized to [0, 2π) </dd></dl>
+
+</div>
+</div>
+<a id="af84659146ac9c5ec223dff939455adad" name="af84659146ac9c5ec223dff939455adad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af84659146ac9c5ec223dff939455adad">&#9670;&#160;</a></span>CalculateRotorSpeed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double openturbine::interfaces::TurbineInterface::CalculateRotorSpeed </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates rotor speed from constraint output. </p>
+<dl class="section return"><dt>Returns</dt><dd>Rotor speed in rad/s </dd></dl>
+
+</div>
+</div>
+<a id="a1fbc7063e40ae3c9fbb9392a746cca19" name="a1fbc7063e40ae3c9fbb9392a746cca19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fbc7063e40ae3c9fbb9392a746cca19">&#9670;&#160;</a></span>GetHostState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structopenturbine_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classopenturbine_1_1interfaces_1_1TurbineInterface.html#a9eea5d692b8ec9d4f80e7cc091a2f5d4">DeviceType</a> &gt; &amp; openturbine::interfaces::TurbineInterface::GetHostState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a reference to this interface's host state. </p>
+
+</div>
+</div>
+<a id="a867ba4a33dc8aa58a8cceac125677079" name="a867ba4a33dc8aa58a8cceac125677079"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a867ba4a33dc8aa58a8cceac125677079">&#9670;&#160;</a></span>GetModel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classopenturbine_1_1Model.html">Model</a> &amp; openturbine::interfaces::TurbineInterface::GetModel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a reference of the model owned by this interface. </p>
+
+</div>
+</div>
 <a id="a72c30ef900fb0fd472e4d249ca96c811" name="a72c30ef900fb0fd472e4d249ca96c811"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a72c30ef900fb0fd472e4d249ca96c811">&#9670;&#160;</a></span>RestoreState()</h2>
 
@@ -349,6 +465,43 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns a reference to the turbine model. </p>
+
+</div>
+</div>
+<a id="a1330ece6c875c543fb274b34eb1fb3af" name="a1330ece6c875c543fb274b34eb1fb3af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1330ece6c875c543fb274b34eb1fb3af">&#9670;&#160;</a></span>UpdateAerodynamicLoads()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void openturbine::interfaces::TurbineInterface::UpdateAerodynamicLoads </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>fluid_density</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::function&lt; std::array&lt; double, 3 &gt;(const std::array&lt; double, 3 &gt; &amp;)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>inflow_function</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the aerodynamic loads to be applied to the sturcture based on a provided function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fluid_density</td><td>The density of the air (assumed constant) </td></tr>
+    <tr><td class="paramname">inflow_function</td><td>A function that takes in a position and returns the velocity </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

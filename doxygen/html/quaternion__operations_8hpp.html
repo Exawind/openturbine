@@ -173,9 +173,11 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 <code>#include &lt;numbers&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
+<code>#include &lt;span&gt;</code><br />
 <code>#include &lt;Kokkos_Core.hpp&gt;</code><br />
 <code>#include &quot;<a class="el" href="vector__operations_8hpp_source.html">vector_operations.hpp</a>&quot;</code><br />
 </div>
@@ -204,9 +206,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae4ee8d5182c7770383629011ad8be530"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ae4ee8d5182c7770383629011ad8be530">openturbine::math::RotateVectorByQuaternion</a> (const Quaternion &amp;q, const View1 &amp;v, const View2 &amp;v_rot)</td></tr>
 <tr class="memdesc:ae4ee8d5182c7770383629011ad8be530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates provided vector by provided <em>unit</em> quaternion and returns the result.  <br /></td></tr>
 <tr class="separator:ae4ee8d5182c7770383629011ad8be530"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6156c5ab354fe52f3fae428fcb879553" id="r_a6156c5ab354fe52f3fae428fcb879553"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a6156c5ab354fe52f3fae428fcb879553">openturbine::math::RotateVectorByQuaternion</a> (const std::array&lt; double, 4 &gt; &amp;q, const std::array&lt; double, 3 &gt; &amp;v)</td></tr>
-<tr class="memdesc:a6156c5ab354fe52f3fae428fcb879553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates provided vector by provided <em>unit</em> quaternion and returns the result.  <br /></td></tr>
-<tr class="separator:a6156c5ab354fe52f3fae428fcb879553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a48fe74fc203914cfe98a42bfd05ca" id="r_a72a48fe74fc203914cfe98a42bfd05ca"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a72a48fe74fc203914cfe98a42bfd05ca">openturbine::math::RotateVectorByQuaternion</a> (std::span&lt; const double, 4 &gt; q, std::span&lt; const double, 3 &gt; v)</td></tr>
+<tr class="memdesc:a72a48fe74fc203914cfe98a42bfd05ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates provided vector by provided <em>unit</em> quaternion and returns the result.  <br /></td></tr>
+<tr class="separator:a72a48fe74fc203914cfe98a42bfd05ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ed1d5a9ce3a81f52284d503138645d4" id="r_a8ed1d5a9ce3a81f52284d503138645d4"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion , typename Matrix &gt; </td></tr>
 <tr class="memitem:a8ed1d5a9ce3a81f52284d503138645d4"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a8ed1d5a9ce3a81f52284d503138645d4">openturbine::math::QuaternionDerivative</a> (const Quaternion &amp;q, const Matrix &amp;m)</td></tr>
 <tr class="memdesc:a8ed1d5a9ce3a81f52284d503138645d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the derivative of a quaternion and stores the result in a 3x4 matrix.  <br /></td></tr>
@@ -215,6 +217,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a02ceedba19eac58a0d18a8e53491650e"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a02ceedba19eac58a0d18a8e53491650e">openturbine::math::QuaternionInverse</a> (const QuaternionInput &amp;q_in, const QuaternionOutput &amp;q_out)</td></tr>
 <tr class="memdesc:a02ceedba19eac58a0d18a8e53491650e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the inverse of a quaternion.  <br /></td></tr>
 <tr class="separator:a02ceedba19eac58a0d18a8e53491650e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca7a194bf4ac296ad32bc68b47c8e7c7" id="r_aca7a194bf4ac296ad32bc68b47c8e7c7"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#aca7a194bf4ac296ad32bc68b47c8e7c7">openturbine::math::QuaternionInverse</a> (std::span&lt; const double, 4 &gt; quaternion)</td></tr>
+<tr class="memdesc:aca7a194bf4ac296ad32bc68b47c8e7c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the inverse of a quaternion.  <br /></td></tr>
+<tr class="separator:aca7a194bf4ac296ad32bc68b47c8e7c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4d1d7726386a6cbe88840d9486519c5" id="r_ad4d1d7726386a6cbe88840d9486519c5"><td class="memTemplParams" colspan="2">template&lt;typename Quaternion1 , typename Quaternion2 , typename QuaternionN &gt; </td></tr>
 <tr class="memitem:ad4d1d7726386a6cbe88840d9486519c5"><td class="memTemplItemLeft" align="right" valign="top">KOKKOS_INLINE_FUNCTION void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ad4d1d7726386a6cbe88840d9486519c5">openturbine::math::QuaternionCompose</a> (const Quaternion1 &amp;q1, const Quaternion2 &amp;q2, QuaternionN &amp;qn)</td></tr>
 <tr class="memdesc:ad4d1d7726386a6cbe88840d9486519c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composes (i.e. multiplies) two quaternions and stores the result in a third quaternion.  <br /></td></tr>
@@ -242,6 +247,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7eadf29df03133ba74b611b10376d607" id="r_a7eadf29df03133ba74b611b10376d607"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a7eadf29df03133ba74b611b10376d607">openturbine::math::TangentTwistToQuaternion</a> (const std::array&lt; double, 3 &gt; &amp;tangent, const double twist)</td></tr>
 <tr class="memdesc:a7eadf29df03133ba74b611b10376d607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a 4-D quaternion from provided tangent vector and twist (degrees) about tangent.  <br /></td></tr>
 <tr class="separator:a7eadf29df03133ba74b611b10376d607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52b91ed5dad6d974ba0360a5269806d7" id="r_a52b91ed5dad6d974ba0360a5269806d7"><td class="memItemLeft" align="right" valign="top">std::array&lt; double, 4 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#a52b91ed5dad6d974ba0360a5269806d7">openturbine::math::AxisAngleToQuaternion</a> (const std::array&lt; double, 3 &gt; &amp;axis, double angle)</td></tr>
+<tr class="memdesc:a52b91ed5dad6d974ba0360a5269806d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a quaternion from the axis vector and angle (radians)  <br /></td></tr>
+<tr class="separator:a52b91ed5dad6d974ba0360a5269806d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7b929525a2902e9f1a4a939f8d3df7f" id="r_ac7b929525a2902e9f1a4a939f8d3df7f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceopenturbine_1_1math.html#ac7b929525a2902e9f1a4a939f8d3df7f">openturbine::math::IsIdentityQuaternion</a> (const std::array&lt; double, 4 &gt; &amp;q, double tolerance=1e-12)</td></tr>
 <tr class="memdesc:ac7b929525a2902e9f1a4a939f8d3df7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a quaternion is approximately the identity quaternion [1, 0, 0, 0].  <br /></td></tr>
 <tr class="separator:ac7b929525a2902e9f1a4a939f8d3df7f"><td class="memSeparator" colspan="2">&#160;</td></tr>

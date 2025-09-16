@@ -1,0 +1,14 @@
+.. meta::3814678e4045af6db18739f7e97bb02d6ed5aed7d83b642685396ef4a23f3d1faa996cf4495eaac32a1342ace8c2cb4994c93328207f81fdbb9058eb51a48db1
+
+:orphan:
+
+.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics_builder.hpp File Reference
+
+/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics\_builder.hpp File Reference
+========================================================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: aerodynamics__builder_8hpp.html

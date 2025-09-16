@@ -1,8 +1,9 @@
 var searchData=
 [
   ['u_0',['u',['../structopenturbine_1_1Node.html#a5cae501e16178e3e3ead7ff5622dc9cb',1,'openturbine::Node']]],
-  ['undeformed_5flength_1',['undeformed_length',['../structopenturbine_1_1SpringElement.html#a0658d458e84f1e6588a279f30fad90a2',1,'openturbine::SpringElement::undeformed_length'],['../structopenturbine_1_1interfaces_1_1cfd_1_1MooringLineInput.html#ae24f4a662aa10b52922860db0ae768e1',1,'openturbine::interfaces::cfd::MooringLineInput::undeformed_length']]],
-  ['uniform_5fflow_2',['uniform_flow',['../structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809',1,'openturbine::interfaces::components::Inflow']]],
-  ['unit_3',['unit',['../classwindio_1_1Schema.html#ae0e3b57fb627b07ef0cb1cce0e30cf62',1,'windio::Schema']]],
-  ['use_5fdevice_4',['use_device',['../structopenturbine_1_1Solver.html#a40a9150e8e69520a124cc7edcc318a52',1,'openturbine::Solver']]]
+  ['u_5fmotion_5fmap_1',['u_motion_map',['../classopenturbine_1_1interfaces_1_1components_1_1AerodynamicBody.html#a9a338cde47e1ec3aaaa021bb009bbc46',1,'openturbine::interfaces::components::AerodynamicBody']]],
+  ['undeformed_5flength_2',['undeformed_length',['../structopenturbine_1_1SpringElement.html#a0658d458e84f1e6588a279f30fad90a2',1,'openturbine::SpringElement::undeformed_length'],['../structopenturbine_1_1interfaces_1_1cfd_1_1MooringLineInput.html#ae24f4a662aa10b52922860db0ae768e1',1,'openturbine::interfaces::cfd::MooringLineInput::undeformed_length']]],
+  ['uniform_5fflow_3',['uniform_flow',['../structopenturbine_1_1interfaces_1_1components_1_1Inflow.html#aedd7e4ce3dea7585b009fba2f30cd809',1,'openturbine::interfaces::components::Inflow']]],
+  ['unit_4',['unit',['../classwindio_1_1Schema.html#ae0e3b57fb627b07ef0cb1cce0e30cf62',1,'windio::Schema']]],
+  ['use_5fdevice_5',['use_device',['../structopenturbine_1_1Solver.html#a40a9150e8e69520a124cc7edcc318a52',1,'openturbine::Solver']]]
 ];
