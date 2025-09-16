@@ -1,5 +1,7 @@
 #pragma once
 
+#include "interfaces/components/aerodynamics.hpp"
+#include "interfaces/components/aerodynamics_input.hpp"
 #include "interfaces/components/controller_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/host_state.hpp"
@@ -30,16 +32,30 @@ public:
      * @brief Constructs a TurbineInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
      * @param turbine_input Configuration parameters for the turbine geometry
+     * @param aerodynamics_input Configuration parameters for the aerodynamic loads
      * @param controller_input Configuration parameters for the controller
      */
     explicit TurbineInterface(
         const components::SolutionInput& solution_input,
         const components::TurbineInput& turbine_input,
+        const components::AerodynamicsInput& aerodynamics_input = {},
         const components::ControllerInput& controller_input = {}
     );
 
     /// @brief Returns a reference to the turbine model
     [[nodiscard]] components::Turbine& Turbine();
+
+    /**
+     * @brief Updates the aerodynamic loads to be applied to the sturcture based on a provided
+     * function
+     *
+     * @param fluid_density The density of the air (assumed constant)
+     * @param inflow_function A function that takes in a position and returns the velocity
+     */
+    void UpdateAerodynamicLoads(
+        double fluid_density,
+        const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function
+    );
 
     /**
      * @brief Steps forward in time
@@ -56,6 +72,24 @@ public:
     /// @brief Restores the previously saved state (in correction step)
     void RestoreState();
 
+    /// @brief Return a reference of the model owned by this interface
+    Model& GetModel() { return model; }
+
+    /// @brief Return a reference to this interface's host state
+    HostState<DeviceType>& GetHostState() { return host_state; }
+
+    /**
+     * @brief Calculates and normalizes azimuth angle from constraint output
+     * @return Azimuth angle in radians, normalized to [0, 2π)
+     */
+    [[nodiscard]] double CalculateAzimuthAngle() const;
+
+    /**
+     * @brief Calculates rotor speed from constraint output
+     * @return Rotor speed in rad/s
+     */
+    [[nodiscard]] double CalculateRotorSpeed() const;
+
 private:
     Model model;                  ///< OpenTurbine class for model construction
     components::Turbine turbine;  ///< Turbine model input/output data
@@ -70,6 +104,7 @@ private:
     HostState<DeviceType> host_state;                     ///< Host local copy of node state data
     std::unique_ptr<Outputs> outputs;                     ///< handle to Output for writing to NetCDF
     std::unique_ptr<util::TurbineController> controller;  ///< DISCON-style controller
+    std::unique_ptr<components::Aerodynamics> aerodynamics;  ///< Aerodynamics component
 
     /**
      * @brief Write rotor time-series data based on constraint outputs
@@ -81,18 +116,6 @@ private:
      * - Index 1: Rotor speed (rad/s)
      */
     void WriteRotorTimeSeriesData();
-
-    /**
-     * @brief Calculates and normalizes azimuth angle from constraint output
-     * @return Azimuth angle in radians, normalized to [0, 2π)
-     */
-    [[nodiscard]] double CalculateAzimuthAngle() const;
-
-    /**
-     * @brief Calculates rotor speed from constraint output
-     * @return Rotor speed in rad/s
-     */
-    [[nodiscard]] double CalculateRotorSpeed() const;
 
     /**
      * @brief Initialize controller with turbine parameters and connect to constraints

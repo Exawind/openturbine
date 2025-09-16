@@ -277,7 +277,8 @@ TEST(Milestone, IEA15RotorAeroController) {
                     {node_coords[j][3], node_coords[j][4], node_coords[j][5], node_coords[j][6]}
                 );
                 auto pos = math::RotateVectorByQuaternion(
-                    q_root, {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
+                    q_root,
+                    std::array{node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                 );
                 const auto v = math::CrossProduct(omega, pos);
 
@@ -313,7 +314,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Calculate node position and orientation for this blade
         auto pos = math::RotateVectorByQuaternion(
-            q_root, {node_coords[0][0] + hub_radius, node_coords[0][1], node_coords[0][2]}
+            q_root, std::array{node_coords[0][0] + hub_radius, node_coords[0][1], node_coords[0][2]}
         );
         const auto v = math::CrossProduct(omega, pos);
 

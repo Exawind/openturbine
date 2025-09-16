@@ -47,7 +47,7 @@ KOKKOS_INLINE_FUNCTION void CrossProduct(
 
 /// Calculate the cross product between two vectors
 constexpr std::array<double, 3> CrossProduct(
-    const std::array<double, 3>& a, const std::array<double, 3>& b
+    std::span<const double, 3> a, std::span<const double, 3> b
 ) {
     return std::array<double, 3>{
         a[1] * b[2] - a[2] * b[1],

@@ -12,6 +12,7 @@ namespace openturbine::interfaces {
 
 TurbineInterface::TurbineInterface(
     const components::SolutionInput& solution_input, const components::TurbineInput& turbine_input,
+    const components::AerodynamicsInput& aerodynamics_input,
     const components::ControllerInput& controller_input
 )
     : model(Model(solution_input.gravity)),
@@ -27,6 +28,24 @@ TurbineInterface::TurbineInterface(
       solver(CreateSolver(state, elements, constraints)),
       state_save(CloneState(state)),
       host_state(state) {
+    if (aerodynamics_input.is_enabled) {
+        auto aero_inputs = std::vector<components::AerodynamicBodyInput>{};
+        const auto num_turbine_blades = turbine.blades.size();
+        for (auto blade : std::views::iota(0U, num_turbine_blades)) {
+            auto blade_node_ids = std::vector<size_t>{};
+            std::ranges::transform(
+                turbine.blades[blade].nodes, std::back_inserter(blade_node_ids),
+                [](const auto& node_data) {
+                    return node_data.id;
+                }
+            );
+            aero_inputs.emplace_back(
+                blade, blade_node_ids,
+                aerodynamics_input.aero_inputs[aerodynamics_input.airfoil_map[blade]]
+            );
+        }
+        aerodynamics = std::make_unique<components::Aerodynamics>(aero_inputs, model.GetNodes());
+    }
     // Initialize controller if library path is provided
     if (controller_input.IsEnabled()) {
         try {
@@ -80,6 +99,21 @@ components::Turbine& TurbineInterface::Turbine() {
     return this->turbine;
 }
 
+void TurbineInterface::UpdateAerodynamicLoads(
+    double fluid_density,
+    const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function
+) {
+    if (aerodynamics) {
+        aerodynamics->CalculateMotion(host_state);
+
+        aerodynamics->SetInflowFromFunction(inflow_function);
+
+        aerodynamics->CalculateAerodynamicLoads(fluid_density);
+
+        aerodynamics->CalculateNodalLoads();
+    }
+}
+
 bool TurbineInterface::Step() {
     // Apply controller if available
     if (controller) {
@@ -89,6 +123,9 @@ bool TurbineInterface::Step() {
     // Update the host state with current node loads
     Kokkos::deep_copy(this->host_state.f, 0.);
     this->turbine.SetLoads(this->host_state);
+    if (this->aerodynamics) {
+        this->aerodynamics->AddNodalLoadsToState(this->host_state);
+    }
     Kokkos::deep_copy(this->state.f, this->host_state.f);
 
     // Solve for state at end of step

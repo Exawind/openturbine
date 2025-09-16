@@ -110,7 +110,7 @@ public:
     TurbineBuilder& SetShaftTiltAngle(double angle);
 
     /**
-     * @brief Set the initial nacelle yaw angle (degrees)
+     * @brief Set the initial nacelle yaw angle (radians)
      * @param angle The nacelle yaw angle to set
      * @return Reference to the builder for method chaining
      */
@@ -124,14 +124,14 @@ public:
     TurbineBuilder& SetConeAngle(double angle);
 
     /**
-     * @brief Set the initial blade pitch angle (degrees)
+     * @brief Set the initial blade pitch angle (radians)
      * @param angle The blade pitch angle to set
      * @return Reference to the builder for method chaining
      */
     TurbineBuilder& SetBladePitchAngle(double angle);
 
     /**
-     * @brief Set the azimuth angle (degrees)
+     * @brief Set the azimuth angle (radiams)
      * @param angle The azimuth angle to set
      * @return Reference to the builder for method chaining
      */
