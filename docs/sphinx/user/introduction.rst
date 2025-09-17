@@ -6,7 +6,7 @@ OpenTurbine is a speed-oriented, performance portable library for solving struct
 Code Structure
 --------------
 
-OpenTurbine provides three element types: high order beams, mass elements, and linear sprint elements.
+OpenTurbine provides three element types: high-order beam finite elements, mass elements, and geometrically nonlinear spring elements.
 When combined with constraints, these elements can be used to describe any number of structural dynamics configurations.
 OpenTurbine's "low level" API is based around the Model class, where the user will manually specify each node and constraint and element memberships.
 Additionally, using the low level API gives the user full flexibility in controlling the time stepping proceedure and copying memory to/from device.
