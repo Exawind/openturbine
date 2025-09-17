@@ -286,7 +286,7 @@ CMake from the command line or through a GUI such as ccmake.
 - ``OpenTurbine_ENABLE_SUPERLU_MT`` builds OpenTurbine with support for SuperLU-mt, a threaded version of SuperLU which may be configured to run in parallel on CPU.
 - ``OpenTurbine_ENABLE_MKL`` builds OpenTurbine with MKL's sparse direct solver, which can take advantage
   of multiple threads to run in parallel on CPU.
-- ``OpenTurbine_ENABLE_CUDSS`` builds OpenTurbine with CUDSS, the next generation sparse direct solver of CUDA; still in pre-release at the time of writing, it is the preferred CUDA based solver if the platform supports it.
-- ``OpenTurbine_ENABLE_CUSOLVERSP`` builds OpenTurbine with the cuSolver-sp sparse direct solver.
+- ``OpenTurbine_ENABLE_CUDSS`` builds OpenTurbine with cuDSS, the next generation sparse direct solver of CUDA; still in pre-release at the time of writing, it is the preferred CUDA based solver if the platform supports it.
+- ``OpenTurbine_ENABLE_CUSOLVERSP`` builds OpenTurbine with the cuSolverSP sparse direct solver.
 - ``OpenTurbine_ENABLE_ROSCO_CONTROLLER`` detects the ROSCO controller shared library and defines the `OpenTurbine_ROSCO_LIBRARY` variable
 - ``OpenTurbine_ENABLE_OPENFAST_ADI`` detects the OpenFAST AeroDyn shared library and defines the `OpenTurbine_ADI_LIBRARY` variable
