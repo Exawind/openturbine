@@ -1,34 +1,34 @@
 VTK Visualization
 =================
 
-This guide will walk you through on how to generate VTK visualization files from OpenTurbine simulation
+This guide demonstrates how to generate VTK visualization files from Kynema simulation
 outputs using the ``generate_vtk_output.py`` script. VTK (Visualization Toolkit) files can be opened
 in visualization software such as `ParaView <https://www.paraview.org/>`_,
 `VisIt <https://visit-dav.github.io/visit-website/>`_, or other VTK-compatible viewers to create plots,
-movies, and interactive visualizations of your simulation results. We tested the visualization workflow
-described below with ParaView version 5.11.2 on macOS.
+movies, and interactive visualizations of your simulation results. This workflow has been tested
+with ParaView version 5.11.2 on macOS.
 
 .. tip::
    For the most up to date and working
    version of this script, see ``src/viz/generate_vtk_output.py``.
 
-   You can get help on how to use the script by running
+   To get help on using the script, run
 
    .. code-block:: bash
 
       python src/viz/generate_vtk_output.py -h
 
-   This will display the usage information for the script, e.g.
+   This displays the usage information for the script
 
    .. code-block:: text
 
       usage: generate_vtk_output.py [-h] [--output_dir OUTPUT_DIR] [--start-timestep START_TIMESTEP] [--end-timestep END_TIMESTEP]
                                     netcdf_file connectivity_file
 
-      Generate VTK files from OpenTurbine NetCDF output
+      Generate VTK files from Kynema NetCDF output
 
       positional arguments:
-        netcdf_file           Path to OpenTurbine NetCDF output file e.g. blade_interface.nc
+        netcdf_file           Path to Kynema NetCDF output file e.g. blade_interface.nc
         connectivity_file     Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml
 
       options:
@@ -43,18 +43,18 @@ described below with ParaView version 5.11.2 on macOS.
 Overview
 --------
 
-The ``generate_vtk_output.py`` script is a post-processing tool that converts OpenTurbine simulation
-outputs into VTK (Visualization Toolkit) format for visualization and analysis. The script executes
-a series of steps to produce the VTK files.
+The ``generate_vtk_output.py`` script is a post-processing tool that converts Kynema simulation
+outputs into VTK (Visualization Toolkit) format for visualization and subsequent analysis. The script
+performs the following operations.
 
 1. **Data Conversion**: Reads time-series simulation data from NetCDF files and mesh connectivity
    information from YAML files, then converts this data into VTK's unstructured grid format
    (``vtkUnstructuredGrid``). An unstructured grid is a flexible data structure that stores a
    collection of points and heterogeneous cells (each with a VTK cell type and point connectivity)
-   without requiring a regular lattice structure, making it well-suited for a flexible multibody system
-   where elements may have varying connectivity patterns and types.
+   without requiring a regular lattice structure. This makes it well-suited for flexible multibody
+   systems where elements may have varying connectivity patterns and types.
 
-2. **Element Visualization**: Creates appropriate VTK representations for different OpenTurbine elements:
+2. **Element Visualization**: Creates appropriate VTK representations for different Kynema elements:
 
    - **Beam elements**: Represented as polyline cells connecting multiple nodes
    - **Mass elements**: Represented as vertex cells at single nodes
@@ -63,7 +63,7 @@ a series of steps to produce the VTK files.
 
 3. **Data Fields**: Extracts and includes comprehensive node data in the VTK output:
 
-   - **Position and orientation**: Node positions and 3x3 rotation matrices derived from quaternions
+   - **Position and orientation**: Node positions and 3×3 rotation matrices derived from quaternions
    - **Velocities and accelerations**: Translational and rotational velocities and accelerations
    - **Forces and moments**: Applied loads (when available in simulation output)
    - **Deformation**: Structural deformation data (when available)
@@ -79,7 +79,7 @@ Prerequisites
 Before using the VTK visualization script, you'll need the following Python packages installed in your environment.
 
 - ``numpy``: For numerical operations
-- ``netCDF4``: For reading OpenTurbine NetCDF output files
+- ``netCDF4``: For reading Kynema NetCDF output files
 - ``vtk``: For creating VTK visualization files
 - ``PyYAML``: For reading yaml-based mesh connectivity files
 
@@ -98,25 +98,25 @@ Or if you're using conda
 Required Input Files
 --------------------
 
-The VTK visualization script requires two input files, which are generated automatically when running a
-simulation via OpenTurbine APIs found in ``src/interfaces``.
+The VTK visualization script requires two input files, which are generated automatically when running
+simulations via Kynema APIs found in ``src/interfaces``.
 
-1. **NetCDF Output File**: This is the primary output file generated by OpenTurbine during simulation.
-   It contains the time-series data for all nodes including position, velocity, acceleration, forces,
-   and moments. This file is generated automatically when running a simulation via the high-level
-   OpenTurbine APIs provided in ``src/interfaces``. The file naming follows the pattern:
+1. **NetCDF Output File**: The primary output file generated by Kynema during simulation.
+   It contains time-series data for all nodes including position, velocity, acceleration, forces,
+   and moments. This file is generated automatically when running simulations via the high-level
+   Kynema APIs provided in ``src/interfaces``. File naming follows this pattern:
 
    - ``TurbineInterface`` API generates ``turbine_interface.nc``
    - ``CFDInterface`` API generates ``cfd_interface.nc``
-   - ``BladeInterface`` API generates ``blade_interface.nc`` etc.
+   - ``BladeInterface`` API generates ``blade_interface.nc``
 
-2. **Mesh Connectivity File**: This is a YAML file that describes the connectivity between nodes for
+2. **Mesh Connectivity File**: A YAML file that describes the connectivity between nodes for
    different element types (beams, masses, springs, constraints). This file is generated during the
    simulation setup process and is named ``mesh_connectivity.yaml`` by default.
 
 .. note::
-   To generate these files during simulation, make sure to set the appropriate output
-   configuration. For example, in test cases, verify that ``write_output`` is set to
+   To generate these files during simulation, ensure that the appropriate output
+   configuration is set. For example, in test cases, verify that ``write_output`` is set to
    ``true`` to enable file output. The output file name can be specified using
    ``builder.Solution().SetOutputFile("filename")``.
 
@@ -129,7 +129,7 @@ The simplest way to generate VTK files is to run the script with the required in
 
     python src/viz/generate_vtk_output.py simulation_output.nc mesh_connectivity.yaml
 
-This will create VTK files for all timesteps in the output directory ``vtk_output/`` in the current working directory.
+This creates VTK files for all timesteps in the output directory ``vtk_output/`` in the current working directory.
 
 Command Line Options
 ~~~~~~~~~~~~~~~~~~~~
@@ -142,7 +142,7 @@ The script supports several command line options to customize the visualization 
 
 **Required Arguments**
 
-- ``netcdf_file``: Path to OpenTurbine NetCDF output file (e.g., ``turbine_interface.nc``)
+- ``netcdf_file``: Path to Kynema NetCDF output file (e.g., ``turbine_interface.nc``)
 - ``connectivity_file``: Path to mesh connectivity YAML file (e.g., ``mesh_connectivity.yaml``)
 
 **Optional Arguments**
@@ -179,8 +179,8 @@ Output Files
 File Locations
 ~~~~~~~~~~~~~~
 
-- For interface tests run from the ``tests/regression_tests/interfaces/`` directory, the output files will be written in the ``build/tests/regression_tests/<TestName>/`` directory
-- In custom simulations: Current working directory or you can specify an output path via the ``--output_dir`` option
+- For interface tests run from the ``tests/regression_tests/interfaces/`` directory, output files are written to the ``build/tests/regression_tests/<TestName>/`` directory
+- For custom simulations: Current working directory or a specified output path via the ``--output_dir`` option
 
 Data Arrays Included
 ~~~~~~~~~~~~~~~~~~~~~
@@ -189,8 +189,7 @@ Point Data (per node)
 ^^^^^^^^^^^^^^^^^^^^^^
 
 - Node identification numbers (NodeID)
-- Orientation data (3x3 rotation matrix components)
-
+- Orientation data (3×3 rotation matrix components):
   - OrientationX
   - OrientationY
   - OrientationZ
@@ -206,18 +205,20 @@ Cell Data (per element)
 Visualization in ParaView
 -------------------------
 
-- **Opening the Collection File**
+Opening the Collection File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  - Launch ParaView
-  - Open the ``simulation.pvd`` file from your output directory
-  - This will load all timesteps as a time series
+1. Launch ParaView
+2. Open the ``simulation.pvd`` file from your output directory
+3. This loads all timesteps as a time series
 
-- **Basic Controls for Animation and Visualization**
+Basic Controls for Animation and Visualization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  - Use the animation controls to play through timesteps
-  - Set the animation speed and range as desired
-  - Export animations as movies using File → Save Animation
-  - Select different data arrays from the "Coloring" dropdown menus
+- Use the animation controls to play through timesteps
+- Set the animation speed and range as desired
+- Export animations as movies using File → Save Animation
+- Select different data arrays from the "Coloring" dropdown menus
 
 .. tip::
    For detailed ParaView usage instructions, refer to the `ParaView User's Guide <https://www.paraview.org/documentation/>`_
@@ -227,7 +228,7 @@ Examples
 --------
 
 This section showcases some examples of the types of visualizations and animations that can be
-generated by the VTK script by leveraging the OpenTurbine interfaces/APIs via the regression
+generated by the VTK script by leveraging the Kynema interfaces/APIs via the regression
 tests.
 
 Static Curled Beam Visualization
