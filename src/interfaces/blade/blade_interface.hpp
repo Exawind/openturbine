@@ -52,16 +52,16 @@ public:
     void SetRootDisplacement(const std::array<double, 7>& u) const;
 
 private:
-    Model model;              ///< Kynema class for model construction
-    components::Beam blade;   ///< Blade model input/output data
-    State<DeviceType> state;  ///< Kynema class for storing system state
+    Model model;                    ///< Kynema class for model construction
+    components::Beam blade;         ///< Blade model input/output data
+    State<DeviceType> state;        ///< Kynema class for storing system state
     Elements<DeviceType> elements;  ///< Kynema class for model elements (beams, masses, springs)
     Constraints<DeviceType> constraints;  ///< Kynema class for constraints tying elements together
     StepParameters parameters;            ///< Kynema class containing solution parameters
     Solver<DeviceType> solver;            ///< Kynema class for solving the dynamic system
     State<DeviceType> state_save;         ///< Kynema class state class for temporarily saving state
-    HostState<DeviceType> host_state;  ///< Host local copy of node state data
-    std::unique_ptr<Outputs> outputs;  ///< handle to Output for writing to NetCDF
+    HostState<DeviceType> host_state;     ///< Host local copy of node state data
+    std::unique_ptr<Outputs> outputs;     ///< handle to Output for writing to NetCDF
 };
 
 }  // namespace kynema::interfaces

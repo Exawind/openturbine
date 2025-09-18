@@ -20,7 +20,8 @@ void TestCalculateTemporaryVariables() {
     const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
 
     Kokkos::parallel_for(
-        "CalculateTemporaryVariables", 1, KOKKOS_LAMBDA(size_t) {
+        "CalculateTemporaryVariables", 1,
+        KOKKOS_LAMBDA(size_t) {
             kynema::beams::CalculateTemporaryVariables<Kokkos::DefaultExecutionSpace>::invoke(
                 x0_prime, u_prime, x0pupSS
             );

@@ -18,7 +18,8 @@ void TestCalculateDistanceComponentsTests_OneElement() {
     const auto r = Kokkos::View<double[3]>("r");
 
     Kokkos::parallel_for(
-        "CalculateDistanceComponents", 1, KOKKOS_LAMBDA(const size_t) {
+        "CalculateDistanceComponents", 1,
+        KOKKOS_LAMBDA(const size_t) {
             kynema::springs::CalculateDistanceComponents<Kokkos::DefaultExecutionSpace>::invoke(
                 x0, u1, u2, r
             );
