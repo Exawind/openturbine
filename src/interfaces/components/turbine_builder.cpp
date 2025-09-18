@@ -2,7 +2,7 @@
 
 #include "turbine.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 [[nodiscard]] const TurbineInput& TurbineBuilder::Input() {
     // Add the blade inputs from the blade builders
     this->input.blades.clear();
@@ -102,4 +102,4 @@ TurbineBuilder& TurbineBuilder::SetRotorSpeed(double speed) {
     this->input.rotor_speed = speed;
     return *this;
 }
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

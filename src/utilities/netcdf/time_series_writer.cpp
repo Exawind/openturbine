@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace openturbine::util {
+namespace kynema::util {
 TimeSeriesWriter::TimeSeriesWriter(const std::string& file_path, bool create)
     : file_(file_path, create) {
     // Check if the "time" dimension already exists in the file
@@ -52,4 +52,4 @@ void TimeSeriesWriter::WriteValueAtTimestep(
 const NetCDFFile& TimeSeriesWriter::GetFile() const {
     return file_;
 }
-}  // namespace openturbine::util
+}  // namespace kynema::util

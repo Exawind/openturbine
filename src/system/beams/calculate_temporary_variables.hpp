@@ -5,7 +5,7 @@
 
 #include "math/vector_operations.hpp"
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct CalculateTemporaryVariables {
@@ -27,4 +27,4 @@ struct CalculateTemporaryVariables {
         math::VecTilde(x0pup, x0pupSS);
     }
 };
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

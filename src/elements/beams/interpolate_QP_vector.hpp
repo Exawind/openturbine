@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 /**
  * @brief A  Kernel which interpolates a vector quantity from nodes on a given element
@@ -41,4 +41,4 @@ struct InterpolateQPVector {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

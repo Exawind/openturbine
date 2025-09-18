@@ -1,6 +1,6 @@
 #pragma once
 
-namespace openturbine::util {
+namespace kynema::util {
 
 extern "C" {
 
@@ -12,4 +12,4 @@ void PITCH_CONTROLLER(
 
 }  // extern "C"
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

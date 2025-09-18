@@ -5,7 +5,7 @@
 #include "masses_input.hpp"
 #include "model/node.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Creates a masses data structure and initializes its data
@@ -59,4 +59,4 @@ inline Masses<DeviceType> CreateMasses(
     return masses;
 }
 
-}  // namespace openturbine
+}  // namespace kynema

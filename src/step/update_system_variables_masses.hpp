@@ -8,7 +8,7 @@
 #include "step_parameters.hpp"
 #include "system/masses/calculate_quadrature_point_values.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 template <typename DeviceType>
 inline void UpdateSystemVariablesMasses(
@@ -29,4 +29,4 @@ inline void UpdateSystemVariablesMasses(
     );
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

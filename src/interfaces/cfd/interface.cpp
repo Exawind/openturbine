@@ -15,7 +15,7 @@
 #include "turbine.hpp"
 #include "turbine_input.hpp"
 
-namespace openturbine::interfaces::cfd {
+namespace kynema::interfaces::cfd {
 
 /**
  * @brief Populates the provided NodeData object with state information
@@ -46,7 +46,7 @@ void GetNodeMotion(
  * @brief Adds nodes to the provided model based on the provided input configuration
  *
  * @param input The configuration for the floating platform
- * @param model The OpenTurbine Model to be populated with mass and spring element information
+ * @param model The Kynema Model to be populated with mass and spring element information
  * @return A FlatingPlatform object based on the provided configuration
  */
 FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Model& model) {
@@ -128,7 +128,7 @@ FloatingPlatform CreateFloatingPlatform(const FloatingPlatformInput& input, Mode
  */
 template <typename DeviceType>
 void SetPlatformLoads(
-    const FloatingPlatform& platform, openturbine::interfaces::HostState<DeviceType>& host_state
+    const FloatingPlatform& platform, kynema::interfaces::HostState<DeviceType>& host_state
 ) {
     // Return if platform is not active
     if (!platform.active) {
@@ -200,7 +200,7 @@ Turbine CreateTurbine(const TurbineInput& input, Model& model) {
  */
 template <typename DeviceType>
 void SetTurbineLoads(
-    const Turbine& turbine, openturbine::interfaces::HostState<DeviceType>& host_state,
+    const Turbine& turbine, kynema::interfaces::HostState<DeviceType>& host_state,
     State<DeviceType>& state
 ) {
     SetPlatformLoads(turbine.floating_platform, host_state);
@@ -254,7 +254,7 @@ Interface::Interface(const InterfaceInput& input)
         std::filesystem::create_directories(input.output_file);
 
         // Initialize outputs
-        this->outputs_ = std::make_unique<openturbine::interfaces::Outputs>(
+        this->outputs_ = std::make_unique<kynema::interfaces::Outputs>(
             input.output_file + "/cfd_interface.nc", state.num_system_nodes
         );
 
@@ -285,9 +285,8 @@ bool Interface::Step() {
     SetTurbineLoads(this->turbine, this->host_state, this->state);
 
     // Solve for state at end of step
-    auto converged = openturbine::Step(
-        this->parameters, this->solver, this->elements, this->state, this->constraints
-    );
+    auto converged =
+        kynema::Step(this->parameters, this->solver, this->elements, this->state, this->constraints);
     if (!converged) {
         return false;
     }
@@ -327,4 +326,4 @@ void Interface::RestoreState() {
     );
 }
 
-}  // namespace openturbine::interfaces::cfd
+}  // namespace kynema::interfaces::cfd

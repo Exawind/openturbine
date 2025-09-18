@@ -4,7 +4,7 @@
 #include <array>
 #include <stdexcept>
 
-namespace openturbine::util {
+namespace kynema::util {
 NodeStateWriter::NodeStateWriter(const std::string& file_path, bool create, size_t num_nodes)
     : file_(file_path, create), num_nodes_(num_nodes) {
     // Define dimensions for time and nodes
@@ -110,4 +110,4 @@ void NodeStateWriter::DefineStateVariables(
         (void)file_.AddVariable<double>(prefix + "_w", dimensions);
     }
 }
-}  // namespace openturbine::util
+}  // namespace kynema::util

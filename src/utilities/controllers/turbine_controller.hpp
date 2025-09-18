@@ -6,7 +6,7 @@
 #include "utilities/controllers/controller_io.hpp"
 #include "vendor/dylib/dylib.hpp"
 
-namespace openturbine::util {
+namespace kynema::util {
 
 /// A turbine controller class that works as a wrapper around the shared library containing the
 /// controller logic
@@ -39,4 +39,4 @@ private:
         controller_function_;  //< Function pointer to the controller function
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

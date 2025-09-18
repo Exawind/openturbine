@@ -1,6 +1,6 @@
 # Specify the source files for the regression test executable
 target_sources(
-    openturbine_regression_tests
+    kynema_regression_tests
     PRIVATE
     test_beams.cpp
     test_cantilever_beam.cpp

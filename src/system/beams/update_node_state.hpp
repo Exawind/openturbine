@@ -3,7 +3,7 @@
 #include <KokkosBatched_Copy_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct UpdateNodeStateElement {
@@ -82,4 +82,4 @@ struct UpdateNodeState {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

@@ -12,7 +12,7 @@
 #include "math/quaternion_operations.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 Beam::Beam(const BeamInput& input, Model& model) {
     ValidateInput(input);
@@ -280,4 +280,4 @@ std::vector<BeamSection> Beam::BuildBeamSections(const BeamInput& input) {
 
     return sections;
 }
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

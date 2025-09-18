@@ -1,7 +1,7 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
-	dss_algorithm.hpp
+        dss_algorithm.hpp
         dss_handle.hpp
         dss_handle_cusolversp.hpp
         dss_handle_cudss.hpp
@@ -34,5 +34,5 @@ install(FILES
         dss_symbolic_mkl.hpp
         dss_symbolic_superlu.hpp
         dss_symbolic_superlu_mt.hpp
-        DESTINATION include/OpenTurbine/solver/linear_solver
+        DESTINATION include/Kynema/solver/linear_solver
 )

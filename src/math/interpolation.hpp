@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace openturbine::math {
+namespace kynema::math {
 
 /**
  * @brief Computes weights for linear interpolation
@@ -223,4 +223,4 @@ inline std::vector<double> GenerateGLLPoints(const size_t order) {
     return gll_points;
 }
 
-}  // namespace openturbine::math
+}  // namespace kynema::math

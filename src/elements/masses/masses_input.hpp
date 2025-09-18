@@ -6,7 +6,7 @@
 
 #include "mass_element.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Represents the input data for creating mass/rigid body elements
@@ -24,4 +24,4 @@ struct MassesInput {
     [[nodiscard]] size_t NumElements() const { return elements.size(); }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

@@ -4,7 +4,7 @@
 #include "constraints/calculate_fixed_bc_constraint.hpp"
 #include "create_view.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteCalculateFixedBCConstraint {
     Kokkos::View<double[3]>::const_type X0;
@@ -69,4 +69,4 @@ TEST(CalculateFixedBCConstraintTests, OneConstraint) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

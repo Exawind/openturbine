@@ -8,11 +8,11 @@
 
 #include <Kokkos_Core.hpp>
 
-#include "OpenTurbine_config.h"
+#include "Kynema_config.h"
 
 /// @cond
 namespace lapack {
-#ifdef OpenTurbine_ENABLE_MKL
+#ifdef Kynema_ENABLE_MKL
 #include <mkl_lapacke.h>
 #else
 #include <lapacke.h>
@@ -22,7 +22,7 @@ namespace lapack {
 
 #include "interpolation.hpp"
 
-namespace openturbine::math {
+namespace kynema::math {
 
 /**
  * @brief Maps input geometric locations -> normalized domain using linear mapping
@@ -173,7 +173,7 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     }
 
     // Solve the least squares problem for each dimension of B
-#ifdef OpenTurbine_ENABLE_MKL
+#ifdef Kynema_ENABLE_MKL
     using index_type = MKL_INT;
 #else
     using index_type = int;
@@ -195,4 +195,4 @@ inline std::vector<std::array<double, 3>> PerformLeastSquaresFitting(
     return result;
 }
 
-}  // namespace openturbine::math
+}  // namespace kynema::math

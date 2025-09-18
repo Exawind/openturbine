@@ -5,7 +5,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine::solver {
+namespace kynema::solver {
 
 /**
  * @brief A Kernel which sums the system matrix contributions computed at a mass element's node
@@ -59,4 +59,4 @@ struct ContributeMassesToSparseMatrix {
     }
 };
 
-}  // namespace openturbine::solver
+}  // namespace kynema::solver

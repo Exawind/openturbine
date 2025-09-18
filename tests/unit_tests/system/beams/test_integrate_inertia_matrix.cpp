@@ -10,7 +10,7 @@
 #include "system/beams/integrate_inertia_matrix.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::beams::tests {
+namespace kynema::beams::tests {
 
 inline void IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_Muu() {
     constexpr auto number_of_nodes = size_t{1U};
@@ -266,4 +266,4 @@ TEST(IntegrateInertiaMatrixTests, OneElementOneNodeOneQP_WithMultiplicationFacto
     IntegrateInertiaMatrix_TestOneElementOneNodeOneQP_WithMultiplicationFactor();
 }
 
-}  // namespace openturbine::beams::tests
+}  // namespace kynema::beams::tests

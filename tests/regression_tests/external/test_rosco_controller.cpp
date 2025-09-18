@@ -1,14 +1,13 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
+#include "Kynema_config.h"
 #include "utilities/controllers/turbine_controller.hpp"
 
-#include "OpenTurbine_config.h"
-
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(ROSCO_Controller, initialize) {
-    const auto shared_lib_path = std::string{static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)};
+    const auto shared_lib_path = std::string{static_cast<const char*>(Kynema_ROSCO_LIBRARY)};
     const auto controller_function_name = std::string{"DISCON"};
 
     auto controller = util::TurbineController(
@@ -23,4 +22,4 @@ TEST(ROSCO_Controller, initialize) {
     controller.CallController();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

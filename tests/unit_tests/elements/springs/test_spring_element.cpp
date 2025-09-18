@@ -3,7 +3,7 @@
 #include "elements/springs/spring_element.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(SpringElement, CreateSpringElement_ZeroUndeformedLength) {
     Model model;
@@ -39,4 +39,4 @@ TEST(SpringElement, CreateSpringElement_NonZeroUndeformedLength) {
     EXPECT_EQ(model.GetNode(spring.node_ids[1]).x0[0], 2.);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

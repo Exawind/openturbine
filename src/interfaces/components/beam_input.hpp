@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 /**
  * @brief Reference axis definition for a beam
@@ -98,4 +98,4 @@ struct BeamInput {
     std::vector<Section> sections;
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

@@ -12,7 +12,7 @@
 #include "step/step.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 auto ComputeIEA15NodeLocations() {
     auto node_loc = std::array<double, node_xi.size()>{};
@@ -375,4 +375,4 @@ TEST(RotorTest, IEA15RotorHost) {
         EXPECT_EQ(converged, true);
     }
 }
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

@@ -1,4 +1,4 @@
-function(openturbine_setup_dependencies)
+function(kynema_setup_dependencies)
   #--------------------------------------------------------------------------
   # Required packages
   #--------------------------------------------------------------------------
@@ -13,35 +13,35 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # Sparse Direct Linear Solvers
   #----------------------------------------
-  if(OpenTurbine_ENABLE_SUPERLU)
+  if(Kynema_ENABLE_SUPERLU)
     find_package(superlu REQUIRED)
   endif()
 
-  if(OpenTurbine_ENABLE_SUPERLU_MT)
+  if(Kynema_ENABLE_SUPERLU_MT)
     find_package(superlu_mt REQUIRED)
   endif()
 
-  if(OpenTurbine_ENABLE_KLU)
+  if(Kynema_ENABLE_KLU)
     find_package(KLU REQUIRED)
   endif()
 
-  if(OpenTurbine_ENABLE_UMFPACK)
+  if(Kynema_ENABLE_UMFPACK)
     find_package(UMFPACK REQUIRED)
   endif()
 
-  if(OpenTurbine_ENABLE_MKL)
+  if(Kynema_ENABLE_MKL)
     find_package(MKL REQUIRED)
   endif()
 
-  if(OpenTurbine_ENABLE_CUSOLVERSP)
+  if(Kynema_ENABLE_CUSOLVERSP)
     if(NOT DEFINED Kokkos_ENABLE_CUDA)
-      message(FATAL_ERROR "When OpenTurbine_ENABLE_CUSOLVERSP is enabled, Kokkos must also be built with CUDA")
+      message(FATAL_ERROR "When Kynema_ENABLE_CUSOLVERSP is enabled, Kokkos must also be built with CUDA")
     endif()
   endif()
 
-  if(OpenTurbine_ENABLE_CUDSS)
+  if(Kynema_ENABLE_CUDSS)
     if(NOT DEFINED Kokkos_ENABLE_CUDA)
-      message(FATAL_ERROR "When OpenTurbine_ENABLE_CUDSS is enabled, Kokkos must also be built with CUDA")
+      message(FATAL_ERROR "When Kynema_ENABLE_CUDSS is enabled, Kokkos must also be built with CUDA")
     endif()
     find_package(cudss REQUIRED)
   endif()
@@ -49,7 +49,7 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # GTest
   #----------------------------------------
-  if(OpenTurbine_ENABLE_TESTS)
+  if(Kynema_ENABLE_TESTS)
     find_package(GTest REQUIRED)
   endif()
 
@@ -68,16 +68,16 @@ function(openturbine_setup_dependencies)
   #----------------------------------------
   # OpenFAST/AerodynInflow (ADI) library
   #----------------------------------------
-  if(OpenTurbine_ENABLE_OPENFAST_ADI)
+  if(Kynema_ENABLE_OPENFAST_ADI)
     find_library(OpenFast_ADI_LIBRARY NAMES aerodyn_inflow_c_binding)
-    set(OpenTurbine_ADI_LIBRARY ${OpenFast_ADI_LIBRARY} CACHE PATH "ADI library")
+    set(Kynema_ADI_LIBRARY ${OpenFast_ADI_LIBRARY} CACHE PATH "ADI library")
   endif()
 
   #----------------------------------------
   # ROSCO Controller library
   #----------------------------------------
-  if(OpenTurbine_ENABLE_ROSCO_CONTROLLER)
+  if(Kynema_ENABLE_ROSCO_CONTROLLER)
     find_library(Rosco_LIBRARY NAMES discon)
-    set(OpenTurbine_ROSCO_LIBRARY ${Rosco_LIBRARY} CACHE PATH "Rosco discon library")
+    set(Kynema_ROSCO_LIBRARY ${Rosco_LIBRARY} CACHE PATH "Rosco discon library")
   endif()
 endfunction()

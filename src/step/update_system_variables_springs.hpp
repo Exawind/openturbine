@@ -7,7 +7,7 @@
 #include "state/state.hpp"
 #include "system/springs/calculate_quadrature_point_values.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 template <typename DeviceType>
 inline void UpdateSystemVariablesSprings(
@@ -27,4 +27,4 @@ inline void UpdateSystemVariablesSprings(
     );
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

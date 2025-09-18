@@ -3,7 +3,7 @@
 #include "elements/beams/beam_quadrature.hpp"
 #include "elements/beams/beam_section.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 // Node location from [-1, 1]
 static constexpr auto node_xi = std::array{
@@ -804,4 +804,4 @@ static const auto material_sections = std::vector{
     },
 };
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

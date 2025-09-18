@@ -6,7 +6,7 @@
 
 #include "state.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Reads State data from a provided restart file.
@@ -64,4 +64,4 @@ inline void ReadStateFromFile(std::istream& input, State<DeviceType>& state) {
     read_6(state.f);
 }
 
-}  // namespace openturbine
+}  // namespace kynema

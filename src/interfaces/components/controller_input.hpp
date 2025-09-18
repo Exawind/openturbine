@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 /**
  * @brief Configuration parameters for a DISCON-style turbine controller
@@ -42,4 +42,4 @@ struct ControllerInput {
     [[nodiscard]] bool IsEnabled() const { return !shared_lib_path.empty(); }
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

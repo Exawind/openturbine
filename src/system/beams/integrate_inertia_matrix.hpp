@@ -3,7 +3,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_SIMD.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct IntegrateInertiaMatrixElement {
@@ -77,4 +77,4 @@ struct IntegrateInertiaMatrixElement {
         }
     }
 };
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

@@ -7,7 +7,7 @@
 #include "create_view.hpp"
 #include "state/calculate_next_state.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
@@ -67,4 +67,4 @@ TEST(CalculateNextState, OneNode) {
     const auto a_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), a);
     CompareWithExpected(a_mirror, a_exact);
 }
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

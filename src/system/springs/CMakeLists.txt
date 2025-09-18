@@ -1,4 +1,4 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
         calculate_distance_components.hpp
@@ -7,5 +7,5 @@ install(FILES
         calculate_length.hpp
         calculate_quadrature_point_values.hpp
         calculate_stiffness_matrix.hpp
-        DESTINATION include/OpenTurbine/system/springs/
+        DESTINATION include/Kynema/system/springs/
 )

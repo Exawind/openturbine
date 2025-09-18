@@ -1,11 +1,10 @@
 #include <gtest/gtest.h>
 
+#include "Kynema_config.h"
 #include "regression/test_utilities.hpp"
 #include "utilities/aerodynamics/aerodyn_inflow.hpp"
 
-#include "OpenTurbine_config.h"
-
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(AerodynInflowTest, BladeInitialState_Constructor) {
     constexpr auto root = std::array{1., 2., 3., 1., 0., 0., 0.};
@@ -521,7 +520,7 @@ TEST(AerodynInflowTest, VTKSettings_Set) {
 
 /// Helper function to get the shared library path
 std::string GetSharedLibraryPath() {
-    return std::string(OpenTurbine_ADI_LIBRARY);
+    return std::string(Kynema_ADI_LIBRARY);
 }
 
 TEST(AerodynInflowTest, AeroDynInflowLibrary_DefaultConstructor) {
@@ -649,4 +648,4 @@ TEST(AerodynInflowTest, AeroDynInflowLibrary_FullLoopSimulation) {
     EXPECT_NO_THROW(aerodyn_inflow_library.Finalize());
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

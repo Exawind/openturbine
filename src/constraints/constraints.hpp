@@ -12,7 +12,7 @@
 #include "dof_management/freedom_signature.hpp"
 #include "model/node.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Container class for managing multiple constraints in a simulation
@@ -353,4 +353,4 @@ struct Constraints {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

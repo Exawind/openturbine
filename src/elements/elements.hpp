@@ -6,7 +6,7 @@
 #include "elements/masses/masses.hpp"
 #include "elements/springs/springs.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief A container providing handle to all structural elements present in the model
@@ -137,4 +137,4 @@ struct Elements {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

@@ -5,7 +5,7 @@
 #include "springs.hpp"
 #include "springs_input.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Creates a springs data structure and initializes its data
@@ -56,4 +56,4 @@ inline Springs<DeviceType> CreateSprings(
     return springs;
 }
 
-}  // namespace openturbine
+}  // namespace kynema

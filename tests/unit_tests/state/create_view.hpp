@@ -1,6 +1,6 @@
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::tests {
+namespace kynema::tests {
 template <typename ValueType, typename DataType>
 typename Kokkos::View<ValueType>::const_type CreateView(
     const std::string& name, const DataType& data
@@ -37,4 +37,4 @@ typename Kokkos::View<ValueType, Kokkos::LayoutLeft>::const_type CreateLeftView(
     return view;
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

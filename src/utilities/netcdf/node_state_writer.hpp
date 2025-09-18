@@ -7,12 +7,12 @@
 
 #include "netcdf_file.hpp"
 
-namespace openturbine::util {
+namespace kynema::util {
 
 /**
- * @brief Class for writing OpenTurbine nodal state data to NetCDF-based output files
+ * @brief Class for writing Kynema nodal state data to NetCDF-based output files
  *
- * This class handles the writing of nodal state data for OpenTurbine simulations to NetCDF format.
+ * This class handles the writing of nodal state data for Kynema simulations to NetCDF format.
  * It manages the output of:
  *   - Position (x, y, z, w, i, j, k)
  *   - Displacement (x, y, z, w, i, j, k)
@@ -91,4 +91,4 @@ private:
     );
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

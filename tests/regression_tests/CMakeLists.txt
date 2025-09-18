@@ -1,5 +1,5 @@
 # Add the executable target for regression tests
-add_executable(openturbine_regression_tests)
+add_executable(kynema_regression_tests)
 
 # Add subdirectories for additional components
 add_subdirectory(external)
@@ -7,13 +7,13 @@ add_subdirectory(regression)
 add_subdirectory(interfaces)
 
 # Specify the source files for the regression tests
-target_sources(openturbine_regression_tests PRIVATE rtest_main.cpp)
+target_sources(kynema_regression_tests PRIVATE rtest_main.cpp)
 
 # Link internal libraries to the regression test executable
-target_link_libraries(openturbine_regression_tests PRIVATE
-  openturbine_warnings
-  openturbine_options
-  OpenTurbine::openturbine_library
+target_link_libraries(kynema_regression_tests PRIVATE
+  kynema_warnings
+  kynema_options
+  Kynema::kynema_library
 )
 
 # Link system libraries and dependencies
@@ -36,7 +36,7 @@ else()
   message(FATAL_ERROR "NetCDF library not found")
 endif()
 
-target_link_system_libraries(openturbine_regression_tests PRIVATE
+target_link_system_libraries(kynema_regression_tests PRIVATE
   KokkosKernels::kokkoskernels
   ${YAML_CPP_TARGET}
   GTest::gtest
@@ -44,19 +44,19 @@ target_link_system_libraries(openturbine_regression_tests PRIVATE
 )
 
 # Add compile definition for writing outputs
-if(OpenTurbine_WRITE_OUTPUTS)
-  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_WRITE_OUTPUTS)
+if(Kynema_WRITE_OUTPUTS)
+  target_compile_definitions(kynema_regression_tests PRIVATE Kynema_WRITE_OUTPUTS)
 endif()
 
-# Add compile definitions for OpenTurbine_ENABLE_OPENFAST_ADI if enabled
-if(OpenTurbine_ENABLE_OPENFAST_ADI)
-  target_compile_definitions(openturbine_regression_tests PRIVATE OpenTurbine_ENABLE_OPENFAST_ADI)
+# Add compile definitions for Kynema_ENABLE_OPENFAST_ADI if enabled
+if(Kynema_ENABLE_OPENFAST_ADI)
+  target_compile_definitions(kynema_regression_tests PRIVATE Kynema_ENABLE_OPENFAST_ADI)
 endif()
 
-target_include_directories(openturbine_regression_tests PRIVATE
+target_include_directories(kynema_regression_tests PRIVATE
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/tests/regression_tests>
 )
 
 # Include GoogleTest module and discover tests
 include(GoogleTest)
-gtest_discover_tests(openturbine_regression_tests PROPERTIES DISCOVERY_TIMEOUT 60000)
+gtest_discover_tests(kynema_regression_tests PROPERTIES DISCOVERY_TIMEOUT 60000)

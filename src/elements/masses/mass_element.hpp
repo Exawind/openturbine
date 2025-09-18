@@ -2,10 +2,10 @@
 
 #include <array>
 
-namespace openturbine {
+namespace kynema {
 
 /**
- * @brief Mass element constitutes rigid bodies/masses material behavior in openturbine.
+ * @brief Mass element constitutes rigid bodies/masses material behavior in kynema.
  * It has a single node and a single section completely defined by a 6x6 mass matrix.
  */
 struct MassElement {
@@ -17,4 +17,4 @@ struct MassElement {
         : ID(id), node_id(n_id), M_star(mass_matrix) {}
 };
 
-}  // namespace openturbine
+}  // namespace kynema

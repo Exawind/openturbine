@@ -3,7 +3,7 @@
 #include "model/model.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline auto SetUpSprings() {
     auto model = Model();
@@ -55,4 +55,4 @@ TEST(SpringsTest, SpringStiffness) {
     expect_kokkos_view_1D_equal(springs.k, {10.});  // Spring stiffness
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

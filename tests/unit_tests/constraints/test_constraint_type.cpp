@@ -2,7 +2,7 @@
 
 #include "constraints/constraint_type.hpp"
 
-namespace openturbine::constraints::tests {
+namespace kynema::constraints::tests {
 
 TEST(ConstraintTypeTest, NoneConstraintHasOneNode) {
     EXPECT_EQ(GetNumberOfNodes(ConstraintType::None), 1U);
@@ -76,4 +76,4 @@ TEST(ConstraintTypeTest, RigidJoint6DOFsTo3DOFsHasThreeDOFs) {
     EXPECT_EQ(NumRowsForConstraint(ConstraintType::RigidJoint6DOFsTo3DOFs), 3U);
 }
 
-}  // namespace openturbine::constraints::tests
+}  // namespace kynema::constraints::tests

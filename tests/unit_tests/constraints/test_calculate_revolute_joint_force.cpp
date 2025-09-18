@@ -4,7 +4,7 @@
 #include "constraints/calculate_revolute_joint_force.hpp"
 #include "create_view.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteCalculateRevoluteJointForce {
     Kokkos::View<double[3][3]>::const_type axes;
@@ -47,4 +47,4 @@ TEST(CalculateRevoluteJointForceTests, OneConstraint) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

@@ -4,7 +4,7 @@
 
 #include "host_state.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 void NodeData::ClearLoads() {
     this->loads = {0., 0., 0., 0., 0., 0.};
 }
@@ -25,4 +25,4 @@ void NodeData::SetLoads(HostState<DeviceType>& host_state) const {
         host_state.f(this->id, component) = this->loads[component];
     }
 }
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

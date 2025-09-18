@@ -5,7 +5,7 @@
 
 #include "interfaces/components/inflow.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct TestCase {
     double time;
@@ -45,7 +45,7 @@ TEST(InflowTest, SteadyWindWithShearNonzeroFlowAngle) {
     constexpr auto ref_height = 100.;
     constexpr auto power_law_exp = 0.1;
     constexpr auto flow_angle_horizontal = M_PI / 4.;  // 45 degrees -> radians
-    auto inflow = openturbine::interfaces::components::Inflow::SteadyWind(
+    auto inflow = kynema::interfaces::components::Inflow::SteadyWind(
         vel_h, ref_height, power_law_exp, flow_angle_horizontal
     );
 
@@ -72,7 +72,7 @@ TEST(InflowTest, SteadyWindWithShear) {
     constexpr auto ref_height = 100.;
     constexpr auto power_law_exp = 0.1;
     constexpr auto flow_angle_horizontal = 0.;
-    auto inflow = openturbine::interfaces::components::Inflow::SteadyWind(
+    auto inflow = kynema::interfaces::components::Inflow::SteadyWind(
         vel_h, ref_height, power_law_exp, flow_angle_horizontal
     );
 
@@ -93,4 +93,4 @@ TEST(InflowTest, SteadyWindWithShear) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

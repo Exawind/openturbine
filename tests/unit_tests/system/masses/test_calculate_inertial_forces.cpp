@@ -9,7 +9,7 @@
 #include "system/masses/calculate_inertial_force.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteCalculateInertialForces {
     double mass;
@@ -67,4 +67,4 @@ TEST(CalculateInertialForcesTestsMasses, OneNode) {
     CompareWithExpected(FI_mirror, FI_exact);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

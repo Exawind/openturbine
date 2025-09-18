@@ -6,8 +6,8 @@
 #include <step/step.hpp>
 
 int main() {
-    // OpenTurbine is based on Kokkos for performance portability.  Make sure to
-    // call Kokkos::initialize before creating any OpenTurbine data structures
+    // Kynema is based on Kokkos for performance portability.  Make sure to
+    // call Kokkos::initialize before creating any Kynema data structures
     // and Kokkos::finalize after all of those data structures have been destroyed.
     Kokkos::initialize();
     {
@@ -16,16 +16,16 @@ int main() {
         constexpr auto inertia = std::array{0.234375, 0.46875, 0.234375};  // inertia matrix
         const auto x = std::array{0., 1., 0.};                             // initial position
         const auto omega = std::array{0., 150., -4.61538};             // initial angular velocity
-        const auto x_dot = openturbine::math::CrossProduct(omega, x);  // initial velocity
+        const auto x_dot = kynema::math::CrossProduct(omega, x);       // initial velocity
         const auto omega_dot =
             std::array{661.3461692307691919, 0., 0.};  // initial anguluar acceleration
         const auto x_ddot =
             std::array{0., -21.3017325444000001, -30.9608307692308244};  // initial acceleration
 
-        // A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints,
+        // A Model is Kynema's low level interface for specifying elements, nodes, constraints,
         // and their connectivities.  Once everything has be specified, we will use to model to
-        // create OpenTurbine's fundamental data structures and advance the problem in time.
-        auto model = openturbine::Model();
+        // create Kynema's fundamental data structures and advance the problem in time.
+        auto model = kynema::Model();
 
         // To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
         // This factory lets us string together function calls to specify the initial position,
@@ -68,7 +68,7 @@ int main() {
         // The gravity vector for the problem is set using the well named SetGravity method
         model.SetGravity(0., 0., -9.81);
 
-        // Now that the problem has been fully described in the model, we will create OpenTurbine's
+        // Now that the problem has been fully described in the model, we will create Kynema's
         // main data structures: State, Elements, Constraints, and Solver.  The
         // CreateSystemWithSolver<> method takes an optional template argument with a Kokkos device
         // describing where the system will reside and run.  By default, it uses Kokkos' default
@@ -94,17 +94,16 @@ int main() {
         constexpr auto rho_inf(0.9);
         constexpr auto a_tol(1e-5);
         constexpr auto r_tol(1e-3);
-        auto parameters = openturbine::StepParameters(
-            is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol
-        );
+        auto parameters =
+            kynema::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
-        // OpenTurbine allows the user to control the actual time stepping process.  This includes
+        // Kynema allows the user to control the actual time stepping process.  This includes
         // setting forces, post-processing data, coupling to other codes.  This example does none of
-        // that. At each time step, we call OpenTurbine's Step function and pass in the previously
+        // that. At each time step, we call Kynema's Step function and pass in the previously
         // created structures.
         for (auto i = 0; i < 400; ++i) {
             [[maybe_unused]] const auto converged =
-                openturbine::Step(parameters, solver, elements, state, constraints);
+                kynema::Step(parameters, solver, elements, state, constraints);
             assert(converged);
         }
 
@@ -124,7 +123,7 @@ int main() {
         assert(std::abs(q(0, 5) - -0.95947769608535960) < 1e-10);
         assert(std::abs(q(0, 6) - -0.017268392381761217) < 1e-10);
     }
-    // Make sure to call finalize after all OpenTurbine data structures are deleted
+    // Make sure to call finalize after all Kynema data structures are deleted
     // and you're ready to exit your application.
     Kokkos::finalize();
     return 0;

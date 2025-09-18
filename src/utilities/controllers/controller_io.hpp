@@ -2,7 +2,7 @@
 
 #include <array>
 
-namespace openturbine::util {
+namespace kynema::util {
 
 static constexpr int kSwapArraySize = 128;
 
@@ -134,4 +134,4 @@ struct ControllerIO {
     }
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

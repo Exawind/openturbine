@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-namespace openturbine::util {
+namespace kynema::util {
 
 TurbineController::TurbineController(
     std::string shared_lib_path, std::string controller_function_name, std::string input_file_path,
@@ -66,4 +66,4 @@ void TurbineController::CallController() {
     }
 }
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

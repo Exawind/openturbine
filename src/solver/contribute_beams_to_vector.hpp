@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::solver {
+namespace kynema::solver {
 
 /**
  * @brief A Kernel which sums the residual contributions computed at each node in a beam
@@ -47,4 +47,4 @@ struct ContributeBeamsToVector {
     }
 };
 
-}  // namespace openturbine::solver
+}  // namespace kynema::solver

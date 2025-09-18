@@ -4,7 +4,7 @@
 
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine::state {
+namespace kynema::state {
 
 /**
  * @brief A Kernel to update the absolute position of each node based on the solver's current
@@ -45,4 +45,4 @@ struct UpdateGlobalPosition {
     }
 };
 
-}  // namespace openturbine::state
+}  // namespace kynema::state

@@ -9,7 +9,7 @@
 
 #include "math/vector_operations.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 template <unsigned size>
 Kokkos::View<double[size]> Create1DView(const std::array<double, size>& input) {
@@ -106,4 +106,4 @@ TEST(VectorTest, VectorTest_UnitVector_Set3_Test) {
     EXPECT_THROW(math::UnitVector(a), std::invalid_argument);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

@@ -13,7 +13,7 @@
 #include "step/update_constraint_variables.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline void SetUpSolverAndAssemble() {
     // Mass matrix for uniform composite beam section
@@ -606,4 +606,4 @@ TEST(SolverStep2Test, ConstraintResidualVector) {
     SetupAndTakeTwoSteps();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

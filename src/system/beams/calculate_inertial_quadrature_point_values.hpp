@@ -11,7 +11,7 @@
 #include "system/masses/calculate_mass_matrix_components.hpp"
 #include "system/masses/rotate_section_matrix.hpp"
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct CalculateInertialQuadraturePointValues {
@@ -126,4 +126,4 @@ struct CalculateInertialQuadraturePointValues {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

@@ -8,7 +8,7 @@
 
 #include "solver/compute_row_ptrs.hpp"
 
-namespace openturbine::solver::tests {
+namespace kynema::solver::tests {
 
 template <typename ValueType, typename DataType>
 typename Kokkos::View<ValueType>::const_type CreateView(
@@ -234,4 +234,4 @@ TEST(ComputeRowPtrs, OneElementOneNode_TwoConstraint) {
     }
 }
 
-}  // namespace openturbine::solver::tests
+}  // namespace kynema::solver::tests

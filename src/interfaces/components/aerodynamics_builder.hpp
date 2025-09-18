@@ -5,7 +5,7 @@
 
 #include "aerodynamics_input.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 class AerodynamicsBuilder {
 public:
@@ -41,4 +41,4 @@ private:
     AerodynamicsInput input;
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

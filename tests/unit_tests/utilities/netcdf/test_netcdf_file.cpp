@@ -7,7 +7,7 @@
 
 #include "utilities/netcdf/netcdf_file.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 class NetCDFFileTest : public ::testing::Test {
 protected:
@@ -388,4 +388,4 @@ TEST_F(NetCDFFileTest, ReadVariableWithStrideTypeInt) {
     EXPECT_EQ(read_data, std::vector<int>({3, 7}));
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

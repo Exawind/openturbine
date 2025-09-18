@@ -1,6 +1,6 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
         aerodyn_inflow.hpp
-        DESTINATION include/OpenTurbine/utilities/aerodynamics/
+        DESTINATION include/Kynema/utilities/aerodynamics/
 )

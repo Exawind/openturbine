@@ -9,7 +9,7 @@
 
 #include "model/mesh_connectivity.hpp"
 
-namespace openturbine::model::tests {
+namespace kynema::model::tests {
 
 class MeshConnectivityTest : public ::testing::Test {
 protected:
@@ -189,4 +189,4 @@ TEST_F(MeshConnectivityTest, ImportFromYAML) {
     EXPECT_EQ(imported_mesh.GetConstraintConnectivity(3)[1], 9);
 }
 
-}  // namespace openturbine::model::tests
+}  // namespace kynema::model::tests

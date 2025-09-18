@@ -6,7 +6,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_klu.hpp"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType>
 struct NumericFunction<Handle<Algorithm::KLU>, CrsMatrixType> {
     static void numeric(Handle<Algorithm::KLU>& dss_handle, CrsMatrixType& A) {
@@ -31,4 +31,4 @@ struct NumericFunction<Handle<Algorithm::KLU>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

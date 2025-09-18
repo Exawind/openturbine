@@ -9,7 +9,7 @@
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 /// @brief Calculation based on Table 1 of DOI: 10.1115/1.4033441
 template <typename DeviceType>
@@ -53,4 +53,4 @@ inline double CalculateConvergenceError(
     return std::sqrt(sum_error_squared / static_cast<double>(solver.num_dofs));
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

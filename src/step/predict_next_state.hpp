@@ -8,7 +8,7 @@
 #include "state/state.hpp"
 #include "step_parameters.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 template <typename DeviceType>
 inline void PredictNextState(StepParameters& parameters, State<DeviceType>& state) {
@@ -46,4 +46,4 @@ inline void PredictNextState(StepParameters& parameters, State<DeviceType>& stat
     state.time_step++;
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

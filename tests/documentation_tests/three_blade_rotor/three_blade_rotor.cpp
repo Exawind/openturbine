@@ -6,8 +6,8 @@
 #include <step/step.hpp>
 
 int main() {
-    // OpenTurbine is based on Kokkos for performance portability.  Make sure to
-    // call Kokkos::initialize before creating any OpenTurbine data structures
+    // Kynema is based on Kokkos for performance portability.  Make sure to
+    // call Kokkos::initialize before creating any Kynema data structures
     // and Kokkos::finalize after all of those data structures have been destroyed.
     Kokkos::initialize();
     {
@@ -31,8 +31,8 @@ int main() {
             std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
         };
         const auto sections = std::vector{
-            openturbine::BeamSection(0., mass_matrix, stiffness_matrix),
-            openturbine::BeamSection(1., mass_matrix, stiffness_matrix),
+            kynema::BeamSection(0., mass_matrix, stiffness_matrix),
+            kynema::BeamSection(1., mass_matrix, stiffness_matrix),
         };
 
         // We now define the node locations where our solution will be defined.  In this case, we
@@ -53,10 +53,10 @@ int main() {
             {0.9491079123427585, 0.1294849661688697},
         };
 
-        // A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints,
+        // A Model is Kynema's low level interface for specifying elements, nodes, constraints,
         // and their connectivities.  Once everything has be specified, we will use to model to
-        // create OpenTurbine's fundamental data structures and advance the problem in time.
-        auto model = openturbine::Model();
+        // create Kynema's fundamental data structures and advance the problem in time.
+        auto model = kynema::Model();
 
         // The aptly named SetGravity method is used to set the gravity vector for the problem.
         model.SetGravity(0., 0., -9.81);
@@ -84,7 +84,7 @@ int main() {
                 }
             );
             auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
-            auto rotation_quaternion = openturbine::math::RotationVectorToQuaternion(
+            auto rotation_quaternion = kynema::math::RotationVectorToQuaternion(
                 {0., 0., 2. * M_PI * blade_number / num_blades}
             );
             model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
@@ -102,7 +102,7 @@ int main() {
         }
         auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
-        // Now that the problem has been fully described in the model, we will create OpenTurbine's
+        // Now that the problem has been fully described in the model, we will create Kynema's
         // main data structures: State, Elements, Constraints, and Solver.
         //
         // The CreateSystem method takes an optional template argument with a Kokkos device
@@ -122,7 +122,7 @@ int main() {
         //
         // Solver contains the linear system (sparse matrix, RHS) and linear system solver
         auto [state, elements, constraints] = model.CreateSystem();
-        auto solver = openturbine::CreateSolver<>(state, elements, constraints);
+        auto solver = kynema::CreateSolver<>(state, elements, constraints);
 
         // The final stage is to create a StepParameters object, which contains information like
         // the number of non-linear iterations, time step size, and numerical damping factor used
@@ -133,26 +133,25 @@ int main() {
         const double rho_inf(0.9);
         const double t_end(0.1);
         const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
-        auto parameters =
-            openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+        auto parameters = kynema::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
-        // OpenTurbine allows the user to control the actual time stepping process.  This includes
+        // Kynema allows the user to control the actual time stepping process.  This includes
         // setting forces, post-processing data, or coupling to other codes.
         // For this problem, we will prescribe a rotation on the hub boundary condition, which will
         // be transmitted to the blades through their respective constraints.
         for (auto i = 0U; i < num_steps; ++i) {
-            const auto q_hub = openturbine::math::RotationVectorToQuaternion(
+            const auto q_hub = kynema::math::RotationVectorToQuaternion(
                 {step_size * (i + 1) * velocity[3], step_size * (i + 1) * velocity[4],
                  step_size * (i + 1) * velocity[5]}
             );
             const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
             constraints.UpdateDisplacement(hub_bc_id, u_hub);
             [[maybe_unused]] const auto converged =
-                openturbine::Step(parameters, solver, elements, state, constraints);
+                kynema::Step(parameters, solver, elements, state, constraints);
             assert(converged);
         }
     }
-    // Make sure to call finalize after all OpenTurbine data structures are deleted
+    // Make sure to call finalize after all Kynema data structures are deleted
     // and you're ready to exit your application.
     Kokkos::finalize();
     return 0;

@@ -14,7 +14,7 @@
 #include "state/state.hpp"
 #include "step/step_parameters.hpp"
 
-namespace openturbine::interfaces::cfd {
+namespace kynema::interfaces::cfd {
 
 /**
  * @brief The main interface for controlling the CFD problem
@@ -57,32 +57,32 @@ public:
     /// @brief Write current state to output file if configured
     void WriteOutputs() const;
 
-    /// @brief  OpenTurbine class used for model construction
+    /// @brief  Kynema class used for model construction
     Model model;
 
     /// @brief Turbine model input/output data
     Turbine turbine;
 
-    /// @brief  OpenTurbine class for storing system state
+    /// @brief  Kynema class for storing system state
     State<DeviceType> state;
 
-    /// @brief  OpenTurbine class for model elements (beams, masses, springs)
+    /// @brief  Kynema class for model elements (beams, masses, springs)
     Elements<DeviceType> elements;
 
-    /// @brief  OpenTurbine class for constraints tying elements together
+    /// @brief  Kynema class for constraints tying elements together
     Constraints<DeviceType> constraints;
 
-    /// @brief  OpenTurbine class containing solution parameters
+    /// @brief  Kynema class containing solution parameters
     StepParameters parameters;
 
-    /// @brief  OpenTurbine class for solving the dynamic system
+    /// @brief  Kynema class for solving the dynamic system
     Solver<DeviceType> solver;
 
-    /// @brief  OpenTurbine class state class for temporarily saving state
+    /// @brief  Kynema class state class for temporarily saving state
     State<DeviceType> state_save;
 
     /// @brief Host local copy of State
-    openturbine::interfaces::HostState<DeviceType> host_state;
+    kynema::interfaces::HostState<DeviceType> host_state;
 
     /// @brief Current timestep index
     size_t current_timestep_{0};
@@ -91,4 +91,4 @@ public:
     std::unique_ptr<interfaces::Outputs> outputs_;
 };
 
-}  // namespace openturbine::interfaces::cfd
+}  // namespace kynema::interfaces::cfd

@@ -5,7 +5,7 @@
 
 #include "math/matrix_operations.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 template <size_t rows, size_t cols>
 Kokkos::View<double[rows][cols]> Create2DView(const std::array<double, rows * cols>& input) {
@@ -142,4 +142,4 @@ TEST(MatrixTest, RotateMatrix6_3) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

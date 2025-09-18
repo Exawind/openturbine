@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::dof {
+namespace kynema::dof {
 
 /**
  * @brief Represents the active degrees of freedom for a node
@@ -53,4 +53,4 @@ size_t count_active_dofs(FreedomSignature x) {
     return count;
 }
 
-}  // namespace openturbine::dof
+}  // namespace kynema::dof

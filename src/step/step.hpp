@@ -26,7 +26,7 @@
 #include "update_system_variables.hpp"
 #include "update_tangent_operator.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Attempts to complete a single time step in the dynamic FEA simulation
@@ -123,4 +123,4 @@ inline bool Step(
     return true;
 }
 
-}  // namespace openturbine
+}  // namespace kynema
