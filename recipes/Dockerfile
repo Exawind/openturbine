@@ -1,5 +1,5 @@
-# Run this from the root of the OpenTurbine repository e.g.
-# docker build -f recipes/Dockerfile -t openturbine:latest .
+# Run this from the root of the Kynema repository e.g.
+# docker build -f recipes/Dockerfile -t kynema:latest .
 
 FROM ubuntu:latest
 
@@ -42,14 +42,14 @@ RUN git clone https://github.com/spack/spack.git && \
     spack install rosco && \
     spack install openfast
 
-# Step 3: Set up the working directory and copy the OpenTurbine repository
-WORKDIR /projects/openturbine
+# Step 3: Set up the working directory and copy the Kynema repository
+WORKDIR /projects/kynema
 COPY . .
 
 # Step 4: Load necessary libraries and build the project
-ARG CMAKE_OPTIONS="-DOpenTurbine_WRITE_OUTPUTS=ON \
-    -DOpenTurbine_ENABLE_OPENFAST_ADI=ON \
-    -DOpenTurbine_ENABLE_ROSCO_CONTROLLER=ON \
+ARG CMAKE_OPTIONS="-DKynema_WRITE_OUTPUTS=ON \
+    -DKynema_ENABLE_OPENFAST_ADI=ON \
+    -DKynema_ENABLE_ROSCO_CONTROLLER=ON \
     -DCMAKE_BUILD_TYPE=Release"
 
 ARG N_PARALLEL_JOBS=4

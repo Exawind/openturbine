@@ -8,13 +8,13 @@
 
 #include "beam_element.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Represents the input data for creating flexible beams
  *
  * This struct encapsulates all necessary input parameters for instantiating flex beams in
- * openturbine i.e. the beam elements and environmental factors such as gravity.
+ * kynema i.e. the beam elements and environmental factors such as gravity.
  * It also provides some utilities for computing properties such as
  * - total number of nodes/quadrature points
  * - maximum number of nodes/quadrature points per element etc.
@@ -85,4 +85,4 @@ struct BeamsInput {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

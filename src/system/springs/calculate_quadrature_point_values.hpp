@@ -8,7 +8,7 @@
 #include "system/springs/calculate_length.hpp"
 #include "system/springs/calculate_stiffness_matrix.hpp"
 
-namespace openturbine::springs {
+namespace kynema::springs {
 
 template <typename DeviceType>
 struct CalculateQuadraturePointValues {
@@ -90,4 +90,4 @@ struct CalculateQuadraturePointValues {
     }
 };
 
-}  // namespace openturbine::springs
+}  // namespace kynema::springs

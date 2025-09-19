@@ -10,7 +10,7 @@
 #include "state/update_static_prediction.hpp"
 #include "step_parameters.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 /**
  * @brief Updates the predicted next state values, based on computed solver solution, solver.x
@@ -67,4 +67,4 @@ inline void UpdateStatePrediction(
     );
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

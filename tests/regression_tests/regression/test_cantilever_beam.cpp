@@ -10,7 +10,7 @@
 #include "step/step.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -137,4 +137,4 @@ TEST(DynamicBeamTest, CantileverBeamSineLoad) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 /**
  * @brief A wrapper around the Constraint ID of a given constraint
@@ -11,4 +11,4 @@ struct ConstraintData {
     size_t id;
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

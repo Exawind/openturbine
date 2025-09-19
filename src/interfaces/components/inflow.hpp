@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 /**
  * @brief Parameters defining uniform flow characteristics
@@ -77,4 +77,4 @@ struct Inflow {
         const;
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

@@ -10,7 +10,7 @@
 
 #include "controller_io.hpp"
 
-namespace openturbine::util {
+namespace kynema::util {
 
 extern "C" {
 
@@ -448,4 +448,4 @@ void DISCON(
 
 }  // extern "C"
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

@@ -1,13 +1,13 @@
 #--------------------------------------------------------------------------
 # Define the main library target
 #--------------------------------------------------------------------------
-add_library(openturbine_library)
-add_library(OpenTurbine::openturbine_library ALIAS openturbine_library)
+add_library(kynema_library)
+add_library(Kynema::kynema_library ALIAS kynema_library)
 
 #----------------------------------------
 # Set target properties
 #----------------------------------------
-set_target_properties(openturbine_library PROPERTIES
+set_target_properties(kynema_library PROPERTIES
   LINKER_LANGUAGE CXX
   POSITION_INDEPENDENT_CODE ON  # Ensure position-independent code for shared libraries
   VISIBILITY_INLINES_HIDDEN YES # Hide inline function symbols to reduce binary size
@@ -16,16 +16,16 @@ set_target_properties(openturbine_library PROPERTIES
 #----------------------------------------
 # Link internal libraries and dependencies
 #----------------------------------------
-target_link_libraries(openturbine_library PRIVATE
-  openturbine_options
-  openturbine_warnings
+target_link_libraries(kynema_library PRIVATE
+  kynema_options
+  kynema_warnings
 )
 
 #----------------------------------------
 # Add compile definitions
 #----------------------------------------
-if(OpenTurbine_WRITE_OUTPUTS)
-  target_compile_definitions(openturbine_library PRIVATE OpenTurbine_WRITE_OUTPUTS)
+if(Kynema_WRITE_OUTPUTS)
+  target_compile_definitions(kynema_library PRIVATE Kynema_WRITE_OUTPUTS)
 endif()
 
 #--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ endif()
 #--------------------------------------------------------------------------
 # Include directories for system libraries
 #--------------------------------------------------------------------------
-target_link_system_libraries(openturbine_library PUBLIC
+target_link_system_libraries(kynema_library PUBLIC
   KokkosKernels::kokkoskernels
   LAPACK::LAPACK
   ${YAML_CPP_TARGET}
@@ -64,38 +64,38 @@ target_link_system_libraries(openturbine_library PUBLIC
   ${NETCDF_TARGET}
 )
 
-if(OpenTurbine_ENABLE_CUDSS)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_CUDSS)
+target_link_system_libraries(kynema_library PUBLIC
   cudss
 )
 endif()
 
-if(OpenTurbine_ENABLE_MKL)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_MKL)
+target_link_system_libraries(kynema_library PUBLIC
   MKL::MKL
 )
 endif()
 
-if(OpenTurbine_ENABLE_SUPERLU)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_SUPERLU)
+target_link_system_libraries(kynema_library PUBLIC
   superlu::superlu
 )
 endif()
 
-if(OpenTurbine_ENABLE_SUPERLU_MT)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_SUPERLU_MT)
+target_link_system_libraries(kynema_library PUBLIC
   superlu_mt::superlu_mt
 )
 endif()
 
-if(OpenTurbine_ENABLE_KLU)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_KLU)
+target_link_system_libraries(kynema_library PUBLIC
   SuiteSparse::KLU
 )
 endif()
 
-if(OpenTurbine_ENABLE_UMFPACK)
-target_link_system_libraries(openturbine_library PUBLIC
+if(Kynema_ENABLE_UMFPACK)
+target_link_system_libraries(kynema_library PUBLIC
   SuiteSparse::UMFPACK
 )
 endif()
@@ -114,24 +114,24 @@ add_shared_library(DISCON_ROTOR_TEST_CONTROLLER)
 #----------------------------------------
 # Set include directories
 #----------------------------------------
-if(OpenTurbine_ENABLE_MKL)
+if(Kynema_ENABLE_MKL)
 else()
 find_path(LAPACKE_INCLUDE_DIRS lapacke.h)
-target_include_directories(openturbine_library SYSTEM
+target_include_directories(kynema_library SYSTEM
  PUBLIC
 ${LAPACKE_INCLUDE_DIRS}
 )
 endif()
 
-target_include_directories(openturbine_library
+target_include_directories(kynema_library
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
-  $<INSTALL_INTERFACE:include/OpenTurbine>
+  $<INSTALL_INTERFACE:include/Kynema>
 )
 
 # Set the C++ standard for the target
-target_compile_features(openturbine_library PUBLIC cxx_std_17)
+target_compile_features(kynema_library PUBLIC cxx_std_20)
 
 #----------------------------------------
 # Add subdirectories
@@ -153,20 +153,20 @@ add_subdirectory(vendor)
 # Install targets and export configuration
 #----------------------------------------
 install(
-  TARGETS openturbine_library openturbine_options openturbine_warnings
-  EXPORT OpenTurbineTargets
+  TARGETS kynema_library kynema_options kynema_warnings
+  EXPORT KynemaTargets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PACKAGE_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT OpenTurbineTargets
-  FILE OpenTurbineTargets.cmake
-  NAMESPACE OpenTurbine::
-  DESTINATION lib/cmake/OpenTurbine
+install(EXPORT KynemaTargets
+  FILE KynemaTargets.cmake
+  NAMESPACE Kynema::
+  DESTINATION lib/cmake/Kynema
 )
 
 install(FILES
-  DESTINATION include/OpenTurbine/
+  DESTINATION include/Kynema/
 )

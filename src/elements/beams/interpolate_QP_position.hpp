@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 /**
  * @brief Interpolates quadrature point positions from nodal positions using shape functions
@@ -49,4 +49,4 @@ struct InterpolateQPPosition {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

@@ -9,11 +9,11 @@
 #include "interfaces/host_state.hpp"
 #include "interfaces/node_data.hpp"
 
-namespace openturbine {
+namespace kynema {
 class Model;
 }
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 /**
  * @brief Represents a turbine with nodes, elements, and constraints
  *
@@ -398,4 +398,4 @@ private:
     void SetInitialRotorVelocity(const TurbineInput& input, Model& model);
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

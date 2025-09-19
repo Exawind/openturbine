@@ -6,7 +6,7 @@
 #include <span>
 #include <vector>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(std::span<const double> grid) {
     const auto n{grid.size()};
@@ -27,4 +27,4 @@ inline std::vector<std::array<double, 2>> CreateTrapezoidalQuadrature(std::span<
     return quadrature;
 }
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

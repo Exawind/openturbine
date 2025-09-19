@@ -6,7 +6,7 @@
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine::constraints {
+namespace kynema::constraints {
 
 /**
  * @brief Kernel for calculating the residual and system gradient for a Prescribed BC constraint
@@ -91,4 +91,4 @@ struct CalculatePrescribedBCConstraint {
         );
     }
 };
-}  // namespace openturbine::constraints
+}  // namespace kynema::constraints

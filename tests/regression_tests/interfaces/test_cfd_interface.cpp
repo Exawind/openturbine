@@ -5,9 +5,9 @@
 #include "interfaces/cfd/interface.hpp"
 #include "interfaces/cfd/interface_builder.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
-using namespace openturbine::interfaces::cfd;
+using namespace kynema::interfaces::cfd;
 
 TEST(CFDInterfaceTest, PrecessionTest) {
     // Create cfd interface
@@ -310,4 +310,4 @@ TEST(CFDInterfaceTest, Restart) {
     std::filesystem::remove("test_restart.dat");
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

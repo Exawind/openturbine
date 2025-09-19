@@ -12,7 +12,7 @@
 #include "step/step.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 auto ComputeIEA15NodeLocations() {
     auto node_loc = std::array<double, node_xi.size()>{};
@@ -281,7 +281,7 @@ TEST(RotorTest, IEA15RotorController) {
             static_cast<double>(beam_elem.ID) / static_cast<double>(num_blades);
         const auto q_root =
             math::RotationVectorToQuaternion({0., 0., -2. * std::numbers::pi * rotation_fraction});
-        const auto pitch_axis = math::RotateVectorByQuaternion(q_root, {1., 0., 0.});
+        const auto pitch_axis = math::RotateVectorByQuaternion(q_root, std::array{1., 0., 0.});
         model.AddRotationControl(
             {hub_node_id, beam_elem.node_ids[0]}, pitch_axis, blade_pitch_command[beam_elem.ID]
         );
@@ -375,4 +375,4 @@ TEST(RotorTest, IEA15RotorHost) {
         EXPECT_EQ(converged, true);
     }
 }
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

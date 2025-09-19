@@ -1,36 +1,36 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-include("${CMAKE_CURRENT_LIST_DIR}/OpenTurbineTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/KynemaTargets.cmake")
 
-check_required_components(openturbine_library)
+check_required_components(kynema_library)
 
 find_dependency(KokkosKernels REQUIRED)
 find_dependency(yaml-cpp REQUIRED)
 find_dependency(NetCDF REQUIRED)
 find_dependency(LAPACK REQUIRED)
 
-if(@OpenTurbine_ENABLE_SUPERLU@)
+if(@Kynema_ENABLE_SUPERLU@)
   find_dependency(superlu REQUIRED)
 endif()
 
-if(@OpenTurbine_ENABLE_SUPERLU_MT@)
+if(@Kynema_ENABLE_SUPERLU_MT@)
   find_dependency(superlu_mt REQUIRED)
 endif()
 
-if(@OpenTurbine_ENABLE_KLU@)
+if(@Kynema_ENABLE_KLU@)
   find_dependency(KLU REQUIRED)
 endif()
 
-if(@OpenTurbine_ENABLE_UMFPACK@)
+if(@Kynema_ENABLE_UMFPACK@)
   find_dependency(UMFPACK REQUIRED)
 endif()
 
-if(@OpenTurbine_ENABLE_MKL@)
+if(@Kynema_ENABLE_MKL@)
   find_dependency(MKL REQUIRED)
 endif()
 
-if(@OpenTurbine_ENABLE_CUDSS@)
+if(@Kynema_ENABLE_CUDSS@)
   find_dependency(cudss REQUIRED)
 endif()
 

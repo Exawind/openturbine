@@ -2,7 +2,7 @@
 
 #include "dof_management/assemble_node_freedom_allocation_table.hpp"
 
-namespace openturbine::dof::tests {
+namespace kynema::dof::tests {
 
 TEST(TestAssembleNodeFreedomAllocationTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =
@@ -227,4 +227,4 @@ TEST(
     EXPECT_EQ(host_node_freedom_allocation_table(4), FreedomSignature::JustPosition);
 }
 
-}  // namespace openturbine::dof::tests
+}  // namespace kynema::dof::tests

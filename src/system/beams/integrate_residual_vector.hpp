@@ -2,7 +2,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct IntegrateResidualVectorElement {
@@ -50,4 +50,4 @@ struct IntegrateResidualVectorElement {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

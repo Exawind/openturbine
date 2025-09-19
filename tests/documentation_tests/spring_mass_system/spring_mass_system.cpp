@@ -6,8 +6,8 @@
 #include <step/step.hpp>
 
 int main() {
-    // OpenTurbine is based on Kokkos for performance portability.  Make sure to
-    // call Kokkos::initialize before creating any OpenTurbine data structures
+    // Kynema is based on Kokkos for performance portability.  Make sure to
+    // call Kokkos::initialize before creating any Kynema data structures
     // and Kokkos::finalize after all of those data structures have been destroyed.
     Kokkos::initialize();
     {
@@ -23,10 +23,10 @@ int main() {
             std::array{0., 0., 0., 0., 0., inertia},  // inertia around z-axis
         };
 
-        // A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints,
+        // A Model is Kynema's low level interface for specifying elements, nodes, constraints,
         // and their connectivities.  Once everything has be specified, we will use to model to
-        // create OpenTurbine's fundamental data structures and advance the problem in time.
-        auto model = openturbine::Model();
+        // create Kynema's fundamental data structures and advance the problem in time.
+        auto model = kynema::Model();
 
         // To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
         // This factory lets us string together function calls to specify the initial position,
@@ -81,7 +81,7 @@ int main() {
             model.AddFixedBC(anchor_node_id);
         }
 
-        // Now that the problem has been fully described in the model, we will create OpenTurbine's
+        // Now that the problem has been fully described in the model, we will create Kynema's
         // main data structures: State, Elements, Constraints, and Solver.
         //
         // The CreateSystem method takes an optional template argument with a Kokkos device
@@ -101,7 +101,7 @@ int main() {
         //
         // Solver contains the linear system (sparse matrix, RHS) and linear system solver
         auto [state, elements, constraints] = model.CreateSystem();
-        auto solver = openturbine::CreateSolver<>(state, elements, constraints);
+        auto solver = kynema::CreateSolver<>(state, elements, constraints);
 
         // The final stage is to create a StepParameters object, which contains information like
         // the number of non-linear iterations, time step size, and numerical damping factor used
@@ -112,10 +112,9 @@ int main() {
         constexpr double rho_inf(0.);
         const double final_time = 2. * M_PI * sqrt(mass / stiffness);
         const double step_size(final_time / static_cast<double>(num_steps));
-        auto parameters =
-            openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+        auto parameters = kynema::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
-        // OpenTurbine allows the user to control the actual time stepping process.  This includes
+        // Kynema allows the user to control the actual time stepping process.  This includes
         // setting forces, post-processing data, or coupling to other codes.  In this example, we'll
         // check that none of the nodes have moved - the chain is in constant tension and
         // equilibrium.
@@ -127,7 +126,7 @@ int main() {
         auto q = Kokkos::create_mirror_view(Kokkos::WithoutInitializing, state.q);
         for (auto i = 0; i < 400; ++i) {
             [[maybe_unused]] const auto converged =
-                openturbine::Step(parameters, solver, elements, state, constraints);
+                kynema::Step(parameters, solver, elements, state, constraints);
             assert(converged);
             Kokkos::deep_copy(q, state.q);
             for (auto node = 0; node < 7; ++node) {
@@ -135,7 +134,7 @@ int main() {
             }
         }
     }
-    // Make sure to call finalize after all OpenTurbine data structures are deleted
+    // Make sure to call finalize after all Kynema data structures are deleted
     // and you're ready to exit your application.
     Kokkos::finalize();
     return 0;

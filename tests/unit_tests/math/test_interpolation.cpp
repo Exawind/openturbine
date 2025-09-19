@@ -5,7 +5,7 @@
 
 #include "math/interpolation.hpp"
 
-namespace openturbine::math::tests {
+namespace kynema::math::tests {
 
 constexpr auto tol = 1.e-12;
 
@@ -354,4 +354,4 @@ TEST(InterpolationTest, GenerateGLLPoints_SixthOrderElement) {
     }
 }
 
-}  // namespace openturbine::math::tests
+}  // namespace kynema::math::tests

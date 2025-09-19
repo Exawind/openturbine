@@ -3,7 +3,7 @@
 
 #include "math/project_points_to_target_polynomial.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
     const size_t num_input_pts = 3;
@@ -35,4 +35,4 @@ TEST(ProjectPointsToTargetPolynomialTest, Project2ndOrderTo4thOrderPolynomial) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

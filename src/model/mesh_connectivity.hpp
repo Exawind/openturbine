@@ -7,7 +7,7 @@
 
 #include <yaml-cpp/yaml.h>
 
-namespace openturbine::model {
+namespace kynema::model {
 
 /**
  * @brief Class to manage element-to-node connectivity information for a mesh
@@ -209,4 +209,4 @@ private:
     }
 };
 
-}  // namespace openturbine::model
+}  // namespace kynema::model

@@ -4,7 +4,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine::solver {
+namespace kynema::solver {
 
 /**
  * @brief A kernel which contributes the constraint Lagrange multiplier terms to the correct
@@ -51,4 +51,4 @@ struct ContributeLambdaToVector {
     }
 };
 
-}  // namespace openturbine::solver
+}  // namespace kynema::solver

@@ -10,7 +10,7 @@ and/or twisted along their length. In this section we describe how beams
 are user defined and how the beams are discretized in the reference
 configuration.
 
-We assume that OpenTurbine beams are defined as a set of points in the
+We assume that Kynema beams are defined as a set of points in the
 global coordinate system (
 :math:`(\overline{x}^\mathrm{g}, \overline{y}^\mathrm{g},\overline{z}^\mathrm{g})`
 with the blade root located at the origin and oriented such that the

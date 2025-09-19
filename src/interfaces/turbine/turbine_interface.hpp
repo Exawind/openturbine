@@ -1,5 +1,7 @@
 #pragma once
 
+#include "interfaces/components/aerodynamics.hpp"
+#include "interfaces/components/aerodynamics_input.hpp"
 #include "interfaces/components/controller_input.hpp"
 #include "interfaces/components/turbine.hpp"
 #include "interfaces/host_state.hpp"
@@ -8,12 +10,12 @@
 #include "step/step_parameters.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 struct SolutionInput;
 struct TurbineInput;
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 /**
  * @brief Interface for blade simulation that manages state, solver, and components
@@ -30,16 +32,30 @@ public:
      * @brief Constructs a TurbineInterface from solution and blade inputs
      * @param solution_input Configuration parameters for solver and solution
      * @param turbine_input Configuration parameters for the turbine geometry
+     * @param aerodynamics_input Configuration parameters for the aerodynamic loads
      * @param controller_input Configuration parameters for the controller
      */
     explicit TurbineInterface(
         const components::SolutionInput& solution_input,
         const components::TurbineInput& turbine_input,
+        const components::AerodynamicsInput& aerodynamics_input = {},
         const components::ControllerInput& controller_input = {}
     );
 
     /// @brief Returns a reference to the turbine model
     [[nodiscard]] components::Turbine& Turbine();
+
+    /**
+     * @brief Updates the aerodynamic loads to be applied to the sturcture based on a provided
+     * function
+     *
+     * @param fluid_density The density of the air (assumed constant)
+     * @param inflow_function A function that takes in a position and returns the velocity
+     */
+    void UpdateAerodynamicLoads(
+        double fluid_density,
+        const std::function<std::array<double, 3>(const std::array<double, 3>&)>& inflow_function
+    );
 
     /**
      * @brief Steps forward in time
@@ -56,31 +72,11 @@ public:
     /// @brief Restores the previously saved state (in correction step)
     void RestoreState();
 
-private:
-    Model model;                  ///< OpenTurbine class for model construction
-    components::Turbine turbine;  ///< Turbine model input/output data
-    State<DeviceType> state;      ///< OpenTurbine class for storing system state
-    Elements<DeviceType>
-        elements;  ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints<DeviceType>
-        constraints;               ///< OpenTurbine class for constraints tying elements together
-    StepParameters parameters;     ///< OpenTurbine class containing solution parameters
-    Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
-    State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;                     ///< Host local copy of node state data
-    std::unique_ptr<Outputs> outputs;                     ///< handle to Output for writing to NetCDF
-    std::unique_ptr<util::TurbineController> controller;  ///< DISCON-style controller
+    /// @brief Return a reference of the model owned by this interface
+    Model& GetModel() { return model; }
 
-    /**
-     * @brief Write rotor time-series data based on constraint outputs
-     *
-     * This method extracts rotor azimuth angle and speed from the constraint system
-     * and writes them to the time-series output file. Data is read from the shaft
-     * base to azimuth constraint, which contains:
-     * - Index 0: Azimuth angle (radians)
-     * - Index 1: Rotor speed (rad/s)
-     */
-    void WriteRotorTimeSeriesData();
+    /// @brief Return a reference to this interface's host state
+    HostState<DeviceType>& GetHostState() { return host_state; }
 
     /**
      * @brief Calculates and normalizes azimuth angle from constraint output
@@ -93,6 +89,31 @@ private:
      * @return Rotor speed in rad/s
      */
     [[nodiscard]] double CalculateRotorSpeed() const;
+
+private:
+    Model model;                    ///< Kynema class for model construction
+    components::Turbine turbine;    ///< Turbine model input/output data
+    State<DeviceType> state;        ///< Kynema class for storing system state
+    Elements<DeviceType> elements;  ///< Kynema class for model elements (beams, masses, springs)
+    Constraints<DeviceType> constraints;  ///< Kynema class for constraints tying elements together
+    StepParameters parameters;            ///< Kynema class containing solution parameters
+    Solver<DeviceType> solver;            ///< Kynema class for solving the dynamic system
+    State<DeviceType> state_save;         ///< Kynema class state class for temporarily saving state
+    HostState<DeviceType> host_state;     ///< Host local copy of node state data
+    std::unique_ptr<Outputs> outputs;     ///< handle to Output for writing to NetCDF
+    std::unique_ptr<util::TurbineController> controller;     ///< DISCON-style controller
+    std::unique_ptr<components::Aerodynamics> aerodynamics;  ///< Aerodynamics component
+
+    /**
+     * @brief Write rotor time-series data based on constraint outputs
+     *
+     * This method extracts rotor azimuth angle and speed from the constraint system
+     * and writes them to the time-series output file. Data is read from the shaft
+     * base to azimuth constraint, which contains:
+     * - Index 0: Azimuth angle (radians)
+     * - Index 1: Rotor speed (rad/s)
+     */
+    void WriteRotorTimeSeriesData();
 
     /**
      * @brief Initialize controller with turbine parameters and connect to constraints
@@ -111,4 +132,4 @@ private:
     void UpdateControllerInputs();
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

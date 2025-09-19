@@ -1,15 +1,15 @@
 Example: Heavy Top Problem
 ==========================
 
-This example will walk through how to run a simulation of a processing top using OpenTurbine's low level API.
-Unline OpenTurbine's high level APIs, you will have to manually set up all nodes and their connectivities.
+This example will walk through how to run a simulation of a processing top using Kynema's low level API.
+Unline Kynema's high level APIs, you will have to manually set up all nodes and their connectivities.
 While this extra work adds complexity compared to the higher level APIs, it also provides unlimited freedom.
-The heavy top problem is one of the simplest problems you'll want to solve with OpenTurbine, so it is a good introduction to our low level APIs.
+The heavy top problem is one of the simplest problems you'll want to solve with Kynema, so it is a good introduction to our low level APIs.
 For the most up to date and working version of this code, see ``tests/documentation_tests/heavy_top/``.
 
 As with any C++ program, start with the includes.
-As a Kokkos-based library, you'll need to include ``Kokkos_Core.hpp`` for setup, teardown, and working with OpenTurbine's data structures.
-From OpenTurbine, you'll have to include ``model.hpp`` for the Model class, our tool for setting up and creating the system, and ``step.hpp`` for the Step function which performs the action of system asembly and solve.
+As a Kokkos-based library, you'll need to include ``Kokkos_Core.hpp`` for setup, teardown, and working with Kynema's data structures.
+From Kynema, you'll have to include ``model.hpp`` for the Model class, our tool for setting up and creating the system, and ``step.hpp`` for the Step function which performs the action of system asembly and solve.
 
 .. code-block:: cpp
 
@@ -43,16 +43,16 @@ Now, we define the mass matrix and initial position, velocity, and acceleration.
     constexpr auto inertia = std::array{0.234375, 0.46875, 0.234375};
     const auto x = std::array{0., 1., 0.};
     const auto omega = std::array{0., 150., -4.61538};
-    const auto x_dot = openturbine::math::CrossProduct(omega, x);
+    const auto x_dot = kynema::math::CrossProduct(omega, x);
     const auto omega_dot = std::array{661.3461692307691919, 0., 0.};
     const auto x_ddot = std::array{0., -21.3017325444000001, -30.9608307692308244};
 
-A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints, and their connectivities.
-One everything has been specified, we will use model to create OpenTurbine's fundamental data structures and advance the problem in time.
+A Model is Kynema's low level interface for specifying elements, nodes, constraints, and their connectivities.
+One everything has been specified, we will use model to create Kynema's fundamental data structures and advance the problem in time.
 
 .. code-block:: cpp
 
-    auto model = openturbine::Model();
+    auto model = kynema::Model();
 
 To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
 This factory lets us string together function calls to specify the initial position, velocity, and acceleration in a human readable fashion.
@@ -99,7 +99,7 @@ The gravity vector for the problem is set using the well named SetGravity method
 
     model.SetGravity(0., 0., -9.81);
 
-Now that the problem has been fully described in the model, we will create OpenTurbine's main data structures: State, Elements, Constraints, and Solver.
+Now that the problem has been fully described in the model, we will create Kynema's main data structures: State, Elements, Constraints, and Solver.
 The CreateSystemWithSolver<> method takes an optional template argument with a Kokkos device describing where the system will reside and run.
 By default, it uses Kokkos' default execution/memory space, so a serial build will run on the CPU, a CUDA build will run on a CUDA device, etc.
 
@@ -126,17 +126,17 @@ The final stage is to create a StepParameters object, which contains information
     constexpr auto rho_inf(0.9);
     constexpr auto a_tol(1e-5);
     constexpr auto r_tol(1e-3);
-    auto parameters = openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
+    auto parameters = kynema::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf, a_tol, r_tol);
 
-OpenTurbine allows the user to control the actual time stepping process.
+Kynema allows the user to control the actual time stepping process.
 This includes setting forces, post-processing data, coupling to other codes.
 This example does none of that.
-At each time step, we call OpenTurbine's Step function and pass in the previously created structures.
+At each time step, we call Kynema's Step function and pass in the previously created structures.
 
 .. code-block:: cpp
 
     for (auto i = 0; i < 400; ++i) {
-        const auto converged = openturbine::Step(parameters, solver, elements, state, constraints);
+        const auto converged = kynema::Step(parameters, solver, elements, state, constraints);
     }
 
 Finally, we can check that our solution is correct.

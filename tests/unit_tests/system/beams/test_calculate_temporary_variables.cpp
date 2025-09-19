@@ -13,16 +13,16 @@ namespace {
 
 void TestCalculateTemporaryVariables() {
     const auto x0_prime =
-        openturbine::beams::tests::CreateView<double[3]>("x0_prime", std::array{1., 2., 3.});
+        kynema::beams::tests::CreateView<double[3]>("x0_prime", std::array{1., 2., 3.});
     const auto u_prime =
-        openturbine::beams::tests::CreateView<double[3]>("u_prime", std::array{4., 5., 6.});
+        kynema::beams::tests::CreateView<double[3]>("u_prime", std::array{4., 5., 6.});
 
     const auto x0pupSS = Kokkos::View<double[3][3]>("x0pupSS");
 
     Kokkos::parallel_for(
         "CalculateTemporaryVariables", 1,
         KOKKOS_LAMBDA(size_t) {
-            openturbine::beams::CalculateTemporaryVariables<Kokkos::DefaultExecutionSpace>::invoke(
+            kynema::beams::CalculateTemporaryVariables<Kokkos::DefaultExecutionSpace>::invoke(
                 x0_prime, u_prime, x0pupSS
             );
         }
@@ -33,15 +33,15 @@ void TestCalculateTemporaryVariables() {
         Kokkos::View<double[3][3], Kokkos::HostSpace>::const_type(x0pupSS_exact_data.data());
 
     const auto x0pupSS_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), x0pupSS);
-    openturbine::beams::tests::CompareWithExpected(x0pupSS_mirror, x0pupSS_exact);
+    kynema::beams::tests::CompareWithExpected(x0pupSS_mirror, x0pupSS_exact);
 }
 
 }  // namespace
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(CalculateTemporaryVariablesTests, OneNode) {
     TestCalculateTemporaryVariables();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

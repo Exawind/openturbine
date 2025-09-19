@@ -2,7 +2,7 @@
 
 #include "model/model.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(ModelTest, AddNodeToModel) {
     Model model;
@@ -161,4 +161,4 @@ TEST(ModelTest, ModelCreateSystem) {
     EXPECT_EQ(constraints.num_constraints, 0);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

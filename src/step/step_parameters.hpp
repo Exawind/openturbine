@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief A Struct containing the paramters used to control the time stepping process.
@@ -52,4 +52,4 @@ struct StepParameters {
           relative_convergence_tol(r_tol) {}
 };
 
-}  // namespace openturbine
+}  // namespace kynema

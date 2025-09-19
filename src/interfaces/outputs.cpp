@@ -4,7 +4,7 @@
 
 #include "host_state.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 Outputs::Outputs(const std::string& output_file, size_t num_nodes, OutputLocation location)
     : output_writer_(std::make_unique<util::NodeStateWriter>(output_file, true, num_nodes)),
       num_nodes_(num_nodes),
@@ -121,4 +121,4 @@ void Outputs::WriteRotorTimeSeriesAtTimestep(
     this->time_series_writer_->WriteValueAtTimestep("rotor_azimuth_angle", timestep, azimuth_angle);
     this->time_series_writer_->WriteValueAtTimestep("rotor_speed", timestep, rotor_speed);
 }
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

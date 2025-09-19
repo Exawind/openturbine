@@ -13,7 +13,7 @@
 #include "interpolate_to_quadrature_point_for_stiffness.hpp"
 #include "system/masses/rotate_section_matrix.hpp"
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct CalculateStiffnessQuadraturePointValues {
@@ -128,4 +128,4 @@ struct CalculateStiffnessQuadraturePointValues {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

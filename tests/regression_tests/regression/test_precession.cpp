@@ -3,7 +3,7 @@
 #include "model/model.hpp"
 #include "step/step.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline auto SetUpPrecessionTest() {
     auto model = Model();
@@ -54,4 +54,4 @@ TEST(PrecessionTest, FinalRotation) {
     SetUpPrecessionTest();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

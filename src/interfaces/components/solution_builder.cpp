@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 SolutionBuilder& SolutionBuilder::EnableStaticSolve() {
     input.dynamic_solve = false;
     return *this;
@@ -58,4 +58,4 @@ const SolutionInput& SolutionBuilder::Input() const {
     return this->input;
 }
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

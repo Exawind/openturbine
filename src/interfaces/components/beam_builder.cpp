@@ -6,7 +6,7 @@
 #include "math/matrix_operations.hpp"
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 BeamBuilder& BeamBuilder::SetElementOrder(size_t element_order) {
     input.element_order = element_order;
     return *this;
@@ -42,7 +42,7 @@ BeamBuilder& BeamBuilder::AddRefAxisPoint(
 
 BeamBuilder& BeamBuilder::AddRefAxisTwist(double grid_location, double twist) {
     input.ref_axis.twist_grid.emplace_back(grid_location);
-    input.ref_axis.twist.emplace_back(twist * std::numbers::pi / 180.);
+    input.ref_axis.twist.emplace_back(twist);
     return *this;
 }
 
@@ -98,4 +98,4 @@ const BeamInput& BeamBuilder::Input() const {
 Beam BeamBuilder::Build(Model& model) const {
     return {this->input, model};
 }
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

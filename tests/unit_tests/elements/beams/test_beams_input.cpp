@@ -5,7 +5,7 @@
 #include "elements/beams/beams_input.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 class BeamsInputTest : public ::testing::Test {
 protected:
@@ -126,4 +126,4 @@ TEST_F(BeamsInputTest, MaxElemQuadraturePoints) {
     EXPECT_EQ(input.MaxElemQuadraturePoints(), 4);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

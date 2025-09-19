@@ -1,5 +1,6 @@
-target_sources(openturbine_library
+target_sources(kynema_library
   PRIVATE
+  aerodynamics.cpp
   beam.cpp
   beam_builder.cpp
   inflow.cpp
@@ -9,6 +10,9 @@ target_sources(openturbine_library
 )
 
 install(FILES
+        aerodynamics.hpp
+        aerodynamics_builder.hpp
+        aerodynamics_input.hpp
         beam.hpp
         beam_builder.hpp
         beam_input.hpp
@@ -19,5 +23,5 @@ install(FILES
         turbine.hpp
         turbine_builder.hpp
         turbine_input.hpp
-        DESTINATION include/OpenTurbine/interfaces/components/
+        DESTINATION include/Kynema/interfaces/components/
 )

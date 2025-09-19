@@ -7,7 +7,7 @@
 #include "model/model.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline auto SetUpBeams() {
     auto model = Model();
@@ -183,4 +183,4 @@ TEST(BeamsTest, QuadraturePointStiffnessMatrixInMaterialFrame) {
     );
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

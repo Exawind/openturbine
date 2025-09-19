@@ -380,7 +380,7 @@ FILE_HEADER = """
 
 #include <yaml-cpp/yaml.h>
 
-namespace openturbine::wind_io {
+namespace kynema::wind_io {
 
 """
 
@@ -393,7 +393,7 @@ struct WindIO {
     }
 };
 
-}  // namespace openturbine::wind_io
+}  // namespace kynema::wind_io
 """
 
 

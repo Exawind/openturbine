@@ -8,7 +8,7 @@
 #include "interfaces/components/beam_builder.hpp"
 #include "step/step.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
@@ -56,7 +56,7 @@ TEST(BladeInterfaceTest, BladeWindIO) {
     const auto twist_grid = twist["grid"].as<std::vector<double>>();
     const auto twist_values = twist["values"].as<std::vector<double>>();
     for (auto i : std::views::iota(0U, twist_grid.size())) {
-        builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i]);
+        builder.Blade().AddRefAxisTwist(twist_grid[i], twist_values[i] * std::numbers::pi / 180.);
     }
 
     // Add blade section properties
@@ -495,4 +495,4 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     EXPECT_NEAR(tip_positions[5][2], 0.0006097054603659835, 1e-8);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

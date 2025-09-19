@@ -11,7 +11,7 @@
 #include "math/vector_operations.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 Turbine::Turbine(const TurbineInput& input, Model& model)
     : blades(CreateBlades(input.blades, model)),
       tower(input.tower, model),
@@ -480,6 +480,7 @@ void Turbine::SetInitialDisplacements(const TurbineInput& input, Model& model) {
         input.tower_base_position[1] - ref_tower_base_position[1],
         input.tower_base_position[2] - ref_tower_base_position[2]
     };
+
     // Get tower base orientation at input position
     const auto tower_base_orientation = std::array{
         input.tower_base_position[3], input.tower_base_position[4], input.tower_base_position[5],
@@ -550,4 +551,4 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
         );
     }
 }
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

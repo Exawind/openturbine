@@ -1,4 +1,4 @@
-target_sources(openturbine_library
+target_sources(kynema_library
   PRIVATE
   turbine_interface.cpp
 )
@@ -6,5 +6,5 @@ target_sources(openturbine_library
 install(FILES
         turbine_interface.hpp
         turbine_interface_builder.hpp
-        DESTINATION include/OpenTurbine/interfaces/turbine/
+        DESTINATION include/Kynema/interfaces/turbine/
 )

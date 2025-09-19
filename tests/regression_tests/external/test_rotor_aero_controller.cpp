@@ -17,9 +17,9 @@
 #include "utilities/aerodynamics/aerodyn_inflow.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 
-#include "OpenTurbine_config.h"
+#include "Kynema_config.h"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 constexpr bool use_node_loads = true;
 
@@ -162,14 +162,13 @@ TEST(Milestone, IEA15RotorAeroController) {
     constexpr auto gravity = std::array{0., 0., -9.81};      // Gravity (m/s/s)
 
     // Controller parameters
-    const std::string controller_shared_lib_path{static_cast<const char*>(OpenTurbine_ROSCO_LIBRARY)
-    };
+    const std::string controller_shared_lib_path{static_cast<const char*>(Kynema_ROSCO_LIBRARY)};
     const std::string controller_function_name{"DISCON"};
     const std::string controller_input_file_path{"./IEA-15-240-RWT/DISCON.IN"};
     const std::string controller_simulation_name{"./IEA-15-240-RWT"};
 
     // Aerodynamics and Inflow library
-    const std::string adi_shared_lib_path{static_cast<const char*>(OpenTurbine_ADI_LIBRARY)};
+    const std::string adi_shared_lib_path{static_cast<const char*>(Kynema_ADI_LIBRARY)};
     const std::string aerodyn_input_path{"./IEA-15-240-RWT/AeroDyn15.dat"};
     const std::string inflowwind_input_path{"./IEA-15-240-RWT/InflowFile.dat"};
 
@@ -277,7 +276,8 @@ TEST(Milestone, IEA15RotorAeroController) {
                     {node_coords[j][3], node_coords[j][4], node_coords[j][5], node_coords[j][6]}
                 );
                 auto pos = math::RotateVectorByQuaternion(
-                    q_root, {node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
+                    q_root,
+                    std::array{node_coords[j][0] + hub_radius, node_coords[j][1], node_coords[j][2]}
                 );
                 const auto v = math::CrossProduct(omega, pos);
 
@@ -313,7 +313,7 @@ TEST(Milestone, IEA15RotorAeroController) {
 
         // Calculate node position and orientation for this blade
         auto pos = math::RotateVectorByQuaternion(
-            q_root, {node_coords[0][0] + hub_radius, node_coords[0][1], node_coords[0][2]}
+            q_root, std::array{node_coords[0][0] + hub_radius, node_coords[0][1], node_coords[0][2]}
         );
         const auto v = math::CrossProduct(omega, pos);
 
@@ -635,4 +635,4 @@ TEST(Milestone, IEA15RotorAeroController) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

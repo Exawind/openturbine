@@ -6,8 +6,8 @@
 #include <interfaces/cfd/interface_builder.hpp>
 
 int main() {
-    // OpenTurbine is based on Kokkos for performance portability.  Make sure to
-    // call Kokkos::initialize before creating any OpenTurbine data structures
+    // Kynema is based on Kokkos for performance portability.  Make sure to
+    // call Kokkos::initialize before creating any Kynema data structures
     // and Kokkos::finalize after all of those data structures have been destroyed.
     Kokkos::initialize();
     {
@@ -40,7 +40,7 @@ int main() {
         constexpr auto mooring_line_initial_length{55.432};  // m
 
         // Create cfd interface
-        // This interface is the primary way for interacting with OpenTurbine
+        // This interface is the primary way for interacting with Kynema
         // and solving floating platform problems.  You can string together setter
         // functions, or call them individually, depending on which
         // works best with your applications.
@@ -48,7 +48,7 @@ int main() {
         // First, general solution parameters should be set - the gravity force,
         // time step, numerical damping factor, and maximum number of nonlinear
         // iterations.
-        auto interface_builder = openturbine::interfaces::cfd::InterfaceBuilder{}
+        auto interface_builder = kynema::interfaces::cfd::InterfaceBuilder{}
                                      .SetGravity(gravity)
                                      .SetTimeStep(time_step)
                                      .SetDampingFactor(rho_inf)
@@ -83,7 +83,7 @@ int main() {
             .SetMooringLineFairleadPosition(2, {20.43, 35.39, -14.})
             .SetMooringLineAnchorPosition(2, {52.73, 91.34, -58.4});
 
-        // Call the .Build() function when done to generate the interface and all of OpenTurbine's
+        // Call the .Build() function when done to generate the interface and all of Kynema's
         // data structures.
         auto interface = interface_builder.Build();
 
@@ -120,7 +120,7 @@ int main() {
             assert(converged);
         }
     }
-    // Make sure to call finalize after all OpenTurbine data structures are deleted
+    // Make sure to call finalize after all Kynema data structures are deleted
     // and you're ready to exit your application.
     Kokkos::finalize();
     return 0;

@@ -9,7 +9,7 @@
 #include "system/masses/calculate_mass_matrix_components.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteCalculateMassMatrixComponents {
     Kokkos::View<double[6][6]>::const_type Muu;
@@ -52,4 +52,4 @@ TEST(CalculateMassMatrixComponentsMassesTests, OneQuadPoint) {
     CompareWithExpected(rho_mirror, rho_exact);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

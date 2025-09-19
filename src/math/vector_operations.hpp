@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::math {
+namespace kynema::math {
 
 /// Converts a 3x1 vector to a 3x3 skew-symmetric matrix and returns the result
 template <typename VectorType, typename MatrixType>
@@ -47,7 +47,7 @@ KOKKOS_INLINE_FUNCTION void CrossProduct(
 
 /// Calculate the cross product between two vectors
 constexpr std::array<double, 3> CrossProduct(
-    const std::array<double, 3>& a, const std::array<double, 3>& b
+    std::span<const double, 3> a, std::span<const double, 3> b
 ) {
     return std::array<double, 3>{
         a[1] * b[2] - a[2] * b[1],
@@ -73,4 +73,4 @@ constexpr std::array<double, 3> UnitVector(const std::array<double, 3>& v) {
         v[2] / norm,
     };
 }
-}  // namespace openturbine::math
+}  // namespace kynema::math

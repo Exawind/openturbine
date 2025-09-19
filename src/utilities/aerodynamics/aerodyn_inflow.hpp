@@ -12,7 +12,7 @@
 #include "math/quaternion_operations.hpp"
 #include "vendor/dylib/dylib.hpp"
 
-namespace openturbine::util {
+namespace kynema::util {
 
 /**
  * AeroDynInflowLibrary: C++ wrapper for the AeroDyn/InflowWind (ADI) shared library
@@ -307,7 +307,7 @@ struct TurbineData {
      * @brief Constructor for TurbineData based on a TurbineConfig object
      *
      * @details This constructor initializes the turbine data in AeroDyn/InflowWind compatible format
-     * based on the provided TurbineConfig object in 7x1 arrays i.e. OpenTurbine format.
+     * based on the provided TurbineConfig object in 7x1 arrays i.e. Kynema format.
      *
      * @param tc The TurbineConfig object containing the initial state of the turbine
      */
@@ -1028,4 +1028,4 @@ private:
     VTKSettings vtk_settings_;                //< VTK output settings
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

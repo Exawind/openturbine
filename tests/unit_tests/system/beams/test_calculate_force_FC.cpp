@@ -12,13 +12,13 @@
 namespace {
 
 void TestCalculateForceFC() {
-    const auto Cuu = openturbine::beams::tests::CreateView<double[6][6]>(
+    const auto Cuu = kynema::beams::tests::CreateView<double[6][6]>(
         "Cuu", std::array{1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,  10., 11., 12.,
                           13., 14., 15., 16., 17., 18., 19., 20., 21., 22., 23., 24.,
                           25., 26., 27., 28., 29., 30., 31., 32., 33., 34., 35., 36.}
     );
 
-    const auto strain = openturbine::beams::tests::CreateView<double[6]>(
+    const auto strain = kynema::beams::tests::CreateView<double[6]>(
         "strain", std::array{37., 38., 39., 40., 41., 42.}
     );
 
@@ -27,9 +27,7 @@ void TestCalculateForceFC() {
     Kokkos::parallel_for(
         "CalculateForceFC", 1,
         KOKKOS_LAMBDA(size_t) {
-            openturbine::beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>::invoke(
-                Cuu, strain, FC
-            );
+            kynema::beams::CalculateForceFC<Kokkos::DefaultExecutionSpace>::invoke(Cuu, strain, FC);
         }
     );
 
@@ -38,15 +36,15 @@ void TestCalculateForceFC() {
         Kokkos::View<double[6], Kokkos::HostSpace>::const_type(FC_exact_data.data());
 
     const auto FC_mirror = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), FC);
-    openturbine::beams::tests::CompareWithExpected(FC_mirror, FC_exact);
+    kynema::beams::tests::CompareWithExpected(FC_mirror, FC_exact);
 }
 
 }  // namespace
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(CalculateForceFCTests, OneNode) {
     TestCalculateForceFC();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

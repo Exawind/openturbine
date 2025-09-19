@@ -9,7 +9,7 @@
 #include "system/masses/calculate_mass_matrix_components.hpp"
 #include "system/masses/rotate_section_matrix.hpp"
 
-namespace openturbine::masses {
+namespace kynema::masses {
 
 template <typename DeviceType>
 struct CalculateQuadraturePointValues {
@@ -152,4 +152,4 @@ struct CalculateQuadraturePointValues {
     }
 };
 
-}  // namespace openturbine::masses
+}  // namespace kynema::masses

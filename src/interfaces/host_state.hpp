@@ -2,7 +2,7 @@
 
 #include "state/state.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 /**
  * @brief Host-side mirror of the simulation state for a given time increment
@@ -55,4 +55,4 @@ struct HostState {
     }
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

@@ -6,7 +6,7 @@
 
 #include "netcdf_file.hpp"
 
-namespace openturbine::util {
+namespace kynema::util {
 
 /**
  * @brief Class for writing time-series data to NetCDF file
@@ -51,4 +51,4 @@ private:
     int time_dim_;
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

@@ -9,7 +9,7 @@
 #include "interfaces/turbine/turbine_interface.hpp"
 #include "interfaces/turbine/turbine_interface_builder.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 // This test builds the IEA-15-240-RWT turbine structure from WindIO yaml file
 // and applies a tower load, generator torque, blade pitch, and yaw angle to test the
@@ -94,7 +94,7 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
         const auto twist_grid = twist["grid"].as<std::vector<double>>();
         const auto twist_values = twist["values"].as<std::vector<double>>();
         for (auto i : std::views::iota(0U, twist_grid.size())) {
-            blade_builder.AddRefAxisTwist(twist_grid[i], twist_values[i]);
+            blade_builder.AddRefAxisTwist(twist_grid[i], twist_values[i] * std::numbers::pi / 180.);
         }
 
         // Add blade section properties
@@ -301,4 +301,4 @@ TEST(TurbineInterfaceTest, IEA15_Structure) {
     EXPECT_NEAR(tower_top_node.position[6], -0.0069174614355188109, 1e-10);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

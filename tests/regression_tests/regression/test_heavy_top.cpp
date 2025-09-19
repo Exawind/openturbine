@@ -4,7 +4,7 @@
 #include "step/step.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline auto SetUpHeavyTopTest() {
     auto model = Model();
@@ -87,4 +87,4 @@ TEST(HeavyTopTest, FinalState) {
     SetUpHeavyTopTest();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

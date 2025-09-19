@@ -1,4 +1,4 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 add_subdirectory(linear_solver)
 
@@ -27,5 +27,5 @@ install(FILES
         create_full_matrix.hpp
         scan_row_entries.hpp
         solver.hpp
-        DESTINATION include/OpenTurbine/solver/
+        DESTINATION include/Kynema/solver/
 )
