@@ -12,3 +12,4 @@ pyenchant
 sphinxcontrib-spelling
 doxysphinx
 sphinxcontrib-doxylink
+sphinxcontrib-youtube
