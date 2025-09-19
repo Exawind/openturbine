@@ -10,13 +10,14 @@
 
 #include <gtest/gtest.h>
 
-#include "Kynema_config.h"
 #include "model/model.hpp"
 #include "regression/iea15_rotor_data.hpp"
 #include "regression/test_utilities.hpp"
 #include "step/step.hpp"
 #include "utilities/aerodynamics/aerodyn_inflow.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
+
+#include "Kynema_config.h"
 
 namespace kynema::tests {
 

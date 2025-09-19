@@ -5,11 +5,12 @@
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 
-#include "Kynema_config.h"
 #include "compute_num_system_dofs.hpp"
 #include "create_full_matrix.hpp"
 #include "linear_solver/dss_handle.hpp"
 #include "linear_solver/dss_symbolic.hpp"
+
+#include "Kynema_config.h"
 
 namespace kynema {
 

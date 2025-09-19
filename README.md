@@ -1,5 +1,5 @@
 # Kynema
-[Documentation](https://exawind.github.io/kynema) | [Nightly test dashboard](http://my.cdash.org/index.php?project=Exawind) 
+[Documentation](https://kynema.github.io/kynema) | [Nightly test dashboard](http://my.cdash.org/index.php?project=Exawind) 
 
 **Kynema development began in 2023, is ongoing, and we aim for beta release in 2025**
 
@@ -53,6 +53,6 @@ Support was also provided by the DOE Office of Science FLOWMAS Energy Earthshot 
 
 [Kynema Software Release Record SWR-23-07](https://www.osti.gov/biblio/1908664)
 
-[Documentation](https://exawind.github.io/kynema/)
+[Documentation](https://kynema.github.io/kynema/)
 
 Send questions to michael.a.sprague@nrel.gov, Kynema Principal Investigator.

@@ -1,8 +1,9 @@
 #include <Kokkos_Core.hpp>
 #include <gtest/gtest.h>
 
-#include "Kynema_config.h"
 #include "utilities/controllers/turbine_controller.hpp"
+
+#include "Kynema_config.h"
 
 namespace kynema::tests {
 
