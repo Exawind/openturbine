@@ -10,7 +10,7 @@
 #include "integrate_stiffness_matrix.hpp"
 #include "update_node_state.hpp"
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct CalculateQuadraturePointValues {
@@ -172,4 +172,4 @@ struct CalculateQuadraturePointValues {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

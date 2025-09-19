@@ -13,7 +13,7 @@ inline void check_netCDF_error(int status, const std::string& message = "") {
 }
 }  // namespace
 
-namespace openturbine::util {
+namespace kynema::util {
 NetCDFFile::NetCDFFile(const std::string& file_path, bool create) {
     if (create) {
         check_netCDF_error(
@@ -362,4 +362,4 @@ void NetCDFFile::ReadVariableWithStride(
         "Failed to read int variable with stride " + name
     );
 }
-}  // namespace openturbine::util
+}  // namespace kynema::util

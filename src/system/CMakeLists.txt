@@ -1,8 +1,8 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
         calculate_tangent_operator.hpp
-        DESTINATION include/OpenTurbine/system/
+        DESTINATION include/Kynema/system/
 )
 
 add_subdirectory(beams)

@@ -9,7 +9,7 @@
 #include "update_system_variables_masses.hpp"
 #include "update_system_variables_springs.hpp"
 
-namespace openturbine::step {
+namespace kynema::step {
 
 template <typename DeviceType>
 inline void UpdateSystemVariables(
@@ -28,4 +28,4 @@ inline void UpdateSystemVariables(
     }
 }
 
-}  // namespace openturbine::step
+}  // namespace kynema::step

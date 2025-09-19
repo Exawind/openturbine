@@ -23,7 +23,7 @@
 #include "solver/solver.hpp"
 #include "state/state.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Compute freedom tables for state, elements, and constraints, then construct and return
@@ -64,10 +64,10 @@ template <
 
 /**
  * @brief Struct to define the connectivity structure of elements, nodes, and constraints defining
- * an OpenTurbine problem.
+ * an Kynema problem.
  *
  * @details A model is a collection of nodes, elements, and constraints that define the geometry and
- * relationships between components in an OpenTurbine problem.
+ * relationships between components in an Kynema problem.
  * Model also provides methods to consistantly manipulate the nodes associated with a given element
  * (for example, rotating all nodes in a beam) to ease the process of defining problems.
  */
@@ -222,7 +222,7 @@ public:
      */
     template <typename DeviceType>
     [[nodiscard]] Beams<DeviceType> CreateBeams() const {
-        return openturbine::CreateBeams<DeviceType>(this->CreateBeamsInput(), this->nodes_);
+        return kynema::CreateBeams<DeviceType>(this->CreateBeamsInput(), this->nodes_);
     }
 
     /**
@@ -354,7 +354,7 @@ public:
      */
     template <typename DeviceType>
     [[nodiscard]] Masses<DeviceType> CreateMasses() const {
-        return openturbine::CreateMasses<DeviceType>(
+        return kynema::CreateMasses<DeviceType>(
             MassesInput(this->mass_elements_, this->gravity_), this->nodes_
         );
     }
@@ -423,9 +423,7 @@ public:
      */
     template <typename DeviceType>
     [[nodiscard]] Springs<DeviceType> CreateSprings() const {
-        return openturbine::CreateSprings<DeviceType>(
-            SpringsInput(this->spring_elements_), this->nodes_
-        );
+        return kynema::CreateSprings<DeviceType>(SpringsInput(this->spring_elements_), this->nodes_);
     }
 
     //--------------------------------------------------------------------------
@@ -694,4 +692,4 @@ private:
         mesh_connectivity_;  //< Mesh connectivity tracking element-node relationships
 };
 
-}  // namespace openturbine
+}  // namespace kynema

@@ -8,8 +8,8 @@
 #include <yaml-cpp/yaml.h>
 
 int main() {
-    // OpenTurbine is based on Kokkos for performance portability.  Make sure to
-    // call Kokkos::initialize before creating any OpenTurbine data structures
+    // Kynema is based on Kokkos for performance portability.  Make sure to
+    // call Kokkos::initialize before creating any Kynema data structures
     // and Kokkos::finalize after all of those data structures have been destroyed.
     Kokkos::initialize();
     {
@@ -21,13 +21,13 @@ int main() {
 
         // Create interface builder
         // This object is the main interface for building turbines.
-        auto builder = openturbine::interfaces::TurbineInterfaceBuilder{};
+        auto builder = kynema::interfaces::TurbineInterfaceBuilder{};
 
         // Set solution parameters
         // The .Solution() function provides options related to controling the solver,
         // such as the time step, numerical damping factor, and convergence criteria.
         //
-        // You can also optionally set an output file in which OpenTurbine will write its
+        // You can also optionally set an output file in which Kynema will write its
         // solution data each iteration.  If this file is not set, no output will be performed.
         //
         // When using the builder, you can string together setter function calls as seen here,
@@ -87,7 +87,7 @@ int main() {
 
         // Loop through blades and set parameters
         // Each blade is added in reference coordinates and then rotated onto the rotor
-        // automatically by OpenTurbine.  The blades of a turbine are assumed to be
+        // automatically by Kynema.  The blades of a turbine are assumed to be
         // equally spaced around the rotor - for example, a turbine with three blades
         // will have one blade every 120 degrees about hte X-axis, with the first blade
         // starting along the global Z-axis.
@@ -101,7 +101,7 @@ int main() {
             auto& blade_builder = turbine_builder.Blade(j);
 
             // Set blade parameters
-            // OpenTurbine's Turbine model assumes one, high order, element per blade.
+            // Kynema's Turbine model assumes one, high order, element per blade.
             // In this case, eleven blade node are used, which we have seen to give accurate
             // results for the IEA15MW blades.
             //
@@ -118,7 +118,7 @@ int main() {
             for (auto i = 0U; i < axis_grid.size(); ++i) {
                 blade_builder.AddRefAxisPoint(
                     axis_grid[i], {x_values[i], y_values[i], z_values[i]},
-                    openturbine::interfaces::components::ReferenceAxisOrientation::Z
+                    kynema::interfaces::components::ReferenceAxisOrientation::Z
                 );
             }
 
@@ -169,7 +169,7 @@ int main() {
                         {k[4], k[9], k[13], k[16], k[18], k[19]},
                         {k[5], k[10], k[14], k[17], k[19], k[20]},
                     }},
-                    openturbine::interfaces::components::ReferenceAxisOrientation::Z
+                    kynema::interfaces::components::ReferenceAxisOrientation::Z
                 );
             }
         }
@@ -197,7 +197,7 @@ int main() {
         for (auto i = 0U; i < axis_grid.size(); ++i) {
             tower_builder.AddRefAxisPoint(
                 axis_grid[i], {x_values[i], y_values[i], z_values[i]},
-                openturbine::interfaces::components::ReferenceAxisOrientation::Z
+                kynema::interfaces::components::ReferenceAxisOrientation::Z
             );
         }
 
@@ -232,9 +232,9 @@ int main() {
         const auto t_wall_thickness = t_layer["thickness"]["values"].as<std::vector<double>>();
         for (auto i = 0U; i < t_diameter_grid.size(); ++i) {
             // Create section mass and stiffness matrices
-            // OpenTurbine provides the helper function GenerateHollowCircleSection to create the
+            // Kynema provides the helper function GenerateHollowCircleSection to create the
             // inertia and stiffness matrices (M_star and C_star) needed to represent the tower
-            const auto section = openturbine::beams::GenerateHollowCircleSection(
+            const auto section = kynema::beams::GenerateHollowCircleSection(
                 t_diameter_grid[i], t_material["E"].as<double>(), t_material["G"].as<double>(),
                 t_material["rho"].as<double>(), t_diameter_values[i], t_wall_thickness[i],
                 t_material["nu"].as<double>()
@@ -243,7 +243,7 @@ int main() {
             // Add section
             tower_builder.AddSection(
                 t_diameter_grid[i], section.M_star, section.C_star,
-                openturbine::interfaces::components::ReferenceAxisOrientation::Z
+                kynema::interfaces::components::ReferenceAxisOrientation::Z
             );
         }
 
@@ -342,7 +342,7 @@ int main() {
             assert(converged);
         }
     }
-    // Make sure to call finalize after all OpenTurbine data structures are deleted
+    // Make sure to call finalize after all Kynema data structures are deleted
     // and you're ready to exit your application.
     Kokkos::finalize();
     return 0;

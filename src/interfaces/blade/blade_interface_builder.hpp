@@ -3,7 +3,7 @@
 #include "interfaces/components/beam_builder.hpp"
 #include "interfaces/components/solution_builder.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 class BladeInterface;
 
@@ -45,4 +45,4 @@ private:
     components::BeamBuilder beam_builder;          ///< Builder for the Blade component
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

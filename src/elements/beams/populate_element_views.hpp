@@ -8,7 +8,7 @@
 #include "math/interpolation.hpp"
 #include "model/node.hpp"
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 /// @brief Populate the node initial position and orientation
 inline void PopulateNodeX0(
@@ -139,4 +139,4 @@ inline void PopulateQPCstar(
         }
     }
 }
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

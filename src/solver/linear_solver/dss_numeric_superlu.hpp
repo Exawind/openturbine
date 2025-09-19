@@ -6,7 +6,7 @@
 #include "dss_handle_superlu.hpp"
 #include "slu_ddefs.h"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType>
 struct NumericFunction<Handle<Algorithm::SUPERLU>, CrsMatrixType> {
     static void numeric(Handle<Algorithm::SUPERLU>& dss_handle, CrsMatrixType& A) {
@@ -49,4 +49,4 @@ struct NumericFunction<Handle<Algorithm::SUPERLU>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

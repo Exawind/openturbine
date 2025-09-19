@@ -11,7 +11,7 @@
 #include "math/vector_operations.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 Turbine::Turbine(const TurbineInput& input, Model& model)
     : blades(CreateBlades(input.blades, model)),
       tower(input.tower, model),
@@ -551,4 +551,4 @@ void Turbine::SetInitialRotorVelocity(const TurbineInput& input, Model& model) {
         );
     }
 }
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

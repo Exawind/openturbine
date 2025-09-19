@@ -5,7 +5,7 @@
 
 #include "step/step_parameters.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 /**
  * @brief A configuration object used to create the low level StepParameters object
@@ -49,4 +49,4 @@ struct SolutionInput {
     }
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

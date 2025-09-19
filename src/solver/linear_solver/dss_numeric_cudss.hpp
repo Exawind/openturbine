@@ -5,7 +5,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cudss.hpp"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType>
 struct NumericFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
     static void numeric(Handle<Algorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
@@ -51,4 +51,4 @@ struct NumericFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
         cudssMatrixDestroy(x_cudss);
     }
 };
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

@@ -1,4 +1,4 @@
-target_sources(openturbine_library 
+target_sources(kynema_library 
   PRIVATE
 )
 
@@ -8,5 +8,5 @@ install(FILES
         create_constraint_freedom_table.hpp
         create_element_freedom_table.hpp
         freedom_signature.hpp
-        DESTINATION include/OpenTurbine/dof_management
+        DESTINATION include/Kynema/dof_management
 )

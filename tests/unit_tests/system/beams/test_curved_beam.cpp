@@ -29,7 +29,7 @@
  *
  * This file contains a series of unit tests that validate a curved beam problem consisting of
  * 3 nodes at GLL points (for second order polynomial). The validation dataset was created in
- * Mathematica during openturbine theory development.
+ * Mathematica during kynema theory development.
  *
  * The Mathematica notebooks used to generate the validation dataset are:
  * - Run1-RotationLibrary.nb
@@ -51,10 +51,10 @@
  * - Q matrix calculation -> CalculateQuu
  * - Stiffness matrix integration -> beams::IntegrateStiffnessMatrixElement
  *
- * Ref: https://github.com/michaelasprague/OpenTurbineTheory/tree/main/mathematica
+ * Ref: https://github.com/michaelasprague/KynemaTheory/tree/main/mathematica
  */
 
-namespace openturbine::beams::tests {
+namespace kynema::beams::tests {
 
 TEST(CurvedBeamTests, LagrangePolynomialInterpWeight_SecondOrder_AtSpecifiedQPs) {
     std::vector<double> weights;
@@ -318,4 +318,4 @@ TEST(CurvedBeamTests, IntegrateStiffnessMatrixForCurvedBeam) {
     CompareWithExpected(stiffness_matrix_terms_mirror, kExpectedStiffnessMatrix, 1e-7);
 }
 
-}  // namespace openturbine::beams::tests
+}  // namespace kynema::beams::tests

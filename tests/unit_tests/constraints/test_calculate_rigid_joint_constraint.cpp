@@ -4,7 +4,7 @@
 #include "constraints/calculate_rigid_joint_constraint.hpp"
 #include "create_view.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteCalculateRigidJointConstraint {
     Kokkos::View<double[3]>::const_type X0;
@@ -107,4 +107,4 @@ TEST(CalculateRigidJointConstraintTests, OneConstraint) {
     }
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

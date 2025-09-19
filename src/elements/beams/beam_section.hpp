@@ -2,7 +2,7 @@
 
 #include <array>
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief A structure containing the position, mass matrix, and stiffness matrix to be used
@@ -20,4 +20,4 @@ struct BeamSection {
         : position(s), M_star(mass), C_star(stiffness) {}
 };
 
-}  // namespace openturbine
+}  // namespace kynema

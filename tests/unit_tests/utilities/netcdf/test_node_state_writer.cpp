@@ -9,7 +9,7 @@
 #include "utilities/netcdf/netcdf_file.hpp"
 #include "utilities/netcdf/node_state_writer.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 class NodeStateWriterTest : public ::testing::Test {
 protected:
@@ -183,4 +183,4 @@ TEST_F(NodeStateWriterTest, ThrowsOnMismatchedVectorSizes) {
     );
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

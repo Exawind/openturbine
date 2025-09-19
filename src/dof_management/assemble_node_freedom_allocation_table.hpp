@@ -7,7 +7,7 @@
 #include "freedom_signature.hpp"
 #include "state/state.hpp"
 
-namespace openturbine::dof {
+namespace kynema::dof {
 
 /**
  * @brief A Kernel for applying a Beam element's freedom signature to all nodes it contains
@@ -130,7 +130,7 @@ struct AssembleNodeFreedomMapTable_Constraints {
  * contain this node.  The most common action using this information is to query how many
  * degrees of freedom are defined, so this information is also computed.
  *
- * @tparam DeviceType The Kokkos device defining where OpenTurbine's structures reside
+ * @tparam DeviceType The Kokkos device defining where Kynema's structures reside
  *
  * @param state A structure containing the node freedom allocation table to be filled
  * @param elements A structure containing all of the elements and their connectivities
@@ -191,4 +191,4 @@ inline void assemble_node_freedom_allocation_table(
     );
 }
 
-}  // namespace openturbine::dof
+}  // namespace kynema::dof

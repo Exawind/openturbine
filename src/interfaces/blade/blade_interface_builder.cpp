@@ -2,7 +2,7 @@
 
 #include "blade_interface.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 components::SolutionBuilder& BladeInterfaceBuilder::Solution() {
     return this->solution_builder;
@@ -16,4 +16,4 @@ BladeInterface BladeInterfaceBuilder::Build() const {
     return BladeInterface(this->solution_builder.Input(), this->beam_builder.Input());
 }
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

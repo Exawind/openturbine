@@ -5,7 +5,7 @@
 #include "dss_algorithm.hpp"
 #include "klu.h"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <>
 class Handle<Algorithm::KLU> {
     struct kluDssHandleType {
@@ -44,4 +44,4 @@ public:
     klu_common& get_common() { return klu_dss_handle->Common; }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

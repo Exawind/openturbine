@@ -5,12 +5,12 @@
 
 #include "interfaces/node_data.hpp"
 
-namespace openturbine {
+namespace kynema {
 class Model;
 struct BeamSection;
-}  // namespace openturbine
+}  // namespace kynema
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 struct BeamInput;
 
@@ -134,4 +134,4 @@ private:
     static std::vector<BeamSection> BuildBeamSections(const BeamInput& input);
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

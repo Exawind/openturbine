@@ -6,7 +6,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_umfpack.hpp"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
 struct SolveFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType, MultiVectorType> {
     static void solve(
@@ -32,4 +32,4 @@ struct SolveFunction<Handle<Algorithm::UMFPACK>, CrsMatrixType, MultiVectorType>
     }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

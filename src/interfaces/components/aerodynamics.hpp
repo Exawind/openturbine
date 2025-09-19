@@ -15,7 +15,7 @@
 #include "math/vector_operations.hpp"
 #include "model/node.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 double CalculateAngleOfAttack(std::span<const double, 3> v_rel);
 
@@ -278,4 +278,4 @@ public:
         }
     }
 };
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

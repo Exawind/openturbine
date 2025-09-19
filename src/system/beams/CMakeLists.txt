@@ -1,4 +1,4 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
         calculate_Ouu.hpp
@@ -18,5 +18,5 @@ install(FILES
         interpolate_to_quadrature_point_for_inertia.hpp
         interpolate_to_quadrature_point_for_stiffness.hpp
         update_node_state.hpp
-        DESTINATION include/OpenTurbine/system/beams/
+        DESTINATION include/Kynema/system/beams/
 )

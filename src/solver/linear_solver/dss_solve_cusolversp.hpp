@@ -7,7 +7,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cusolversp.hpp"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType, typename MultiVectorType>
 struct SolveFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType, MultiVectorType> {
     static void solve(
@@ -33,4 +33,4 @@ struct SolveFunction<Handle<Algorithm::CUSOLVER_SP>, CrsMatrixType, MultiVectorT
     }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
-# Run this from the root of the OpenTurbine repository with the following arguments:
-# ./recipes/build_recipe_macos.sh <path_to_openturbine_root> <path_to_spack_root>
+# Run this from the root of the Kynema repository with the following arguments:
+# ./recipes/build_recipe_macos.sh <path_to_kynema_root> <path_to_spack_root>
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -22,12 +22,12 @@ if [ -z "${FC}" ]; then
     exit 1
 fi
 
-# Clone OpenTurbine repository if not present in the provided path
-openturbine_path=$(dirname "$1") # Get the directory of the provided path
-if [ ! -d "$openturbine_path/openturbine" ]; then
-    git clone --recursive https://github.com/Exawind/openturbine.git $openturbine_path/openturbine
+# Clone Kynema repository if not present in the provided path
+kynema_path=$(dirname "$1") # Get the directory of the provided path
+if [ ! -d "$kynema_path/kynema" ]; then
+    git clone --recursive https://github.com/Exawind/kynema.git $kynema_path/kynema
 fi
-cd $openturbine_path/openturbine
+cd $kynema_path/kynema
 
 # Install Spack if not present in the provided path
 spack_path=$(dirname "$2") # Get the directory of the provided path
@@ -62,14 +62,14 @@ install_if_missing openfast
 
 spack load kokkos kokkos-kernels netdcf-c suite-sparse lapack googletest yaml-cpp rosco openfast #llvm cppcheck
 
-# Build OpenTurbine with the specified options
+# Build Kynema with the specified options
 mkdir -p build-from-script
 cd build-from-script
 cmake .. \
   -DCMAKE_CXX_COMPILER=hipcc \
-  -DOpenTurbine_WRITE_OUTPUTS=ON \
-  -DOpenTurbine_ENABLE_OPENFAST_ADI=ON \
-  -DOpenTurbine_ENABLE_ROSCO_CONTROLLER=ON \
+  -DKynema_WRITE_OUTPUTS=ON \
+  -DKynema_ENABLE_OPENFAST_ADI=ON \
+  -DKynema_ENABLE_ROSCO_CONTROLLER=ON \
   -DOpenTUrbine_ENABLE_KLU=ON \
   -DCMAKE_BUILD_TYPE="Release"
 

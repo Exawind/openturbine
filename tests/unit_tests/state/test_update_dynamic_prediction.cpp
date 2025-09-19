@@ -10,7 +10,7 @@
 #include "dof_management/freedom_signature.hpp"
 #include "state/update_dynamic_prediction.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline void CompareWithExpected(
     const Kokkos::View<const double**>::host_mirror_type& result,
@@ -65,4 +65,4 @@ TEST(UpdateDynamicPrediction, OneNode) {
     CompareWithExpected(vd_mirror, vd_exact);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

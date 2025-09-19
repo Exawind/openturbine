@@ -9,7 +9,7 @@
 #include "system/masses/rotate_section_matrix.hpp"
 #include "test_calculate.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 struct ExecuteRotateSectionMatrix {
     Kokkos::View<double[4]>::const_type xr;
@@ -46,4 +46,4 @@ TEST(RotateSectionMatrixMassesTests, OneNode) {
     CompareWithExpected(Cuu_mirror, Cuu_exact);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

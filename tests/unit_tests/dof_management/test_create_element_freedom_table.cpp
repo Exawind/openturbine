@@ -12,7 +12,7 @@
 #include "elements/springs/springs.hpp"
 #include "state/state.hpp"
 
-namespace openturbine::dof::tests {
+namespace kynema::dof::tests {
 
 TEST(TestCreateElementFreedomTable, OneBeamElementWithOneNode_NoMassNoSpring) {
     using DeviceType =
@@ -498,4 +498,4 @@ TEST(
     }
 }
 
-}  // namespace openturbine::dof::tests
+}  // namespace kynema::dof::tests

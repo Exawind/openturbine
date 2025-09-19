@@ -5,7 +5,7 @@
 
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 template <unsigned size>
 auto Create1DView(const std::array<double, size>& input) {
@@ -461,4 +461,4 @@ TEST(QuaternionTest, IsIdentityQuaternion_NonIdentityQuaternions) {
     EXPECT_FALSE(math::IsIdentityQuaternion(arbitrary));
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

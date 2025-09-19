@@ -3,7 +3,7 @@
 #include "interface.hpp"
 #include "interface_input.hpp"
 
-namespace openturbine::interfaces::cfd {
+namespace kynema::interfaces::cfd {
 
 /**
  * @brief A factory for configuring and building a CFD interface object.
@@ -167,4 +167,4 @@ private:
     InterfaceInput interface_input;
 };
 
-}  // namespace openturbine::interfaces::cfd
+}  // namespace kynema::interfaces::cfd

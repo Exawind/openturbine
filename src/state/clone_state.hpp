@@ -2,7 +2,7 @@
 
 #include "state.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Creates a new state object and performs a deep copy of the data in the old one.
@@ -35,4 +35,4 @@ inline State<DeviceType> CloneState(const State<DeviceType>& old) {
     return clone;
 }
 
-}  // namespace openturbine
+}  // namespace kynema

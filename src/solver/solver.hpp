@@ -5,14 +5,13 @@
 #include <KokkosSparse.hpp>
 #include <Kokkos_Core.hpp>
 
+#include "Kynema_config.h"
 #include "compute_num_system_dofs.hpp"
 #include "create_full_matrix.hpp"
 #include "linear_solver/dss_handle.hpp"
 #include "linear_solver/dss_symbolic.hpp"
 
-#include "OpenTurbine_config.h"
-
-namespace openturbine {
+namespace kynema {
 
 /** @brief This object manages the assembly and solution of linear system arising from the
  * generalized-alpha based time integration of the dynamic structural problem.
@@ -24,9 +23,9 @@ struct Solver {
 #ifdef KOKKOS_ENABLE_CUDA
     static constexpr bool use_device =
         std::is_same<typename DeviceType::execution_space, Kokkos::Cuda>::value;
-#if defined(OpenTurbine_ENABLE_CUDSS)
+#if defined(Kynema_ENABLE_CUDSS)
     static constexpr dss::Algorithm algorithm_device = dss::Algorithm::CUDSS;
-#elif defined(OpenTurbine_ENABLE_CUSOLVERSP)
+#elif defined(Kynema_ENABLE_CUSOLVERSP)
     static constexpr dss::Algorithm algorithm_device = dss::Algorithm::CUSOLVER_SP;
 #else
     static constexpr dss::Algorithm algorithm_device = dss::Algorithm::NONE;
@@ -36,15 +35,15 @@ struct Solver {
     static constexpr dss::Algorithm algorithm_device = dss::Algorithm::NONE;
 #endif
 
-#if defined(OpenTurbine_ENABLE_KLU)
+#if defined(Kynema_ENABLE_KLU)
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::KLU;
-#elif defined(OpenTurbine_ENABLE_SUPERLU)
+#elif defined(Kynema_ENABLE_SUPERLU)
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::SUPERLU;
-#elif defined(OpenTurbine_ENABLE_MKL)
+#elif defined(Kynema_ENABLE_MKL)
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::MKL;
-#elif defined(OpenTurbine_ENABLE_SUPERLU_MT)
+#elif defined(Kynema_ENABLE_SUPERLU_MT)
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::SUPERLU_MT;
-#elif defined(OpenTurbine_ENABLE_UMFPACK)
+#elif defined(Kynema_ENABLE_UMFPACK)
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::UMFPACK;
 #else
     static constexpr dss::Algorithm algorithm_host = dss::Algorithm::NONE;
@@ -56,7 +55,7 @@ struct Solver {
     static_assert(algorithm != dss::Algorithm::NONE);
 
     using HandleType = dss::Handle<algorithm>;
-#if defined(OpenTurbine_ENABLE_MKL)
+#if defined(Kynema_ENABLE_MKL)
     using IndexType = std::conditional<algorithm == dss::Algorithm::MKL, MKL_INT, int>::type;
 #else
     using IndexType = int;
@@ -123,4 +122,4 @@ struct Solver {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

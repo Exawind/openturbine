@@ -1,4 +1,4 @@
-name: OpenTurbine-CI
+name: Kynema Formatting
 
 on:
   push:

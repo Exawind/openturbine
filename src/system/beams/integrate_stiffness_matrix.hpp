@@ -4,7 +4,7 @@
 #include <Kokkos_Core.hpp>
 #include <Kokkos_SIMD.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct IntegrateStiffnessMatrixElement {
@@ -96,4 +96,4 @@ struct IntegrateStiffnessMatrixElement {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

@@ -4,7 +4,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Contains the field variables needed to compute the per-element contributions to the
@@ -180,4 +180,4 @@ struct Beams {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

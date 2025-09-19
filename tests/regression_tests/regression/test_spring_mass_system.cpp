@@ -6,7 +6,7 @@
 #include "step/step.hpp"
 #include "step/step_parameters.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 /*
  * A simple spring-mass system with one mass attached to a fixed point by a spring.
@@ -185,4 +185,4 @@ TEST(SpringMassChainSystemTest, FinalDisplacement) {
     SetUpSpringMassChainSystem();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

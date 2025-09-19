@@ -4,11 +4,11 @@
 
 #include "beam_input.hpp"
 
-namespace openturbine {
+namespace kynema {
 class Model;
 }
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 class Beam;
 
@@ -146,4 +146,4 @@ private:
     BeamInput input;
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

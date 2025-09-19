@@ -6,7 +6,7 @@
 #include "dss_algorithm.hpp"
 #include "dss_handle_cudss.hpp"
 
-namespace openturbine::dss {
+namespace kynema::dss {
 template <typename CrsMatrixType>
 struct SymbolicFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
     static void symbolic(Handle<Algorithm::CUDSS>& dss_handle, CrsMatrixType& A) {
@@ -47,4 +47,4 @@ struct SymbolicFunction<Handle<Algorithm::CUDSS>, CrsMatrixType> {
     }
 };
 
-}  // namespace openturbine::dss
+}  // namespace kynema::dss

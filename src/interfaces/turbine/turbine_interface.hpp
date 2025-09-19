@@ -10,12 +10,12 @@
 #include "step/step_parameters.hpp"
 #include "utilities/controllers/turbine_controller.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 struct SolutionInput;
 struct TurbineInput;
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 /**
  * @brief Interface for blade simulation that manages state, solver, and components
@@ -91,19 +91,17 @@ public:
     [[nodiscard]] double CalculateRotorSpeed() const;
 
 private:
-    Model model;                  ///< OpenTurbine class for model construction
-    components::Turbine turbine;  ///< Turbine model input/output data
-    State<DeviceType> state;      ///< OpenTurbine class for storing system state
-    Elements<DeviceType>
-        elements;  ///< OpenTurbine class for model elements (beams, masses, springs)
-    Constraints<DeviceType>
-        constraints;               ///< OpenTurbine class for constraints tying elements together
-    StepParameters parameters;     ///< OpenTurbine class containing solution parameters
-    Solver<DeviceType> solver;     ///< OpenTurbine class for solving the dynamic system
-    State<DeviceType> state_save;  ///< OpenTurbine class state class for temporarily saving state
-    HostState<DeviceType> host_state;                     ///< Host local copy of node state data
-    std::unique_ptr<Outputs> outputs;                     ///< handle to Output for writing to NetCDF
-    std::unique_ptr<util::TurbineController> controller;  ///< DISCON-style controller
+    Model model;                    ///< Kynema class for model construction
+    components::Turbine turbine;    ///< Turbine model input/output data
+    State<DeviceType> state;        ///< Kynema class for storing system state
+    Elements<DeviceType> elements;  ///< Kynema class for model elements (beams, masses, springs)
+    Constraints<DeviceType> constraints;  ///< Kynema class for constraints tying elements together
+    StepParameters parameters;            ///< Kynema class containing solution parameters
+    Solver<DeviceType> solver;            ///< Kynema class for solving the dynamic system
+    State<DeviceType> state_save;         ///< Kynema class state class for temporarily saving state
+    HostState<DeviceType> host_state;     ///< Host local copy of node state data
+    std::unique_ptr<Outputs> outputs;     ///< handle to Output for writing to NetCDF
+    std::unique_ptr<util::TurbineController> controller;     ///< DISCON-style controller
     std::unique_ptr<components::Aerodynamics> aerodynamics;  ///< Aerodynamics component
 
     /**
@@ -134,4 +132,4 @@ private:
     void UpdateControllerInputs();
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

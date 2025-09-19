@@ -8,7 +8,7 @@
 #include "state/copy_state_data.hpp"
 #include "step/step.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 TurbineInterface::TurbineInterface(
     const components::SolutionInput& solution_input, const components::TurbineInput& turbine_input,
@@ -129,9 +129,8 @@ bool TurbineInterface::Step() {
     Kokkos::deep_copy(this->state.f, this->host_state.f);
 
     // Solve for state at end of step
-    auto converged = openturbine::Step(
-        this->parameters, this->solver, this->elements, this->state, this->constraints
-    );
+    auto converged =
+        kynema::Step(this->parameters, this->solver, this->elements, this->state, this->constraints);
 
     // If not converged, return false
     if (!converged) {
@@ -274,4 +273,4 @@ void TurbineInterface::UpdateControllerInputs() {
     // Set status for subsequent calls
     controller->io.status = 1;
 }
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

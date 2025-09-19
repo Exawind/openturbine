@@ -1,4 +1,4 @@
-name: Deploy OpenTurbine Documentation
+name: Deploy Kynema Documentation
 
 on:
   push:
@@ -41,26 +41,26 @@ jobs:
     - name: Clone repository
       uses: actions/checkout@v4
       with:
-        path: openturbine
+        path: kynema
     - name: Install documentation dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends graphviz libenchant-2-dev doxygen
         python3 -m pip install --upgrade pip
-        pip install -r openturbine/docs/requirements.txt
-    - name: Build OpenTurbine with documentation
+        pip install -r kynema/docs/requirements.txt
+    - name: Build Kynema with documentation
       run: |
         source spack/share/spack/setup-env.sh
         spack load kokkos-kernels yaml-cpp netcdf-c suite-sparse superlu lapack
-        cd openturbine
+        cd kynema
         mkdir build
         cd build
         cmake .. \
-          -DOpenTurbine_ENABLE_TESTS=OFF \
-          -DOpenTurbine_ENABLE_DOCUMENTATION=ON \
-          -DOpenTurbine_ENABLE_KLU=ON \
-          -DOpenTurbine_ENABLE_UMFPACK=ON \
-          -DOpenTurbine_ENABLE_SUPERLU=ON \
+          -DKynema_ENABLE_TESTS=OFF \
+          -DKynema_ENABLE_DOCUMENTATION=ON \
+          -DKynema_ENABLE_KLU=ON \
+          -DKynema_ENABLE_UMFPACK=ON \
+          -DKynema_ENABLE_SUPERLU=ON \
           -DCMAKE_BUILD_TYPE=Release
         cmake --build .
     - name: Deploy documentation
@@ -68,4 +68,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ github.workspace }}/openturbine/build/docs/sphinx/html
+        publish_dir: ${{ github.workspace }}/kynema/build/docs/sphinx/html

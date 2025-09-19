@@ -2,7 +2,7 @@
 
 #include "dof_management/freedom_signature.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Container for storing the complete system state of the simulation at a given
@@ -67,4 +67,4 @@ struct State {
     }
 };
 
-}  // namespace openturbine
+}  // namespace kynema

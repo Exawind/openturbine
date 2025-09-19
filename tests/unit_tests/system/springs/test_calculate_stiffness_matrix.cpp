@@ -24,7 +24,7 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
             constexpr auto r_data = Kokkos::Array<double, 3>{1., 2., 3.};
             const auto r = Kokkos::View<double[3]>::const_type(r_data.data());
 
-            openturbine::springs::CalculateStiffnessMatrix<Kokkos::DefaultExecutionSpace>::invoke(
+            kynema::springs::CalculateStiffnessMatrix<Kokkos::DefaultExecutionSpace>::invoke(
                 c1, c2, r, l, a
             );
         }
@@ -43,14 +43,14 @@ void TestCalculateStiffnessMatrixTests_OneElement() {
     const auto a_result = Kokkos::create_mirror_view_and_copy(Kokkos::HostSpace(), a);
     Kokkos::deep_copy(a_result, a);
 
-    openturbine::beams::tests::CompareWithExpected(a_result, a_exact);
+    kynema::beams::tests::CompareWithExpected(a_result, a_exact);
 }
 
 }  // namespace
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(CalculateStiffnessMatrixTests, OneElement) {
     TestCalculateStiffnessMatrixTests_OneElement();
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

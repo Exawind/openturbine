@@ -6,7 +6,7 @@
 
 #include <netcdf.h>
 
-namespace openturbine::util {
+namespace kynema::util {
 
 /// @brief Class for managing NetCDF files for writing outputs
 class NetCDFFile {
@@ -226,4 +226,4 @@ private:
     int netcdf_id_{-1};
 };
 
-}  // namespace openturbine::util
+}  // namespace kynema::util

@@ -5,7 +5,7 @@
 #include "step/step.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 inline auto SetUpMasses() {
     // Create model object
@@ -141,4 +141,4 @@ TEST(MassesTest, ExternalForce) {
     EXPECT_NEAR(v_host(0, 5), 0., 1.e-12);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

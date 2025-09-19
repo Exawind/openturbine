@@ -11,7 +11,7 @@
 #include "interfaces/turbine/turbine_interface.hpp"
 #include "interfaces/turbine/turbine_interface_builder.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(AerodynamicsInterfaceTest, IEA15_Turbine) {
     constexpr auto time_step = 0.01;
@@ -288,4 +288,4 @@ TEST(AerodynamicsInterfaceTest, IEA15_Turbine) {
         }
     }
 }
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

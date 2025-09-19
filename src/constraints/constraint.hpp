@@ -4,7 +4,7 @@
 
 #include "constraint_type.hpp"
 
-namespace openturbine::constraints {
+namespace kynema::constraints {
 
 /**
  * @brief Defines a constraint between two nodes or enforces a boundary condition at a single node
@@ -45,4 +45,4 @@ struct Constraint {
           control(ctrl) {}
 };
 
-}  // namespace openturbine::constraints
+}  // namespace kynema::constraints

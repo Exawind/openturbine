@@ -9,11 +9,11 @@
 #include "interfaces/components/beam_input.hpp"
 #include "model/model.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
-    auto model = openturbine::Model();
-    auto beam_input = openturbine::interfaces::components::BeamInput{};
+    auto model = kynema::Model();
+    auto beam_input = kynema::interfaces::components::BeamInput{};
 
     beam_input.element_order = 2UL;
 
@@ -28,12 +28,12 @@ TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
     beam_input.sections = std::vector{
-        openturbine::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
+        kynema::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
-    auto beam = openturbine::interfaces::components::Beam(beam_input, model);
+    auto beam = kynema::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
 
     const auto& root_node = model.GetNode(beam_node_ids[0]);
@@ -104,8 +104,8 @@ TEST(BeamComponentTest, InitialBeamHasCorrectRotation) {
 }
 
 TEST(BeamComponentTest, UnrotatedBeamHasIdentityRotationMatrix) {
-    auto model = openturbine::Model();
-    auto beam_input = openturbine::interfaces::components::BeamInput{};
+    auto model = kynema::Model();
+    auto beam_input = kynema::interfaces::components::BeamInput{};
 
     beam_input.element_order = 2UL;
 
@@ -120,12 +120,12 @@ TEST(BeamComponentTest, UnrotatedBeamHasIdentityRotationMatrix) {
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
     beam_input.sections = std::vector{
-        openturbine::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
+        kynema::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
-    auto beam = openturbine::interfaces::components::Beam(beam_input, model);
+    auto beam = kynema::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
 
     const auto& root_node = model.GetNode(beam_node_ids[0]);
@@ -148,8 +148,8 @@ TEST(BeamComponentTest, UnrotatedBeamHasIdentityRotationMatrix) {
 }
 
 TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
-    auto model = openturbine::Model();
-    auto beam_input = openturbine::interfaces::components::BeamInput{};
+    auto model = kynema::Model();
+    auto beam_input = kynema::interfaces::components::BeamInput{};
 
     beam_input.element_order = 2UL;
 
@@ -164,16 +164,16 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
     beam_input.sections = std::vector{
-        openturbine::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
+        kynema::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
     beam_input.root.position =
         std::array{0., 0., 0., std::cos(std::numbers::pi / 4.), 0., std::sin(std::numbers::pi / 4.),
                    0.};
 
-    auto beam = openturbine::interfaces::components::Beam(beam_input, model);
+    auto beam = kynema::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
 
     const auto& root_node = model.GetNode(beam_node_ids[0]);
@@ -244,8 +244,8 @@ TEST(BeamComponentTest, RotatedBeamAboutYAxisPointsAlongZAxis) {
 }
 
 TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
-    auto model = openturbine::Model();
-    auto beam_input = openturbine::interfaces::components::BeamInput{};
+    auto model = kynema::Model();
+    auto beam_input = kynema::interfaces::components::BeamInput{};
 
     beam_input.element_order = 2UL;
 
@@ -260,16 +260,16 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
     beam_input.sections = std::vector{
-        openturbine::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
+        kynema::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
     beam_input.root.position = std::array{
         0., 0., 0., std::cos(std::numbers::pi / 4.), 0., 0., std::sin(std::numbers::pi / 4.)
     };
 
-    auto beam = openturbine::interfaces::components::Beam(beam_input, model);
+    auto beam = kynema::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
 
     const auto& root_node = model.GetNode(beam_node_ids[0]);
@@ -340,8 +340,8 @@ TEST(BeamComponentTest, RotatedBeamAboutZAxisPointsAlongYAxis) {
 }
 
 TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
-    auto model = openturbine::Model();
-    auto beam_input = openturbine::interfaces::components::BeamInput{};
+    auto model = kynema::Model();
+    auto beam_input = kynema::interfaces::components::BeamInput{};
 
     beam_input.element_order = 2UL;
 
@@ -356,16 +356,16 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
                    std::array{0., 0., 1., 0., 0., 0.}, std::array{0., 0., 0., 1., 0., 0.},
                    std::array{0., 0., 0., 0., 1., 0.}, std::array{0., 0., 0., 0., 0., 1.}};
     beam_input.sections = std::vector{
-        openturbine::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
-        openturbine::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
+        kynema::interfaces::components::Section(0., mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(0.5, mass_stiff_array, mass_stiff_array),
+        kynema::interfaces::components::Section(1., mass_stiff_array, mass_stiff_array)
     };
 
     beam_input.root.position =
         std::array{0., 0., 0., std::cos(std::numbers::pi / 4.), std::sin(std::numbers::pi / 4.),
                    0., 0.};
 
-    auto beam = openturbine::interfaces::components::Beam(beam_input, model);
+    auto beam = kynema::interfaces::components::Beam(beam_input, model);
     const auto& beam_node_ids = model.GetBeamElement(0).node_ids;
 
     const auto& root_node = model.GetNode(beam_node_ids[0]);
@@ -434,4 +434,4 @@ TEST(BeamComponentTest, RotatedBeamAboutXAxisStillPointsAlongXAxis) {
     EXPECT_NEAR(end_rotation_matrix[2][1], 1., 1.e-15);
     EXPECT_NEAR(end_rotation_matrix[2][2], 0., 1.e-15);
 }
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

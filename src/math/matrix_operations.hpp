@@ -7,7 +7,7 @@
 
 #include "math/quaternion_operations.hpp"
 
-namespace openturbine::math {
+namespace kynema::math {
 
 /**
  * @brief Computes AX(A) of a square matrix
@@ -88,4 +88,4 @@ inline std::array<std::array<double, 6>, 6> RotateMatrix6(
     return mo;
 }
 
-}  // namespace openturbine::math
+}  // namespace kynema::math

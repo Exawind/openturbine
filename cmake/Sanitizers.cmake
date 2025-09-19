@@ -1,5 +1,5 @@
 # Function to enable various sanitizers for a given target
-function(openturbine_enable_sanitizers
+function(kynema_enable_sanitizers
   project_name
   ENABLE_SANITIZER_ADDRESS
   ENABLE_SANITIZER_LEAK

@@ -8,7 +8,7 @@
 #include "state/state.hpp"
 #include "state/update_global_position.hpp"
 
-namespace openturbine::model {
+namespace kynema::model {
 
 template <typename DeviceType>
 inline void CopyNodesToState(State<DeviceType>& state, std::span<const Node> nodes) {
@@ -59,4 +59,4 @@ inline void CopyNodesToState(State<DeviceType>& state, std::span<const Node> nod
     );
 }
 
-}  // namespace openturbine::model
+}  // namespace kynema::model

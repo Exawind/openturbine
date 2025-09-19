@@ -9,7 +9,7 @@
 #include "utilities/netcdf/node_state_writer.hpp"
 #include "utilities/netcdf/time_series_writer.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 template <typename DeviceType>
 struct HostState;
@@ -108,4 +108,4 @@ private:
     std::vector<double> w_data_;
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

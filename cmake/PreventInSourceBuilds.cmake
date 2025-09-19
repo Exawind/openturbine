@@ -1,4 +1,4 @@
-function(openturbine_assure_out_of_source_builds)
+function(kynema_assure_out_of_source_builds)
   # Get the real paths of the source and binary directories
   get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
   get_filename_component(bindir "${CMAKE_BINARY_DIR}" REALPATH)
@@ -19,4 +19,4 @@ function(openturbine_assure_out_of_source_builds)
 endfunction()
 
 # Invoke the function to enforce the out-of-source build
-openturbine_assure_out_of_source_builds()
+kynema_assure_out_of_source_builds()

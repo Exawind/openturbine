@@ -4,7 +4,7 @@
 #include <KokkosBatched_Gemm_Decl.hpp>
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::beams {
+namespace kynema::beams {
 
 template <typename DeviceType>
 struct CalculateSystemMatrix {
@@ -53,4 +53,4 @@ struct CalculateSystemMatrix {
     }
 };
 
-}  // namespace openturbine::beams
+}  // namespace kynema::beams

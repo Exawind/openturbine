@@ -1,4 +1,4 @@
-target_sources(openturbine_library
+target_sources(kynema_library
   PRIVATE
   interface.cpp
   interface_builder.cpp
@@ -15,5 +15,5 @@ install(FILES
         node_data.hpp
         turbine.hpp
         turbine_input.hpp
-        DESTINATION include/OpenTurbine/interfaces/cfd/
+        DESTINATION include/Kynema/interfaces/cfd/
 )

@@ -5,7 +5,7 @@
 #include "interfaces/components/turbine_builder.hpp"
 #include "turbine_interface.hpp"
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 /**
  * @brief Builder class to construct a TurbineInterface by composing Turbine and Solution components
@@ -49,4 +49,4 @@ private:
     components::AerodynamicsBuilder aero_builder;  ///< Builder for the Aerodynamics component
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

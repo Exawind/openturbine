@@ -4,7 +4,7 @@
 
 #include <Kokkos_Core.hpp>
 
-namespace openturbine::interfaces {
+namespace kynema::interfaces {
 
 template <typename DeviceType>
 struct HostState;
@@ -51,4 +51,4 @@ struct NodeData {
     void SetLoads(HostState<DeviceType>& host_state) const;
 };
 
-}  // namespace openturbine::interfaces
+}  // namespace kynema::interfaces

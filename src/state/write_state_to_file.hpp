@@ -6,7 +6,7 @@
 
 #include "state.hpp"
 
-namespace openturbine {
+namespace kynema {
 
 /**
  * @brief Writes State data into a minimal restart file
@@ -57,4 +57,4 @@ inline void WriteStateToFile(std::ostream& output, const State<DeviceType>& stat
     write_6(state.f);
 }
 
-}  // namespace openturbine
+}  // namespace kynema

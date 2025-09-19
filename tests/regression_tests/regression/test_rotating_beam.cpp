@@ -9,7 +9,7 @@
 #include "step/step.hpp"
 #include "test_utilities.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 template <typename T>
 void WriteMatrixToFile(const std::vector<std::vector<T>>& data, const std::string& filename) {
@@ -690,4 +690,4 @@ TEST(RotatingBeamTest, GeneratorTorque_Tilt90) {
     );
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

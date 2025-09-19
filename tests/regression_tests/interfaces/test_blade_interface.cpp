@@ -8,7 +8,7 @@
 #include "interfaces/components/beam_builder.hpp"
 #include "step/step.hpp"
 
-namespace openturbine::tests {
+namespace kynema::tests {
 
 TEST(BladeInterfaceTest, BladeWindIO) {
     // Read WindIO yaml file
@@ -495,4 +495,4 @@ TEST(BladeInterfaceTest, StaticCurledBeam) {
     EXPECT_NEAR(tip_positions[5][2], 0.0006097054603659835, 1e-8);
 }
 
-}  // namespace openturbine::tests
+}  // namespace kynema::tests

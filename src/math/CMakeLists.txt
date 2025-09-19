@@ -1,4 +1,4 @@
-target_sources(openturbine_library PRIVATE)
+target_sources(kynema_library PRIVATE)
 
 install(FILES
         interpolation.hpp
@@ -7,5 +7,5 @@ install(FILES
         project_points_to_target_polynomial.hpp
         quaternion_operations.hpp
         vector_operations.hpp
-        DESTINATION include/OpenTurbine/math
+        DESTINATION include/Kynema/math
 )

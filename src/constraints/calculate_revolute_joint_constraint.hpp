@@ -5,7 +5,7 @@
 #include "math/quaternion_operations.hpp"
 #include "math/vector_operations.hpp"
 
-namespace openturbine::constraints {
+namespace kynema::constraints {
 
 /**
  * @brief Kernel for calculating the residual and system gradient for a revolute joint constraint
@@ -113,4 +113,4 @@ struct CalculateRevoluteJointConstraint {
         }
     }
 };
-}  // namespace openturbine::constraints
+}  // namespace kynema::constraints

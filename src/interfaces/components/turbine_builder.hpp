@@ -3,7 +3,7 @@
 #include "beam_builder.hpp"
 #include "turbine_input.hpp"
 
-namespace openturbine::interfaces::components {
+namespace kynema::interfaces::components {
 
 class Turbine;
 
@@ -150,4 +150,4 @@ private:
     BeamBuilder tower_builder;                ///< builder for the tower component
 };
 
-}  // namespace openturbine::interfaces::components
+}  // namespace kynema::interfaces::components

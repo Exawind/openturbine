@@ -5,7 +5,7 @@
 
 #include "interfaces/cfd/turbine_input.hpp"
 
-namespace openturbine::interfaces::cfd {
+namespace kynema::interfaces::cfd {
 
 /**
  * @brief An object describing the configuration of the interface
@@ -30,4 +30,4 @@ struct InterfaceInput {
     std::string output_file;
 };
 
-}  // namespace openturbine::interfaces::cfd
+}  // namespace kynema::interfaces::cfd
