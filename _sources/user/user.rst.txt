@@ -15,6 +15,7 @@ For more detailed build instructions, see the README files in their respective f
    introduction.rst
    compiling.rst
    linking.rst
+   vtk_visualization.rst
    floating_platform.rst
    turbine.rst
    heavy_top.rst

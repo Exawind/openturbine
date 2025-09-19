@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VTK Visualization &mdash; Kynema 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example: Rigid body with three springs" href="floating_platform.html" />
+    <link rel="prev" title="Linking To Kynema" href="linking.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Kynema
+              <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To Kynema</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">VTK Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#required-input-files">Required Input Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#command-line-options">Command Line Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-usage">Example Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#output-files">Output Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#file-locations">File Locations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-arrays-included">Data Arrays Included</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization-in-paraview">Visualization in ParaView</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#opening-the-collection-file">Opening the Collection File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basic-controls-for-animation-and-visualization">Basic Controls for Animation and Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#static-curled-beam-visualization">Static Curled Beam Visualization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rotating-beam-visualization">Rotating Beam Visualization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#point-mass-rigid-body-with-mooring-lines-visualization">Point Mass Rigid Body With Mooring Lines Visualization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#turbine-structure-visualization">Turbine Structure Visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="floating_platform.html">Example: Rigid body with three springs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavy_top.html">Example: Heavy Top Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spring_mass.html">Example: Spring-Mass System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="three_blade.html">Example: Three Blade Rotor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Kynema</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="user.html">User Manual</a></li>
+      <li class="breadcrumb-item active">VTK Visualization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user/vtk_visualization.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="vtk-visualization">
+<h1>VTK Visualization<a class="headerlink" href="#vtk-visualization" title="Permalink to this heading"></a></h1>
+<p>This guide demonstrates how to generate VTK visualization files from Kynema simulation
+outputs using the <code class="docutils literal notranslate"><span class="pre">generate_vtk_output.py</span></code> script. VTK (Visualization Toolkit) files can be opened
+in visualization software such as <a class="reference external" href="https://www.paraview.org/">ParaView</a>,
+<a class="reference external" href="https://visit-dav.github.io/visit-website/">VisIt</a>, or other VTK-compatible viewers to create plots,
+movies, and interactive visualizations of your simulation results. This workflow has been tested
+with ParaView version 5.11.2 on macOS.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For the most up to date and working
+version of this script, see <code class="docutils literal notranslate"><span class="pre">src/viz/generate_vtk_output.py</span></code>.</p>
+<p>To get help on using the script, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>src/viz/generate_vtk_output.py<span class="w"> </span>-h
+</pre></div>
+</div>
+<p>This displays the usage information for the script</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: generate_vtk_output.py [-h] [--output_dir OUTPUT_DIR] [--start-timestep START_TIMESTEP] [--end-timestep END_TIMESTEP]
+                              netcdf_file connectivity_file
+
+Generate VTK files from Kynema NetCDF output
+
+positional arguments:
+  netcdf_file           Path to Kynema NetCDF output file e.g. blade_interface.nc
+  connectivity_file     Path to mesh connectivity YAML file e.g. mesh_connectivity.yaml
+
+options:
+  -h, --help            show this help message and exit
+  --output_dir, -o OUTPUT_DIR
+                        Directory for writing the vtk output files
+  --start-timestep, -s START_TIMESTEP
+                        Starting timestep to visualize (default: 0)
+  --end-timestep, -e END_TIMESTEP
+                        Ending timestep to visualize (default: last timestep)
+</pre></div>
+</div>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">generate_vtk_output.py</span></code> script is a post-processing tool that converts Kynema simulation
+outputs into VTK (Visualization Toolkit) format for visualization and subsequent analysis. The script
+performs the following operations.</p>
+<ol class="arabic simple">
+<li><p><strong>Data Conversion</strong>: Reads time-series simulation data from NetCDF files and mesh connectivity
+information from YAML files, then converts this data into VTK’s unstructured grid format
+(<code class="docutils literal notranslate"><span class="pre">vtkUnstructuredGrid</span></code>). An unstructured grid is a flexible data structure that stores a
+collection of points and heterogeneous cells (each with a VTK cell type and point connectivity)
+without requiring a regular lattice structure. This makes it well-suited for flexible multibody
+systems where elements may have varying connectivity patterns and types.</p></li>
+<li><p><strong>Element Visualization</strong>: Creates appropriate VTK representations for different Kynema elements:</p>
+<ul class="simple">
+<li><p><strong>Beam elements</strong>: Represented as polyline cells connecting multiple nodes</p></li>
+<li><p><strong>Mass elements</strong>: Represented as vertex cells at single nodes</p></li>
+<li><p><strong>Spring elements</strong>: Represented as line cells connecting two nodes</p></li>
+<li><p><strong>Constraint elements</strong>: Represented as line cells connecting constrained nodes</p></li>
+</ul>
+</li>
+<li><p><strong>Data Fields</strong>: Extracts and includes comprehensive node data in the VTK output:</p>
+<ul class="simple">
+<li><p><strong>Position and orientation</strong>: Node positions and 3×3 rotation matrices derived from quaternions</p></li>
+<li><p><strong>Velocities and accelerations</strong>: Translational and rotational velocities and accelerations</p></li>
+<li><p><strong>Forces and moments</strong>: Applied loads (when available in simulation output)</p></li>
+<li><p><strong>Deformation</strong>: Structural deformation data (when available)</p></li>
+<li><p><strong>Element metadata</strong>: Element IDs, types, and node connectivity information</p></li>
+</ul>
+</li>
+<li><p><strong>Time Series Support</strong>: Generates individual VTK files for each simulation timestep and creates
+a ParaView Data (PVD) collection file that groups all timesteps together, enabling time-based
+animation and analysis in ParaView.</p></li>
+</ol>
+</div>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Before using the VTK visualization script, you’ll need the following Python packages installed in your environment.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code>: For numerical operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">netCDF4</span></code>: For reading Kynema NetCDF output files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vtk</span></code>: For creating VTK visualization files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PyYAML</span></code>: For reading yaml-based mesh connectivity files</p></li>
+</ul>
+<p>You can install these dependencies using pip</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>netcdf4<span class="w"> </span>vtk<span class="w"> </span>pyyaml
+</pre></div>
+</div>
+<p>Or if you’re using conda</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>netcdf4<span class="w"> </span>vtk<span class="w"> </span>pyyaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="required-input-files">
+<h2>Required Input Files<a class="headerlink" href="#required-input-files" title="Permalink to this heading"></a></h2>
+<p>The VTK visualization script requires two input files, which are generated automatically when running
+simulations via Kynema APIs found in <code class="docutils literal notranslate"><span class="pre">src/interfaces</span></code>.</p>
+<ol class="arabic simple">
+<li><p><strong>NetCDF Output File</strong>: The primary output file generated by Kynema during simulation.
+It contains time-series data for all nodes including position, velocity, acceleration, forces,
+and moments. This file is generated automatically when running simulations via the high-level
+Kynema APIs provided in <code class="docutils literal notranslate"><span class="pre">src/interfaces</span></code>. File naming follows this pattern:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TurbineInterface</span></code> API generates <code class="docutils literal notranslate"><span class="pre">turbine_interface.nc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFDInterface</span></code> API generates <code class="docutils literal notranslate"><span class="pre">cfd_interface.nc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BladeInterface</span></code> API generates <code class="docutils literal notranslate"><span class="pre">blade_interface.nc</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Mesh Connectivity File</strong>: A YAML file that describes the connectivity between nodes for
+different element types (beams, masses, springs, constraints). This file is generated during the
+simulation setup process and is named <code class="docutils literal notranslate"><span class="pre">mesh_connectivity.yaml</span></code> by default.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To generate these files during simulation, ensure that the appropriate output
+configuration is set. For example, in test cases, verify that <code class="docutils literal notranslate"><span class="pre">write_output</span></code> is set to
+<code class="docutils literal notranslate"><span class="pre">true</span></code> to enable file output. The output file name can be specified using
+<code class="docutils literal notranslate"><span class="pre">builder.Solution().SetOutputFile(&quot;filename&quot;)</span></code>.</p>
+</div>
+</div>
+<div class="section" id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading"></a></h2>
+<p>The simplest way to generate VTK files is to run the script with the required input files</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>src/viz/generate_vtk_output.py<span class="w"> </span>simulation_output.nc<span class="w"> </span>mesh_connectivity.yaml
+</pre></div>
+</div>
+<p>This creates VTK files for all timesteps in the output directory <code class="docutils literal notranslate"><span class="pre">vtk_output/</span></code> in the current working directory.</p>
+<div class="section" id="command-line-options">
+<h3>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this heading"></a></h3>
+<p>The script supports several command line options to customize the visualization output</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>src/viz/generate_vtk_output.py<span class="w"> </span>netcdf_file<span class="w"> </span>connectivity_file<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p><strong>Required Arguments</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">netcdf_file</span></code>: Path to Kynema NetCDF output file (e.g., <code class="docutils literal notranslate"><span class="pre">turbine_interface.nc</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">connectivity_file</span></code>: Path to mesh connectivity YAML file (e.g., <code class="docutils literal notranslate"><span class="pre">mesh_connectivity.yaml</span></code>)</p></li>
+</ul>
+<p><strong>Optional Arguments</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--output_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">-o</span></code>: Directory for writing VTK output files (default: <code class="docutils literal notranslate"><span class="pre">vtk_output</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--start-timestep</span></code>, <code class="docutils literal notranslate"><span class="pre">-s</span></code>: Starting timestep to visualize (default: 0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--end-timestep</span></code>, <code class="docutils literal notranslate"><span class="pre">-e</span></code>: Ending timestep to visualize (default: last timestep)</p></li>
+</ul>
+</div>
+<div class="section" id="example-usage">
+<h3>Example Usage<a class="headerlink" href="#example-usage" title="Permalink to this heading"></a></h3>
+<p>Generate VTK files for all timesteps for the IEA 15 MW reference turbine test case</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>src/viz/generate_vtk_output.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tests/regression_tests/TurbineInterfaceTest.IEA15/turbine_interface.nc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tests/regression_tests/TurbineInterfaceTest.IEA15/mesh_connectivity.yaml
+</pre></div>
+</div>
+<p>Generate VTK files for a specific time range</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>src/viz/generate_vtk_output.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tests/regression_tests/TurbineInterfaceTest.IEA15/turbine_interface.nc<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tests/regression_tests/TurbineInterfaceTest.IEA15/mesh_connectivity.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_dir<span class="w"> </span>my_visualization<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--start-timestep<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--end-timestep<span class="w"> </span><span class="m">50</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="output-files">
+<h2>Output Files<a class="headerlink" href="#output-files" title="Permalink to this heading"></a></h2>
+<div class="section" id="file-locations">
+<h3>File Locations<a class="headerlink" href="#file-locations" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>For interface tests run from the <code class="docutils literal notranslate"><span class="pre">tests/regression_tests/interfaces/</span></code> directory, output files are written to the <code class="docutils literal notranslate"><span class="pre">build/tests/regression_tests/&lt;TestName&gt;/</span></code> directory</p></li>
+<li><p>For custom simulations: Current working directory or a specified output path via the <code class="docutils literal notranslate"><span class="pre">--output_dir</span></code> option</p></li>
+</ul>
+</div>
+<div class="section" id="data-arrays-included">
+<h3>Data Arrays Included<a class="headerlink" href="#data-arrays-included" title="Permalink to this heading"></a></h3>
+<div class="section" id="point-data-per-node">
+<h4>Point Data (per node)<a class="headerlink" href="#point-data-per-node" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Node identification numbers (NodeID)</p></li>
+<li><p>Orientation data (3×3 rotation matrix components):
+- OrientationX
+- OrientationY
+- OrientationZ</p></li>
+<li><p>Translational and rotational velocities</p></li>
+<li><p>Translational and rotational accelerations</p></li>
+</ul>
+</div>
+<div class="section" id="cell-data-per-element">
+<h4>Cell Data (per element)<a class="headerlink" href="#cell-data-per-element" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Element type information for filtering (numeric IDs (ElementType) and string names (ElementTypeName))</p></li>
+<li><p>Element identification numbers (ElementID)</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="visualization-in-paraview">
+<h2>Visualization in ParaView<a class="headerlink" href="#visualization-in-paraview" title="Permalink to this heading"></a></h2>
+<div class="section" id="opening-the-collection-file">
+<h3>Opening the Collection File<a class="headerlink" href="#opening-the-collection-file" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Launch ParaView</p></li>
+<li><p>Open the <code class="docutils literal notranslate"><span class="pre">simulation.pvd</span></code> file from your output directory</p></li>
+<li><p>This loads all timesteps as a time series</p></li>
+</ol>
+</div>
+<div class="section" id="basic-controls-for-animation-and-visualization">
+<h3>Basic Controls for Animation and Visualization<a class="headerlink" href="#basic-controls-for-animation-and-visualization" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use the animation controls to play through timesteps</p></li>
+<li><p>Set the animation speed and range as desired</p></li>
+<li><p>Export animations as movies using File → Save Animation</p></li>
+<li><p>Select different data arrays from the “Coloring” dropdown menus</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For detailed ParaView usage instructions, refer to the <a class="reference external" href="https://www.paraview.org/documentation/">ParaView User’s Guide</a>
+and <a class="reference external" href="https://www.paraview.org/tutorials/">ParaView Tutorials</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<p>This section showcases some examples of the types of visualizations and animations that can be
+generated by the VTK script by leveraging the Kynema interfaces/APIs via the regression
+tests.</p>
+<div class="section" id="static-curled-beam-visualization">
+<h3>Static Curled Beam Visualization<a class="headerlink" href="#static-curled-beam-visualization" title="Permalink to this heading"></a></h3>
+<p>This example demonstrates a static beam analysis with increasing tip moments, as described in the
+<code class="docutils literal notranslate"><span class="pre">BladeInterfaceTest.StaticCurledBeam</span></code> test of the regression suite. This test simulates
+a 10-meter long straight beam with applied moments at the tip, causing the beam to curl and
+deform progressively as the moment magnitude increases.</p>
+<p><strong>Beam Configuration</strong></p>
+<ul class="simple">
+<li><p>Beam length: 10 meters</p></li>
+<li><p>Element order: 10 (high-order elements for accuracy)</p></li>
+<li><p>Reference axis: Straight line along X-axis from <span class="math notranslate nohighlight">\((0,0,0)\)</span> to <span class="math notranslate nohighlight">\((10,0,0)\)</span></p></li>
+<li><p>Twist: No twist (0° at both root and tip)</p></li>
+<li><p>Root boundary condition: Fixed (prescribed root motion)</p></li>
+</ul>
+<p><strong>Applied Loads</strong></p>
+<p>The test applies progressively increasing moments about the Y-axis at the beam tip:</p>
+<ul class="simple">
+<li><p>0 N⋅m (undeformed state)</p></li>
+<li><p>10,920 N⋅m</p></li>
+<li><p>21,840 N⋅m</p></li>
+<li><p>32,761 N⋅m</p></li>
+<li><p>43,681 N⋅m</p></li>
+<li><p>54,601 N⋅m</p></li>
+</ul>
+<p><strong>Simulation Parameters</strong></p>
+<ul class="simple">
+<li><p>Analysis type: Static</p></li>
+</ul>
+<p>The visualization shows the beam’s deformation progression as the tip moment increases, demonstrating
+the nonlinear geometric effects as the beam curls into a circular arc. The beam tip moves from its
+initial undeformed position to various deformed positions, with the final state showing significant
+nonlinear deformation.</p>
+<div class="video_wrapper align-center" style="text-align: center">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/5z8oQr2XyDc?si=TqYs2xVkJAyxoPIj" style="border: 0; height: 510px; width: 640px">
+</iframe></div></div>
+<div class="section" id="rotating-beam-visualization">
+<h3>Rotating Beam Visualization<a class="headerlink" href="#rotating-beam-visualization" title="Permalink to this heading"></a></h3>
+<p>This example illustrates a rotating beam, as provided in the <code class="docutils literal notranslate"><span class="pre">BladeInterfaceTest.RotatingBeam</span></code>
+test of the regression test suite. This test simulates a straight, flexible beam with prescribed
+root motion rotating around the Z-axis with uniform angular velocity, representing a simplified
+wind turbine blade or helicopter rotor blade model.</p>
+<p><strong>Initial Conditions</strong></p>
+<ul class="simple">
+<li><p>Beam root position: <span class="math notranslate nohighlight">\((2, 0, 0)\)</span> m from origin</p></li>
+<li><p>Initial angular velocity: <span class="math notranslate nohighlight">\(\omega = [0, 0, 2]\)</span> rad/s i.e. ~20 rpm (rotation around Z-axis)</p></li>
+<li><p>Root motion: Prescribed BC</p></li>
+<li><p>Gravity: Not prescribed</p></li>
+</ul>
+<p><strong>Simulation Parameters</strong></p>
+<ul class="simple">
+<li><p>Duration: 5 seconds with 0.01 s time steps</p></li>
+</ul>
+<p>The animation demonstrates the beam’s elastic deformation as it rotates, including tip
+deflection due to centrifugal loading and the dynamic response of the flexible
+structure under the applied uniform angular velocity, particularly evident during the
+initial transient response. The legend shows the rotational velocity of the beam in rad/s.</p>
+<div class="video_wrapper align-center" style="text-align: center">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/LDk0f3pxPb8?si=FSnXFo6wQmh0Fn1_" style="border: 0; height: 510px; width: 640px">
+</iframe></div></div>
+<div class="section" id="point-mass-rigid-body-with-mooring-lines-visualization">
+<h3>Point Mass Rigid Body With Mooring Lines Visualization<a class="headerlink" href="#point-mass-rigid-body-with-mooring-lines-visualization" title="Permalink to this heading"></a></h3>
+<p>The following animation demonstrates visualization of a point mass rigid body with three mooring
+lines from the <code class="docutils literal notranslate"><span class="pre">CFDInterfaceTest.FloatingPlatform</span></code> regression test. This test simulates a
+lumped mass rigid body with three tensioned mooring lines subjected to time-varying loads representing
+buoyancy and wave forces, similar to the example described in <a class="reference internal" href="floating_platform.html"><span class="doc">Example: Rigid body with three springs</span></a>. The mooring
+lines are modeled as linear springs and are connected to the platform at the fairlead points and to
+the seabed at the anchor points.</p>
+<p><strong>Platform Properties</strong></p>
+<ul class="simple">
+<li><p>Platform mass: <span class="math notranslate nohighlight">\(1.419625 \times 10^7\)</span> kg (14,200 tons)</p></li>
+<li><p>Platform moments of inertia: <span class="math notranslate nohighlight">\([1.2898 \times 10^{10}, 1.2851 \times 10^{10}, 1.4189 \times 10^{10}]\)</span> kg⋅m²</p></li>
+<li><p>Platform modeled as a rigid body point mass i.e. a point mass with inertia</p></li>
+<li><p>Gravity: <span class="math notranslate nohighlight">\(9.8124\)</span> m/s² in negative Z direction</p></li>
+</ul>
+<p><strong>Mooring System Configuration</strong></p>
+<ul class="simple">
+<li><p>Number of mooring lines: 3 (linear spring elements)</p></li>
+</ul>
+<p><strong>Applied Time-Varying Loads</strong></p>
+<ul class="simple">
+<li><p>Y-direction force: <span class="math notranslate nohighlight">\(1 \times 10^6\)</span> N oscillating at 0.05 Hz (20 s period)</p></li>
+<li><p>Z-direction buoyancy: Base buoyancy force + oscillating component at 0.05 Hz (20 s period)</p></li>
+<li><p>Roll moment (Rx): <span class="math notranslate nohighlight">\(5 \times 10^5\)</span> N⋅m oscillating at 0.067 Hz (15 s period)</p></li>
+<li><p>Pitch moment (Ry): <span class="math notranslate nohighlight">\(1 \times 10^6\)</span> N⋅m oscillating at 0.033 Hz (30 s period)</p></li>
+<li><p>Yaw moment (Rz): <span class="math notranslate nohighlight">\(2 \times 10^7\)</span> N⋅m oscillating at 0.017 Hz (60 s period)</p></li>
+</ul>
+<p><strong>Simulation Parameters</strong></p>
+<ul class="simple">
+<li><p>Duration: 120 seconds with 0.1 s time steps</p></li>
+</ul>
+<p>The animation demonstrates all six degrees of freedom: surge, sway, heave, roll, pitch,
+and yaw motions as the floating platform responds to the oscillatory loads while being
+restrained by the three-point mooring system.</p>
+<div class="video_wrapper align-center" style="text-align: center">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/zPF4K1FPVMw?si=L04MVLnenX1MzJFl" style="border: 0; height: 510px; width: 640px">
+</iframe></div></div>
+<div class="section" id="turbine-structure-visualization">
+<h3>Turbine Structure Visualization<a class="headerlink" href="#turbine-structure-visualization" title="Permalink to this heading"></a></h3>
+<p>The following animation demonstrates the flexible multibody dynamics of a wind turbine
+structure during dynamic simulation, utilizing the <code class="docutils literal notranslate"><span class="pre">TurbineInterfaceTest.IEA15_Structure</span></code> regression
+test. This test builds the <a class="reference external" href="https://github.com/IEAWindSystems/IEA-15-240-RWT">IEA‑15‑240‑RWT</a>
+turbine structure from a WindIO YAML file with the following initial conditions and applied loads:</p>
+<p><strong>Initial Conditions</strong></p>
+<ul class="simple">
+<li><p>Initial rotor azimuth angle: 0° i.e. blade 1 is at 12 o’clock position</p></li>
+<li><p>Initial blade pitch angles: 0° (all blades)</p></li>
+<li><p>Initial nacelle yaw angle: 0°</p></li>
+<li><p>Tower base: Fixed BC</p></li>
+<li><p>Gravity: 9.81 m/s² in negative Z direction</p></li>
+</ul>
+<p><strong>Applied Loads and Controls</strong></p>
+<ul class="simple">
+<li><p>Tower load: 100 kN at the tower‑top node</p></li>
+<li><p>Generator torque: 100 MNm applied to the turbine shaft</p></li>
+<li><p>Time‑varying blade‑3 pitch: 0.5 rad/s rate (t * 0.5)</p></li>
+<li><p>Time‑varying yaw angle: 0.3 rad/s rate (t * 0.3)</p></li>
+</ul>
+<p><strong>Simulation Parameters</strong></p>
+<ul class="simple">
+<li><p>Duration: 5 seconds with 0.01 s time steps</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a flexible multibody dynamics simulation of the IEA‑15‑240‑RWT wind turbine under an
+unrealistically aggressive start-up with prescribed blade pitch and yaw.
+The turbine is under gravity loading, but there are no aerodynamic forces. The simulation was
+created to demonstrate the robustness of the Kynema model, even under fast, large nonlinear
+deflections.</p>
+</div>
+<p>This is a turbine start-up simulation i.e. the turbine is started from rest with the applied
+generator torque and blade pitch and yaw control inputs. The animation demonstrates blade
+deformation, tower motion, nacelle yaw rotation, blade pitch changes, and overall structural
+response during the simulation duration.</p>
+<div class="video_wrapper align-center" style="text-align: center">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/QommrkhmfDQ?si=D3tBRDd3VZr36YAR" style="border: 0; height: 510px; width: 640px">
+</iframe></div></div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="linking.html" class="btn btn-neutral float-left" title="Linking To Kynema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="floating_platform.html" class="btn btn-neutral float-right" title="Example: Rigid body with three springs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
