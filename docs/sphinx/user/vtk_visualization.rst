@@ -267,7 +267,7 @@ the nonlinear geometric effects as the beam curls into a circular arc. The beam 
 initial undeformed position to various deformed positions, with the final state showing significant
 nonlinear deformation.
 
-.. youtube:: _hKKgOcwixw?si=uiUoGuhiO-txk-0g
+.. youtube:: 5z8oQr2XyDc?si=TqYs2xVkJAyxoPIj
    :width: 640
    :height: 480
    :align: center
@@ -296,21 +296,20 @@ deflection due to centrifugal loading and the dynamic response of the flexible
 structure under the applied uniform angular velocity, particularly evident during the
 initial transient response. The legend shows the rotational velocity of the beam in rad/s.
 
-.. youtube:: 5GAZaLW4gAY?si=5kJ6kdBS_XszSB6c
+.. youtube:: LDk0f3pxPb8?si=FSnXFo6wQmh0Fn1_
    :width: 640
    :height: 480
    :align: center
 
-Floating Platform Visualization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Point Mass Rigid Body With Mooring Lines Visualization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following animation demonstrates visualization of a floating wind turbine platform from the
-``CFDInterfaceTest.FloatingPlatform`` regression test. This test simulates a
-`DeepCWind-style floating platform <https://www.deepcwindco.com/>`_
-with three mooring lines subjected to time-varying loads representing ocean wave and wind
-forces, similar to the example described in :doc:`floating_platform`. The mooring lines are modeled
-as linear springs and are connected to the platform at the fairlead points and to the seabed at the
-anchor points.
+The following animation demonstrates visualization of a point mass rigid body with three mooring
+lines from the ``CFDInterfaceTest.FloatingPlatform`` regression test. This test simulates a
+lumped mass rigid body with three tensioned mooring lines subjected to time-varying loads representing
+buoyancy and wave forces, similar to the example described in :doc:`floating_platform`. The mooring
+lines are modeled as linear springs and are connected to the platform at the fairlead points and to
+the seabed at the anchor points.
 
 **Platform Properties**
 
@@ -339,7 +338,7 @@ The animation demonstrates all six degrees of freedom: surge, sway, heave, roll,
 and yaw motions as the floating platform responds to the oscillatory loads while being
 restrained by the three-point mooring system.
 
-.. youtube:: 37INqZMY7Is?si=jrZvUGjbW3gEUXPC
+.. youtube:: zPF4K1FPVMw?si=L04MVLnenX1MzJFl
    :width: 640
    :height: 480
    :align: center
@@ -372,16 +371,18 @@ turbine structure from a WindIO YAML file with the following initial conditions 
 * Duration: 5 seconds with 0.01 s time steps
 
 .. note::
-   The above loads and control inputs are fictitious and chosen just to demonstrate the turbine's
-   response under different conditions for testing purposes; they are not representative of a specific
-   operating scenario.
+   This is a flexible multibody dynamics simulation of the IEA‑15‑240‑RWT wind turbine under an
+   unrealistically aggressive start-up with prescribed blade pitch and yaw.
+   The turbine is under gravity loading, but there are no aerodynamic forces. The simulation was
+   created to demonstrate the robustness of the Kynema model, even under fast, large nonlinear
+   deflections.
 
 This is a turbine start-up simulation i.e. the turbine is started from rest with the applied
 generator torque and blade pitch and yaw control inputs. The animation demonstrates blade
 deformation, tower motion, nacelle yaw rotation, blade pitch changes, and overall structural
 response during the simulation duration.
 
-.. youtube:: mC6apcQt6Oo?si=9cAndu13xJD3gwSp
+.. youtube:: QommrkhmfDQ?si=D3tBRDd3VZr36YAR
    :width: 640
    :height: 480
    :align: center
