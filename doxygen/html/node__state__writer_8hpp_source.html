@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/node_state_writer.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/utilities/netcdf/node_state_writer.hpp Source File &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -35,7 +35,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">OpenTurbine</a>
+          <a href="../../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/node_state_writer.hpp Source File</li>
+      <li class="breadcrumb-item active">Kynema API: /home/runner/work/kynema/kynema/kynema/src/utilities/netcdf/node_state_writer.hpp Source File</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/doxygen/html/node__state__writer_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-utilities-netcdf-node-state-writer-hpp-source-file">
-<h1>/home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/node_state_writer.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-utilities-netcdf-node-state-writer-hpp-source-file" title="Permalink to this heading"></a></h1>
+  <div class="section" id="home-runner-work-kynema-kynema-kynema-src-utilities-netcdf-node-state-writer-hpp-source-file">
+<h1>/home/runner/work/kynema/kynema/kynema/src/utilities/netcdf/node_state_writer.hpp Source File<a class="headerlink" href="#home-runner-work-kynema-kynema-kynema-src-utilities-netcdf-node-state-writer-hpp-source-file" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/netcdf/node_state_writer.hpp Source File</title>
+<title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/utilities/netcdf/node_state_writer.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -113,7 +113,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">OpenTurbine API
+   <div id="projectname">Kynema API
    </div>
    <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
   </td>
@@ -183,31 +183,31 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="netcdf__file_8hpp.html">netcdf_file.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1util.html">openturbine::util</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekynema_1_1util.html">kynema::util</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classopenturbine_1_1util_1_1NodeStateWriter.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classopenturbine_1_1util_1_1NodeStateWriter.html">NodeStateWriter</a> {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classkynema_1_1util_1_1NodeStateWriter.html">   28</a></span><span class="keyword">class </span><a class="code hl_class" href="classkynema_1_1util_1_1NodeStateWriter.html">NodeStateWriter</a> {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="classopenturbine_1_1util_1_1NodeStateWriter.html">NodeStateWriter</a>(<span class="keyword">const</span> std::string&amp; file_path, <span class="keywordtype">bool</span> create, <span class="keywordtype">size_t</span> num_nodes);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="classkynema_1_1util_1_1NodeStateWriter.html">NodeStateWriter</a>(<span class="keyword">const</span> std::string&amp; file_path, <span class="keywordtype">bool</span> create, <span class="keywordtype">size_t</span> num_nodes);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1NodeStateWriter.html#a1c373b9fff39fec370141d0f0e205805">WriteStateDataAtTimestep</a>(</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classkynema_1_1util_1_1NodeStateWriter.html#a5d008a2328f69dcdcc8ea6994880775b">WriteStateDataAtTimestep</a>(</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">size_t</span> timestep, <span class="keyword">const</span> std::string&amp; component_prefix, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; x,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">const</span> std::vector&lt;double&gt;&amp; y, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; z, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; i,</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keyword">const</span> std::vector&lt;double&gt;&amp; j, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; k,</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">const</span> std::vector&lt;double&gt;&amp; w = std::vector&lt;double&gt;()</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    ) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1NodeStateWriter.html#a05fdda31a618c89c1df0aff2fc507827">WriteDeformationDataAtTimestep</a>(</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classkynema_1_1util_1_1NodeStateWriter.html#ad5b9c6d04278f888a49849770de320ea">WriteDeformationDataAtTimestep</a>(</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        <span class="keywordtype">size_t</span> timestep, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; x, <span class="keyword">const</span> std::vector&lt;double&gt;&amp; y,</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keyword">const</span> std::vector&lt;double&gt;&amp; z</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    ) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    [[nodiscard]] <span class="keyword">const</span> <a class="code hl_class" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a>&amp; <a class="code hl_function" href="classopenturbine_1_1util_1_1NodeStateWriter.html#aef3a2025c06952b39bcc4e4aa6ce5fdd">GetFile</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    [[nodiscard]] <span class="keyword">const</span> <a class="code hl_class" href="classkynema_1_1util_1_1NetCDFFile.html">NetCDFFile</a>&amp; <a class="code hl_function" href="classkynema_1_1util_1_1NodeStateWriter.html#ae8a9dd6b73b5d3e74e44b7d3c6dac164">GetFile</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    [[nodiscard]] <span class="keywordtype">size_t</span> <a class="code hl_function" href="classopenturbine_1_1util_1_1NodeStateWriter.html#ac882fd92984409bf2b1d28ecf0ab4259">GetNumNodes</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    [[nodiscard]] <span class="keywordtype">size_t</span> <a class="code hl_function" href="classkynema_1_1util_1_1NodeStateWriter.html#a2be74536a08c7e3fdfecfd64f0fa7faa">GetNumNodes</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <a class="code hl_class" href="classopenturbine_1_1util_1_1NetCDFFile.html">NetCDFFile</a> file_;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <a class="code hl_class" href="classkynema_1_1util_1_1NetCDFFile.html">NetCDFFile</a> file_;</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">size_t</span> num_nodes_;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordtype">void</span> DefineStateVariables(</div>
@@ -216,14 +216,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>};</div>
 </div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>}  <span class="comment">// namespace openturbine::util</span></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NetCDFFile_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1NetCDFFile.html">openturbine::util::NetCDFFile</a></div><div class="ttdoc">Class for managing NetCDF files for writing outputs.</div><div class="ttdef"><b>Definition</b> netcdf_file.hpp:12</div></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NodeStateWriter_html"><div class="ttname"><a href="classopenturbine_1_1util_1_1NodeStateWriter.html">openturbine::util::NodeStateWriter</a></div><div class="ttdoc">Class for writing OpenTurbine nodal state data to NetCDF-based output files.</div><div class="ttdef"><b>Definition</b> node_state_writer.hpp:28</div></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NodeStateWriter_html_a05fdda31a618c89c1df0aff2fc507827"><div class="ttname"><a href="classopenturbine_1_1util_1_1NodeStateWriter.html#a05fdda31a618c89c1df0aff2fc507827">openturbine::util::NodeStateWriter::WriteDeformationDataAtTimestep</a></div><div class="ttdeci">void WriteDeformationDataAtTimestep(size_t timestep, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z) const</div><div class="ttdoc">Write deformation data for all nodes at a timestep.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:71</div></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NodeStateWriter_html_a1c373b9fff39fec370141d0f0e205805"><div class="ttname"><a href="classopenturbine_1_1util_1_1NodeStateWriter.html#a1c373b9fff39fec370141d0f0e205805">openturbine::util::NodeStateWriter::WriteStateDataAtTimestep</a></div><div class="ttdeci">void WriteStateDataAtTimestep(size_t timestep, const std::string &amp;component_prefix, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z, const std::vector&lt; double &gt; &amp;i, const std::vector&lt; double &gt; &amp;j, const std::vector&lt; double &gt; &amp;k, const std::vector&lt; double &gt; &amp;w=std::vector&lt; double &gt;()) const</div><div class="ttdoc">Writes state data for a specific timestep.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:28</div></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NodeStateWriter_html_ac882fd92984409bf2b1d28ecf0ab4259"><div class="ttname"><a href="classopenturbine_1_1util_1_1NodeStateWriter.html#ac882fd92984409bf2b1d28ecf0ab4259">openturbine::util::NodeStateWriter::GetNumNodes</a></div><div class="ttdeci">size_t GetNumNodes() const</div><div class="ttdoc">Get the number of nodes with state data in output file.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:95</div></div>
-<div class="ttc" id="aclassopenturbine_1_1util_1_1NodeStateWriter_html_aef3a2025c06952b39bcc4e4aa6ce5fdd"><div class="ttname"><a href="classopenturbine_1_1util_1_1NodeStateWriter.html#aef3a2025c06952b39bcc4e4aa6ce5fdd">openturbine::util::NodeStateWriter::GetFile</a></div><div class="ttdeci">const NetCDFFile &amp; GetFile() const</div><div class="ttdoc">Get the NetCDF file object.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:91</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1util_html"><div class="ttname"><a href="namespaceopenturbine_1_1util.html">openturbine::util</a></div><div class="ttdef"><b>Definition</b> aerodyn_inflow.hpp:15</div></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>}  <span class="comment">// namespace kynema::util</span></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NetCDFFile_html"><div class="ttname"><a href="classkynema_1_1util_1_1NetCDFFile.html">kynema::util::NetCDFFile</a></div><div class="ttdoc">Class for managing NetCDF files for writing outputs.</div><div class="ttdef"><b>Definition</b> netcdf_file.hpp:12</div></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NodeStateWriter_html"><div class="ttname"><a href="classkynema_1_1util_1_1NodeStateWriter.html">kynema::util::NodeStateWriter</a></div><div class="ttdoc">Class for writing Kynema nodal state data to NetCDF-based output files.</div><div class="ttdef"><b>Definition</b> node_state_writer.hpp:28</div></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NodeStateWriter_html_a2be74536a08c7e3fdfecfd64f0fa7faa"><div class="ttname"><a href="classkynema_1_1util_1_1NodeStateWriter.html#a2be74536a08c7e3fdfecfd64f0fa7faa">kynema::util::NodeStateWriter::GetNumNodes</a></div><div class="ttdeci">size_t GetNumNodes() const</div><div class="ttdoc">Get the number of nodes with state data in output file.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:95</div></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NodeStateWriter_html_a5d008a2328f69dcdcc8ea6994880775b"><div class="ttname"><a href="classkynema_1_1util_1_1NodeStateWriter.html#a5d008a2328f69dcdcc8ea6994880775b">kynema::util::NodeStateWriter::WriteStateDataAtTimestep</a></div><div class="ttdeci">void WriteStateDataAtTimestep(size_t timestep, const std::string &amp;component_prefix, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z, const std::vector&lt; double &gt; &amp;i, const std::vector&lt; double &gt; &amp;j, const std::vector&lt; double &gt; &amp;k, const std::vector&lt; double &gt; &amp;w=std::vector&lt; double &gt;()) const</div><div class="ttdoc">Writes state data for a specific timestep.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:28</div></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NodeStateWriter_html_ad5b9c6d04278f888a49849770de320ea"><div class="ttname"><a href="classkynema_1_1util_1_1NodeStateWriter.html#ad5b9c6d04278f888a49849770de320ea">kynema::util::NodeStateWriter::WriteDeformationDataAtTimestep</a></div><div class="ttdeci">void WriteDeformationDataAtTimestep(size_t timestep, const std::vector&lt; double &gt; &amp;x, const std::vector&lt; double &gt; &amp;y, const std::vector&lt; double &gt; &amp;z) const</div><div class="ttdoc">Write deformation data for all nodes at a timestep.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:71</div></div>
+<div class="ttc" id="aclasskynema_1_1util_1_1NodeStateWriter_html_ae8a9dd6b73b5d3e74e44b7d3c6dac164"><div class="ttname"><a href="classkynema_1_1util_1_1NodeStateWriter.html#ae8a9dd6b73b5d3e74e44b7d3c6dac164">kynema::util::NodeStateWriter::GetFile</a></div><div class="ttdeci">const NetCDFFile &amp; GetFile() const</div><div class="ttdoc">Get the NetCDF file object.</div><div class="ttdef"><b>Definition</b> node_state_writer.cpp:91</div></div>
+<div class="ttc" id="anamespacekynema_1_1util_html"><div class="ttname"><a href="namespacekynema_1_1util.html">kynema::util</a></div><div class="ttdef"><b>Definition</b> aerodyn_inflow.hpp:15</div></div>
 <div class="ttc" id="anetcdf__file_8hpp_html"><div class="ttname"><a href="netcdf__file_8hpp.html">netcdf_file.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

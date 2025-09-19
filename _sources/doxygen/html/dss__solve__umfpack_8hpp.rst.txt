@@ -1,11 +1,11 @@
-.. meta::ad0ea672ce5b1c18d5c94c252166f4d5b9124798169103dcc5cd45d04c4298421aa4df760807a4d7226b08043cba05e3a7f21539a37fd4c0580834460ffc729e
+.. meta::d75ea0a058a4cfbd2ebcacc62688d5954bc835f816e7d58a2d9209c340b7e3b8c46e0884aa392199a5e91b5c31afcb1f6b36f3477ba0b94bae46dcca3423a196
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_solve_umfpack.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/linear_solver/dss_solve_umfpack.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver/dss\_solve\_umfpack.hpp File Reference
-======================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/linear\_solver/dss\_solve\_umfpack.hpp File Reference
+=======================================================================================================
 
 .. container:: doxygen-content
 

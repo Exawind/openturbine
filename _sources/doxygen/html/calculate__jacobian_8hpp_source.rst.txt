@@ -1,11 +1,11 @@
-.. meta::a3b5418c10c083b2742a040305f54963af39ceb37bfe67b14ebef5ae24a284422adce5e8fa200b4f55df7b14fc5e5bd11ee480275d3a1d73269f319ebecf5d03
+.. meta::2ba79803bec89fb605254fda3c6856712a0e35461b61841793aace56c6a560e59db8136d1407049d7f0b232a3ff4d4aa49f428b4b8a2998a7441e3a1ff7e4afe
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate_jacobian.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/calculate_jacobian.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate\_jacobian.hpp Source File
-============================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/beams/calculate\_jacobian.hpp Source File
+=============================================================================================
 
 .. container:: doxygen-content
 

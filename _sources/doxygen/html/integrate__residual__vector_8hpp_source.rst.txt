@@ -1,11 +1,11 @@
-.. meta::425273025d13d217ce25b974b1e99f58f2dd0d32eadd01dec42cb46a11cbb6b77e92c70e826726a7ae2bbf67da6138786a5dd9f96316604bb150f8901bceec50
+.. meta::d8fa0e59bd498fa3649238f3c6356fb8f1122d60bb6d0882c870b730e3898742f307da9906ddcc76b129414e712e4dfb6e17eee3d3804607d2e58a1e14384445
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate_residual_vector.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/integrate_residual_vector.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate\_residual\_vector.hpp Source File
-==================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/integrate\_residual\_vector.hpp Source File
+===================================================================================================
 
 .. container:: doxygen-content
 

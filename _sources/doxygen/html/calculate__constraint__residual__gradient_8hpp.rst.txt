@@ -1,11 +1,11 @@
-.. meta::d95beafe705e727273a2ffea5b29539f72e8015d87ad279d70753ea25561c7cee59f65e008786271ff7dc8950d9706c3d8f75bf37d3e6b90fb1ddaf753c2819a
+.. meta::766f4866f419812dcfa516306e092c0b95ca9175cdc5a140eeda865fc66d7652d5eacfb1da6cf32cd6f8ba4bed0c53a00e643aa5a5bc6d03b13ae2afbb44a6d0
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_constraint_residual_gradient.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/constraints/calculate_constraint_residual_gradient.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_constraint\_residual\_gradient.hpp File Reference
-==================================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/constraints/calculate\_constraint\_residual\_gradient.hpp File Reference
+===================================================================================================================
 
 .. container:: doxygen-content
 

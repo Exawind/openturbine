@@ -1,11 +1,11 @@
-.. meta::8e633da8c142d2162f40b5eeb044fed91c79d19315466b1d8b7b5bf396cf3c04306c79a9662971d5d021ff0b99ba30fa5700e920f7c28b4cb4cadf7afdce6d0e
+.. meta::ec5075a5c6d1beee13946494d277e06a0a63dd9f89ae044250bea8c7adbf3042ba4ca6da5e15cc5cc58d5a8c919577969bf480ea3ede790e134ca281c5ae4d41
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams Directory Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams Directory Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams Directory Reference
-============================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/beams Directory Reference
+=============================================================================
 
 .. container:: doxygen-content
 

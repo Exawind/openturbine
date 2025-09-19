@@ -1,11 +1,11 @@
-.. meta::79b7ba732c98539edc3676a8b2f25782154f32eedf844e7fd4f65ff2b5e6e9a8f962a4d65ceac8f6c72bc30352f6d187fffa853aab592cba03f53c6c2852e63e
+.. meta::084c8cd817c29e1756dee8abde9d0ceffcba71c4dcd0966555f89e71b8a37468efffc4beaf30f5d42eb9ebf9742e52db4b8d7bfa6c704e882abade7889013577
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/quaternion_operations.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/math/quaternion_operations.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/math/quaternion\_operations.hpp File Reference
-========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/math/quaternion\_operations.hpp File Reference
+=========================================================================================
 
 .. container:: doxygen-content
 

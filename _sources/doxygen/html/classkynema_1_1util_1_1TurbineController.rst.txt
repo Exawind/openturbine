@@ -1,0 +1,14 @@
+.. meta::af31cf6aa57bc2974195f1aea3f564c7414594235097e77ca1003857ec9b4eb59a78f840c0caacbacff8812fe0ce27a880a1a721bbd0fb30dfca609303a91a82
+
+:orphan:
+
+.. title:: Kynema API: kynema::util::TurbineController Class Reference
+
+TurbineController Class Reference
+=================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classkynema_1_1util_1_1TurbineController.html

@@ -1,11 +1,11 @@
-.. meta::1954f656a3c98a27111c49f342219d2825fca71f83582f156518ce162d044a77f24990209a95446a27a56b8afaeabe613988ad3f41482c560d2d60ee0b113ec3
+.. meta::511b2d4142ea829b7055a625c72f45ed41e282953b47f70dc518be5b41156165b6ff0265f2357375eb565e7f4fc91e6d7a100cb64a92981af86a94674fbe43a5
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/turbine.cpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/components/turbine.cpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/turbine.cpp File Reference
-==========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/components/turbine.cpp File Reference
+===========================================================================================
 
 .. container:: doxygen-content
 

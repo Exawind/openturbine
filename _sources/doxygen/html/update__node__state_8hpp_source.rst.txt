@@ -1,11 +1,11 @@
-.. meta::0fdca73b86ce750cce9ce2b4553b5c3d2b19e5aab76385a469ba48139bd2093961ce35e4a0c533b81a4937c54cc6d5fefe9eb18266a8041d9984caabe90dac4f
+.. meta::677831c69deb4a526fb85b6710adc773a896cfbcbaf926601e30926446aa837df0f9b564d53c5eeb4c98c0c62399a11587730ca7e20f62df469f56766fc81a47
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/update_node_state.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/update_node_state.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/update\_node\_state.hpp Source File
-==========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/update\_node\_state.hpp Source File
+===========================================================================================
 
 .. container:: doxygen-content
 

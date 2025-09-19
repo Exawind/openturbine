@@ -1,11 +1,11 @@
-.. meta::5359836c65a863ad9b4ff1a636bc3a0acc196d3eed8fd0cfa060c252ddb989cede3d2cd254a1ac10b5f4c887318f408cc2e9c9bf08186dcfefe5574d4dd521ed
+.. meta::fd512225326261ac77ea1ab1b0508a7bb3b819e0448af2a89eef853a096efc9a3ec6b2fa834d25cfd0ed7a20568a040df3e70574ece8c882ce765363f7bb2866
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/discon_rotor_test_controller.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/utilities/controllers/discon_rotor_test_controller.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/utilities/controllers/discon\_rotor\_test\_controller.hpp Source File
-===============================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/utilities/controllers/discon\_rotor\_test\_controller.hpp Source File
+================================================================================================================
 
 .. container:: doxygen-content
 

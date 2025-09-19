@@ -1,11 +1,11 @@
-.. meta::9a2e7a84ec7506e5449d0fb23790c4f802fced6876ef8e02fac253afc7d408c5fa11179fa69930f75235a3b225526287985a4fb2c7492445188edfb4ced55fce
+.. meta::ce9a99b36c4788114aa92e5960730de315b048fe4d2fff6c7f343b3c44c89d8dcafed0acdd660b1079b4eccb66787e193fb9ec28d4a6a420e0bf91360f3d4a8a
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/cfd/floating_platform_input.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/cfd/floating_platform_input.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/cfd/floating\_platform\_input.hpp Source File
-==================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/cfd/floating\_platform\_input.hpp Source File
+===================================================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::ab44ccfa742b075da558e466116c3d3dbbcfa58c52f69886525ff71da9492a674c21f28bf0e9fd1d337ea0309ebb28fb047747df8032e5f3e4c9fba36d2275dd
+.. meta::dd63aa7a7b5b175011a219e35405aafc9f8cd17e2a96fa33337c4481987171aeb68aa2cd763a0ec561a10bc7cae35262046898d59a9ecc0e754f5f10c6c0c8ff
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_Quu.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/calculate_Quu.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_Quu.hpp File Reference
-========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/calculate\_Quu.hpp File Reference
+=========================================================================================
 
 .. container:: doxygen-content
 

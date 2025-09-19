@@ -1,11 +1,11 @@
-.. meta::333baa108925a8e77ad908b76cd4579676325b9d3cd531ea1170ad24793af342a7f41e886d971406c259b65f7710a5b92e9b45e82acaceee0914d965d493bdf3
+.. meta::5288847d53785d8d0d59aa851a10ac73fd0a1bb2b1ba1cd7f8958006b2d73e511b8f9f426e9e0b6de28c04c32c467c852b1f250fc8a9597b3f4e85261775feb7
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate_inertia_matrix.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/integrate_inertia_matrix.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate\_inertia\_matrix.hpp Source File
-=================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/integrate\_inertia\_matrix.hpp Source File
+==================================================================================================
 
 .. container:: doxygen-content
 

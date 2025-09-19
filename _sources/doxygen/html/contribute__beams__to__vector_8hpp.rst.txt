@@ -1,11 +1,11 @@
-.. meta::5911cd1e02ea467aafb680df5374326e2d7bd0d861cda89dec09cb4e2e2d395de7f4501e2ce544956143b3f8f916974cd62e7fca8f1bc5eabd9778848bf3c681
+.. meta::cde547bed5a89c1505d304e9072ed4abeac61645a4f705ebe823b94b08bee4527abb5b27e8aeabfbccddc3c825fe814c2bc525c4768bba6ce63e7a25e84d55b4
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/contribute_beams_to_vector.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/contribute_beams_to_vector.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/contribute\_beams\_to\_vector.hpp File Reference
-=================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/contribute\_beams\_to\_vector.hpp File Reference
+==================================================================================================
 
 .. container:: doxygen-content
 

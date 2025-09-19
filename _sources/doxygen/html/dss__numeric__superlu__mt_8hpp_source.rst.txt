@@ -1,11 +1,11 @@
-.. meta::a373edf38bb9b6de491ef90bbe558c0c5a2014f5b5d863b73cb65c354974b52d8f05f62302a4e52d5afcd51fa880721c60752826a2451a00c55e907d251614fb
+.. meta::01a74ae843be3765188b6721951a0b02c939288ab30a5d29dc0b2b4e8a2f1e21dc48ab19c940ef1fc740e259126676a185bc43bafafb52618581978b960988ce
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_numeric_superlu_mt.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/linear_solver/dss_numeric_superlu_mt.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver/dss\_numeric\_superlu\_mt.hpp Source File
-=========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/linear\_solver/dss\_numeric\_superlu\_mt.hpp Source File
+==========================================================================================================
 
 .. container:: doxygen-content
 

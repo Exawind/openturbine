@@ -1,11 +1,11 @@
-.. meta::473cc93b5c747a8c98a42ffb44873dd0165cebff34014ab8dc5a8dec6ae23ead38e8139e9e58c79af1e0b9a3b625272157e342d43628f79809c60918e7e453cc
+.. meta::ea939f3909cafef647883ac655e74207a42ec4d4ca2f056c9501a89305fe662b7c3dabadd0ff63547c3716e53d5803245d67c2e22fba6ee98a7f04559f538e70
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/vector_operations.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/math/vector_operations.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/math/vector\_operations.hpp Source File
-=================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/math/vector\_operations.hpp Source File
+==================================================================================
 
 .. container:: doxygen-content
 

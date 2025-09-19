@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example: Heavy Top Problem &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Example: Heavy Top Problem &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -55,7 +55,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="user.html">User Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To OpenTurbine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To Kynema</a></li>
 <li class="toctree-l2"><a class="reference internal" href="floating_platform.html">Example: Rigid body with three springs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Example: Heavy Top Problem</a></li>
@@ -74,7 +74,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">OpenTurbine</a>
+          <a href="../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -95,14 +95,14 @@
              
   <div class="section" id="example-heavy-top-problem">
 <h1>Example: Heavy Top Problem<a class="headerlink" href="#example-heavy-top-problem" title="Permalink to this heading"></a></h1>
-<p>This example will walk through how to run a simulation of a processing top using OpenTurbine’s low level API.
-Unline OpenTurbine’s high level APIs, you will have to manually set up all nodes and their connectivities.
+<p>This example will walk through how to run a simulation of a processing top using Kynema’s low level API.
+Unline Kynema’s high level APIs, you will have to manually set up all nodes and their connectivities.
 While this extra work adds complexity compared to the higher level APIs, it also provides unlimited freedom.
-The heavy top problem is one of the simplest problems you’ll want to solve with OpenTurbine, so it is a good introduction to our low level APIs.
+The heavy top problem is one of the simplest problems you’ll want to solve with Kynema, so it is a good introduction to our low level APIs.
 For the most up to date and working version of this code, see <code class="docutils literal notranslate"><span class="pre">tests/documentation_tests/heavy_top/</span></code>.</p>
 <p>As with any C++ program, start with the includes.
-As a Kokkos-based library, you’ll need to include <code class="docutils literal notranslate"><span class="pre">Kokkos_Core.hpp</span></code> for setup, teardown, and working with OpenTurbine’s data structures.
-From OpenTurbine, you’ll have to include <code class="docutils literal notranslate"><span class="pre">model.hpp</span></code> for the Model class, our tool for setting up and creating the system, and <code class="docutils literal notranslate"><span class="pre">step.hpp</span></code> for the Step function which performs the action of system asembly and solve.</p>
+As a Kokkos-based library, you’ll need to include <code class="docutils literal notranslate"><span class="pre">Kokkos_Core.hpp</span></code> for setup, teardown, and working with Kynema’s data structures.
+From Kynema, you’ll have to include <code class="docutils literal notranslate"><span class="pre">model.hpp</span></code> for the Model class, our tool for setting up and creating the system, and <code class="docutils literal notranslate"><span class="pre">step.hpp</span></code> for the Step function which performs the action of system asembly and solve.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;array&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cassert&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;Kokkos_Core.hpp&gt;</span>
@@ -129,14 +129,14 @@ Failure to do this will result in lots of nasty, hard to decipher errors on prog
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">inertia</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.234375</span><span class="p">,</span><span class="w"> </span><span class="mf">0.46875</span><span class="p">,</span><span class="w"> </span><span class="mf">0.234375</span><span class="p">};</span>
 <span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">};</span>
 <span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">omega</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">150.</span><span class="p">,</span><span class="w"> </span><span class="mf">-4.61538</span><span class="p">};</span>
-<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x_dot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">CrossProduct</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x_dot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kynema</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">CrossProduct</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
 <span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">omega_dot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">661.3461692307691919</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">};</span>
 <span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">x_ddot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">array</span><span class="p">{</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">-21.3017325444000001</span><span class="p">,</span><span class="w"> </span><span class="mf">-30.9608307692308244</span><span class="p">};</span>
 </pre></div>
 </div>
-<p>A Model is OpenTurbine’s low level interface for specifying elements, nodes, constraints, and their connectivities.
-One everything has been specified, we will use model to create OpenTurbine’s fundamental data structures and advance the problem in time.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">Model</span><span class="p">();</span>
+<p>A Model is Kynema’s low level interface for specifying elements, nodes, constraints, and their connectivities.
+One everything has been specified, we will use model to create Kynema’s fundamental data structures and advance the problem in time.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kynema</span><span class="o">::</span><span class="n">Model</span><span class="p">();</span>
 </pre></div>
 </div>
 <p>To add a node, we call the AddNode method on Model, which creates a NodeBuilder object.
@@ -175,7 +175,7 @@ This ID will be used for specifying elements and constraints.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">.</span><span class="n">SetGravity</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">-9.81</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>Now that the problem has been fully described in the model, we will create OpenTurbine’s main data structures: State, Elements, Constraints, and Solver.
+<p>Now that the problem has been fully described in the model, we will create Kynema’s main data structures: State, Elements, Constraints, and Solver.
 The CreateSystemWithSolver&lt;&gt; method takes an optional template argument with a Kokkos device describing where the system will reside and run.
 By default, it uses Kokkos’ default execution/memory space, so a serial build will run on the CPU, a CUDA build will run on a CUDA device, etc.</p>
 <p>State contains the current state (position, velocity, etc) information for each node.</p>
@@ -193,15 +193,15 @@ These contain the connectivity and basis information or all of the elements of t
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">rho_inf</span><span class="p">(</span><span class="mf">0.9</span><span class="p">);</span>
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">a_tol</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">);</span>
 <span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">r_tol</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">);</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">parameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">StepParameters</span><span class="p">(</span><span class="n">is_dynamic_solve</span><span class="p">,</span><span class="w"> </span><span class="n">max_iter</span><span class="p">,</span><span class="w"> </span><span class="n">step_size</span><span class="p">,</span><span class="w"> </span><span class="n">rho_inf</span><span class="p">,</span><span class="w"> </span><span class="n">a_tol</span><span class="p">,</span><span class="w"> </span><span class="n">r_tol</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">parameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kynema</span><span class="o">::</span><span class="n">StepParameters</span><span class="p">(</span><span class="n">is_dynamic_solve</span><span class="p">,</span><span class="w"> </span><span class="n">max_iter</span><span class="p">,</span><span class="w"> </span><span class="n">step_size</span><span class="p">,</span><span class="w"> </span><span class="n">rho_inf</span><span class="p">,</span><span class="w"> </span><span class="n">a_tol</span><span class="p">,</span><span class="w"> </span><span class="n">r_tol</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>OpenTurbine allows the user to control the actual time stepping process.
+<p>Kynema allows the user to control the actual time stepping process.
 This includes setting forces, post-processing data, coupling to other codes.
 This example does none of that.
-At each time step, we call OpenTurbine’s Step function and pass in the previously created structures.</p>
+At each time step, we call Kynema’s Step function and pass in the previously created structures.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openturbine</span><span class="o">::</span><span class="n">Step</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="w"> </span><span class="n">solver</span><span class="p">,</span><span class="w"> </span><span class="n">elements</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">constraints</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">converged</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kynema</span><span class="o">::</span><span class="n">Step</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="w"> </span><span class="n">solver</span><span class="p">,</span><span class="w"> </span><span class="n">elements</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">constraints</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>

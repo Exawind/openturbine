@@ -1,8 +1,8 @@
-.. meta::97bfabb566bd5fa7f5c8548a90a7c3849113ffd70e636d7ec6481cb6a86b5c448b9bbb651a003e68655c4e22b65b7f4c255ddf5e94bd5bd4ad8f0497b7e053e5
+.. meta::9cb021cde2659c7c4e777a0315dcb234467962ba15844b7f925fef482034948f0f90d41ce4ecda194b83f15ff39b04824a9dd5f6408aaf96753881ff7e480895
 
 :orphan:
 
-.. title:: OpenTurbine API: Namespace List
+.. title:: Kynema API: Namespace List
 
 Namespace List
 ==============

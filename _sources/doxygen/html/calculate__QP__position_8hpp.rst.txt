@@ -1,11 +1,11 @@
-.. meta::7801297c1c5787de336a5bf19528f0f8b11c4ea3a5ed7f5bb1fba047b139ec7a7b77683c46ef82e73d6232d5e7266d88cb065fe46e2566e0c2b2a13d4b4cd939
+.. meta::1922a624b432db747a65acfcb7bc418e9c319bc3a6cb65023e321ef6178af6ad122f0a0e17570b93913820157cfdd6a62127f234567ead5efbec933274430b90
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate_QP_position.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/calculate_QP_position.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/calculate\_QP\_position.hpp File Reference
-===================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/beams/calculate\_QP\_position.hpp File Reference
+====================================================================================================
 
 .. container:: doxygen-content
 

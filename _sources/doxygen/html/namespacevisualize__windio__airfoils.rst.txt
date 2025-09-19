@@ -1,8 +1,8 @@
-.. meta::a29f8d6a416ddec60e87f94828c19b09d898bb60418516e92599c0ad1dfff1305fd61da8fdbbc567e42e9610406f02c64f06f18b415c87bad5cb2fc1a74dff57
+.. meta::95b81a594c09d7d05579178e3fc6ba76e3d421c81911bea28fd75bb463b408a6ba7640cd9c384ac040b9dba6f1a176ee6503af26fa78717be6c6869af78c9818
 
 :orphan:
 
-.. title:: OpenTurbine API: visualize_windio_airfoils Namespace Reference
+.. title:: Kynema API: visualize_windio_airfoils Namespace Reference
 
 visualize\_windio\_airfoils Namespace Reference
 ===============================================

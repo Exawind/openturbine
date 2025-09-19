@@ -1,0 +1,14 @@
+.. meta::5eac10f4c3686c56d55bdc2d414a42c5642a63e3d767ce9da756913354678669c561b348191c74a9a0c58ef758740bb7445e4f677a28fe856b7931091d16e7b9
+
+:orphan:
+
+.. title:: Kynema API: kynema::BeamElement Struct Reference
+
+BeamElement Struct Reference
+============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1BeamElement.html

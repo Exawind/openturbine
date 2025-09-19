@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/update_constraint_prediction.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/step/update_constraint_prediction.hpp Source File &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -35,7 +35,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">OpenTurbine</a>
+          <a href="../../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/update_constraint_prediction.hpp Source File</li>
+      <li class="breadcrumb-item active">Kynema API: /home/runner/work/kynema/kynema/kynema/src/step/update_constraint_prediction.hpp Source File</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/doxygen/html/update__constraint__prediction_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-step-update-constraint-prediction-hpp-source-file">
-<h1>/home/runner/work/openturbine/openturbine/openturbine/src/step/update_constraint_prediction.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-step-update-constraint-prediction-hpp-source-file" title="Permalink to this heading"></a></h1>
+  <div class="section" id="home-runner-work-kynema-kynema-kynema-src-step-update-constraint-prediction-hpp-source-file">
+<h1>/home/runner/work/kynema/kynema/kynema/src/step/update_constraint_prediction.hpp Source File<a class="headerlink" href="#home-runner-work-kynema-kynema-kynema-src-step-update-constraint-prediction-hpp-source-file" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/update_constraint_prediction.hpp Source File</title>
+<title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/step/update_constraint_prediction.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -113,7 +113,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">OpenTurbine API
+   <div id="projectname">Kynema API
    </div>
    <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
   </td>
@@ -183,38 +183,38 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="update__lambda__prediction_8hpp.html">constraints/update_lambda_prediction.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="solver_8hpp.html">solver/solver.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1step.html">openturbine::step</a> {</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekynema_1_1step.html">kynema::step</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="}">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1step.html#aa31edd0f1b282899bcf67fe3081a6d02">   13</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespaceopenturbine_1_1step.html#aa31edd0f1b282899bcf67fe3081a6d02">UpdateConstraintPrediction</a>(</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <a class="code hl_struct" href="structopenturbine_1_1Solver.html">Solver&lt;DeviceType&gt;</a>&amp; solver, <a class="code hl_struct" href="structopenturbine_1_1Constraints.html">Constraints&lt;DeviceType&gt;</a>&amp; constraints</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="namespacekynema_1_1step.html#ac2e26dd54abbdda75a0e45454b8d5b61">   13</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespacekynema_1_1step.html#ac2e26dd54abbdda75a0e45454b8d5b61">UpdateConstraintPrediction</a>(</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <a class="code hl_struct" href="structkynema_1_1Solver.html">Solver&lt;DeviceType&gt;</a>&amp; solver, <a class="code hl_struct" href="structkynema_1_1Constraints.html">Constraints&lt;DeviceType&gt;</a>&amp; constraints</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>) {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">auto</span> region = Kokkos::Profiling::ScopedRegion(<span class="stringliteral">&quot;Update Constraint Prediction&quot;</span>);</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">using </span>RangePolicy = Kokkos::RangePolicy&lt;typename DeviceType::execution_space&gt;;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">auto</span> range_policy = RangePolicy(0, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">num_constraints</a>);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">auto</span> range_policy = RangePolicy(0, constraints.<a class="code hl_variable" href="structkynema_1_1Constraints.html#ab456e594cab1dfe24e280bc0444f5fe3">num_constraints</a>);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Kokkos::parallel_for(</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="stringliteral">&quot;UpdateLambdaPrediction&quot;</span>, range_policy,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_struct" href="structopenturbine_1_1constraints_1_1UpdateLambdaPrediction.html">constraints::UpdateLambdaPrediction&lt;DeviceType&gt;</a>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a8cf96e14a7db65ee6bfe5e06a8efcbe5">num_system_dofs</a>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#accd54ac850a411975103f20490a46f7b">row_range</a>, solver.<a class="code hl_variable" href="structopenturbine_1_1Solver.html#a5dd414eb0cd88db9ffe1e9d66670d5f0">x</a>, constraints.<a class="code hl_variable" href="structopenturbine_1_1Constraints.html#a7d376cb9eab4281026af89e3fb229e1f">lambda</a></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <a class="code hl_struct" href="structkynema_1_1constraints_1_1UpdateLambdaPrediction.html">constraints::UpdateLambdaPrediction&lt;DeviceType&gt;</a>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>            solver.<a class="code hl_variable" href="structkynema_1_1Solver.html#ac9e80d7b32aed9274ef9c71f429dd8a0">num_system_dofs</a>, constraints.<a class="code hl_variable" href="structkynema_1_1Constraints.html#aa957692bedd6e76982cac3e17c02d047">row_range</a>, solver.<a class="code hl_variable" href="structkynema_1_1Solver.html#a373647cabfa178f13bce0b938713cdb2">x</a>, constraints.<a class="code hl_variable" href="structkynema_1_1Constraints.html#a04a64626c23c3dd49c2b58971abb4998">lambda</a></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        }</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    );</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}</div>
 </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>}  <span class="comment">// namespace openturbine::step</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>}  <span class="comment">// namespace kynema::step</span></div>
 <div class="ttc" id="aconstraints_8hpp_html"><div class="ttname"><a href="constraints_8hpp.html">constraints.hpp</a></div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1step_html"><div class="ttname"><a href="namespaceopenturbine_1_1step.html">openturbine::step</a></div><div class="ttdef"><b>Definition</b> assemble_constraints_matrix.hpp:11</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1step_html_aa31edd0f1b282899bcf67fe3081a6d02"><div class="ttname"><a href="namespaceopenturbine_1_1step.html#aa31edd0f1b282899bcf67fe3081a6d02">openturbine::step::UpdateConstraintPrediction</a></div><div class="ttdeci">void UpdateConstraintPrediction(Solver&lt; DeviceType &gt; &amp;solver, Constraints&lt; DeviceType &gt; &amp;constraints)</div><div class="ttdef"><b>Definition</b> update_constraint_prediction.hpp:13</div></div>
+<div class="ttc" id="anamespacekynema_1_1step_html"><div class="ttname"><a href="namespacekynema_1_1step.html">kynema::step</a></div><div class="ttdef"><b>Definition</b> assemble_constraints_matrix.hpp:11</div></div>
+<div class="ttc" id="anamespacekynema_1_1step_html_ac2e26dd54abbdda75a0e45454b8d5b61"><div class="ttname"><a href="namespacekynema_1_1step.html#ac2e26dd54abbdda75a0e45454b8d5b61">kynema::step::UpdateConstraintPrediction</a></div><div class="ttdeci">void UpdateConstraintPrediction(Solver&lt; DeviceType &gt; &amp;solver, Constraints&lt; DeviceType &gt; &amp;constraints)</div><div class="ttdef"><b>Definition</b> update_constraint_prediction.hpp:13</div></div>
 <div class="ttc" id="asolver_8hpp_html"><div class="ttname"><a href="solver_8hpp.html">solver.hpp</a></div></div>
-<div class="ttc" id="astructopenturbine_1_1Constraints_html"><div class="ttname"><a href="structopenturbine_1_1Constraints.html">openturbine::Constraints</a></div><div class="ttdoc">Container class for managing multiple constraints in a simulation.</div><div class="ttdef"><b>Definition</b> constraints.hpp:29</div></div>
-<div class="ttc" id="astructopenturbine_1_1Constraints_html_a059227bdad44685e6b29146caa38e0e3"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a059227bdad44685e6b29146caa38e0e3">openturbine::Constraints::num_constraints</a></div><div class="ttdeci">size_t num_constraints</div><div class="ttdef"><b>Definition</b> constraints.hpp:35</div></div>
-<div class="ttc" id="astructopenturbine_1_1Constraints_html_a7d376cb9eab4281026af89e3fb229e1f"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#a7d376cb9eab4281026af89e3fb229e1f">openturbine::Constraints::lambda</a></div><div class="ttdeci">View&lt; double *[6]&gt; lambda</div><div class="ttdef"><b>Definition</b> constraints.hpp:60</div></div>
-<div class="ttc" id="astructopenturbine_1_1Constraints_html_accd54ac850a411975103f20490a46f7b"><div class="ttname"><a href="structopenturbine_1_1Constraints.html#accd54ac850a411975103f20490a46f7b">openturbine::Constraints::row_range</a></div><div class="ttdeci">View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt; row_range</div><div class="ttdef"><b>Definition</b> constraints.hpp:45</div></div>
-<div class="ttc" id="astructopenturbine_1_1Solver_html"><div class="ttname"><a href="structopenturbine_1_1Solver.html">openturbine::Solver</a></div><div class="ttdoc">This object manages the assembly and solution of linear system arising from the generalized-alpha bas...</div><div class="ttdef"><b>Definition</b> solver.hpp:21</div></div>
-<div class="ttc" id="astructopenturbine_1_1Solver_html_a5dd414eb0cd88db9ffe1e9d66670d5f0"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a5dd414eb0cd88db9ffe1e9d66670d5f0">openturbine::Solver::x</a></div><div class="ttdeci">MultiVectorType x</div><div class="ttdef"><b>Definition</b> solver.hpp:79</div></div>
-<div class="ttc" id="astructopenturbine_1_1Solver_html_a8cf96e14a7db65ee6bfe5e06a8efcbe5"><div class="ttname"><a href="structopenturbine_1_1Solver.html#a8cf96e14a7db65ee6bfe5e06a8efcbe5">openturbine::Solver::num_system_dofs</a></div><div class="ttdeci">size_t num_system_dofs</div><div class="ttdef"><b>Definition</b> solver.hpp:74</div></div>
-<div class="ttc" id="astructopenturbine_1_1constraints_1_1UpdateLambdaPrediction_html"><div class="ttname"><a href="structopenturbine_1_1constraints_1_1UpdateLambdaPrediction.html">openturbine::constraints::UpdateLambdaPrediction</a></div><div class="ttdoc">A Kernel to update the predicted constraint Lagrange multiplier values at each nonlinear iteration.</div><div class="ttdef"><b>Definition</b> update_lambda_prediction.hpp:12</div></div>
+<div class="ttc" id="astructkynema_1_1Constraints_html"><div class="ttname"><a href="structkynema_1_1Constraints.html">kynema::Constraints</a></div><div class="ttdoc">Container class for managing multiple constraints in a simulation.</div><div class="ttdef"><b>Definition</b> constraints.hpp:29</div></div>
+<div class="ttc" id="astructkynema_1_1Constraints_html_a04a64626c23c3dd49c2b58971abb4998"><div class="ttname"><a href="structkynema_1_1Constraints.html#a04a64626c23c3dd49c2b58971abb4998">kynema::Constraints::lambda</a></div><div class="ttdeci">View&lt; double *[6]&gt; lambda</div><div class="ttdef"><b>Definition</b> constraints.hpp:60</div></div>
+<div class="ttc" id="astructkynema_1_1Constraints_html_aa957692bedd6e76982cac3e17c02d047"><div class="ttname"><a href="structkynema_1_1Constraints.html#aa957692bedd6e76982cac3e17c02d047">kynema::Constraints::row_range</a></div><div class="ttdeci">View&lt; Kokkos::pair&lt; size_t, size_t &gt; * &gt; row_range</div><div class="ttdef"><b>Definition</b> constraints.hpp:45</div></div>
+<div class="ttc" id="astructkynema_1_1Constraints_html_ab456e594cab1dfe24e280bc0444f5fe3"><div class="ttname"><a href="structkynema_1_1Constraints.html#ab456e594cab1dfe24e280bc0444f5fe3">kynema::Constraints::num_constraints</a></div><div class="ttdeci">size_t num_constraints</div><div class="ttdef"><b>Definition</b> constraints.hpp:35</div></div>
+<div class="ttc" id="astructkynema_1_1Solver_html"><div class="ttname"><a href="structkynema_1_1Solver.html">kynema::Solver</a></div><div class="ttdoc">This object manages the assembly and solution of linear system arising from the generalized-alpha bas...</div><div class="ttdef"><b>Definition</b> solver.hpp:21</div></div>
+<div class="ttc" id="astructkynema_1_1Solver_html_a373647cabfa178f13bce0b938713cdb2"><div class="ttname"><a href="structkynema_1_1Solver.html#a373647cabfa178f13bce0b938713cdb2">kynema::Solver::x</a></div><div class="ttdeci">MultiVectorType x</div><div class="ttdef"><b>Definition</b> solver.hpp:79</div></div>
+<div class="ttc" id="astructkynema_1_1Solver_html_ac9e80d7b32aed9274ef9c71f429dd8a0"><div class="ttname"><a href="structkynema_1_1Solver.html#ac9e80d7b32aed9274ef9c71f429dd8a0">kynema::Solver::num_system_dofs</a></div><div class="ttdeci">size_t num_system_dofs</div><div class="ttdef"><b>Definition</b> solver.hpp:74</div></div>
+<div class="ttc" id="astructkynema_1_1constraints_1_1UpdateLambdaPrediction_html"><div class="ttname"><a href="structkynema_1_1constraints_1_1UpdateLambdaPrediction.html">kynema::constraints::UpdateLambdaPrediction</a></div><div class="ttdoc">A Kernel to update the predicted constraint Lagrange multiplier values at each nonlinear iteration.</div><div class="ttdef"><b>Definition</b> update_lambda_prediction.hpp:12</div></div>
 <div class="ttc" id="aupdate__lambda__prediction_8hpp_html"><div class="ttname"><a href="update__lambda__prediction_8hpp.html">update_lambda_prediction.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

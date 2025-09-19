@@ -1,11 +1,11 @@
-.. meta::abe50f7286710b46e465af1ea90b4119264df76d3ac2ff3b452a8b26319a198adc3b41f5b97921f1e4fde6ce02567bc500495d54a1886d52f65ee0ec99789c1b
+.. meta::f76159e6fd14e200bba065a11147b546a478e16b9b40e72a74a0338183754ce4396799af992cae4a05c2b3ac455a6df8e91da51e442d5c5c1f0d599b7e9f3932
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertia_stiffness_matrix.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/masses/calculate_inertia_stiffness_matrix.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate\_inertia\_stiffness\_matrix.hpp Source File
-=============================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/masses/calculate\_inertia\_stiffness\_matrix.hpp Source File
+==============================================================================================================
 
 .. container:: doxygen-content
 

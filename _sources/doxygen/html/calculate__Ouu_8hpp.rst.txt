@@ -1,11 +1,11 @@
-.. meta::db970e8e8358f939c724d2eda085808d97d8a98b854f5f739b61b4324283192d84c9f62e9de8bb7c0b5c88a32132426b6776bf31311f95134d310bd1c6a5497d
+.. meta::fe380c687d67ee991ed957434a32f7affce0f766ba8a4f3300725e4089ccf369149efbea87b8b6248dd5b5d6a85155c91c352c78944a5762bf4bf9cc4597e67e
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_Ouu.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/calculate_Ouu.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_Ouu.hpp File Reference
-========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/calculate\_Ouu.hpp File Reference
+=========================================================================================
 
 .. container:: doxygen-content
 

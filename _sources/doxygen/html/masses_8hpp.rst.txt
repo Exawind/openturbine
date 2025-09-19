@@ -1,11 +1,11 @@
-.. meta::f8011359741ef2b6343905aec8216f05eb25f173ee73de669920bb5b7fb4ee6cc1df0afa2422ce87e9d7432b5d170c14cf36c40169f4abef85b5fb05a3815099
+.. meta::8f405fcee7b04ca6375dd4daae0fb8759187901bc36b2cfff410e210227d756e246fb3b76ae96ebd054b45a80c7e579cce5efe225ceb3edac4f0b87039399a73
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/masses/masses.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/masses/masses.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/masses/masses.hpp File Reference
-===================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/masses/masses.hpp File Reference
+====================================================================================
 
 .. container:: doxygen-content
 

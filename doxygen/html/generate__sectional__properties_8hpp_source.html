@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/generate_sectional_properties.hpp Source File &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -35,7 +35,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">OpenTurbine</a>
+          <a href="../../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File</li>
+      <li class="breadcrumb-item active">Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/generate_sectional_properties.hpp Source File</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/doxygen/html/generate__sectional__properties_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-elements-beams-generate-sectional-properties-hpp-source-file">
-<h1>/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-elements-beams-generate-sectional-properties-hpp-source-file" title="Permalink to this heading"></a></h1>
+  <div class="section" id="home-runner-work-kynema-kynema-kynema-src-elements-beams-generate-sectional-properties-hpp-source-file">
+<h1>/home/runner/work/kynema/kynema/kynema/src/elements/beams/generate_sectional_properties.hpp Source File<a class="headerlink" href="#home-runner-work-kynema-kynema-kynema-src-elements-beams-generate-sectional-properties-hpp-source-file" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File</title>
+<title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/generate_sectional_properties.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -113,7 +113,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">OpenTurbine API
+   <div id="projectname">Kynema API
    </div>
    <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
   </td>
@@ -179,10 +179,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;array&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1beams.html">openturbine::beams</a> {</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekynema_1_1beams.html">kynema::beams</a> {</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1beams.html#a1aa48516b3b7def3617477e406b96c9c">   41</a></span><span class="keyword">static</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt; <a class="code hl_function" href="namespaceopenturbine_1_1beams.html#a1aa48516b3b7def3617477e406b96c9c">GenerateStiffnessMatrix</a>(</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="namespacekynema_1_1beams.html#a8cb02b6f7d0ef23479f3bf80cba0cac9">   41</a></span><span class="keyword">static</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt; <a class="code hl_function" href="namespacekynema_1_1beams.html#a8cb02b6f7d0ef23479f3bf80cba0cac9">GenerateStiffnessMatrix</a>(</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">double</span> EA, <span class="keywordtype">double</span> EI_x, <span class="keywordtype">double</span> EI_y, <span class="keywordtype">double</span> GKt, <span class="keywordtype">double</span> GA, <span class="keywordtype">double</span> kxs, <span class="keywordtype">double</span> kys, <span class="keywordtype">double</span> x_C,</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">double</span> y_C, <span class="keywordtype">double</span> theta_p, <span class="keywordtype">double</span> x_S, <span class="keywordtype">double</span> y_S, <span class="keywordtype">double</span> theta_s</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>) {</div>
@@ -246,7 +246,7 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
 <div class="foldopen" id="foldopen00126" data-start="{" data-end="}">
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="namespaceopenturbine_1_1beams.html#a2b002e423ce27826a3b8a3f0ba50922d">  126</a></span><span class="keyword">static</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt; <a class="code hl_function" href="namespaceopenturbine_1_1beams.html#a2b002e423ce27826a3b8a3f0ba50922d">GenerateMassMatrix</a>(</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="namespacekynema_1_1beams.html#a435e42a15766127a7721f0be5f9ac717">  126</a></span><span class="keyword">static</span> std::array&lt;std::array&lt;double, 6&gt;, 6&gt; <a class="code hl_function" href="namespacekynema_1_1beams.html#a435e42a15766127a7721f0be5f9ac717">GenerateMassMatrix</a>(</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keywordtype">double</span> m, <span class="keywordtype">double</span> I_x, <span class="keywordtype">double</span> I_y, <span class="keywordtype">double</span> I_p, <span class="keywordtype">double</span> x_G = 0., <span class="keywordtype">double</span> y_G = 0.,</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keywordtype">double</span> theta_i = 0.</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>) {</div>
@@ -293,10 +293,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>}</div>
 </div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>}  <span class="comment">// namespace openturbine::beams</span></div>
-<div class="ttc" id="anamespaceopenturbine_1_1beams_html"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html">openturbine::beams</a></div><div class="ttdef"><b>Definition</b> beam_quadrature.hpp:9</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1beams_html_a1aa48516b3b7def3617477e406b96c9c"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html#a1aa48516b3b7def3617477e406b96c9c">openturbine::beams::GenerateStiffnessMatrix</a></div><div class="ttdeci">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; GenerateStiffnessMatrix(double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C, double y_C, double theta_p, double x_S, double y_S, double theta_s)</div><div class="ttdoc">Generates a 6x6 cross-sectional stiffness matrix for use in beam elements.</div><div class="ttdef"><b>Definition</b> generate_sectional_properties.hpp:41</div></div>
-<div class="ttc" id="anamespaceopenturbine_1_1beams_html_a2b002e423ce27826a3b8a3f0ba50922d"><div class="ttname"><a href="namespaceopenturbine_1_1beams.html#a2b002e423ce27826a3b8a3f0ba50922d">openturbine::beams::GenerateMassMatrix</a></div><div class="ttdeci">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; GenerateMassMatrix(double m, double I_x, double I_y, double I_p, double x_G=0., double y_G=0., double theta_i=0.)</div><div class="ttdoc">Generates a 6x6 cross-sectional mass matrix for use in beam elements.</div><div class="ttdef"><b>Definition</b> generate_sectional_properties.hpp:126</div></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>}  <span class="comment">// namespace kynema::beams</span></div>
+<div class="ttc" id="anamespacekynema_1_1beams_html"><div class="ttname"><a href="namespacekynema_1_1beams.html">kynema::beams</a></div><div class="ttdef"><b>Definition</b> beam_quadrature.hpp:9</div></div>
+<div class="ttc" id="anamespacekynema_1_1beams_html_a435e42a15766127a7721f0be5f9ac717"><div class="ttname"><a href="namespacekynema_1_1beams.html#a435e42a15766127a7721f0be5f9ac717">kynema::beams::GenerateMassMatrix</a></div><div class="ttdeci">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; GenerateMassMatrix(double m, double I_x, double I_y, double I_p, double x_G=0., double y_G=0., double theta_i=0.)</div><div class="ttdoc">Generates a 6x6 cross-sectional mass matrix for use in beam elements.</div><div class="ttdef"><b>Definition</b> generate_sectional_properties.hpp:126</div></div>
+<div class="ttc" id="anamespacekynema_1_1beams_html_a8cb02b6f7d0ef23479f3bf80cba0cac9"><div class="ttname"><a href="namespacekynema_1_1beams.html#a8cb02b6f7d0ef23479f3bf80cba0cac9">kynema::beams::GenerateStiffnessMatrix</a></div><div class="ttdeci">static std::array&lt; std::array&lt; double, 6 &gt;, 6 &gt; GenerateStiffnessMatrix(double EA, double EI_x, double EI_y, double GKt, double GA, double kxs, double kys, double x_C, double y_C, double theta_p, double x_S, double y_S, double theta_s)</div><div class="ttdoc">Generates a 6x6 cross-sectional stiffness matrix for use in beam elements.</div><div class="ttdef"><b>Definition</b> generate_sectional_properties.hpp:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

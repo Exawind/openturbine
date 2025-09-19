@@ -1,11 +1,11 @@
-.. meta::89b532c76d94bafdcbbdebba1466cb9729b1e798f0a3b15bf9874c6c754178d411ac583ffcf7d7b96572e26279263f9f57545256b5cead6cca6900c913ec2288
+.. meta::51854af3c7b38a63ef95f417b6a89c3aed7a9a7b9cb446d3bd91864bda214869c5067059502b77e860956a20c59e838ba6640b596a1f95d54b5b1c9251161fb1
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/state/update_algorithmic_acceleration.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/state/update_algorithmic_acceleration.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/state/update\_algorithmic\_acceleration.hpp Source File
-=================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/state/update\_algorithmic\_acceleration.hpp Source File
+==================================================================================================
 
 .. container:: doxygen-content
 

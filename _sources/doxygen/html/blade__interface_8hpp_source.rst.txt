@@ -1,11 +1,11 @@
-.. meta::8e254d9c1ed8be882ae2e9663428d7024ee5081aee96b3d39e841ff4e804af4bad509c090cef2d5af254c74f10cbf3d7ac719956f0ce8c8447b88a3344ac39b9
+.. meta::126eaa993c1b9810f509879921d166d6e1a06e615f6fbf31df56e5a20069f7af8c783315a70f7bfba2aa1c82884593b8dcdf406c34f315b1e717462699f72928
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/blade/blade_interface.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/blade/blade_interface.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/blade/blade\_interface.hpp Source File
-===========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/blade/blade\_interface.hpp Source File
+============================================================================================
 
 .. container:: doxygen-content
 

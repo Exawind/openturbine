@@ -1,0 +1,14 @@
+.. meta::b6defa34c860a280b1cf7d2335f2090e87f8ffd4a8d61be4b165cfd600124b1dfe9915cfa82f54fb437ad2e888bfd578f215913062fbfab7c25b111a13ce50c1
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::components::ControllerInput Struct Reference
+
+ControllerInput Struct Reference
+================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1interfaces_1_1components_1_1ControllerInput.html

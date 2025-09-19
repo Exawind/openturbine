@@ -1,0 +1,14 @@
+.. meta::6bb12156afc8c6e4c05dce533233b32549aff2d680257e26f19b185412d49c796bd2213ac2182eacfd2e30cd1ee24a63bcd5c81902cbf4e2eb76d37b29cc55af
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::components::TurbineInput Struct Reference
+
+TurbineInput Struct Reference
+=============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1interfaces_1_1components_1_1TurbineInput.html

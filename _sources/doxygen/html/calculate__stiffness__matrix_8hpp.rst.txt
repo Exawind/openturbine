@@ -1,11 +1,11 @@
-.. meta::1d159a629e099581c790a60e3a1560e3abf301482714899e8f684ddb81d062fe33415ad33533a73c2f448b76dad0868a87c70f9a4ccabfb2d30460507de6c826
+.. meta::14e1fe80d4c41753830982180ce263d1108b8e28eab9c902dcf4c64d3e2fd7b9b418d67d6b8decf8b21ba2954005c5b6e9b385e04d59c97542b7c800d38bc039
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate_stiffness_matrix.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/springs/calculate_stiffness_matrix.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate\_stiffness\_matrix.hpp File Reference
-========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/springs/calculate\_stiffness\_matrix.hpp File Reference
+=========================================================================================================
 
 .. container:: doxygen-content
 

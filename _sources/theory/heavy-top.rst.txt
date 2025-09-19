@@ -3,11 +3,11 @@
 Heavy top constrained-rigid-body example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We provide here a simple application of the OpenTurbine formulation for
+We provide here a simple application of the Kynema formulation for
 the heavy-top problem, which is a rotating body fixed to the ground
 by a spherical joint. It is a common benchmark problem for
 constrained-rigid-body dynamics and for testing Lie-group time
-integrators like that used in OpenTurbine. We follow the problem
+integrators like that used in Kynema. We follow the problem
 description found in [@Bruls-etal:2012], but with the key difference
 that we formulate the problem in inertial coordinates rather than
 material coordinates. We assume the heavy top is a thin disk with mass
@@ -60,7 +60,7 @@ stiffness matrix associated with linearization of the constraint forces (see Eq.
    \widetilde{\lambda} \, \widetilde{\underline{\underline{R}} \underline{x}^\mathrm{r}}
    \end{bmatrix}
 
-where :math:`\underline{\lambda} \in  \mathbb{R}^3` are the Lagrange multipliers.  The OpenTurbine regression test suite includes the spinning, heavy top
+where :math:`\underline{\lambda} \in  \mathbb{R}^3` are the Lagrange multipliers.  The Kynema regression test suite includes the spinning, heavy top
 problem with the following initial conditions:
 
 .. math::

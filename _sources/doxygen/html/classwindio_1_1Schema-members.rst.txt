@@ -1,8 +1,8 @@
-.. meta::b22e102ecefa2a76b8b48df05207dd9dc21d5bb5f283eed55b75fc2714788f873ead6eda532f678b0940b88b2ed18fadfb51c562d6456fc27fae34135876cffb
+.. meta::26b80bdf71103be996dae246cc40a511e09c864735fc449cab02e530ca48e8fae2d418c363d49cdd981c13b6c1274d2587a693ff60be5c247db9668e8e1707e0
 
 :orphan:
 
-.. title:: OpenTurbine API: Member List
+.. title:: Kynema API: Member List
 
 Member List
 ===========

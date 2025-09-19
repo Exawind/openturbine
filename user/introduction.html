@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Introduction &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -60,7 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="compiling.html">Compiling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To OpenTurbine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linking.html">Linking To Kynema</a></li>
 <li class="toctree-l2"><a class="reference internal" href="floating_platform.html">Example: Rigid body with three springs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="turbine.html">Example: IEA15MW Turbine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="heavy_top.html">Example: Heavy Top Problem</a></li>
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">OpenTurbine</a>
+          <a href="../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -100,33 +100,33 @@
              
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
-<p>OpenTurbine is a speed-oriented, performance portable library for solving structural dynamics problems.</p>
+<p>Kynema is a speed-oriented, performance portable library for solving structural dynamics problems.</p>
 <div class="section" id="code-structure">
 <h2>Code Structure<a class="headerlink" href="#code-structure" title="Permalink to this heading"></a></h2>
-<p>OpenTurbine provides three element types: high-order beam finite elements, mass elements, and geometrically nonlinear spring elements.
+<p>Kynema provides three element types: high-order beam finite elements, mass elements, and geometrically nonlinear spring elements.
 When combined with constraints, these elements can be used to describe any number of structural dynamics configurations.
-OpenTurbine’s “low level” API is based around the Model class, where the user will manually specify each node and constraint and element memberships.
+Kynema’s “low level” API is based around the Model class, where the user will manually specify each node and constraint and element memberships.
 Additionally, using the low level API gives the user full flexibility in controlling the time stepping proceedure and copying memory to/from device.
 For more details on the low level API, see the Heavy Top, Spring-Mass, and Three Blade example problems.</p>
-<p>OpenTurbine also provides a number of “high level” APIs for defining and driving specific problem configurations that are in high demand by our users.
+<p>Kynema also provides a number of “high level” APIs for defining and driving specific problem configurations that are in high demand by our users.
 This approach allows users to avoid much of the tedious book keeping needed to specify and drive these common problems.
 For more details on the currently provided low level APIs, see the Rigid Body with Three Springs example and the IEA15MW Turbine example.</p>
 </div>
 <div class="section" id="kokkos-and-kokkos-kernels">
 <h2>Kokkos and Kokkos Kernels<a class="headerlink" href="#kokkos-and-kokkos-kernels" title="Permalink to this heading"></a></h2>
-<p>OpenTurbine is built on top of the Kokkos ecosystem, which allows a single code base to target serial CPU, multi-threaded CPU, and GPU platforms from NVIDIA, AMD, and Intel.</p>
+<p>Kynema is built on top of the Kokkos ecosystem, which allows a single code base to target serial CPU, multi-threaded CPU, and GPU platforms from NVIDIA, AMD, and Intel.</p>
 <p>Kokkos provides the basic building blocks for expressing algorithms in a performance portable way.
 Kokkos’ Views wrap the details of memory allocation across platforms and abstract memory access patterns for optimal caching/coalescing behavior on CPU/GPU platforms.
 Additionally, Kokkos’ parallel_for construct abstracts the details of kernel launching on different platforms, allowing a single piece of code to represent a simple for loop (when configured for serial execution), an OpenMP accelerated for loop with thread local variables (when configured for OpenMP execution) or a Cuda/HIP kernel launch with tuned grid sizing and shared memory usaged.
 Furthermore, Kokkos allows us to express heirarchical parallelism, which is essential for extracting maximum performance on GPU devices when working with high order elements.
 Finally, Kokkos provides a SIMD interface, which allows us to manually specify outer-loop SIMD parallelism in key algorithms.</p>
 <p>Kokkos Kernels is a library built on top of Kokkos which provides performance-portable BLAS algorithms.
-OpenTurbine primarily uses Kokkos Kernels’ batched algorithms to perform optimized matrix math in its system assembly algorithms.
-Kokkos Kernels also provides a sparse matrix library, which is used for manipulating OpenTurbine’s sparse system matrix.</p>
+Kynema primarily uses Kokkos Kernels’ batched algorithms to perform optimized matrix math in its system assembly algorithms.
+Kokkos Kernels also provides a sparse matrix library, which is used for manipulating Kynema’s sparse system matrix.</p>
 </div>
 <div class="section" id="linear-solvers">
 <h2>Linear Solvers<a class="headerlink" href="#linear-solvers" title="Permalink to this heading"></a></h2>
-<p>Much of OpenTurbine’s performance is derived from its use of highly optimized sparse direct solvers.
+<p>Much of Kynema’s performance is derived from its use of highly optimized sparse direct solvers.
 When solving the system matrix that is assembled as part of our time stepping processs, sparse direct solvers combine the robustness of traditional LU factorization with the efficiency of a sparse matrix representation.
 The actual peformance of these algorithms is highly dependent on the fill-in of the matrix’s sparsity pattern, the built-in reordering algorithm, and the details of the exact solution proceedure.</p>
 <p>On CPU, we provide many choices for solvers, since different solvers have their own performance properties for different sparse matrix structures.

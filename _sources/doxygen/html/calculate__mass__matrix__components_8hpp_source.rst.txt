@@ -1,11 +1,11 @@
-.. meta::de6e8e8a746e890b63c901ecd6b01c933781a1e240ccd7f13667f242d9fe02404186d51f2cdce29fa1bd9836cafa8355a0c79ddc6ec3be8e863f80c2c6cb947c
+.. meta::98dbfbadc18a3339f54ce06249028cb4b9b1b87b1ef850818ae45445e00dfffb62c3544c879bd6cec9e8c19d47dddd995cca022d8fd69d2eec8f3f9aa3c546f2
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_mass_matrix_components.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/masses/calculate_mass_matrix_components.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate\_mass\_matrix\_components.hpp Source File
-===========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/masses/calculate\_mass\_matrix\_components.hpp Source File
+============================================================================================================
 
 .. container:: doxygen-content
 

@@ -1,8 +1,8 @@
-.. meta::773bb899b3487fdb9f1a0bf12c77d2f7dda5ce6c587ff9d1474c87fbbeb6e1a1c2ff4874c3e538a174f4bf9747b89d55da1e49df359d6ba764459fa42ed5fce7
+.. meta::405c55d12c004cb01f6b3d43798a6c9020cb5cd27c8ce6bb53024ba7ab853cebf414140a5a9fc38e00485cb06918a5befb578ebd9fd2ab96c8a61fdc38916c07
 
 :orphan:
 
-.. title:: OpenTurbine API: Class Members - Functions
+.. title:: Kynema API: Class Members - Functions
 
 Class Members - Functions
 =========================

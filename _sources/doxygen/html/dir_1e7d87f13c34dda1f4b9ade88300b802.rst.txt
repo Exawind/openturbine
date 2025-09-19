@@ -1,11 +1,11 @@
-.. meta::374a0f874b17d737587b8b73c1136a2f78a9737d1fae04f0eec87b89cf89471b383ac653b47cd8847e43abfeea8d38b6ee908da199bf6052dc0dc41586586b91
+.. meta::33a8cad53f8d8fac7c404425ccffa44c0f16028e9d0b606d1121eef11503d2c9e8b441c0a596118942a5fc51c5db47d73bc4fc781d6353c0877e993cdf837659
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/masses Directory Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/masses Directory Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/masses Directory Reference
-=============================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/masses Directory Reference
+==============================================================================
 
 .. container:: doxygen-content
 

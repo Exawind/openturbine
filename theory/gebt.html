@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geometrically exact beam theory &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Geometrically exact beam theory &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -38,7 +38,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">OpenTurbine</a>
+          <a href="../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -107,11 +107,11 @@
              
   <div class="section" id="geometrically-exact-beam-theory">
 <span id="sec-gebt"></span><h1>Geometrically exact beam theory<a class="headerlink" href="#geometrically-exact-beam-theory" title="Permalink to this heading"></a></h1>
-<p>OpenTurbine beam finite elements are based on geometrically exact beam
+<p>Kynema beam finite elements are based on geometrically exact beam
 theory (GEBT) [&#64;Reissner:1973 &#64;Simo:1985; &#64;Simo-VuQuoc:1986]. Our
 formulation largely follows that described in [&#64;Bauchau:2011] and as
 implemented in Dymore [&#64;Dymore:2013] and the BeamDyn [&#64;Wang-etal:2017]
-module of OpenFAST. A key difference is that OpenTurbine uses
+module of OpenFAST. A key difference is that Kynema uses
 quaternions to store and track rotations rather than Wiener-Milenkovic
 parameters, thereby removing the challenges associated rescaling
 operations to avoid singularities.</p>
@@ -287,7 +287,7 @@ coordinates, i.e.,</p>
   \underline{\dot{u}}^\prime - \widetilde{\omega} \underline{\underline{R}}\, \underline{x}^{0\prime}\\
   \widetilde{\omega} \underline{\kappa} + \underline{\omega}^\prime
 \end{bmatrix}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}\)</span> is the damping matrix in inertial coordinates. OpenTurbine currently uses stiffness proportional damping, i.e.,</p>
+<p>where <span class="math notranslate nohighlight">\(\underline{\underline{D}}\in \mathbb{R}^{6 \times 6}\)</span> is the damping matrix in inertial coordinates. Kynema currently uses stiffness proportional damping, i.e.,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\underline{\underline{D}}
 = \begin{bmatrix}

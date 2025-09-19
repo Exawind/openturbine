@@ -1,11 +1,11 @@
-.. meta::7ffdf9b2e8311221a4db90b4eaffb56673ffdc858b9e7300f36929985853ed77fa825a9a2015345f99c51e8d4d44cb5f4632c052a8c279ca03716cdbc8118431
+.. meta::af6632f7d17ab1527328e4ec0dae5386370e2d03116e277f1491093b085c45e92c0f5c776a3239245231a4f25b76c830c13d9deea930f13ecbe4c5973fa888f9
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/state/update_global_position.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/state/update_global_position.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/state/update\_global\_position.hpp Source File
-========================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/state/update\_global\_position.hpp Source File
+=========================================================================================
 
 .. container:: doxygen-content
 

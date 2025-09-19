@@ -1,0 +1,14 @@
+.. meta::e600b340dd152a7fd417420753541a061095587a5b086e19ec0d8e105af8485a4979256737300450231b1bf4ca17797ed903e8445d7d1c1698e790096bc3236c
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces Namespace Reference
+
+interfaces Namespace Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: namespacekynema_1_1interfaces.html

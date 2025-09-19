@@ -1,0 +1,14 @@
+.. meta::b31334fc7621b74413de4e7995cf2f67377d68b7d8a1ff04e4a1a5642d943f9e79118a363171856528810c02f5737de6fafcf3a82978e954c773991dc8a69986
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::ConstraintData Struct Reference
+
+ConstraintData Struct Reference
+===============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1interfaces_1_1ConstraintData.html

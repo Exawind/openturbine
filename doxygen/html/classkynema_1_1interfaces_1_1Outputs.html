@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kynema API: kynema::interfaces::Outputs Class Reference &mdash; Kynema 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Kynema
+              <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user/user.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory/index.html">Theory Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer/index.html">Developer Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../acknowledgement.html">Acknowledgements</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Kynema</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Kynema API: kynema::interfaces::Outputs Class Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/doxygen/html/classkynema_1_1interfaces_1_1Outputs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="outputs-class-reference">
+<h1>Outputs Class Reference<a class="headerlink" href="#outputs-class-reference" title="Permalink to this heading"></a></h1>
+<div class="doxygen-content docutils container">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kynema API: kynema::interfaces::Outputs Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Kynema API
+   </div>
+   <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Search');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacekynema.html">kynema</a></li><li class="navelem"><a class="el" href="namespacekynema_1_1interfaces.html">interfaces</a></li><li class="navelem"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html">Outputs</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="classkynema_1_1interfaces_1_1Outputs-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">kynema::interfaces::Outputs Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>A class that handles writing state data to disk for analysis/visualization.  
+ <a href="classkynema_1_1interfaces_1_1Outputs.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="outputs_8hpp_source.html">outputs.hpp</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a7b15231d850c623a8e997c8718e02fb8" id="r_a7b15231d850c623a8e997c8718e02fb8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a> : std::uint8_t { <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26">kNodes</a> = 0
+, <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a31539a8d3602f23f600139d92f392d02">kQPs</a> = 1
+ }</td></tr>
+<tr class="memdesc:a7b15231d850c623a8e997c8718e02fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum for selecting where on elements to write the outputs.  <a href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">More...</a><br /></td></tr>
+<tr class="separator:a7b15231d850c623a8e997c8718e02fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4644108269d8a020942368acac4f649d" id="r_a4644108269d8a020942368acac4f649d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a4644108269d8a020942368acac4f649d">DeviceType</a> = Kokkos::Device&lt; Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space &gt;</td></tr>
+<tr class="separator:a4644108269d8a020942368acac4f649d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a7fed57015ce93d7b1d0431f7b5cad2e9" id="r_a7fed57015ce93d7b1d0431f7b5cad2e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7fed57015ce93d7b1d0431f7b5cad2e9">Outputs</a> (const std::string &amp;output_file, size_t num_nodes, <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a> location=<a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a>)</td></tr>
+<tr class="memdesc:a7fed57015ce93d7b1d0431f7b5cad2e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor taking an output file and location.  <br /></td></tr>
+<tr class="separator:a7fed57015ce93d7b1d0431f7b5cad2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad76da15340127166c7fce3eb6699e1ca" id="r_ad76da15340127166c7fce3eb6699e1ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#ad76da15340127166c7fce3eb6699e1ca">Outputs</a> (const std::string &amp;output_file, const std::string &amp;time_series_file, size_t num_nodes, <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a> location=<a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a>)</td></tr>
+<tr class="memdesc:ad76da15340127166c7fce3eb6699e1ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor taking an output file, time-series file, and location.  <br /></td></tr>
+<tr class="separator:ad76da15340127166c7fce3eb6699e1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa71238193443daecdd3fd15bed131482" id="r_aa71238193443daecdd3fd15bed131482"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classkynema_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#aa71238193443daecdd3fd15bed131482">GetOutputWriter</a> ()</td></tr>
+<tr class="memdesc:aa71238193443daecdd3fd15bed131482"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a reference to the NodeStateWriter for direct usage.  <br /></td></tr>
+<tr class="separator:aa71238193443daecdd3fd15bed131482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f8f0c1b7c6c7c592d6c2aaef824bff0" id="r_a5f8f0c1b7c6c7c592d6c2aaef824bff0"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classkynema_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a5f8f0c1b7c6c7c592d6c2aaef824bff0">GetTimeSeriesWriter</a> ()</td></tr>
+<tr class="memdesc:a5f8f0c1b7c6c7c592d6c2aaef824bff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a reference to the TimeSeriesWriter for direct usage.  <br /></td></tr>
+<tr class="separator:a5f8f0c1b7c6c7c592d6c2aaef824bff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb02a97673911d34aa872b542231c185" id="r_abb02a97673911d34aa872b542231c185"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#abb02a97673911d34aa872b542231c185">GetLocation</a> () const</td></tr>
+<tr class="memdesc:abb02a97673911d34aa872b542231c185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output location as set by the constructor.  <br /></td></tr>
+<tr class="separator:abb02a97673911d34aa872b542231c185"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a778d26801259ab43aa8e5c4f365de1c2" id="r_a778d26801259ab43aa8e5c4f365de1c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a778d26801259ab43aa8e5c4f365de1c2">WriteNodeOutputsAtTimestep</a> (const <a class="el" href="structkynema_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a4644108269d8a020942368acac4f649d">DeviceType</a> &gt; &amp;host_state, size_t timestep)</td></tr>
+<tr class="memdesc:a778d26801259ab43aa8e5c4f365de1c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write node state outputs to NetCDF file at specified timestep.  <br /></td></tr>
+<tr class="separator:a778d26801259ab43aa8e5c4f365de1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af60645bf9e64cc7243cb05d428b33f01" id="r_af60645bf9e64cc7243cb05d428b33f01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#af60645bf9e64cc7243cb05d428b33f01">WriteRotorTimeSeriesAtTimestep</a> (size_t timestep, double azimuth_angle, double rotor_speed)</td></tr>
+<tr class="memdesc:af60645bf9e64cc7243cb05d428b33f01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write rotor time-series data at specified timestep.  <br /></td></tr>
+<tr class="separator:af60645bf9e64cc7243cb05d428b33f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A class that handles writing state data to disk for analysis/visualization. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a4644108269d8a020942368acac4f649d" name="a4644108269d8a020942368acac4f649d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4644108269d8a020942368acac4f649d">&#9670;&#160;</a></span>DeviceType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a4644108269d8a020942368acac4f649d">kynema::interfaces::Outputs::DeviceType</a> =  Kokkos::Device&lt;Kokkos::DefaultExecutionSpace, Kokkos::DefaultExecutionSpace::memory_space&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a7b15231d850c623a8e997c8718e02fb8" name="a7b15231d850c623a8e997c8718e02fb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b15231d850c623a8e997c8718e02fb8">&#9670;&#160;</a></span>OutputLocation</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">kynema::interfaces::Outputs::OutputLocation</a> : std::uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enum for selecting where on elements to write the outputs. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26" name="a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26"></a>kNodes&#160;</td><td class="fielddoc"><p>Write outputs at node locations. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a7b15231d850c623a8e997c8718e02fb8a31539a8d3602f23f600139d92f392d02" name="a7b15231d850c623a8e997c8718e02fb8a31539a8d3602f23f600139d92f392d02"></a>kQPs&#160;</td><td class="fielddoc"><p>Write outputs at quadrature points. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7fed57015ce93d7b1d0431f7b5cad2e9" name="a7fed57015ce93d7b1d0431f7b5cad2e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fed57015ce93d7b1d0431f7b5cad2e9">&#9670;&#160;</a></span>Outputs() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">kynema::interfaces::Outputs::Outputs </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>output_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a>&#160;</td>
+          <td class="paramname"><em>location</em> = <code><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor taking an output file and location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_file</td><td>The name of the output file </td></tr>
+    <tr><td class="paramname">num_nodes</td><td>the number of nodes to be written to the file </td></tr>
+    <tr><td class="paramname">location</td><td>where the output will be written (quadrature points vs nodes) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad76da15340127166c7fce3eb6699e1ca" name="ad76da15340127166c7fce3eb6699e1ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad76da15340127166c7fce3eb6699e1ca">&#9670;&#160;</a></span>Outputs() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">kynema::interfaces::Outputs::Outputs </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>output_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>time_series_file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>num_nodes</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">OutputLocation</a>&#160;</td>
+          <td class="paramname"><em>location</em> = <code><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8a160413698c72c216b33f26d67f394d26">OutputLocation::kNodes</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor taking an output file, time-series file, and location. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">output_file</td><td>The name of the output file </td></tr>
+    <tr><td class="paramname">time_series_file</td><td>The name of the file with time-series data </td></tr>
+    <tr><td class="paramname">num_nodes</td><td>the number of nodes to be written to the file </td></tr>
+    <tr><td class="paramname">location</td><td>where the output will be written (quadrature points vs nodes) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abb02a97673911d34aa872b542231c185" name="abb02a97673911d34aa872b542231c185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb02a97673911d34aa872b542231c185">&#9670;&#160;</a></span>GetLocation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8">Outputs::OutputLocation</a> kynema::interfaces::Outputs::GetLocation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the output location as set by the constructor. </p>
+<dl class="section return"><dt>Returns</dt><dd>the OutputLocation </dd></dl>
+
+</div>
+</div>
+<a id="aa71238193443daecdd3fd15bed131482" name="aa71238193443daecdd3fd15bed131482"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa71238193443daecdd3fd15bed131482">&#9670;&#160;</a></span>GetOutputWriter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classkynema_1_1util_1_1NodeStateWriter.html">util::NodeStateWriter</a> &gt; &amp; kynema::interfaces::Outputs::GetOutputWriter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a reference to the NodeStateWriter for direct usage. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the NodeStateWriter </dd></dl>
+
+</div>
+</div>
+<a id="a5f8f0c1b7c6c7c592d6c2aaef824bff0" name="a5f8f0c1b7c6c7c592d6c2aaef824bff0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f8f0c1b7c6c7c592d6c2aaef824bff0">&#9670;&#160;</a></span>GetTimeSeriesWriter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classkynema_1_1util_1_1TimeSeriesWriter.html">util::TimeSeriesWriter</a> &gt; &amp; kynema::interfaces::Outputs::GetTimeSeriesWriter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a reference to the TimeSeriesWriter for direct usage. </p>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the TimeSeriesWriter </dd></dl>
+
+</div>
+</div>
+<a id="a778d26801259ab43aa8e5c4f365de1c2" name="a778d26801259ab43aa8e5c4f365de1c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a778d26801259ab43aa8e5c4f365de1c2">&#9670;&#160;</a></span>WriteNodeOutputsAtTimestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kynema::interfaces::Outputs::WriteNodeOutputsAtTimestep </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structkynema_1_1interfaces_1_1HostState.html">HostState</a>&lt; <a class="el" href="classkynema_1_1interfaces_1_1Outputs.html#a4644108269d8a020942368acac4f649d">DeviceType</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>host_state</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>timestep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write node state outputs to NetCDF file at specified timestep. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">host_state</td><td>an updated host_state object with the current state loaded </td></tr>
+    <tr><td class="paramname">timestep</td><td>The timestep number to write data to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af60645bf9e64cc7243cb05d428b33f01" name="af60645bf9e64cc7243cb05d428b33f01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af60645bf9e64cc7243cb05d428b33f01">&#9670;&#160;</a></span>WriteRotorTimeSeriesAtTimestep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kynema::interfaces::Outputs::WriteRotorTimeSeriesAtTimestep </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>timestep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>azimuth_angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>rotor_speed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write rotor time-series data at specified timestep. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timestep</td><td>The timestep number to write data to </td></tr>
+    <tr><td class="paramname">azimuth_angle</td><td>The current azimuth angle </td></tr>
+    <tr><td class="paramname">rotor_speed</td><td>The current rotor speed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/runner/work/kynema/kynema/kynema/src/interfaces/<a class="el" href="outputs_8hpp_source.html">outputs.hpp</a></li>
+<li>/home/runner/work/kynema/kynema/kynema/src/interfaces/<a class="el" href="outputs_8cpp.html">outputs.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+</small></address>
+</body>
+</html>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 - Present, MIT License.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

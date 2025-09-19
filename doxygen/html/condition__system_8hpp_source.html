@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File &mdash; OpenTurbine 0.0.1 documentation</title>
+  <title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/condition_system.hpp Source File &mdash; Kynema 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -35,7 +35,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            OpenTurbine
+            Kynema
               <img src="../../_static/oturb_logo_v2.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">OpenTurbine</a>
+          <a href="../../index.html">Kynema</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File</li>
+      <li class="breadcrumb-item active">Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/condition_system.hpp Source File</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/doxygen/html/condition__system_8hpp_source.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,8 +80,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="home-runner-work-openturbine-openturbine-openturbine-src-solver-condition-system-hpp-source-file">
-<h1>/home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File<a class="headerlink" href="#home-runner-work-openturbine-openturbine-openturbine-src-solver-condition-system-hpp-source-file" title="Permalink to this heading"></a></h1>
+  <div class="section" id="home-runner-work-kynema-kynema-kynema-src-solver-condition-system-hpp-source-file">
+<h1>/home/runner/work/kynema/kynema/kynema/src/solver/condition_system.hpp Source File<a class="headerlink" href="#home-runner-work-kynema-kynema-kynema-src-solver-condition-system-hpp-source-file" title="Permalink to this heading"></a></h1>
 <div class="doxygen-content docutils container">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
@@ -90,7 +90,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/condition_system.hpp Source File</title>
+<title>Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/condition_system.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -113,7 +113,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">OpenTurbine API
+   <div id="projectname">Kynema API
    </div>
    <div id="projectbrief">A flexible multibody structural dynamics code for wind turbines</div>
   </td>
@@ -178,42 +178,42 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;Kokkos_Core.hpp&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespaceopenturbine_1_1solver.html">openturbine::solver</a> {</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekynema_1_1solver.html">kynema::solver</a> {</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1ConditionR.html">   11</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1solver_1_1ConditionR.html">ConditionR</a> {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1ConditionR.html#a7da2507c42be02fe56d7723117d44e82">   12</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1solver_1_1ConditionR.html#a7da2507c42be02fe56d7723117d44e82">conditioner</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1ConditionR.html#a8396ffd4b36a2d913666da8c9c81e545">   13</a></span>    Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="code hl_variable" href="structopenturbine_1_1solver_1_1ConditionR.html#a8396ffd4b36a2d913666da8c9c81e545">R</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1ConditionR.html">   11</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structkynema_1_1solver_1_1ConditionR.html">ConditionR</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1ConditionR.html#a549af05b54d4edb71c0d53e90958c502">   12</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structkynema_1_1solver_1_1ConditionR.html#a549af05b54d4edb71c0d53e90958c502">conditioner</a>;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1ConditionR.html#a57e5ae6c3d30cc31da76f1acad77fcba">   13</a></span>    Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="code hl_variable" href="structkynema_1_1solver_1_1ConditionR.html#a57e5ae6c3d30cc31da76f1acad77fcba">R</a>;</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    KOKKOS_FUNCTION</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1ConditionR.html#aaefbe1222c2f922157fd00f6fb33fabb">   16</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1solver_1_1ConditionR.html#aaefbe1222c2f922157fd00f6fb33fabb">operator()</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structopenturbine_1_1solver_1_1ConditionR.html#a8396ffd4b36a2d913666da8c9c81e545">R</a>(i, 0) *= <a class="code hl_variable" href="structopenturbine_1_1solver_1_1ConditionR.html#a7da2507c42be02fe56d7723117d44e82">conditioner</a>; }</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1ConditionR.html#a58a62a0c8af9c73810a5b558dee4c81c">   16</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structkynema_1_1solver_1_1ConditionR.html#a58a62a0c8af9c73810a5b558dee4c81c">operator()</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structkynema_1_1solver_1_1ConditionR.html#a57e5ae6c3d30cc31da76f1acad77fcba">R</a>(i, 0) *= <a class="code hl_variable" href="structkynema_1_1solver_1_1ConditionR.html#a549af05b54d4edb71c0d53e90958c502">conditioner</a>; }</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>};</div>
 </div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DeviceType&gt;</div>
 <div class="foldopen" id="foldopen00024" data-start="{" data-end="};">
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1UnconditionSolution.html">   24</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structopenturbine_1_1solver_1_1UnconditionSolution.html">UnconditionSolution</a> {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a2e23f0895af59a0c3007a3b29c6c9063">   25</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a2e23f0895af59a0c3007a3b29c6c9063">num_system_dofs</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a096806d598c9dfd3d900ddd44441cca8">   26</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a096806d598c9dfd3d900ddd44441cca8">conditioner</a>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a4a12608afb6982917ff9481a276a38ee">   27</a></span>    Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a4a12608afb6982917ff9481a276a38ee">x</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1UnconditionSolution.html">   24</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structkynema_1_1solver_1_1UnconditionSolution.html">UnconditionSolution</a> {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1UnconditionSolution.html#a9b7aea3ece04ac729e62e759bf89725d">   25</a></span>    <span class="keywordtype">size_t</span> <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a9b7aea3ece04ac729e62e759bf89725d">num_system_dofs</a>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1UnconditionSolution.html#a4d7e9e59671c2044d4c2d7b87360bd3b">   26</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a4d7e9e59671c2044d4c2d7b87360bd3b">conditioner</a>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1UnconditionSolution.html#a926d4f21b348e9735764c9b468df0737">   27</a></span>    Kokkos::View&lt;double* [1], Kokkos::LayoutLeft, DeviceType&gt; <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a926d4f21b348e9735764c9b468df0737">x</a>;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    KOKKOS_FUNCTION</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a475e76b5debf811525728bcdf1163f1c">   30</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a475e76b5debf811525728bcdf1163f1c">operator()</a>(<span class="keywordtype">size_t</span> i)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a4a12608afb6982917ff9481a276a38ee">x</a>(i + <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a2e23f0895af59a0c3007a3b29c6c9063">num_system_dofs</a>, 0) /= <a class="code hl_variable" href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a096806d598c9dfd3d900ddd44441cca8">conditioner</a>; }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structkynema_1_1solver_1_1UnconditionSolution.html#a77c1853ad0406481b3dbff4d90a24030">   30</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structkynema_1_1solver_1_1UnconditionSolution.html#a77c1853ad0406481b3dbff4d90a24030">operator()</a>(<span class="keywordtype">size_t</span> i)<span class="keyword"> const </span>{ <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a926d4f21b348e9735764c9b468df0737">x</a>(i + <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a9b7aea3ece04ac729e62e759bf89725d">num_system_dofs</a>, 0) /= <a class="code hl_variable" href="structkynema_1_1solver_1_1UnconditionSolution.html#a4d7e9e59671c2044d4c2d7b87360bd3b">conditioner</a>; }</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
 </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}  <span class="comment">// namespace openturbine::solver</span></div>
-<div class="ttc" id="anamespaceopenturbine_1_1solver_html"><div class="ttname"><a href="namespaceopenturbine_1_1solver.html">openturbine::solver</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:5</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1ConditionR_html"><div class="ttname"><a href="structopenturbine_1_1solver_1_1ConditionR.html">openturbine::solver::ConditionR</a></div><div class="ttdoc">A Kernel which applies the given factor to the system RHS vector.</div><div class="ttdef"><b>Definition</b> condition_system.hpp:11</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1ConditionR_html_a7da2507c42be02fe56d7723117d44e82"><div class="ttname"><a href="structopenturbine_1_1solver_1_1ConditionR.html#a7da2507c42be02fe56d7723117d44e82">openturbine::solver::ConditionR::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:12</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1ConditionR_html_a8396ffd4b36a2d913666da8c9c81e545"><div class="ttname"><a href="structopenturbine_1_1solver_1_1ConditionR.html#a8396ffd4b36a2d913666da8c9c81e545">openturbine::solver::ConditionR::R</a></div><div class="ttdeci">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt; R</div><div class="ttdef"><b>Definition</b> condition_system.hpp:13</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1ConditionR_html_aaefbe1222c2f922157fd00f6fb33fabb"><div class="ttname"><a href="structopenturbine_1_1solver_1_1ConditionR.html#aaefbe1222c2f922157fd00f6fb33fabb">openturbine::solver::ConditionR::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(int i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:16</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1UnconditionSolution_html"><div class="ttname"><a href="structopenturbine_1_1solver_1_1UnconditionSolution.html">openturbine::solver::UnconditionSolution</a></div><div class="ttdoc">A Kernel which divides the RHS vector terms corresponding to the constraints by a given conditioner f...</div><div class="ttdef"><b>Definition</b> condition_system.hpp:24</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1UnconditionSolution_html_a096806d598c9dfd3d900ddd44441cca8"><div class="ttname"><a href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a096806d598c9dfd3d900ddd44441cca8">openturbine::solver::UnconditionSolution::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:26</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1UnconditionSolution_html_a2e23f0895af59a0c3007a3b29c6c9063"><div class="ttname"><a href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a2e23f0895af59a0c3007a3b29c6c9063">openturbine::solver::UnconditionSolution::num_system_dofs</a></div><div class="ttdeci">size_t num_system_dofs</div><div class="ttdef"><b>Definition</b> condition_system.hpp:25</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1UnconditionSolution_html_a475e76b5debf811525728bcdf1163f1c"><div class="ttname"><a href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a475e76b5debf811525728bcdf1163f1c">openturbine::solver::UnconditionSolution::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:30</div></div>
-<div class="ttc" id="astructopenturbine_1_1solver_1_1UnconditionSolution_html_a4a12608afb6982917ff9481a276a38ee"><div class="ttname"><a href="structopenturbine_1_1solver_1_1UnconditionSolution.html#a4a12608afb6982917ff9481a276a38ee">openturbine::solver::UnconditionSolution::x</a></div><div class="ttdeci">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt; x</div><div class="ttdef"><b>Definition</b> condition_system.hpp:27</div></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}  <span class="comment">// namespace kynema::solver</span></div>
+<div class="ttc" id="anamespacekynema_1_1solver_html"><div class="ttname"><a href="namespacekynema_1_1solver.html">kynema::solver</a></div><div class="ttdef"><b>Definition</b> calculate_error_sum_squares.hpp:5</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1ConditionR_html"><div class="ttname"><a href="structkynema_1_1solver_1_1ConditionR.html">kynema::solver::ConditionR</a></div><div class="ttdoc">A Kernel which applies the given factor to the system RHS vector.</div><div class="ttdef"><b>Definition</b> condition_system.hpp:11</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1ConditionR_html_a549af05b54d4edb71c0d53e90958c502"><div class="ttname"><a href="structkynema_1_1solver_1_1ConditionR.html#a549af05b54d4edb71c0d53e90958c502">kynema::solver::ConditionR::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:12</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1ConditionR_html_a57e5ae6c3d30cc31da76f1acad77fcba"><div class="ttname"><a href="structkynema_1_1solver_1_1ConditionR.html#a57e5ae6c3d30cc31da76f1acad77fcba">kynema::solver::ConditionR::R</a></div><div class="ttdeci">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt; R</div><div class="ttdef"><b>Definition</b> condition_system.hpp:13</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1ConditionR_html_a58a62a0c8af9c73810a5b558dee4c81c"><div class="ttname"><a href="structkynema_1_1solver_1_1ConditionR.html#a58a62a0c8af9c73810a5b558dee4c81c">kynema::solver::ConditionR::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(int i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:16</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1UnconditionSolution_html"><div class="ttname"><a href="structkynema_1_1solver_1_1UnconditionSolution.html">kynema::solver::UnconditionSolution</a></div><div class="ttdoc">A Kernel which divides the RHS vector terms corresponding to the constraints by a given conditioner f...</div><div class="ttdef"><b>Definition</b> condition_system.hpp:24</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1UnconditionSolution_html_a4d7e9e59671c2044d4c2d7b87360bd3b"><div class="ttname"><a href="structkynema_1_1solver_1_1UnconditionSolution.html#a4d7e9e59671c2044d4c2d7b87360bd3b">kynema::solver::UnconditionSolution::conditioner</a></div><div class="ttdeci">double conditioner</div><div class="ttdef"><b>Definition</b> condition_system.hpp:26</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1UnconditionSolution_html_a77c1853ad0406481b3dbff4d90a24030"><div class="ttname"><a href="structkynema_1_1solver_1_1UnconditionSolution.html#a77c1853ad0406481b3dbff4d90a24030">kynema::solver::UnconditionSolution::operator()</a></div><div class="ttdeci">KOKKOS_FUNCTION void operator()(size_t i) const</div><div class="ttdef"><b>Definition</b> condition_system.hpp:30</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1UnconditionSolution_html_a926d4f21b348e9735764c9b468df0737"><div class="ttname"><a href="structkynema_1_1solver_1_1UnconditionSolution.html#a926d4f21b348e9735764c9b468df0737">kynema::solver::UnconditionSolution::x</a></div><div class="ttdeci">Kokkos::View&lt; double *[1], Kokkos::LayoutLeft, DeviceType &gt; x</div><div class="ttdef"><b>Definition</b> condition_system.hpp:27</div></div>
+<div class="ttc" id="astructkynema_1_1solver_1_1UnconditionSolution_html_a9b7aea3ece04ac729e62e759bf89725d"><div class="ttname"><a href="structkynema_1_1solver_1_1UnconditionSolution.html#a9b7aea3ece04ac729e62e759bf89725d">kynema::solver::UnconditionSolution::num_system_dofs</a></div><div class="ttdeci">size_t num_system_dofs</div><div class="ttdef"><b>Definition</b> condition_system.hpp:25</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

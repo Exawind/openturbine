@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['errorlevel_0',['ErrorLevel',['../structopenturbine_1_1util_1_1ErrorHandling.html#ab23ec7239ee96f0457f272754b87a856',1,'openturbine::util::ErrorHandling']]]
+  ['errorlevel_0',['ErrorLevel',['../structkynema_1_1util_1_1ErrorHandling.html#a7d0a698fdff5746800e562c031548f29',1,'kynema::util::ErrorHandling']]]
 ];

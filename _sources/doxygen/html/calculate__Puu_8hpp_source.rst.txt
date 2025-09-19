@@ -1,11 +1,11 @@
-.. meta::f6f64736e5df4b0e7125b781deda0f4ed05e0dc5d86aca8e734f64e4144977671c288c21085f9bf1c2279e26916aad6596e90a3076029b4499d59440a2235157
+.. meta::451cead3ec1ad2962e8a2e6cf6e625f77e6ade1f79a4fe6d86a13e8f603d2cc36655f30ddce0ce36543cf11bb3a80a82d98884392d368d5d27844f3f9378f5cb
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_Puu.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/calculate_Puu.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_Puu.hpp Source File
-=====================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/calculate\_Puu.hpp Source File
+======================================================================================
 
 .. container:: doxygen-content
 

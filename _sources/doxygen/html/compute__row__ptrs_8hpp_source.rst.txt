@@ -1,11 +1,11 @@
-.. meta::9dfb32b64f7ef23a636fcb1b5a85415927858f4e43481e6e6566d20fee439edbbf1fb1fbf7951f7f919297d2efd4f7aa054c1b4ffe8307238965c6e0f3043978
+.. meta::1eb94f362e5f30c6d5d74c119449db09f77939097a2ae76b20635820beef0c52917e5bb02477726f416a3c9d1976458d02d24def6e1d4548322b9ce3134b435a
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_row_ptrs.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/compute_row_ptrs.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_row\_ptrs.hpp Source File
-===================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/compute\_row\_ptrs.hpp Source File
+====================================================================================
 
 .. container:: doxygen-content
 

@@ -1,11 +1,11 @@
-.. meta::59bf1afdaee887a38c11ef510963aa55c4a784750f9cd567433144eb43111390f1bbbc89a7e6e5bd4f9d21fd5828e621040c06a8686019ae50412d5b5e0270ba
+.. meta::a267ac75caa9f621a9141502833ba3fedbcd22d7abffbb8e547a04e70092ce0a4a29479a12e03c12972b60879c7589c0595caab8d7dbd001dc769b678804ec8c
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/compute_constraints_col_inds.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/compute_constraints_col_inds.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/compute\_constraints\_col\_inds.hpp File Reference
-===================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/compute\_constraints\_col\_inds.hpp File Reference
+====================================================================================================
 
 .. container:: doxygen-content
 

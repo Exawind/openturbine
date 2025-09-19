@@ -1,11 +1,11 @@
-.. meta::2a4ea855baad2f2559cbcca8bff1bd47435e11720ef9556efb29dc99cad519605dde18f0c720dc02b873b916856bf4a9834dbf5661e4121a6b60106d54274f9a
+.. meta::d95286dfb3c8ef45f9c25f198465e991128cfac7903f7bdbdfad6ffa2a12ccb75ebf7c8ff6ceea3253192d52be0382e143b33e1fb37cf4eff8acc841ce4dc7e1
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_rigid_joint_3DOF_constraint.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/constraints/calculate_rigid_joint_3DOF_constraint.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_rigid\_joint\_3DOF\_constraint.hpp File Reference
-==================================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/constraints/calculate\_rigid\_joint\_3DOF\_constraint.hpp File Reference
+===================================================================================================================
 
 .. container:: doxygen-content
 

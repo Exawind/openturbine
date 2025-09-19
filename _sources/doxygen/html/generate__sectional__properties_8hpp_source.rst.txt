@@ -1,11 +1,11 @@
-.. meta::d75910014cdd32eb9777de2078d11b94b03fae968880a140387a3c8f61b0899eb217908732cef97498645a6e55ff8a11bb3e1432b383aa9972c0b30c45ce3e39
+.. meta::e9e53d0473fd75ba034f1196bf9c62c193f994b397ac82efd501c06c84ec1422e1f0b32dc903eb681a495754adf6991b3cf03825473735d8fc55c3a39d08c108
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate_sectional_properties.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/generate_sectional_properties.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/generate\_sectional\_properties.hpp Source File
-========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/beams/generate\_sectional\_properties.hpp Source File
+=========================================================================================================
 
 .. container:: doxygen-content
 

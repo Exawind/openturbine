@@ -1,11 +1,11 @@
-.. meta::475f9eff05abeaf3f967b4b4829df63b4868b77addd62d2b047bbf1857985323a372690e98df3450eec4158e6ce6b50bbeb5e395df0d1174caaef6a389ad7479
+.. meta::ad2a4a6526b10debcc41dd09d9772d817d173f229627797add5b646cf50adcec0238978f72cdbd6a06ce4c6dd9a1946bf82e5f639f89cec4d0f7fd056cf5c955
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_numeric_klu.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/linear_solver/dss_numeric_klu.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver/dss\_numeric\_klu.hpp File Reference
-====================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/linear\_solver/dss\_numeric\_klu.hpp File Reference
+=====================================================================================================
 
 .. container:: doxygen-content
 

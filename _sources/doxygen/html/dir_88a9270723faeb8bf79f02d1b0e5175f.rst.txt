@@ -1,11 +1,11 @@
-.. meta::fe20bbab39b192002f1090e51bcebafa34a0e33aad4c903e4deddf8c6fa15a98b4190665e42f9fde49e7d3ae3c3dfa741b6d91b3f49651d6d8e90d59838ae3d1
+.. meta::d41268cb141730346fed9e2f30b74738cea942d0484cdc22a1017e4f7c3effb52f817ab65f2e2c005fb72d15ca563aa23360c52964eecd1b87f68a90002f4143
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver Directory Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/linear_solver Directory Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver Directory Reference
-===================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/linear\_solver Directory Reference
+====================================================================================
 
 .. container:: doxygen-content
 

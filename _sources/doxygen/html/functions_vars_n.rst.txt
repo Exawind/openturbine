@@ -1,8 +1,8 @@
-.. meta::68ffb559789660aba7d3e28ecdc54f4d5b24352ba1e6d7197fdbfc17eb0c1f55485db3a19078f5c08a42b9fd56093993c461ef8f6abdb2c9893e01a95fff5503
+.. meta::76061f009097324fcc4d2f130887f282ebcb619ee5d8b03902b69ace756fd7237128a5446dc4b2590815c852df5a1ff51967756d9c6b14a9d3b4bdbcf6befd69
 
 :orphan:
 
-.. title:: OpenTurbine API: Class Members - Variables
+.. title:: Kynema API: Class Members - Variables
 
 Class Members - Variables
 =========================

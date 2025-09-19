@@ -1,11 +1,11 @@
-.. meta::2a1eb271e243e38ce22e582499c6fb928a53d8c2f20638d23c71421d46fa59665fe94c2524de00fe305df17e40887086de91383a5d450f7f091f8946e950be2a
+.. meta::b1fe852c3c5e1b955b5b864343e63dcc86767ac7d5a0c97c4521a6c096dca620cf53c8c6aef0cc381b4aa703f6208b6dff423b03b4fb2a06faab0245a1061fc1
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate_revolute_joint_constraint.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/constraints/calculate_revolute_joint_constraint.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/constraints/calculate\_revolute\_joint\_constraint.hpp File Reference
-===============================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/constraints/calculate\_revolute\_joint\_constraint.hpp File Reference
+================================================================================================================
 
 .. container:: doxygen-content
 

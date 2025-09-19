@@ -1,11 +1,11 @@
-.. meta::1d84d58d30fc4420ec05128f7b773c5ae01931268e54ae20966742d53239f0cba3d98973359e208f3c651a092c50c084eb6818624b5c2cb2ed5d6546573a7a40
+.. meta::2091cad7ddd96f6ef46619a44ff62fc6af6c69bfa1e49898759661653533fb02d0099c8dfed53f28b0273b458e6df4cd43ce8c8d6912c855bbe7bf3ea9e2a89b
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/calculate_error_sum_squares.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/calculate_error_sum_squares.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/calculate\_error\_sum\_squares.hpp File Reference
-==================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/calculate\_error\_sum\_squares.hpp File Reference
+===================================================================================================
 
 .. container:: doxygen-content
 

@@ -1,0 +1,14 @@
+.. meta::fdf145895ad64301d010056552ec936fa3f982dff8e719a14eed9f980e775f408501b18ddcda0266bdbb7a52e406596af54c82ed0c2692ee1216e47c3ab82b36
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::BladeInterface Class Reference
+
+BladeInterface Class Reference
+==============================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: classkynema_1_1interfaces_1_1BladeInterface.html

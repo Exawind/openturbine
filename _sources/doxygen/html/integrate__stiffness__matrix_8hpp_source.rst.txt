@@ -1,11 +1,11 @@
-.. meta::74a4967bb5045ef1cb73c26b26daa6f2661348fb1e1f334adb8bc2b89b8d3c8a78c0ba85608e9d962b0128eb9e0521a6c8c9ffd18953bcf7da73e85e6d217ed9
+.. meta::c2858c30a0b72ccbc6fb0343e8147cba22378501ba8a89173910bcf201f1adfbc78968c7b134ad685168b778114cfa6c09dfd87db6696f13e11a564e5e46401f
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate_stiffness_matrix.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/integrate_stiffness_matrix.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/integrate\_stiffness\_matrix.hpp Source File
-===================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/integrate\_stiffness\_matrix.hpp Source File
+====================================================================================================
 
 .. container:: doxygen-content
 

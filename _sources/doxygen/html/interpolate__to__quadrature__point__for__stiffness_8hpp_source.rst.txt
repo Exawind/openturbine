@@ -1,11 +1,11 @@
-.. meta::a99ddf2f40ca004b4ad48ec84d52f08c956c619da5274a82c0959d84afd41758150536e0446823a4fcc25cc5a4295f625e83ff98840cb47b84659c0614e75457
+.. meta::feb24f6a1ea51d907c6ab509f438dca98a22d6e7fb836f5d6be8d19be6aa41163927f6b3e1b1c2196cbca309df1d71daae516c07f1e420563205950085d4d400
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/interpolate_to_quadrature_point_for_stiffness.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/interpolate_to_quadrature_point_for_stiffness.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/interpolate\_to\_quadrature\_point\_for\_stiffness.hpp Source File
-=========================================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/interpolate\_to\_quadrature\_point\_for\_stiffness.hpp Source File
+==========================================================================================================================
 
 .. container:: doxygen-content
 

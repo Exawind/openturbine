@@ -1,11 +1,11 @@
-.. meta::1c7a1718fc8aa95b82117705cbb0d0fce53c4dd8bcc25b13c172001dbf2d3c4423d69aecb13a2552037727e2c2ffc6663ac90fbffc563713083e74b96fa8447c
+.. meta::28c14098eeb7774ef3390eeaf9d72214cf67876db7e6857e8ab24347ba35f9ef4bed7efd0570cec839ba33e173aed547e06dd72fb401074f1a3163ab257905a1
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/components/beam.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/beam.hpp File Reference
-=======================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/components/beam.hpp File Reference
+========================================================================================
 
 .. container:: doxygen-content
 

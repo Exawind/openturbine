@@ -1,11 +1,11 @@
-.. meta::5192e8a4f5088d1cbdd38b4768b04871d98a6d247102c9dcc92200f30f68f35b6896329ecaf95715158ed03d894e6983aaacdd2e72d3e8e470cd782e9d81f04c
+.. meta::0939ef31decde3a00a7c37357e546c1dd5f0a97229809c5a3070c24c73d083e973585d4faa0ecd0e71954b2064c12982441c5262cf2e2e64863f35330857a018
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_inertial_force.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/masses/calculate_inertial_force.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate\_inertial\_force.hpp Source File
-==================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/masses/calculate\_inertial\_force.hpp Source File
+===================================================================================================
 
 .. container:: doxygen-content
 

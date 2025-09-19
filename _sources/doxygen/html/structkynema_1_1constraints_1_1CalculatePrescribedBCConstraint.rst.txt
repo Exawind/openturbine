@@ -1,0 +1,14 @@
+.. meta::5c192fe5c339781d13af9fb65e612189716952e139bda317044f35993d94d4789b418ffd04528a8a719800218ed255fc58450a658df0647ba514214758e2694d
+
+:orphan:
+
+.. title:: Kynema API: kynema::constraints::CalculatePrescribedBCConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculatePrescribedBCConstraint&lt; DeviceType &gt; Struct Template Reference
+=============================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1constraints_1_1CalculatePrescribedBCConstraint.html

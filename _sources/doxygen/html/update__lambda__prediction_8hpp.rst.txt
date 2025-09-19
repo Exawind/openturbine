@@ -1,11 +1,11 @@
-.. meta::afa4073f138f03844ce383b0ebdf2669702c014a27ef994c45d9560ca41ee7eb6bef51e6cb678f4589d94b450f7957872407e5a1e03b88c4ba8e33ed8a5bd318
+.. meta::e7b66a283cb6664cfce89520f30b742fc160387adeab584702351065a932fad6b5ed10921ee6cd7a6e1dd3c7702801de738250c5fcdf8dd43f81b264a1512b65
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/constraints/update_lambda_prediction.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/constraints/update_lambda_prediction.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/constraints/update\_lambda\_prediction.hpp File Reference
-===================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/constraints/update\_lambda\_prediction.hpp File Reference
+====================================================================================================
 
 .. container:: doxygen-content
 

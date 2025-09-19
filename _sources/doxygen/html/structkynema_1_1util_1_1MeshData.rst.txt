@@ -1,0 +1,14 @@
+.. meta::7f60923ea20318df5b55f04e4f98f0f681c3c7ab3685ecca3fd28edb045da4337370e7f344638eb9c4dc83902592df8197e7cacd2e29b6de0ec925cfba69d820
+
+:orphan:
+
+.. title:: Kynema API: kynema::util::MeshData Struct Reference
+
+MeshData Struct Reference
+=========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1util_1_1MeshData.html

@@ -1,0 +1,14 @@
+.. meta::d88b64b156fe4c00d6c520223e9dc206ab47417d9abef024709d89192e4f84258fd3cbb30603dd69b3ee2ff47e8d7222c72616850c4551f1a14bf339cfd77e8e
+
+:orphan:
+
+.. title:: Kynema API: kynema::constraints::CalculateRotationControlConstraint&lt; DeviceType &gt; Struct Template Reference
+
+CalculateRotationControlConstraint&lt; DeviceType &gt; Struct Template Reference
+================================================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1constraints_1_1CalculateRotationControlConstraint.html

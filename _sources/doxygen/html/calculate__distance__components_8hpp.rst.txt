@@ -1,11 +1,11 @@
-.. meta::5f26ebc1f38ae080b057438697c418989c926de3556dc672140bdca1c5632cfa6db96183dcc99bad781835bedbbd73d8a6a434b8d8117428901d258a5b0b3629
+.. meta::2f6324ae7922b33a22b5446d3ca6d1244727d6025f4f37e08262d1758241e90cd6dc477e374298a9d3b6e5bd8bce9038ba0541ea5e9d4dc7ef5594929ac1bb9e
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate_distance_components.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/springs/calculate_distance_components.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/springs/calculate\_distance\_components.hpp File Reference
-===========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/springs/calculate\_distance\_components.hpp File Reference
+============================================================================================================
 
 .. container:: doxygen-content
 

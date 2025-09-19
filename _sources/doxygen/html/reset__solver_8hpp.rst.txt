@@ -1,11 +1,11 @@
-.. meta::6312b91d039ba10c3095b1bb00606e14ce1c582be6f4bf8f5f07f3da268a88daff937bb0c3fe7cb755afbaab4db5372b06b489382ee0577c2c99b65f054c1ad9
+.. meta::9ffe12d23793c13fb20e1912acc95d1d41e19ff483642b0c94cf09e0c4b78af9c3863d163630b53bfd5cdadd6c82ed7f9758337a24a4c140316d563d4e563b68
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/step/reset_solver.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/step/reset_solver.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/step/reset\_solver.hpp File Reference
-===============================================================================================
+/home/runner/work/kynema/kynema/kynema/src/step/reset\_solver.hpp File Reference
+================================================================================
 
 .. container:: doxygen-content
 

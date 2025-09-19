@@ -1,11 +1,11 @@
-.. meta::e96c99f5cc7ae470e981f3b83cb8732d3fe4162fea2de69fc35bcb9a554c53801d51b1c25d47747a8aef1fb445a628eda67ebbb3ecc9b81cad1c36f46c29c4f8
+.. meta::99b23de3dff71eacf4a6cf49336ada6f0960d77662264e91e2c1dbee12ec9bacf70c354fcfe0e9be7e6605b05bafce0ac48c13f232732613178b647f401f80e7
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/interpolate_to_quadrature_point_for_inertia.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/interpolate_to_quadrature_point_for_inertia.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/interpolate\_to\_quadrature\_point\_for\_inertia.hpp File Reference
-==========================================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/interpolate\_to\_quadrature\_point\_for\_inertia.hpp File Reference
+===========================================================================================================================
 
 .. container:: doxygen-content
 

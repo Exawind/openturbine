@@ -1,11 +1,11 @@
-.. meta::1d825a2c6af847107fe8fb28f3d2ca8f5dbf0f85b32eb98ec19b682d4530c2648e1fa56a9c16223fc23605d64ba55bc2108aae03920d7826aa9a1043813db07c
+.. meta::d072c3f2033e8b9cde84e90419a85385eea485d9a5401ce725729f2d0b91a92341d228b6160e34f8f6fb063cf647721f21a4360cb0dc33b75c8e305b04a0dac1
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/controller_input.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/components/controller_input.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/controller\_input.hpp File Reference
-====================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/components/controller\_input.hpp File Reference
+=====================================================================================================
 
 .. container:: doxygen-content
 

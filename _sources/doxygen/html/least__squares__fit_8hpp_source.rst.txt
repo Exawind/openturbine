@@ -1,11 +1,11 @@
-.. meta::07c8d80bf0cd8de8d173d3088f025456ece417514623e9bc2d510152acce22bc669214593d08f08f77b0ff49a9ba9e8e56b57023cdd029e86d2560369dd1d652
+.. meta::0df0b316e79fe8de5cab32f15062c4f83a09ec7ed5ac08981ddf37cb25cb983e7146fdd792d69e984cded2d6a9d3ff53f9e9b619fdee4d92b5044ea226d23cde
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/math/least_squares_fit.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/math/least_squares_fit.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/math/least\_squares\_fit.hpp Source File
-==================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/math/least\_squares\_fit.hpp Source File
+===================================================================================
 
 .. container:: doxygen-content
 

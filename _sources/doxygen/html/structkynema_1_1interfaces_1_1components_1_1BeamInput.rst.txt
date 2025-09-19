@@ -1,0 +1,14 @@
+.. meta::e58526277d85e961bf7f85b0dac88d66e2033f560835de57f607e81d4cbc06c50f9bf12e19d27055374e79b1ba1176268c99da6919d8392375bba3d2dfff608c
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::components::BeamInput Struct Reference
+
+BeamInput Struct Reference
+==========================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1interfaces_1_1components_1_1BeamInput.html

@@ -1,11 +1,11 @@
-.. meta::393fb3aa44ada11a7d0cb8cba38f2599b6b900c7bd821ccc0c1acdcdea96e67493f13a2ce42ae4a701bd553d54703898515063f7debb671c39bffd68a66c9740
+.. meta::3ac34b762e0c97b4a2f5cd263d487edae2f316db1f044737b5b4143bd05038d8268c2ff936cdb50555b3bc27a4fe383b51549d03875750f866cd1c286cfea379
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/solver/linear_solver/dss_symbolic_cudss.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/solver/linear_solver/dss_symbolic_cudss.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/solver/linear\_solver/dss\_symbolic\_cudss.hpp Source File
-====================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/solver/linear\_solver/dss\_symbolic\_cudss.hpp Source File
+=====================================================================================================
 
 .. container:: doxygen-content
 

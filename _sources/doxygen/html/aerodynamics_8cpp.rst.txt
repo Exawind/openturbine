@@ -1,11 +1,11 @@
-.. meta::8723ffcbb40d33d635f8c834c62f323c816f060e691bcd411734d297c113233908ba3fdc36d970a81a07ffcc0eb867bb8d05465736ef4df98ad12b705b0b532e
+.. meta::9596b5bb3a21c97330fbf978d934f04e73f2936c7de77765d38f7b24300a53d696c9b0a03d2a9eb5ccaada5559a81d614afa8e7bdc367786734aea9811b6fe90
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics.cpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/interfaces/components/aerodynamics.cpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/interfaces/components/aerodynamics.cpp File Reference
-===============================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/interfaces/components/aerodynamics.cpp File Reference
+================================================================================================
 
 .. container:: doxygen-content
 

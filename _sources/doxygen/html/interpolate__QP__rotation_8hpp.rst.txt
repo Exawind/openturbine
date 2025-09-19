@@ -1,11 +1,11 @@
-.. meta::4f6d4ce5d5bbe7c5625afd47dd4f655c673306a3b54887e1478c7a1167ad467292b588348faf870de660fbebb55a164ad3e18d89f5ebf5fc23d2fc3898cf963e
+.. meta::30ab410c08129e1e687876ffa2e9fbbb9c1d63c1f066daa2b694907dd2281a1aa9a2af25a4ae7d8bbb363505c43ddb22e0c3cf81037c1899ba478d310528e6e6
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate_QP_rotation.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/elements/beams/interpolate_QP_rotation.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/elements/beams/interpolate\_QP\_rotation.hpp File Reference
-=====================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/elements/beams/interpolate\_QP\_rotation.hpp File Reference
+======================================================================================================
 
 .. container:: doxygen-content
 

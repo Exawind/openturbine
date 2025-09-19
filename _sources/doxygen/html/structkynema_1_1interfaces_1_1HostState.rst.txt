@@ -1,0 +1,14 @@
+.. meta::92cc1c3d390a3a108ddacebf7c7b58227f497c41d57db35217f0b1532c60653e0f1cd5a518df846744604fc9084a2183274b8b5837ee85ef28f5c90028e79e9b
+
+:orphan:
+
+.. title:: Kynema API: kynema::interfaces::HostState&lt; DeviceType &gt; Struct Template Reference
+
+HostState&lt; DeviceType &gt; Struct Template Reference
+=======================================================
+
+.. container:: doxygen-content
+
+   
+   .. raw:: html
+     :file: structkynema_1_1interfaces_1_1HostState.html

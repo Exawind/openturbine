@@ -1,8 +1,8 @@
-.. meta::2113e38a678a1669ec6b1a101c77ee413c8731e4e0c8f53284c61fc6b6c926a1d8210291b151c0b033c67be8da0f886338146b5d56e5e2081c13328f7a309e9c
+.. meta::463b5a9c47483468be169aace6264cd1feb9378f330c289b6e7d571ff3fe636b088d9468d9e92ac53b5cca20182d191af1073bc14e4b81ddaf9f1c410418fa4c
 
 :orphan:
 
-.. title:: OpenTurbine API: Class Members - Typedefs
+.. title:: Kynema API: Class Members - Typedefs
 
 Class Members - Typedefs
 ========================

@@ -1,11 +1,11 @@
-.. meta::160caf361d2923c50aa5df81847ba36b307f52bda1fa8a8b7b249807529092408e413685fa02c0d6404c4c8f74daa9b1eb717e4fa60f4e28dedf32528bffb715
+.. meta::805d49d745a39a125e48fe0c0f29391163764ce6b013426efaf72525168002db97ba753806a93755b17563fb2703ddd543ca43e4a9a8ab789911188b5cb92ab5
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/rotate_section_matrix.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/masses/rotate_section_matrix.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/rotate\_section\_matrix.hpp File Reference
-==================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/masses/rotate\_section\_matrix.hpp File Reference
+===================================================================================================
 
 .. container:: doxygen-content
 

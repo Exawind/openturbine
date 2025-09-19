@@ -1,8 +1,8 @@
-.. meta::92ff78fce9c446309cdba3230392c9ff4f43ff1a1e71d1ade8771c66c59a5d077df9a3f92e3b04afcb3eaec114bd568ba0445e87efa8dbe2adb1a120e3d4ec45
+.. meta::e57664644a1019875fb7c1628336b530402a5eed1626c52aa6b9b9ca73194d787e946b034555b5363135f4a6897cf5e7cd819e5e8aefe8a8379190f532f9755f
 
 :orphan:
 
-.. title:: OpenTurbine API: windio.Struct Class Reference
+.. title:: Kynema API: windio.Struct Class Reference
 
 windio.Struct Class Reference
 =============================

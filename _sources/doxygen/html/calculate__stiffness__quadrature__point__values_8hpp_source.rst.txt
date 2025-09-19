@@ -1,11 +1,11 @@
-.. meta::c78587136d4d0426f716f97fcaea7cd5e5c3b02d1c2bc4f958581f932038c4d98950ee5728b26bbbfa3eb2a12bd21ce9d64dc56ce203e3e9305421f6930d0a82
+.. meta::575ff05f07b6fa7ac632d962719486cf69cc5ef103f34171daebbc8f652dbdbd794bcc01b841649093e16ba6bfa3143b0ac4018893a348b9de36d727a93373b4
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_stiffness_quadrature_point_values.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/calculate_stiffness_quadrature_point_values.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_stiffness\_quadrature\_point\_values.hpp Source File
-======================================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/calculate\_stiffness\_quadrature\_point\_values.hpp Source File
+=======================================================================================================================
 
 .. container:: doxygen-content
 

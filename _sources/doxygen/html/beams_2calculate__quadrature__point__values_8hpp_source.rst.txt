@@ -1,11 +1,11 @@
-.. meta::1076ed4c189db9af93b6be820ed79a72768b4dea0be6b53a2a046295a513d2bd88041f29b7653f475cc944c06f1b40bccab5f9712a08cde0c1b503699c62cc68
+.. meta::947b98d9f9b19d89607f3e98413ed62ee2e6b520165850120be5a66eed2ee00e175639bd5df45db0f40b6e76f08b74607f9428add7b02d160e7d33067dae79b3
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate_quadrature_point_values.hpp Source File
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/beams/calculate_quadrature_point_values.hpp Source File
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/beams/calculate\_quadrature\_point\_values.hpp Source File
-===========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/beams/calculate\_quadrature\_point\_values.hpp Source File
+============================================================================================================
 
 .. container:: doxygen-content
 

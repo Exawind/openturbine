@@ -1,11 +1,11 @@
-.. meta::dcce0c35e91031035fcf6ebffbcfa303e80e90b92c1c63a2c6aeb4503108eed65b67ca62046e4416bdad3aef05f42869f98f05555822a8fb53300833fd821256
+.. meta::97a97225d922c1abb85243036bf37942ddedd598f77907cb082347795ed35d1cca78d79d35af4b0e3a43ff8b61ff8c323f33f9da6fdceeb8a6dc930f0871d60c
 
 :orphan:
 
-.. title:: OpenTurbine API: /home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate_gyroscopic_matrix.hpp File Reference
+.. title:: Kynema API: /home/runner/work/kynema/kynema/kynema/src/system/masses/calculate_gyroscopic_matrix.hpp File Reference
 
-/home/runner/work/openturbine/openturbine/openturbine/src/system/masses/calculate\_gyroscopic\_matrix.hpp File Reference
-========================================================================================================================
+/home/runner/work/kynema/kynema/kynema/src/system/masses/calculate\_gyroscopic\_matrix.hpp File Reference
+=========================================================================================================
 
 .. container:: doxygen-content
 

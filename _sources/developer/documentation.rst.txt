@@ -3,7 +3,7 @@
 Documentation
 =============
 
-OpenTurbine comes with two different types of documentation:
+Kynema comes with two different types of documentation:
 
 - The manual, i.e., the document you are reading now, that is
   written using `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_, and
@@ -14,13 +14,13 @@ OpenTurbine comes with two different types of documentation:
 Manual
 ------
 
-The OpenTurbine manual is written using a special format called
+The Kynema manual is written using a special format called
 ReStructured Text (ReST) and is converted into HTML and PDF formats
 using a python package Sphinx. Since the manuals are written in simple
 text files, they can be version controlled alongside the source
 code. Documentation is automatically generated with new updates to the
-GitHub repository and deployed at `OpenTurbine documentation site
-<https://exawind.github.io/openturbine>`_.
+GitHub repository and deployed at `Kynema documentation site
+<https://kynema.github.io/kynema>`_.
 
 Writing documentation
 `````````````````````
@@ -40,7 +40,7 @@ documentation for the latest snapshot of
 the codebase can be browsed in this manual. The `Doxygen manual
 <http://www.doxygen.nl/manual/index.html>`_ provides an overview of
 the syntax that must be used. Please follow the Doxygen style of
-commenting code when commenting OpenTurbine sources.
+commenting code when commenting Kynema sources.
 
 When commenting code, try to use self-documenting code, i.e., descriptive names
 for variables and functions that eliminate the need to describe what is going on
@@ -55,7 +55,7 @@ Building documentation
 Documentation Dependencies
 ```````````````````````````
 
-To generate the OpenTurbine documentation locally, several dependencies are required:
+To generate the Kynema documentation locally, several dependencies are required:
 
 * ``doxygen`` - For generating source code documentation
 * ``graphviz`` - For creating inheritance diagrams
@@ -97,7 +97,7 @@ To build the documentation:
 
 .. code-block:: bash
 
-    $ cd build && cmake -DOPENTURBINE_ENABLE_DOCUMENTATION:BOOL=ON .. && cmake --build . -t docs
+    $ cd build && cmake -DKYNEMA_ENABLE_DOCUMENTATION:BOOL=ON .. && cmake --build . -t docs
 
 .. note::
 

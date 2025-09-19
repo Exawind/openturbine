@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['outputformat_0',['OutputFormat',['../structopenturbine_1_1util_1_1SimulationControls.html#a8a5e536df4479cdc0d3f329c1d971765',1,'openturbine::util::SimulationControls']]],
-  ['outputlocation_1',['OutputLocation',['../classopenturbine_1_1interfaces_1_1Outputs.html#ad5b708c1ba7632d144080c7234a54375',1,'openturbine::interfaces::Outputs']]],
-  ['outputtype_2',['OutputType',['../structopenturbine_1_1util_1_1VTKSettings.html#aea9e768b4eea1c082339c3479eba8fa9',1,'openturbine::util::VTKSettings']]]
+  ['outputformat_0',['OutputFormat',['../structkynema_1_1util_1_1SimulationControls.html#ab99879bffe9cb15b62967d8589c4c049',1,'kynema::util::SimulationControls']]],
+  ['outputlocation_1',['OutputLocation',['../classkynema_1_1interfaces_1_1Outputs.html#a7b15231d850c623a8e997c8718e02fb8',1,'kynema::interfaces::Outputs']]],
+  ['outputtype_2',['OutputType',['../structkynema_1_1util_1_1VTKSettings.html#af28cbc6574f6064fbf30fca71c3f12ff',1,'kynema::util::VTKSettings']]]
 ];
