@@ -17,7 +17,7 @@ Nalu
 Navier
 Neumann
 OpenFAST
-OpenTurbine
+Kynema
 Raphson
 SIMD
 amr
@@ -62,7 +62,7 @@ netcdf
 normals
 ok
 openfast
-openturbine
+kynema
 paraview
 performant
 piecewise

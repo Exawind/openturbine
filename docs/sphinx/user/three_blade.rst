@@ -2,13 +2,13 @@ Example: Three Blade Rotor
 ==========================
 
 This example will walk through how to run a simulation of a rotor made of three blades connected to a central hub.
-We'll use OpenTurbine's low level API, which, unlike OpenTurbine's high level APIs, will require us to manually set up all nodes and their connectivities.
+We'll use Kynema's low level API, which, unlike Kynema's high level APIs, will require us to manually set up all nodes and their connectivities.
 This extra complexity is the trade-off required for unlimited freedom.
 For the most up to date and working version of this code, see ``tests/documentation_tests/three_blade_rotor/``.
 
 As with any C++ program, start with the includes.
-As a Kokkos-based library, you'll need to include ``Kokkos_Core.hpp`` for setup, teardown, and working with OpenTurbine's data structures.
-From OpenTurbine, you'll have to include ``model.hpp`` for the Model class, our tool for setting up and creating the system, and ``step.hpp`` for the Step function which performs the action of system asembly and solve.
+As a Kokkos-based library, you'll need to include ``Kokkos_Core.hpp`` for setup, teardown, and working with Kynema's data structures.
+From Kynema, you'll have to include ``model.hpp`` for the Model class, our tool for setting up and creating the system, and ``step.hpp`` for the Step function which performs the action of system asembly and solve.
 
 .. code-block:: cpp
 
@@ -58,8 +58,8 @@ This problem uses a constant-cross-section blade, so the sections at the root an
         std::array{0., 0., 0., -0.3510e3, -0.3700e3, 141.470e3},
     };
     const auto sections = std::vector{
-        openturbine::BeamSection(0., mass_matrix, stiffness_matrix),
-        openturbine::BeamSection(1., mass_matrix, stiffness_matrix),
+        kynema::BeamSection(0., mass_matrix, stiffness_matrix),
+        kynema::BeamSection(1., mass_matrix, stiffness_matrix),
     };
 
 We now define the node locations where our solution will be defined.
@@ -84,12 +84,12 @@ We've precalculated these to be a seven point GL quadrature rule, which will be 
         {0.9491079123427585, 0.1294849661688697},
     };
 
-A Model is OpenTurbine's low level interface for specifying elements, nodes, constraints, and their connectivities.
-One everything has been specified, we will use model to create OpenTurbine's fundamental data structures and advance the problem in time.
+A Model is Kynema's low level interface for specifying elements, nodes, constraints, and their connectivities.
+One everything has been specified, we will use model to create Kynema's fundamental data structures and advance the problem in time.
 
 .. code-block:: cpp
 
-    auto model = openturbine::Model();
+    auto model = kynema::Model();
 
 The aptly named SetGravity method is used to set the gravity vector for the problem.
 
@@ -122,7 +122,7 @@ rotor like one would see on a wind turbine.
             }
         );
         auto blade_elem_id = model.AddBeamElement(beam_node_ids, sections, quadrature);
-        auto rotation_quaternion = openturbine::math::RotationVectorToQuaternion(
+        auto rotation_quaternion = kynema::math::RotationVectorToQuaternion(
             {0., 0., 2. * M_PI * blade_number / num_blades}
         );
         model.TranslateBeam(blade_elem_id, {hub_radius, 0., 0.});
@@ -143,7 +143,7 @@ modify during time stepping to create rotation.
     }
     auto hub_bc_id = model.AddPrescribedBC(hub_node_id);
 
-Now that the problem has been fully described in the model, we will create OpenTurbine's main data structures: State, Elements, Constraints, and Solver.
+Now that the problem has been fully described in the model, we will create Kynema's main data structures: State, Elements, Constraints, and Solver.
 
 The CreateSystem method takes an optional template argument with a Kokkos device describing where the system will reside and run.
 By default, it uses Kokkos' default execution/memory space, so a serial build will run on the CPU, a CUDA build will run on a CUDA device, etc.
@@ -162,7 +162,7 @@ Solver contains the linear system (sparse matrix, RHS) and linear system solver
 .. code-block:: cpp
    
     auto [state, elements, constraints] = model.CreateSystem();
-    auto solver = openturbine::CreateSolver<>(state, elements, constraints);
+    auto solver = kynema::CreateSolver<>(state, elements, constraints);
 
 The final stage is to create a StepParameters object, which contains information like the number of non-linear iterations, time step size, and numerical damping factor used to take a single time step.
 
@@ -174,22 +174,22 @@ The final stage is to create a StepParameters object, which contains information
     const double rho_inf(0.9);
     const double t_end(0.1);
     const auto num_steps = static_cast<size_t>(std::floor(t_end / step_size + 1.0));
-    auto parameters = openturbine::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
+    auto parameters = kynema::StepParameters(is_dynamic_solve, max_iter, step_size, rho_inf);
 
-OpenTurbine allows the user to control the actual time stepping process.
+Kynema allows the user to control the actual time stepping process.
 This includes setting forces, post-processing data, or coupling to other codes.
 For this problem, we will prescribe a rotation on the hub boundary condition, which will be transmitted to the blades through their respective constraints.
 
 .. code-block:: cpp
 
     for (auto i = 0U; i < num_steps; ++i) {
-        const auto q_hub = openturbine::math::RotationVectorToQuaternion(
+        const auto q_hub = kynema::math::RotationVectorToQuaternion(
             {step_size * (i + 1) * velocity[3], step_size * (i + 1) * velocity[4],
              step_size * (i + 1) * velocity[5]}
         );
         const auto u_hub = std::array{0., 0., 0., q_hub[0], q_hub[1], q_hub[2], q_hub[3]};
         constraints.UpdateDisplacement(hub_bc_id, u_hub);
         [[maybe_unused]] const auto converged =
-            openturbine::Step(parameters, solver, elements, state, constraints);
+            kynema::Step(parameters, solver, elements, state, constraints);
         assert(converged);
     }

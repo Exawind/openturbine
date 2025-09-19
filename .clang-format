@@ -67,7 +67,7 @@ IncludeCategories:
     Priority: 40
 
   # This project's h files
-  - Regex:    '^"(src|tests|OpenTurbine)'
+  - Regex:    '^"(src|tests|Kynema)'
     Priority: 60
 
   # Other libraries' h files (with quotes)

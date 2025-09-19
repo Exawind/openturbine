@@ -25,7 +25,7 @@ fi
 # Clone Kynema repository if not present in the provided path
 kynema_path=$(dirname "$1") # Get the directory of the provided path
 if [ ! -d "$kynema_path/kynema" ]; then
-    git clone --recursive https://github.com/Exawind/kynema.git $kynema_path/kynema
+    git clone --recursive https://github.com/kynema/kynema.git $kynema_path/kynema
 fi
 cd $kynema_path/kynema
 
@@ -70,7 +70,7 @@ cmake .. \
   -DKynema_WRITE_OUTPUTS=ON \
   -DKynema_ENABLE_OPENFAST_ADI=ON \
   -DKynema_ENABLE_ROSCO_CONTROLLER=ON \
-  -DOpenTUrbine_ENABLE_KLU=ON \
+  -DKynema_ENABLE_KLU=ON \
   -DCMAKE_BUILD_TYPE="Release"
 
 cmake --build .

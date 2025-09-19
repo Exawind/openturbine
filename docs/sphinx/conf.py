@@ -22,8 +22,8 @@ bibtex_bibfiles = []
 templates_path = ['_templates'] # path relative to conf.py
 source_suffix = ['.rst']        # options ['.rst', '.md']
 main_doc = 'index'              # top-level toctree document
-project = 'OpenTurbine'
-title = 'OpenTurbine Documentation'
+project = 'Kynema'
+title = 'Kynema Documentation'
 copyright = '2023 - Present, MIT License'
 author = 'National Renewable Energy Laboratory (NREL) and Sandia National Laboratories (SNL)'
 
@@ -63,7 +63,7 @@ html_theme = 'sphinx_rtd_theme'
 html_logo = '_static/oturb_logo_v2.png'
 html_static_path = ['_static']         # Path to static files
 html_show_copyright = True             # Show copyright in the footer
-htmlhelp_basename = 'openturbine_doc'  # Output file base name for HTML help builder
+htmlhelp_basename = 'kynema_doc'  # Output file base name for HTML help builder
 
 #--------------------------------------------------------------------------
 # LaTeX output configuration
@@ -71,7 +71,7 @@ htmlhelp_basename = 'openturbine_doc'  # Output file base name for HTML help bui
 # Group the document tree into LaTeX files
 latex_documents = [(
     main_doc,          # source start file
-    'openturbine.tex', # target name
+    'kynema.tex', # target name
     title,             # title
     author,            # author
     'manual'           # documentclass [howto, manual, or own class]
@@ -83,7 +83,7 @@ latex_documents = [(
 # One entry per manual page
 man_pages = [(
     main_doc,          # source start file
-    'openturbine',     # name
+    'kynema',     # name
     title,             # description
     [author],          # authors
     1                  # manual section
@@ -95,7 +95,7 @@ man_pages = [(
 # Grouping the document tree into Texinfo files
 texinfo_documents = [(
     main_doc,          # source start file
-    'openturbine',     # name
+    'kynema',     # name
     title,             # description
     author,            # author
     project,           # project
@@ -105,5 +105,5 @@ texinfo_documents = [(
 
 def setup(app):
     app.add_object_type("input_param", "input_param",
-                       objname="OpenTurbine input parameter",
-                       indextemplate="pair: %s; OpenTurbine input parameter")
+                       objname="Kynema input parameter",
+                       indextemplate="pair: %s; Kynema input parameter")

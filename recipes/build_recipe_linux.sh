@@ -17,7 +17,7 @@ fi
 # Clone Kynema repository if not present in the provided path
 kynema_path=$(dirname "$1") # Get the directory of the provided path
 if [ ! -d "$kynema_path/kynema" ]; then
-    git clone --recursive https://github.com/Exawind/kynema.git $kynema_path/kynema
+    git clone --recursive https://github.com/kynema/kynema.git $kynema_path/kynema
 fi
 cd $kynema_path/kynema
 
