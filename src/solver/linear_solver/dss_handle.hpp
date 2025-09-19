@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Kynema_config.h"
 #include "dss_algorithm.hpp"
+
+#include "Kynema_config.h"
 
 namespace kynema::dss {
 
